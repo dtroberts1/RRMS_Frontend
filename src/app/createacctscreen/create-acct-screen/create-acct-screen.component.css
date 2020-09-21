@@ -1,0 +1,41 @@
+.loginScreenLoginButton{
+    vertical-align:bottom;
+    top:90%;
+    color:blue;
+    position:absolute;
+    height:8%;
+    left:40%;
+    background-color:#ddcd9d;
+}
+.loginScreenOuter{
+    height:100%;
+    width:100%;
+}
+h1{
+    text-align:center;
+    top:1%;
+}
+.mainPageFormField{
+    width:290px;
+    left:12%;
+}
+.createAcctDiv{
+    overflow:auto;
+     height:250px;
+/*     overflow: hidden; */
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.createAcctDiv::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .createAcctDiv {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  .mainPageFormField mat-button-toggle{
+    line-height: 5px !important;
+    color:blue;
+  }

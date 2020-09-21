@@ -1,0 +1,16 @@
+<div class="loginScreenOuter">
+    <mat-label style="cursor:context-menu; color:blue">
+        <h1>Confirmation</h1>
+    </mat-label>
+
+    <div style="margin-left:12%">
+        Email Confirmation has been sent to {{email.value}}
+    </div>
+
+    <button class="loginScreenLoginButton" mat-stroked-button color="primary"
+        (click)='okClicked()'
+    >
+        <mat-label><h4>Ok</h4>
+        </mat-label>
+    </button>
+</div>

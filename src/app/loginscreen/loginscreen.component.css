@@ -1,0 +1,19 @@
+.loginScreenLoginButton{
+    vertical-align:bottom;
+    top:80%;
+    color:blue;
+    position:absolute;
+    height:8%;
+    left:40%;
+    background-color:#ddcd9d;
+    text-align:center;
+}
+
+h1{
+    text-align:center;
+    top:1%;
+}
+.mainPageFormField{
+    width:290px;
+    left:12%;
+}

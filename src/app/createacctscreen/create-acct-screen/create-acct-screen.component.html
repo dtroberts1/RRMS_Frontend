@@ -1,0 +1,49 @@
+<div class="loginScreenOuter">
+    <mat-label style="cursor:context-menu; color:blue">
+        <h1>Create Account</h1>
+    </mat-label>
+
+    <div class="createAcctDiv">
+        <mat-form-field class="mainPageFormField" appearance="standard">
+        <mat-label>First Name</mat-label>
+        <input matInput placeholder="John" [formControl]="fName">
+        <mat-icon *ngIf="fName.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+        <mat-error *ngIf="fName.invalid">{{getFNameErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <mat-form-field class="mainPageFormField" appearance="standard">
+    <mat-label>Last Name</mat-label>
+    <input matInput placeholder="Doe" [formControl]="lName">
+    <mat-icon *ngIf="lName.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+    <mat-error *ngIf="lName.invalid">{{getLNameErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <mat-form-field class="mainPageFormField" appearance="standard">
+        <mat-label>Enter your email</mat-label>
+        <input matInput placeholder="user@email.com" [formControl]="email" required>
+        <mat-icon  *ngIf="email.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+        <mat-error *ngIf="email.invalid">{{getEmailErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <br />
+    <mat-form-field class="mainPageFormField" appearance="standard">
+        <mat-label>Password</mat-label>
+        <input matInput placeholder="password" [formControl]="password">
+        <mat-icon *ngIf="password.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+        <mat-error *ngIf="password.invalid">{{getPasswordErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <br />
+    <br />
+    <mat-button-toggle-group class="mainPageFormField" required
+    name="fontStyle">
+        <mat-label style="padding-left:2%; padding-top:4%; cursor:context-menu; color:blue">Account Type</mat-label>
+        <mat-button-toggle value="italic" style="left:6%">Landlord</mat-button-toggle>
+        <mat-button-toggle value="italic" style="left:9%">Tenant</mat-button-toggle>
+    </mat-button-toggle-group>
+</div>
+
+    <button class="loginScreenLoginButton" mat-stroked-button color="primary"
+        (click)='createAccount()'
+    >
+        <mat-label><h4>Create</h4>
+        </mat-label>
+    </button>
+
+</div>
