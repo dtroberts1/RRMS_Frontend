@@ -9,6 +9,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 
 const MaterialComponents = [
@@ -21,7 +22,8 @@ const MaterialComponents = [
   ScrollingModule,
   MatSidenavModule,
   MatListModule,
-  MatToolbarModule
+  MatToolbarModule,
+  MatExpansionModule
 ];
 
 

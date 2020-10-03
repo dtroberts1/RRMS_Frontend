@@ -1,1 +1,10 @@
-<p>Homes works!</p>
+<div class="homeContainer">
+  <div class="homesUiView">
+   
+    <li style="list-style: none;" *ngFor="let home of homes">
+      <app-home [myHome]="home">
+      </app-home>
+    </li>
+
+  </div>
+</div>

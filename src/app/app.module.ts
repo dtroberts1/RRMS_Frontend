@@ -19,6 +19,10 @@ import { ProspectsComponent } from './prospects/prospects.component';
 import { SalesComponent } from './sales/sales.component';
 import { MarketingComponent } from './marketing/marketing.component';
 import { SettingsComponent } from './settings/settings.component';
+import { RoomComponent } from './homes/room/room.component';
+import { AddRoomComponent } from './homes/add-room/add-room.component';
+import { HomeComponent } from './homes/home/home.component';
+import { AgmCoreModule } from '@agm/core';
 
 const appRoutes: Routes = [
   { path: '', component: HomesComponent, data: { title: 'Homes Component' } },
@@ -30,6 +34,9 @@ const appRoutes: Routes = [
   { path: 'sales', component: SalesComponent, data: { title: 'Sales Component' } },
   { path: 'marketing', component: MarketingComponent, data: { title: 'Marketing Component' } },
   { path: 'settings', component: SettingsComponent, data: { title: 'Settings Component' } },
+  { path: 'homes/home', component: HomeComponent, data: { title: 'Home Component' } },
+  { path: 'homes/room', component: RoomComponent, data: { title: 'Rooms Component' } },
+  { path: 'homes/addroom', component: AddRoomComponent, data: { title: 'Add Room Component' } },
 
 ];
 @NgModule({
@@ -47,8 +54,12 @@ const appRoutes: Routes = [
     ProspectsComponent,
     SalesComponent,
     MarketingComponent,
-    SettingsComponent
-  ],
+    SettingsComponent,
+    RoomComponent,
+    AddRoomComponent,
+    HomeComponent,
+    HomesComponent
+    ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -59,7 +70,10 @@ const appRoutes: Routes = [
       appRoutes,
       { useHash: true }
     ),
-    //RouterOutlet
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyDmNBhieCcLQWf4Bk97IWi-0pYujLH-ODU',
+      libraries: ['places']
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

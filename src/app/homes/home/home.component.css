@@ -1,0 +1,21 @@
+.homeItem{
+    border-width:5px;
+    border-color:red;
+    border-style:solid;
+    width:100%;
+    text-align: center;
+    
+  }
+
+  .homesTable{
+    overflow:auto;
+/*     overflow: hidden; */
+}
+
+
+img{
+    height:210px;
+}
+agm-map {
+    height:210px;
+}

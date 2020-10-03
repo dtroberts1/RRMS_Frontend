@@ -6,22 +6,77 @@
       <span><img src="./assets/devglan.png"></span>
     </mat-toolbar-row>
 </mat-toolbar>
-<mat-sidenav-container class="example-container">
-    <mat-sidenav #drawer mode="side" opened role="navigation">
+<mat-sidenav-container class="container">
+    <mat-sidenav class="sidenav" #drawer mode="side" opened role="navigation">
       <mat-nav-list>
-          
-        <a mat-list-item routerLink='/homes'>Homes</a>
-        <a mat-list-item routerLink='/tenants'>Tenants Component</a>
-        <a mat-list-item routerLink='/billing'>Billing Component</a>
-        <a mat-list-item routerLink='/backgroundchecks'>Background Checks Component</a>
-        <a mat-list-item routerLink='/prospects'>Prospects Component</a>
-        <a mat-list-item routerLink='/sales'>Sales Component</a>
-        <a mat-list-item routerLink='/marketing'>Marketing Component</a>
-        <a mat-list-item routerLink='/settings'>Settings Component</a>
-  
+        <mat-accordion>
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <h3 matSubHeader><a routerLink='homes'>Homes</a></h3>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+              <a mat-list-item routerLink='/homes/home'>Home #1</a>
+              <a mat-list-item routerLink='/homes/addroom'>&lt;Add Room&gt;</a>
+          </mat-expansion-panel>
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <h3 matSubHeader><a routerLink='/tenants'>Tenants</a></h3>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+              <a mat-list-item routerLink='/homes/home'>Home #1</a>
+              <a mat-list-item routerLink='/homes/addroom'>&lt;Add Room&gt;</a>
+          </mat-expansion-panel>
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <h3 matSubHeader><a routerLink='/billing'>Billing</a></h3>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+              <a mat-list-item routerLink='/homes/home'>Home #1</a>
+              <a mat-list-item routerLink='/homes/addroom'>&lt;Add Room&gt;</a>
+          </mat-expansion-panel>
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <h3 matSubHeader><a routerLink='/backgroundchecks'>Background Checks</a></h3>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+              <a mat-list-item routerLink='/homes/home'>Home #1</a>
+              <a mat-list-item routerLink='/homes/addroom'>&lt;Add Room&gt;</a>
+          </mat-expansion-panel>
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <h3 matSubHeader><a routerLink='/prospects'>Prospects</a></h3>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+              <a mat-list-item routerLink='/homes/home'>Home #1</a>
+              <a mat-list-item routerLink='/homes/addroom'>&lt;Add Room&gt;</a>
+          </mat-expansion-panel>
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <h3 matSubHeader><a routerLink='/sales'>Sales</a></h3>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+              <a mat-list-item routerLink='/homes/home'>Home #1</a>
+              <a mat-list-item routerLink='/homes/addroom'>&lt;Add Room&gt;</a>
+          </mat-expansion-panel>
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <h3 matSubHeader><a routerLink='/marketing'>Marketing</a></h3>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+              <a mat-list-item routerLink='/homes/home'>Home #1</a>
+              <a mat-list-item routerLink='/homes/addroom'>&lt;Add Room&gt;</a>
+          </mat-expansion-panel>
+        </mat-accordion>
       </mat-nav-list>
     </mat-sidenav>
-    <mat-sidenav-content>
+    <mat-sidenav-content class="sidenav-content">
      <router-outlet></router-outlet>
     </mat-sidenav-content>
 </mat-sidenav-container>

@@ -1,0 +1,21 @@
+.homeContainer{
+  display: flex;
+    border-width:5px;
+    border-color:blue;
+    border-style:solid;
+    
+    width:100%;
+    height:80%;
+    align-items: center;
+    justify-content: center;
+}
+
+.homesUiView{
+  /*display: flex; */
+  border-width:5px;
+  border-color:orange;
+  border-style:solid;
+  /*margin-left:25%;*/
+  width:60%;
+  height:80%;
+}
