@@ -19,19 +19,18 @@ export class CreateAcctScreenComponent implements OnInit{
     lName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,}')]);
 
     createAccount(){
-      console.log("create acct button clicked");
-      // Post to Web Service 
-      this.accountService.postLandlord({
-        active : false,
-        EmailAddress : this.email.value,
-        Username: "nothing",
-        Password: this.password.value,
+// This was working!
+/*
+      this.accountService.register({
+        Email : this.email.value,
+        Password : this.password.value,
         FName : this.fName.value,
         LName : this.lName.value,
-        MdInit : "T"
+        ConfirmPassword : this.password.value
       }).subscribe();
 
       this.notifyFromCreateAcct.emit("createAcct");
+      */
     }
 
     getFNameErrorMessage(){

@@ -1,5 +1,6 @@
 import { Component,OnInit } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
+import {AccountService} from './services/account.service';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,7 @@ export class AppComponent implements OnInit{
   showLoginScreen: boolean = false;
   showCreateAcctScreen: boolean = false;
   showCreateAcctEmailConfScreen: boolean = false;
+  showDashboard: boolean = false;
   email = new FormControl('', [Validators.required, Validators.email]);
 
   onNotifyFromCreateAcctEmailConf(message: string): void{
@@ -24,12 +26,24 @@ export class AppComponent implements OnInit{
     this.showCreateAcctEmailConfScreen = !this.showCreateAcctEmailConfScreen;
   }
 
-  onNotifyFromLogin(newmg: string): void{
-    this.title = "notify received";
+  async onNotifyFromLogin(msgFromLogin: string): Promise<void>{
+    console.log("message from login screen: " + msgFromLogin);
     this.showLoginScreen = !this.showLoginScreen;
-  }
 
+    if (msgFromLogin == "loginSuccessful")
+    {
+      console.log("Login successful in app.component");
+      this.showDashboard = !this.showDashboard;
+    }
+}
+  toggleDashboard(): void{
+    this.showDashboard = !this.showDashboard;
+  }
   toggleLoginScreen(): void{
+    if (this.showDashboard)
+    { // First close dashboard if it's opened.
+      this.showDashboard = !this.showDashboard;
+    }
     this.showLoginScreen = !this.showLoginScreen;
   }
   toggleCreateAcctScreen(): void{

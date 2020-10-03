@@ -1,8 +1,10 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {tap, catchError} from 'rxjs/operators';
-import {Landlord} from '../interfaces/Landlord'
+import {User, LoginUser} from '../interfaces/User'
+import {AToken} from '../interfaces/Token';
+
 
 @Injectable({
     providedIn: 'root'
@@ -11,6 +13,9 @@ import {Landlord} from '../interfaces/Landlord'
 export class AccountService{
     private accountURL = 'http://localhost:64097/api/Accounts/1';
     private landlordsURL = 'http://localhost:64097/api/Landlords';
+    private regURL = 'http://localhost:64097/api/Account/Register';
+    private tokenURL = 'http://localhost:64097/token';
+
 
     constructor(private http: HttpClient){}
     /*
@@ -22,22 +27,49 @@ export class AccountService{
         );
     }
     */
-
-    postLandlord(landlord: Landlord) : Observable<Landlord>{
-    return this.http.post<Landlord>(this.landlordsURL, landlord).pipe(
-        catchError(this.handleError))
+   async login(user: LoginUser){
+    let body = `grant_type=password&username=${user.username} &password=${user.password}`;
+    console.log("body is " + body);
+    //new URLSearchParams(); 
+    //body.set('user', user.username);
+    //body.set('password', user.password);
+    
+    let options = {
+        headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
+    };
+    
+    return new Promise((resolve, reject) => { this.http
+        .post<AToken>(this.tokenURL, body.toString(), options).subscribe(
+            data => {
+                localStorage.setItem('user', JSON.stringify(data.access_token));
+                  // If token is valid, login
+                  console.log("localStorage is " + JSON.parse(localStorage.getItem('user')));
+                  resolve();
+              },
+            error => {
+              console.log("Can't go to dashboard. invalid login");
+              console.log(error);
+              reject(error);
+            }
+        )
+        });
     }
 
-    private handleError(err: HttpErrorResponse){
-        let errorMessage = '';
-        if (err.error instanceof ErrorEvent){
-            // a Client-side or network related error occured. Handle it accordingly.
-            errorMessage = `An Error occured: ${err.message};`
+    private handleError(error: HttpErrorResponse) {
+
+        if (error.error instanceof ErrorEvent) {
+          // A client-side or network error occurred. Handle it accordingly.
+          console.error('An error occurred:', error.error.message);
+        } else {
+          // The backend returned an unsuccessful response code.
+          // The response body may contain clues as to what went wrong.
+          console.error(
+            `Backend returned code ${error.status}, ` +
+            `body was: ${error.error}`);
+            localStorage.clear();
         }
-        else{
-            errorMessage = `Server returned code: ${err.status}, error message is ${err.message}`;
-        }
-        console.error(errorMessage);
-        return throwError(errorMessage);
-    }
+        // Return an observable with a user-facing error message.
+        return throwError(
+          'Something bad happened; please try again later.');
+      }
 }
