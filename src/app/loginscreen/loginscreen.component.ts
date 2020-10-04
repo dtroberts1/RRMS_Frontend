@@ -16,8 +16,12 @@ export class LoginScreenComponent implements OnInit{
     constructor (private accountService: AccountService){}
 
     
-    async notifyParentClicked() {
+    async notifyParentClicked(inStr : string) {
       // Logout
+      if (inStr == "closeLoginDialog"){
+        this.notifyFromLogin.emit("closeLoginDialog. Don't login");
+        return;
+      }
 
       let result = await this.accountService.login({
         username : "nedfye@gmail.com", //this.email.value,

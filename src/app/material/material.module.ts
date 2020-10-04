@@ -10,7 +10,9 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatExpansionModule} from '@angular/material/expansion';
-
+import { CdkTableModule } from "@angular/cdk/table";
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import { MatTreeModule } from "@angular/material/tree";
 
 const MaterialComponents = [
   MatButtonModule,
@@ -23,7 +25,10 @@ const MaterialComponents = [
   MatSidenavModule,
   MatListModule,
   MatToolbarModule,
-  MatExpansionModule
+  MatExpansionModule,
+  CdkTableModule,
+  DragDropModule,
+  MatTreeModule,
 ];
 
 

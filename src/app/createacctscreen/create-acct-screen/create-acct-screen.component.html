@@ -3,12 +3,12 @@
         <h1>Create Account</h1>
     </mat-label>
 
-    <div class="createAcctDiv">
-        <mat-form-field class="mainPageFormField" appearance="standard">
-        <mat-label>First Name</mat-label>
-        <input matInput placeholder="John" [formControl]="fName">
-        <mat-icon *ngIf="fName.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-        <mat-error *ngIf="fName.invalid">{{getFNameErrorMessage()}}</mat-error>
+<div class="createAcctDiv">
+    <mat-form-field class="mainPageFormField" appearance="standard">
+    <mat-label>First Name</mat-label>
+    <input matInput placeholder="John" [formControl]="fName">
+    <mat-icon *ngIf="fName.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+    <mat-error *ngIf="fName.invalid">{{getFNameErrorMessage()}}</mat-error>
     </mat-form-field>
     <mat-form-field class="mainPageFormField" appearance="standard">
     <mat-label>Last Name</mat-label>
@@ -39,11 +39,18 @@
     </mat-button-toggle-group>
 </div>
 
-    <button class="loginScreenLoginButton" mat-stroked-button color="primary"
-        (click)='createAccount()'
+    <button class="createAcctScreenCreateButton" mat-stroked-button color="primary"
+        (click)='createAccount(true)'
     >
         <mat-label><h4>Create</h4>
         </mat-label>
+    </button>
+
+    <button class="createAcctScreenCancelButton" mat-stroked-button color="primary"
+    (click)="createAccount(false)">
+    <mat-label>
+      <h4>Cancel</h4>
+    </mat-label>
     </button>
 
 </div>

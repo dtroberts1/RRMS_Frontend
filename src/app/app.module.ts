@@ -24,6 +24,10 @@ import { AddRoomComponent } from './homes/add-room/add-room.component';
 import { HomeComponent } from './homes/home/home.component';
 import { AgmCoreModule } from '@agm/core';
 import { AddHomeComponent } from './homes/add-home/add-home.component';
+import { MaterialFileUploadComponent } from './material-file-upload/material-file-upload.component';
+import { DialogDataRRMSDialog } from './dialog-data/dialog-data.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import { OverlayModule } from "@angular/cdk/overlay";
 
 const appRoutes: Routes = [
   { path: '', component: HomesComponent, data: { title: 'Homes' } },
@@ -61,7 +65,9 @@ const appRoutes: Routes = [
     AddRoomComponent,
     HomeComponent,
     HomesComponent,
-    AddHomeComponent
+    AddHomeComponent,
+    MaterialFileUploadComponent,
+    DialogDataRRMSDialog
     ],
   imports: [
     BrowserModule,
@@ -73,12 +79,14 @@ const appRoutes: Routes = [
       appRoutes,
       { useHash: true }
     ),
+    MatDialogModule,
+    OverlayModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDmNBhieCcLQWf4Bk97IWi-0pYujLH-ODU',
       libraries: ['places']
     })
   ],
-  providers: [],
+  providers: [MatDialogModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

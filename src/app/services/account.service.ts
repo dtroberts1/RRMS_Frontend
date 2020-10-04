@@ -27,6 +27,21 @@ export class AccountService{
         );
     }
     */
+    register(user : User){
+      return new Promise((resolve, reject) => {
+        this.http.post<User>(this.regURL, user).subscribe(
+          data => {
+            console.log("Result of register is " + JSON.stringify(data));
+            resolve();
+          },
+          error =>{
+            console.log("error on register: " + JSON.stringify(error));
+            reject(error);
+          }
+        )
+      });
+    }
+
    async login(user: LoginUser){
     let body = `grant_type=password&username=${user.username} &password=${user.password}`;
     console.log("body is " + body);

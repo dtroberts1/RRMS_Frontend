@@ -18,19 +18,26 @@ export class CreateAcctScreenComponent implements OnInit{
     fName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,}')]);
     lName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,}')]);
 
-    createAccount(){
+    createAccount(canCreateAct : boolean){
 // This was working!
-/*
-      this.accountService.register({
-        Email : this.email.value,
-        Password : this.password.value,
-        FName : this.fName.value,
-        LName : this.lName.value,
-        ConfirmPassword : this.password.value
-      }).subscribe();
-
-      this.notifyFromCreateAcct.emit("createAcct");
-      */
+      console.log("canCreateAcct is " + canCreateAct);
+      if (canCreateAct == false){
+        this.notifyFromCreateAcct.emit("closeCreateAcctWindow");
+      }
+      if (canCreateAct == true){
+        this.accountService.register({
+          Email : this.email.value,
+          Password : this.password.value,
+          FName : this.fName.value,
+          LName : this.lName.value,
+          ConfirmPassword : this.password.value
+        }).then(() =>{
+          this.notifyFromCreateAcct.emit("createAcct");
+        }).catch((err) => {
+          console.log("err: " + err);
+        });
+  
+      }
     }
 
     getFNameErrorMessage(){

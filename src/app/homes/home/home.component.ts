@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("in home: " + this.myHome);
-    console.log("image path is : " + this.myHome.homeImagePath);
+    console.log("image path is : " + this.myHome?.homeImagePath);
 
   }
 

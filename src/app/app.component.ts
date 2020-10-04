@@ -8,6 +8,7 @@ import {AccountService} from './services/account.service';
 })
 export class AppComponent implements OnInit{
   title = 'RRMSWebapp';
+  loginLogout = "Login";
   showLoginScreen: boolean = false;
   showCreateAcctScreen: boolean = false;
   showCreateAcctEmailConfScreen: boolean = false;
@@ -20,10 +21,15 @@ export class AppComponent implements OnInit{
   }
   
   onNotifyFromCreateAcct(message: string): void{
-    console.log("updating state of creatacct email conf");
-    console.log("before rendering, email is " + this.email.value);
-    this.showCreateAcctScreen = !this.showCreateAcctScreen;
-    this.showCreateAcctEmailConfScreen = !this.showCreateAcctEmailConfScreen;
+    if (message == "closeCreateAcctWindow"){
+      this.showCreateAcctScreen = !this.showCreateAcctScreen;
+    }
+    else{
+      console.log("updating state of creatacct email conf");
+      console.log("before rendering, email is " + this.email.value);
+      this.showCreateAcctScreen = !this.showCreateAcctScreen;
+      this.showCreateAcctEmailConfScreen = !this.showCreateAcctEmailConfScreen;
+    }
   }
 
   async onNotifyFromLogin(msgFromLogin: string): Promise<void>{
@@ -35,14 +41,17 @@ export class AppComponent implements OnInit{
       console.log("Login successful in app.component");
       this.showDashboard = !this.showDashboard;
     }
-}
+  }
   toggleDashboard(): void{
     this.showDashboard = !this.showDashboard;
   }
   toggleLoginScreen(): void{
     if (this.showDashboard)
     { // First close dashboard if it's opened.
+      // Clear Token
+      localStorage.clear();
       this.showDashboard = !this.showDashboard;
+
     }
     this.showLoginScreen = !this.showLoginScreen;
   }

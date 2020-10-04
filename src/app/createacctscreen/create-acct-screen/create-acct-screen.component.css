@@ -1,12 +1,23 @@
-.loginScreenLoginButton{
+.createAcctScreenCreateButton{
     vertical-align:bottom;
-    top:90%;
+    top:84%;
     color:blue;
     position:absolute;
     height:8%;
     left:40%;
     background-color:#ddcd9d;
 }
+
+.createAcctScreenCancelButton{
+  vertical-align:bottom;
+  top:84%;
+  color:blue;
+  position:absolute;
+  height:8%;
+  left:58%;
+  background-color:#ddcd9d;
+}
+
 .loginScreenOuter{
     height:100%;
     width:100%;

@@ -15,8 +15,15 @@
         <mat-error *ngIf="password.invalid">{{getPasswordErrorMessage()}}</mat-error>
       </mat-form-field>
 <button class="loginScreenLoginButton" mat-stroked-button color="primary"
-      (click)="notifyParentClicked()"
->
-  <mat-label><h4>Login</h4>
+      (click)="notifyParentClicked('attemptLogin')"
+>  
+  <mat-label>
+    <h4>Login</h4>
   </mat-label>
+</button>
+<button class="loginCloseButton" mat-stroked-button color="primary"
+      (click)="notifyParentClicked('closeLoginDialog')">
+      <mat-label>
+        <h4>Cancel</h4>
+      </mat-label>
 </button>

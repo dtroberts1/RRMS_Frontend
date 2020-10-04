@@ -14,8 +14,6 @@ simpleArg: string;
    }
 
   ngOnInit(): void {
-/*
-    this.homes = [];
     this.homes = [{
       summary: "This is my house",
       addressStreet1: "47725 W 1st St",
@@ -73,7 +71,7 @@ simpleArg: string;
         }
       ]
     },
-    ]*/
+    ]
 
     console.log(this.homes);
   }
