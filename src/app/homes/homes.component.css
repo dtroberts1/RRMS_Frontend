@@ -18,4 +18,17 @@
   /*margin-left:25%;*/
   width:60%;
   height:80%;
+  overflow:auto;
+
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.homesUiView::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.homesUiView {
+  -ms-overflow-style: none;  
+  scrollbar-width: none;  
 }

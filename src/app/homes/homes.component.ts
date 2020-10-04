@@ -14,6 +14,8 @@ simpleArg: string;
    }
 
   ngOnInit(): void {
+/*
+    this.homes = [];
     this.homes = [{
       summary: "This is my house",
       addressStreet1: "47725 W 1st St",
@@ -61,7 +63,7 @@ simpleArg: string;
       addressZipCode: "24222",
       averageRate: 1,
       nbrRooms: 4,
-      homeImagePath: "../../assets/secondhouse.jpg",
+      homeImagePath: "../../assets/thirdhouse.jpg",
       nickname: "My Other Beautiful home",
       tenants: [
         {
@@ -71,7 +73,18 @@ simpleArg: string;
         }
       ]
     },
-    ]
+    ]*/
+
     console.log(this.homes);
+  }
+  getHomesCount(): number{
+    let myCount;
+    if (this.homes == null)
+      myCount = 0;
+    else{
+      myCount = (<any>this?.homes).length;
+    }
+    console.log(`myCount: ${myCount}`);
+    return myCount;
   }
 }

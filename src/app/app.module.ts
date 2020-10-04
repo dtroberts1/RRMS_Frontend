@@ -23,20 +23,22 @@ import { RoomComponent } from './homes/room/room.component';
 import { AddRoomComponent } from './homes/add-room/add-room.component';
 import { HomeComponent } from './homes/home/home.component';
 import { AgmCoreModule } from '@agm/core';
+import { AddHomeComponent } from './homes/add-home/add-home.component';
 
 const appRoutes: Routes = [
-  { path: '', component: HomesComponent, data: { title: 'Homes Component' } },
-  { path: 'homes', component: HomesComponent, data: { title: 'Homes Component' } },
-  { path: 'tenants', component: TenantsComponent, data: { title: 'Tenants Component' } },
-  { path: 'billing', component: BillingComponent, data: { title: 'Billing Component' } },
-  { path: 'backgroundchecks', component: BackgroundChecksComponent, data: { title: 'Background Checks Component' } },
-  { path: 'prospects', component: ProspectsComponent, data: { title: 'Prospects Component' } },
-  { path: 'sales', component: SalesComponent, data: { title: 'Sales Component' } },
-  { path: 'marketing', component: MarketingComponent, data: { title: 'Marketing Component' } },
-  { path: 'settings', component: SettingsComponent, data: { title: 'Settings Component' } },
-  { path: 'homes/home', component: HomeComponent, data: { title: 'Home Component' } },
-  { path: 'homes/room', component: RoomComponent, data: { title: 'Rooms Component' } },
-  { path: 'homes/addroom', component: AddRoomComponent, data: { title: 'Add Room Component' } },
+  { path: '', component: HomesComponent, data: { title: 'Homes' } },
+  { path: 'homes', component: HomesComponent, data: { title: 'Homes' } },
+  { path: 'tenants', component: TenantsComponent, data: { title: 'Tenants' } },
+  { path: 'billing', component: BillingComponent, data: { title: 'Billing' } },
+  { path: 'backgroundchecks', component: BackgroundChecksComponent, data: { title: 'Background Checks' } },
+  { path: 'prospects', component: ProspectsComponent, data: { title: 'Prospects' } },
+  { path: 'sales', component: SalesComponent, data: { title: 'Sales' } },
+  { path: 'marketing', component: MarketingComponent, data: { title: 'Marketing' } },
+  { path: 'settings', component: SettingsComponent, data: { title: 'Settings' } },
+  { path: 'homes/home', component: HomeComponent, data: { title: 'Home' } },
+  { path: 'homes/addhome', component: AddHomeComponent, data: { title: 'Add Home' } },
+  { path: 'homes/room', component: RoomComponent, data: { title: 'Rooms' } },
+  { path: 'homes/addroom', component: AddRoomComponent, data: { title: 'Add Room' } },
 
 ];
 @NgModule({
@@ -58,7 +60,8 @@ const appRoutes: Routes = [
     RoomComponent,
     AddRoomComponent,
     HomeComponent,
-    HomesComponent
+    HomesComponent,
+    AddHomeComponent
     ],
   imports: [
     BrowserModule,
