@@ -1,1 +1,89 @@
-<p>add-home works!</p>
+<div class="addHomeContainer">
+    <div class="addHomeUiView">
+        <mat-form-field  appearance="standard">
+        <mat-label>Home Name</mat-label>
+        <input matInput placeholder="MyHome" [formControl]="nickname">
+        <mat-icon *ngIf="nickname.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+        <mat-error *ngIf="nickname.invalid">{{getInputErrorMessage(nickname)}}</mat-error>
+        </mat-form-field>
+        <br />
+        <mat-form-field appearance="standard">
+        <mat-label>Summary</mat-label>
+        <input matInput placeholder="This home is located in a beautiful, safe community, next to all the shopping malls" 
+        [formControl]="summary">
+        <mat-icon *ngIf="summary.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+        <mat-error *ngIf="summary.invalid">{{getInputErrorMessage(summary)}}</mat-error>
+        </mat-form-field>
+        <br />
+        <mat-form-field appearance="standard">
+            <mat-label>Street Address 1</mat-label>
+            <input matInput placeholder="This home is located in a beautiful, safe community, next to all the shopping malls" 
+            [formControl]="addressStreet1">
+            <mat-icon *ngIf="addressStreet1.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+            <mat-error *ngIf="addressStreet1.invalid">{{getInputErrorMessage(addressStreet1)}}</mat-error>
+            </mat-form-field>
+        <br />
+        <mat-form-field appearance="standard">
+            <mat-label>Street Address 2</mat-label>
+            <input matInput placeholder="This home is located in a beautiful, safe community, next to all the shopping malls" 
+            [formControl]="addressStreet2">
+            <mat-icon *ngIf="addressStreet2.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+            <mat-error *ngIf="addressStreet2.invalid">{{getInputErrorMessage(addressStreet2)}}</mat-error>
+            </mat-form-field>
+        <br />    
+        <mat-form-field appearance="standard">
+            <mat-label>City</mat-label>
+            <input matInput placeholder="This home is located in a beautiful, safe community, next to all the shopping malls" 
+            [formControl]="addressCity">
+            <mat-icon *ngIf="addressCity.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+            <mat-error *ngIf="addressCity.invalid">{{getInputErrorMessage(addressCity)}}</mat-error>
+            </mat-form-field>
+        <br /> 
+        <mat-form-field appearance="standard">
+            <mat-label>State</mat-label>
+            <input matInput placeholder="This home is located in a beautiful, safe community, next to all the shopping malls" 
+            [formControl]="addressState">
+            <mat-icon *ngIf="addressState.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+            <mat-error *ngIf="addressState.invalid">{{getInputErrorMessage(addressState)}}</mat-error>
+            </mat-form-field>
+        <br /> 
+        <mat-form-field appearance="standard">
+            <mat-label>Zipcode</mat-label>
+            <input matInput placeholder="This home is located in a beautiful, safe community, next to all the shopping malls" 
+            [formControl]="addressZipCode">
+            <mat-icon *ngIf="addressZipCode.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+            <mat-error *ngIf="addressZipCode.invalid">{{getInputErrorMessage(addressZipCode)}}</mat-error>
+            </mat-form-field>
+            <br /> 
+            <button mat-stroked-button color="primary">
+                Submit
+            </button>
+        <br /> 
+    </div>
+    <div class="browseImage">
+        <img [src]="homeImagePath"/>
+        <br />
+        <button mat-stroked-button color="primary">
+            Browse for image
+        </button>
+    </div>
+            <!--
+
+      addressStreet1: "47725 W 1st St",
+      addressStreet2: "g",
+      addressCity: "Oakridge",
+      addressState: "OR",
+      addressZipCode: "97463",
+      averageRate: 1,
+      nbrRooms: 4,
+      homeImagePath: "../../assets/anotherhomepic.jpg",
+      nickname: "My Beautiful home",
+      tenants: [
+        {
+          firstName: "John",
+          lastName: "Doe",
+          midInit: "E"
+        }
+      ]
+            -->
+</div>

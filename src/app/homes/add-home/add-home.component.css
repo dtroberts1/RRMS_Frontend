@@ -1,0 +1,39 @@
+.addHomeContainer{
+    display: flex;
+    border-width:5px;
+    border-color:blue;
+    border-style:solid;
+    
+    width:100%;
+    height:80%;
+    align-items: center;
+    justify-content: center;
+}
+
+.addHomeUiView{
+    border-width:5px;
+    border-color:orange;
+    border-style:solid;
+    /*margin-left:25%;*/
+    width:27%;
+    height:90%;
+    top:10%;
+    text-align: center;
+    float:left;
+    overflow:auto;
+  }
+
+  .browseImage{
+      float:right;
+      top:10%;
+      right:0;
+        height:90%;
+
+      border-width:5px;
+      border-color:purple;
+      border-style:solid;
+  }
+
+  img{
+    height:210px;
+  }
