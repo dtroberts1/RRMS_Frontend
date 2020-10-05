@@ -4,6 +4,7 @@ import {Observable, throwError} from 'rxjs';
 import {tap, catchError} from 'rxjs/operators';
 import {User, LoginUser} from '../interfaces/User'
 import {AToken} from '../interfaces/Token';
+import { HomesService } from './homes.service';
 
 
 @Injectable({
@@ -17,7 +18,7 @@ export class AccountService{
     private tokenURL = 'http://localhost:64097/token';
 
 
-    constructor(private http: HttpClient){}
+    constructor(private http: HttpClient, private homesService: HomesService){}
     /*
     getAccounts() : Observable<any[]>{
         // IAccount -- set this up as well as observable
@@ -57,6 +58,7 @@ export class AccountService{
         .post<AToken>(this.tokenURL, body.toString(), options).subscribe(
             data => {
                 localStorage.setItem('user', JSON.stringify(data.access_token));
+                this.homesService.fetchHomes();
                   // If token is valid, login
                   console.log("localStorage is " + JSON.parse(localStorage.getItem('user')));
                   resolve();

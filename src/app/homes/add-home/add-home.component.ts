@@ -106,7 +106,7 @@ export class AddHomeComponent implements OnInit {
       if (res == true){
         console.log("inputs are valid");
         console.log("attempting to save home");
-        this.homesService.login(
+        this.homesService.saveHome(
         {
           homeImagePath : this.homeImagePath,
           nickname : this.nickname.value,

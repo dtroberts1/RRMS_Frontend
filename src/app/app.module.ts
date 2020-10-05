@@ -39,7 +39,7 @@ const appRoutes: Routes = [
   { path: 'sales', component: SalesComponent, data: { title: 'Sales' } },
   { path: 'marketing', component: MarketingComponent, data: { title: 'Marketing' } },
   { path: 'settings', component: SettingsComponent, data: { title: 'Settings' } },
-  { path: 'homes/home', component: HomeComponent, data: { title: 'Home' } },
+  { path: 'homes/home/:id', component: HomeComponent, data: { title: 'Home' } },
   { path: 'homes/addhome', component: AddHomeComponent, data: { title: 'Add Home' } },
   { path: 'homes/room', component: RoomComponent, data: { title: 'Rooms' } },
   { path: 'homes/addroom', component: AddRoomComponent, data: { title: 'Add Room' } },

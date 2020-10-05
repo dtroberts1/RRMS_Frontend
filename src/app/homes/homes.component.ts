@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import{IHome} from '../interfaces/Homes';
+import {HomesService} from '../services/homes.service';
+
 @Component({
   selector: 'app-homes',
   templateUrl: './homes.component.html',
@@ -9,71 +11,15 @@ export class HomesComponent implements OnInit {
 //  tenants : Tenants;
 homes: Iterable<IHome>;
 simpleArg: string;
-  constructor() {
+  constructor(private homeService: HomesService) {
+    this.homes = this.homeService.getHomes(); 
+    console.log("In homes component, homes is " + JSON.stringify(this.homes));
+    console.log(this.homes);
     this.simpleArg = "somearg";
    }
 
-  ngOnInit(): void {
-    this.homes = [{
-      summary: "This is my house",
-      addressStreet1: "47725 W 1st St",
-      addressStreet2: "g",
-      addressCity: "Oakridge",
-      addressState: "OR",
-      addressZipCode: "97463",
-      averageRate: 1,
-      nbrRooms: 4,
-      homeImagePath: "../../assets/anotherhomepic.jpg",
-      nickname: "My Beautiful home",
-      tenants: [
-        {
-          firstName: "John",
-          lastName: "Doe",
-          midInit: "E"
-        }
-      ]
-    },
-    {
-      summary: "This is my Second house",
-      addressStreet1: "3537 Egret Dr",
-      addressStreet2: "",
-      addressCity: "Melbourne",
-      addressState: "FL",
-      addressZipCode: "32901",
-      averageRate: 1,
-      nbrRooms: 4,
-      homeImagePath: "../../assets/secondhouse.jpg",
-      nickname: "My Other Beautiful home",
-      tenants: [
-        {
-          firstName: "John",
-          lastName: "Doe",
-          midInit: "E"
-        }
-      ]
-    },
-    {
-      summary: "This is my Third house",
-      addressStreet1: "1212 Egret Dr",
-      addressStreet2: "",
-      addressCity: "San Francisco",
-      addressState: "CA",
-      addressZipCode: "24222",
-      averageRate: 1,
-      nbrRooms: 4,
-      homeImagePath: "../../assets/thirdhouse.jpg",
-      nickname: "My Other Beautiful home",
-      tenants: [
-        {
-          firstName: "John",
-          lastName: "Doe",
-          midInit: "E"
-        }
-      ]
-    },
-    ]
+   ngOnInit() {
 
-    console.log(this.homes);
   }
   getHomesCount(): number{
     let myCount;
@@ -82,7 +28,7 @@ simpleArg: string;
     else{
       myCount = (<any>this?.homes).length;
     }
-    console.log(`myCount: ${myCount}`);
+    console.log("homes count is " + myCount);
     return myCount;
   }
 }

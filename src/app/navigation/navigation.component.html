@@ -16,7 +16,9 @@
                 <h3 matSubHeader><a routerLink='homes'>Homes</a></h3>
               </mat-panel-title>
             </mat-expansion-panel-header>
-              <a mat-list-item routerLink='/homes/home'>Home #1</a>
+            <li style="list-style: none;" *ngFor="let currHome of homes; let i = index">
+              <a mat-list-item routerLink='/homes/home/{{i + 1}}'>Home {{i + 1}}</a>
+            </li>
               <a mat-list-item routerLink='/homes/addhome'>&lt;Add Home&gt;</a>
           </mat-expansion-panel>
           <mat-expansion-panel hideToggle>
