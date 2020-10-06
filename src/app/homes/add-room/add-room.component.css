@@ -1,0 +1,37 @@
+.addRoomContainer{
+    display: flex;
+    border-width:5px;
+    border-color:blue;
+    border-style:solid;
+    
+    width:100%;
+    height:80%;
+    align-items: center;
+    justify-content: center;
+}
+
+.addRoomUiView{
+    border-width:5px;
+    border-color:orange;
+    border-style:solid;
+    /*margin-left:25%;*/
+    width:40%;
+    height:90%;
+    top:10%;
+    text-align: center;
+    /*float:left; */
+    overflow:auto;
+  }
+  .example-section {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+  }
+  
+  .example-margin {
+    margin: 2px 8px auto 0 !important;
+  }
+  ::ng-deep .mat-checkbox .mat-checkbox-frame {
+    background-color: #69F0AE;
+  }

@@ -13,6 +13,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import { CdkTableModule } from "@angular/cdk/table";
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { MatTreeModule } from "@angular/material/tree";
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 const MaterialComponents = [
   MatButtonModule,
@@ -29,6 +30,7 @@ const MaterialComponents = [
   CdkTableModule,
   DragDropModule,
   MatTreeModule,
+  MatCheckboxModule
 ];
 
 

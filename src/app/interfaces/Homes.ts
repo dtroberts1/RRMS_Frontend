@@ -1,4 +1,7 @@
+import { IRoom } from './Rooms';
+
 export interface IHome{
+    id:number,
     nickname: string,
     summary: string,
     addressStreet1: string,
@@ -7,9 +10,9 @@ export interface IHome{
     addressState: string,
     addressZipCode: string,
     averageRate: number,
-    nbrRooms: number,
     tenants: Iterable<ITenant>,
     homeImagePath: string;
+    rooms: Iterable<IRoom>
 }
 
 

@@ -22,6 +22,7 @@ export class AddHomeComponent implements OnInit {
   addressState = new FormControl('', [Validators.required, Validators.pattern('^((A[LKZR])|(C[AOT])|(D[EC])|(FL)|(GA)|(HI)|(I[DLNA])|(K[SY])|(LA)|(M[EDAINSOT])|(N[EVHJMYCD])|(O[HKR])|(PA)|(RI)|(S[CD])|(T[NX])|(UT)|(V[TA])|(W[AVIY]))$')]);
   addressZipCode = new FormControl('', [Validators.required, Validators.pattern('^[0-9]{5}(?:-[0-9]{4})?$')]);
   homesService: HomesService;
+  home: IHome; // Used only for navigating to homes/addroom
 
   constructor(
     homesService: HomesService, 
@@ -109,6 +110,7 @@ export class AddHomeComponent implements OnInit {
         this.homesService.saveHome(
         {
           homeImagePath : this.homeImagePath,
+          id : -1,
           nickname : this.nickname.value,
           summary : this.summary.value,
           addressStreet1 : this.addressStreet1.value,
@@ -117,11 +119,12 @@ export class AddHomeComponent implements OnInit {
           addressState : this.addressState.value,
           addressZipCode : this.addressZipCode.value,
           tenants : [],
+          rooms : [],
           averageRate : 0,
-          nbrRooms : 0
           }
-          ).then(() => {
+          ).then((home:IHome) => {
             console.log("Service call complete");  
+            this.home = home;
             this.dialog.open(DialogDataRRMSDialog, {
               data: {
                 inError: false,
@@ -129,10 +132,10 @@ export class AddHomeComponent implements OnInit {
                 contentSummary: "This home has been Saved! Would you like to proceed to add a rental room for this home?",
                 errorItems: []
               }
-            }).afterClosed().subscribe(result => {
+            }).afterClosed().subscribe((addRooms: boolean)=> {
               console.log("prompt has closed");
-              if (result.addRooms == true ){
-                this.router.navigate(['homes/addroom']);
+              if (addRooms == true ){
+                this.router.navigate([`homes/addroom/${this.home.id}/${this.home.nickname}/${(<any[]>this.home.rooms).length}`]);
               }
             });
 

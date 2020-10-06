@@ -18,15 +18,6 @@ export class HomeComponent implements OnInit {
   constructor(private route: ActivatedRoute, private homesService: HomesService) { }
 
   ngOnInit(): void {
-    /*
-    let selectedHomeIndex = +this.route.snapshot.paramMap.get('id') - 1;
-    let myHomes : Iterable<IHome> = this.homesService.getHomes();
-    console.log("In home, myHomes is " + JSON.stringify(myHomes));
-    this.myHome = myHomes[selectedHomeIndex];
-    
-    console.log("in home: " + this.myHome);
-    console.log("image path is : " + this.myHome?.homeImagePath);
-    */
     if (this.route.queryParams != null){
       this.route.queryParams.subscribe(queryParams => {
         // do something with the query params

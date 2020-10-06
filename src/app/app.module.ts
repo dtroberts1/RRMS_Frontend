@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -42,7 +43,7 @@ const appRoutes: Routes = [
   { path: 'homes/home/:id', component: HomeComponent, data: { title: 'Home' } },
   { path: 'homes/addhome', component: AddHomeComponent, data: { title: 'Add Home' } },
   { path: 'homes/room', component: RoomComponent, data: { title: 'Rooms' } },
-  { path: 'homes/addroom', component: AddRoomComponent, data: { title: 'Add Room' } },
+  { path: 'homes/addroom/:id/:nickname/:nbrRooms', component: AddRoomComponent, data: { title: 'Add Room' } },
 
 ];
 @NgModule({
@@ -73,6 +74,7 @@ const appRoutes: Routes = [
     BrowserModule,
     BrowserAnimationsModule,
     CommonModule,
+    FormsModule,
     MaterialModule,
     HttpClientModule,
     RouterModule.forRoot(

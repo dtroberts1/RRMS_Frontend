@@ -1,1 +1,33 @@
-<p>add-room works!</p>
+<div class="addRoomContainer">
+    <div class="addRoomUiView">
+        <h1>{{nickname}}</h1>
+        <h2>Room#{{nbrRooms + 1}}</h2>
+        <mat-form-field appearance="standard">
+            <h4>Dimensions
+            <input matInput style="width:2em" placeholder="10" maxlength="3" [formControl]="dimension1">
+            By
+            <input matInput style="width:2em" placeholder="10" maxlength="3" [formControl]="dimension2">
+            </h4>
+            
+            <mat-checkbox class="example-margin" [(ngModel)]="isMaster">Is Master</mat-checkbox>
+            <br />
+            <mat-checkbox class="example-margin" [(ngModel)]="hasCloset">Has Closet</mat-checkbox>
+            <br />
+            <mat-checkbox class="example-margin" [(ngModel)]="hasCeilingFan">Ceiling Fan</mat-checkbox>
+            <br />
+            <mat-checkbox  class="example-margin" [(ngModel)]="hasPrivateBath">Private Bath</mat-checkbox>
+            <br />
+            <br />
+
+            Monthly Rate
+            <input required maxlength="4" matInput placeholder="$500" 
+            [formControl]="monthlyRateInput">
+            <mat-icon *ngIf="monthlyRateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+            <mat-error *ngIf="monthlyRateInput.invalid">{{getInputErrorMessage(monthlyRateInput)}}</mat-error>
+        </mat-form-field>
+        <br /> 
+        <button mat-stroked-button color="primary" (click)="saveRoom()">
+            Submit
+        </button>
+    </div>
+  </div>

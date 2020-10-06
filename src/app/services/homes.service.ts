@@ -31,10 +31,10 @@ export class HomesService{
         if (this.currToken != null){
             console.log("Sending the following to the API: " + JSON.stringify(home));
             return new Promise((resolve, reject) => { this.http
-                .post<AToken>(this.tokenURL, home, options).subscribe(
-                    data => {
-                        // Get some logic for response
-                        resolve();
+                .post<IHome>(this.tokenURL, home, options).subscribe(
+                    home => {
+                        // Get some logic for response (should just return id back for newly added home)
+                        resolve(home);
                     },
                     error => {
                     console.log("Home post to API was unsuccessful.");
@@ -46,15 +46,17 @@ export class HomesService{
         }
     }
    fetchHomes(){
+     // Gets homes from database and stores locally
+     // This must be called anytime homes are modified or saved in the database. 
        this.homes = [{
         summary: "This is my house",
+        id : -1,
         addressStreet1: "47725 W 1st St",
         addressStreet2: "g",
         addressCity: "Oakridge",
         addressState: "OR",
         addressZipCode: "97463",
         averageRate: 1,
-        nbrRooms: 4,
         homeImagePath: "../../assets/anotherhomepic.jpg",
         nickname: "My Beautiful home",
         tenants: [
@@ -63,17 +65,18 @@ export class HomesService{
             lastName: "Doe",
             midInit: "E"
           }
-        ]
+        ],
+        rooms: []
       },
       {
         summary: "This is my Second house",
+        id : -1,
         addressStreet1: "3537 Egret Dr",
         addressStreet2: "",
         addressCity: "Melbourne",
         addressState: "FL",
         addressZipCode: "32901",
         averageRate: 1,
-        nbrRooms: 4,
         homeImagePath: "../../assets/secondhouse.jpg",
         nickname: "My Other Beautiful home",
         tenants: [
@@ -82,17 +85,18 @@ export class HomesService{
             lastName: "Doe",
             midInit: "E"
           }
-        ]
+        ],
+        rooms: []
       },
       {
         summary: "This is my Third house",
+        id : -1,
         addressStreet1: "1212 Egret Dr",
         addressStreet2: "",
         addressCity: "San Francisco",
         addressState: "CA",
         addressZipCode: "24222",
         averageRate: 1,
-        nbrRooms: 4,
         homeImagePath: "../../assets/thirdhouse.jpg",
         nickname: "My Other Beautiful home",
         tenants: [
@@ -101,7 +105,8 @@ export class HomesService{
             lastName: "Doe",
             midInit: "E"
           }
-        ]
+        ],
+        rooms: []
       },
       ];
    }
