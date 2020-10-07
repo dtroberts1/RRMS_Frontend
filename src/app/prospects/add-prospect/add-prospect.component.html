@@ -37,10 +37,21 @@
                     <mat-error *ngIf="ssn.invalid">{{getInputErrorMessage(ssn)}}</mat-error>
                 </mat-form-field>
                 <br />
-            <br /> 
-            <button mat-stroked-button color="primary">
+                <br />
+                    <mat-label>Employers: {{0}}</mat-label>
+                    <button mat-stroked-button color="primary"
+                        style="margin-left:10px;"
+                        (click)="addEmployer()"
+                    >
+                        Add Employer
+                    </button>
+                <br />                
+                <br /> 
+            <button mat-stroked-button color="primary"
+            >
                 Submit
             </button>
-    
+            <br /> 
+
            </div>
        </div>

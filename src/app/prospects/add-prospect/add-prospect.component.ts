@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import {MatDialog} from '@angular/material/dialog';
+import { AddEmployerComponent } from '../add-employer/add-employer.component';
+import {Employer} from '../../interfaces/Employer';
 
 @Component({
   selector: 'app-add-prospect',
@@ -19,10 +22,20 @@ export class AddProspectComponent implements OnInit {
   nickname : string;
   checked : boolean = false;
   nbrRooms : number;
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute,
+    public dialog: MatDialog, 
+    private router: Router,
+    ) { }
 
   ngOnInit(): void {
 
+  }
+  addEmployer(){
+    this.dialog.open(AddEmployerComponent, {
+      data: {}
+    }).afterClosed().subscribe(result => {
+      console.log("In afterClosed(), employer is " + result);
+    });
   }
 
   getInputErrorMessage(inputField){

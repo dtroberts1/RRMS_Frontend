@@ -30,6 +30,7 @@ import { DialogDataRRMSDialog } from './dialog-data/dialog-data.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import { OverlayModule } from "@angular/cdk/overlay";
 import { AddProspectComponent } from './prospects/add-prospect/add-prospect.component';
+import { AddEmployerComponent } from './prospects/add-employer/add-employer.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomesComponent, data: { title: 'Homes' } },
@@ -71,7 +72,8 @@ const appRoutes: Routes = [
     AddHomeComponent,
     MaterialFileUploadComponent,
     DialogDataRRMSDialog,
-    AddProspectComponent
+    AddProspectComponent,
+    AddEmployerComponent
     ],
   imports: [
     BrowserModule,
