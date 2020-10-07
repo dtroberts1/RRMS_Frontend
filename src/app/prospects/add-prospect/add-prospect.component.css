@@ -1,4 +1,4 @@
-.prospectContainer{
+.addProspectContainer{
     display: flex;
     border-width:5px;
     border-color:blue;
@@ -10,7 +10,7 @@
     justify-content: center;
 }
 
-.prospectUiView{
+.addProspectUiView{
     border-width:5px;
     border-color:orange;
     border-style:solid;

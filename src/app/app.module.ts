@@ -29,6 +29,7 @@ import { MaterialFileUploadComponent } from './material-file-upload/material-fil
 import { DialogDataRRMSDialog } from './dialog-data/dialog-data.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import { OverlayModule } from "@angular/cdk/overlay";
+import { AddProspectComponent } from './prospects/add-prospect/add-prospect.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomesComponent, data: { title: 'Homes' } },
@@ -44,6 +45,7 @@ const appRoutes: Routes = [
   { path: 'homes/addhome', component: AddHomeComponent, data: { title: 'Add Home' } },
   { path: 'homes/room', component: RoomComponent, data: { title: 'Rooms' } },
   { path: 'homes/addroom/:id/:nickname/:nbrRooms', component: AddRoomComponent, data: { title: 'Add Room' } },
+  { path: 'prospects/add-prospect', component: AddProspectComponent, data: { title: 'Add Prospect' } },
 
 ];
 @NgModule({
@@ -68,7 +70,8 @@ const appRoutes: Routes = [
     HomesComponent,
     AddHomeComponent,
     MaterialFileUploadComponent,
-    DialogDataRRMSDialog
+    DialogDataRRMSDialog,
+    AddProspectComponent
     ],
   imports: [
     BrowserModule,

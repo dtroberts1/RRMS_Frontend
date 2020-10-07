@@ -10,6 +10,6 @@ export class ProspectsComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-  }
 
+  }
 }

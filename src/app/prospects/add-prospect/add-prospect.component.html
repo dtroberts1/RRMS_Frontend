@@ -1,0 +1,46 @@
+       <div class="addProspectContainer">
+           <div class="addProspectUiView">
+            <h1>Add New Prospect</h1>
+    
+                <mat-form-field appearance="standard">
+                    <mat-label>First Name</mat-label>
+                    <input matInput placeholder="Stacy" required [formControl]="fName">
+                    <mat-icon *ngIf="fName.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error *ngIf="fName.invalid">{{getInputErrorMessage(fName)}}</mat-error>
+                </mat-form-field>
+                <br />
+                <mat-form-field appearance="standard">
+                    <mat-label>Last Name</mat-label>
+                    <input matInput placeholder="Jones" required [formControl]="lName">
+                    <mat-icon *ngIf="lName.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error *ngIf="lName.invalid">{{getInputErrorMessage(lName)}}</mat-error>
+                </mat-form-field>
+                <br />
+                <mat-form-field appearance="standard">
+                    <mat-label>Mid Initial</mat-label>
+                    <input matInput placeholder="T" maxlength="1" required [formControl]="mdInit">
+                    <mat-icon *ngIf="mdInit.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error *ngIf="mdInit.invalid">{{getInputErrorMessage(mdInit)}}</mat-error>
+                </mat-form-field>
+                <br />
+                <mat-form-field appearance="standard">
+                    <mat-label>Email Address</mat-label>
+                    <input matInput placeholder="user@email.com" [formControl]="email" required>
+                    <mat-icon  *ngIf="email.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error *ngIf="email.invalid">{{getInputErrorMessage(email)}}</mat-error>
+                </mat-form-field>
+                <br />
+                <mat-form-field appearance="standard">
+                    <mat-label>SSN</mat-label>
+                    <input matInput placeholder="123-45-6789" [formControl]="ssn" required>
+                    <mat-icon  *ngIf="ssn.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error *ngIf="ssn.invalid">{{getInputErrorMessage(ssn)}}</mat-error>
+                </mat-form-field>
+                <br />
+            <br /> 
+            <button mat-stroked-button color="primary">
+                Submit
+            </button>
+    
+           </div>
+       </div>
