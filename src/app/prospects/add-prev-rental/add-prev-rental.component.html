@@ -1,38 +1,34 @@
 <h1 mat-dialog-title style="color:blue"></h1>
 <div mat-dialog-content>
-<!--
-  current: boolean,
-  salaryType: SalaryType,
-  prospectID: number,
--->
-<h1>Add Employer</h1>
+
+<h1>Add New Previous Address/Landlord</h1>
 
   <mat-form-field appearance="standard">
     <mat-label>First Name</mat-label>
-    <input matInput placeholder="Stacy" required [formControl]="MgrFName">
-    <mat-icon *ngIf="MgrFName.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-    <mat-error *ngIf="MgrFName.invalid">{{getInputErrorMessage(MgrFName)}}</mat-error>
+    <input matInput placeholder="Stacy" required [formControl]="PrevLandlordFName">
+    <mat-icon *ngIf="PrevLandlordFName.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+    <mat-error *ngIf="PrevLandlordFName.invalid">{{getInputErrorMessage(PrevLandlordFName)}}</mat-error>
 </mat-form-field>
 <br />
 <mat-form-field appearance="standard">
     <mat-label>Last Name</mat-label>
-    <input matInput placeholder="Jones" required [formControl]="MgrLName">
-    <mat-icon *ngIf="MgrLName.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-    <mat-error *ngIf="MgrLName.invalid">{{getInputErrorMessage(MgrLName)}}</mat-error>
+    <input matInput placeholder="Jones" required [formControl]="PrevLandlordLName">
+    <mat-icon *ngIf="PrevLandlordLName.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+    <mat-error *ngIf="PrevLandlordLName.invalid">{{getInputErrorMessage(PrevLandlordLName)}}</mat-error>
 </mat-form-field>
 <br />
 <mat-form-field appearance="standard">
     <mat-label>Email Address</mat-label>
-    <input matInput placeholder="michelle@email.com" required [formControl]="MgrEmailAddress">
-    <mat-icon *ngIf="MgrEmailAddress.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-    <mat-error *ngIf="MgrEmailAddress.invalid">{{getInputErrorMessage(MgrEmailAddress)}}</mat-error>
+    <input matInput placeholder="michelle@email.com" required [formControl]="PrevLandlordEmailAddress">
+    <mat-icon *ngIf="PrevLandlordEmailAddress.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+    <mat-error *ngIf="PrevLandlordEmailAddress.invalid">{{getInputErrorMessage(PrevLandlordEmailAddress)}}</mat-error>
 </mat-form-field>
 <br />
 <mat-form-field appearance="standard">
   <mat-label>Phone Number</mat-label>
-  <input matInput placeholder="555-555-4444" required [formControl]="MgrPhoneNumber">
-  <mat-icon *ngIf="MgrPhoneNumber.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-  <mat-error *ngIf="MgrPhoneNumber.invalid">{{getInputErrorMessage(MgrPhoneNumber)}}</mat-error>
+  <input matInput placeholder="555-555-4444" required [formControl]="PrevLandlordPhoneNumber">
+  <mat-icon *ngIf="PrevLandlordPhoneNumber.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+  <mat-error *ngIf="PrevLandlordPhoneNumber.invalid">{{getInputErrorMessage(PrevLandlordPhoneNumber)}}</mat-error>
 </mat-form-field>
 <br /><mat-form-field appearance="standard">
     <mat-label>Street Address (1)</mat-label>
@@ -70,13 +66,6 @@
 </mat-form-field>
 <br />
 <mat-form-field appearance="standard">
-  <mat-label>Job Title</mat-label>
-  <input matInput placeholder="Accountant" [formControl]="prospectJobTitle" required>
-  <mat-icon  *ngIf="prospectJobTitle.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-  <mat-error *ngIf="prospectJobTitle.invalid">{{getInputErrorMessage(prospectJobTitle)}}</mat-error>
-</mat-form-field>
-<br />
-<mat-form-field appearance="standard">
   <mat-label>Start Date</mat-label>
   <input matInput placeholder="01/01/2008" [formControl]="startDate" required>
   <mat-icon  *ngIf="startDate.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
@@ -91,7 +80,7 @@
 </mat-form-field>
 <br />
 <br />
-<label>Current Employer</label>
+<label>Current Address</label>
 <br />
 <mat-radio-group
   aria-labelledby="example-radio-group-label"
@@ -104,19 +93,8 @@
 </mat-radio-group>
 <br />
 <br />
-<label>Salary Type</label>
-<br />
-<mat-radio-group
-  aria-labelledby="example-radio-group-label"
-  class="example-radio-group"
-  [(ngModel)]="salType">
-
-  <mat-radio-button class="example-radio-button" *ngFor="let salType of salaryType" [value]="salType">
-    {{salType}}
-  </mat-radio-button>
-</mat-radio-group>
   <br />
-  <button mat-button (click)="closeEmpDialog()">Close</button>
-  <button mat-button (click)="addEmp()">Add </button>
+  <button mat-button (click)="closeAddRentalDialog()">Close</button>
+  <button mat-button (click)="addPrevRental()">Add </button>
 
 </div>

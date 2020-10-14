@@ -12,7 +12,8 @@
   <span class=headerText id=createAccountText
   (click)='toggleCreateAcctScreen()'
 > 
-  Create Account
+  <span   *ngIf="showDashboard == false"
+  >Create Account</span>
 </span>
 
   <span class=headerText id="loginText"

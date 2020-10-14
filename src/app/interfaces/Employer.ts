@@ -1,9 +1,8 @@
-export interface Employer{
+export interface IEmployer{
     MgrEmailAddress : string;
-    MgrUsername: string;
+    MgrPhoneNumber: string;
     MgrFName : string;
     MgrLName : string;
-    MgrMdInit : string;
     addressStreet1: string,
     addressStreet2: string,
     addressCity: string,

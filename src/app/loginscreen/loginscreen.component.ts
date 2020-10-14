@@ -26,8 +26,8 @@ export class LoginScreenComponent implements OnInit{
         return;
       }
       let result = await this.accountService.login({
-        username : "nedfye@gmail.com", //this.email.value,
-        password : "Password!1",//this.password.value,
+        username : "utfvyhts481@gmail.com", //this.email.value,
+        password : "Sky35t32t@#$T",//this.password.value,
         grant_type : "password"
       }).then((response) => {
        //if (result == 0){

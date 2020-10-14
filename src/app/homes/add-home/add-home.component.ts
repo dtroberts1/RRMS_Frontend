@@ -21,15 +21,13 @@ export class AddHomeComponent implements OnInit {
   addressCity = new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z\u0080-\u024F]+(?:. |-| |')*([1-9a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$")]);
   addressState = new FormControl('', [Validators.required, Validators.pattern('^((A[LKZR])|(C[AOT])|(D[EC])|(FL)|(GA)|(HI)|(I[DLNA])|(K[SY])|(LA)|(M[EDAINSOT])|(N[EVHJMYCD])|(O[HKR])|(PA)|(RI)|(S[CD])|(T[NX])|(UT)|(V[TA])|(W[AVIY]))$')]);
   addressZipCode = new FormControl('', [Validators.required, Validators.pattern('^[0-9]{5}(?:-[0-9]{4})?$')]);
-  homesService: HomesService;
   home: IHome; // Used only for navigating to homes/addroom
 
   constructor(
-    homesService: HomesService, 
+    private homesService: HomesService, 
     public dialog: MatDialog, 
     private route: ActivatedRoute,
     private router: Router) {
-    this.homesService = homesService;
   }
 
   ngOnInit(): void {

@@ -31,6 +31,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { OverlayModule } from "@angular/cdk/overlay";
 import { AddProspectComponent } from './prospects/add-prospect/add-prospect.component';
 import { AddEmployerComponent } from './prospects/add-employer/add-employer.component';
+import { AddPrevRentalComponent } from './prospects/add-prev-rental/add-prev-rental.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomesComponent, data: { title: 'Homes' } },
@@ -73,7 +74,8 @@ const appRoutes: Routes = [
     MaterialFileUploadComponent,
     DialogDataRRMSDialog,
     AddProspectComponent,
-    AddEmployerComponent
+    AddEmployerComponent,
+    AddPrevRentalComponent
     ],
   imports: [
     BrowserModule,

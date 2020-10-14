@@ -17,6 +17,7 @@ export class CreateAcctScreenComponent implements OnInit{
     password = new FormControl('', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')]);
     fName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,}')]);
     lName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,}')]);
+    phoneNumber = new FormControl('', [Validators.required, Validators.pattern(/((\(\d{3}\) ?)|(\d{3}-))?\d{3}-\d{4}/)]);
 
     createAccount(canCreateAct : boolean){
 // This was working!
@@ -53,6 +54,14 @@ export class CreateAcctScreenComponent implements OnInit{
       return 'You must enter a value';
     }
     if (this.lName.hasError('lName')){
+        return "Not a valid name";
+    }
+  }
+  getPhoneNumberErrorMessage(){
+    if (this.phoneNumber.hasError('required')) {
+      return 'You must enter a value';
+    }
+    if (this.phoneNumber.hasError('phoneNumber')){
         return "Not a valid name";
     }
   }

@@ -5,15 +5,16 @@ import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component'
 import {IEmployer, SalaryType} from '../../interfaces/Employer';
 
 @Component({
-  selector: 'app-add-employer',
-  templateUrl: './add-employer.component.html',
-  styleUrls: ['./add-employer.component.css']
+  selector: 'app-add-prev-rental',
+  templateUrl: './add-prev-rental.component.html',
+  styleUrls: ['./add-prev-rental.component.css']
 })
-export class AddEmployerComponent {
-  MgrFName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,30}')]);
-  MgrLName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,30}')]);
-  MgrEmailAddress = new FormControl('', [Validators.required, Validators.email]);
-  MgrPhoneNumber = new FormControl('', [Validators.required, Validators.pattern(/((\(\d{3}\) ?)|(\d{3}-))?\d{3}-\d{4}/)]);
+
+export class AddPrevRentalComponent {
+  PrevLandlordFName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,30}')]);
+  PrevLandlordLName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,30}')]);
+  PrevLandlordEmailAddress = new FormControl('', [Validators.required, Validators.email]);
+  PrevLandlordPhoneNumber = new FormControl('', [Validators.required, Validators.pattern(/((\(\d{3}\) ?)|(\d{3}-))?\d{3}-\d{4}/)]);
   addressStreet1 = new FormControl('', [Validators.required, Validators.pattern(/\d+(\s+\w+\.?){1,}\s+(?:st(?:\.|reet)?|dr(?:\.|ive)?|pl(?:\.|ace)?|ave(?:\.|nue)?|rd(\.?)|road|lane|drive|way|court|plaza|square|run|parkway|point|pike|square|driveway|trace|park|terrace|blvd)+$/i)]);
   addressStreet2 = new FormControl('', [Validators.pattern(/^(APT|APARTMENT|SUITE|STE|UNIT) *(NUMBER|NO|#)? *([0-9A-Z-]+)(.*)$/i)]);
   addressCity = new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z\u0080-\u024F]+(?:. |-| |')*([1-9a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$")]);
@@ -28,14 +29,14 @@ export class AddEmployerComponent {
   currentEmp : boolean = false;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, 
-  public dialogRef: MatDialogRef<AddEmployerComponent>,
+  public dialogRef: MatDialogRef<AddPrevRentalComponent>,
   public dialog: MatDialog, 
 
   ) {
     
     console.log("data in the dialog is " + JSON.stringify(data));
   }
-  closeEmpDialog(){
+  closeAddRentalDialog(){
     this.dialogRef.close(null); // this needs to return a null
 
   }  
@@ -52,16 +53,16 @@ export class AddEmployerComponent {
   async inputsAreValid():Promise<boolean> {
     return new Promise((resolve, reject) => {
       let invalidElements = new Array();
-      if (this.MgrFName.invalid){
+      if (this.PrevLandlordFName.invalid){
         invalidElements.push("First Name");
       }
-      if (this.MgrLName.invalid){
+      if (this.PrevLandlordLName.invalid){
         invalidElements.push("Last Name");
       }
-      if (this.MgrEmailAddress.invalid){
+      if (this.PrevLandlordEmailAddress.invalid){
         invalidElements.push("Email");
       }
-      if (this.MgrPhoneNumber.invalid){
+      if (this.PrevLandlordPhoneNumber.invalid){
         invalidElements.push("Phone Number");
       }
       if (this.addressStreet1.invalid){
@@ -85,6 +86,7 @@ export class AddEmployerComponent {
       
       if (invalidElements.length > 0)
       {
+        console.log("about to send the following invalid items" + JSON.stringify(invalidElements));
 
         this.dialog.open(DialogDataRRMSDialog, {
           data: {
@@ -104,26 +106,23 @@ export class AddEmployerComponent {
     });
   }
   
-  addEmp(){
-    this.inputsAreValid().then((isValid: boolean) => {
+  addPrevRental(){
+    this.inputsAreValid().then((isValid : boolean) => {
       if (isValid == true){
         this.dialogRef.close(
-          // IEmployer
           {
-            MgrEmailAddress : this.MgrEmailAddress.value,
-            MgrFName : this.MgrFName.value,
-            MgrLName : this.MgrLName.value,
-            addressStreet1: this.addressStreet1.value,
-            addressStreet2: this.addressStreet2.value,
-            addressCity: this.addressCity.value,
-            addressState: this.addressState.value,
-            addressZipCode: this.addressZipCode.value,
-            prospectJobTitle: this.prospectJobTitle.value,
-            startDate: this.startDate.value,
-            endDate: this.startDate.value,
-            current: this.currentEmp,
-            salaryType: this.salType,
-            prospectID: -1, // Not created yet
+            PrevLandlordEmailAddress : this.PrevLandlordEmailAddress,
+            PrevLandlordPhoneNumber : this.PrevLandlordPhoneNumber,
+            PrevLandlordFName : this.PrevLandlordFName,
+            PrevLandlordLName : this.PrevLandlordFName,
+            addressStreet1: this.addressStreet1,
+            addressStreet2: this.addressStreet2,
+            addressCity: this.addressCity,
+            addressState: this.addressState,
+            addressZipCode: this.addressZipCode,
+            startDate: this.startDate,
+            endDate: this.endDate,
+            prospectID: -1,
           }
         );
       }

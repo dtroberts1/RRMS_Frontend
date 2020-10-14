@@ -1,9 +1,8 @@
-export interface PreviousRental{
+export interface IPreviousRental{
     PrevLandlordEmailAddress : string;
-    PrevLandlordUsername: string;
+    PrevLandlordPhoneNumber : string;
     PrevLandlordFName : string;
     PrevLandlordLName : string;
-    PrevLandlordMdInit : string;
     addressStreet1: string,
     addressStreet2: string,
     addressCity: string,
