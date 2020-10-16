@@ -54,11 +54,13 @@ export class ProspectService{
         FName : "Jake",
         LName : "Jogers",
         MdInit : "T",
+        PhoneNumber: "541-554-3299",
         employers : [{    
             MgrEmailAddress : "john@hyundai.com",
             MgrPhoneNumber: "385-252-0453",
             MgrFName : "John",
             MgrLName : "Stoner",
+            CompanyName: "Daytona Hyundai",
             addressStreet1: "444 5th St",
             addressStreet2: "",
             addressCity: "Daytona Beach",
@@ -82,11 +84,13 @@ export class ProspectService{
             addressZipCode: "42888",
             startDate: new Date(500000000000),
             endDate: new Date(500000000000),
+            current: true,
             prospectID: -1,
         }],
         SSN: "555-33-2222",
         status: ProspectStatus.pending,
-        prospectID:-1,
+        roomId: -1,
+        prospectId:-1,
       },
       ];
    }

@@ -1,5 +1,6 @@
 export interface IEmployer{
     MgrEmailAddress : string;
+    CompanyName: string;
     MgrPhoneNumber: string;
     MgrFName : string;
     MgrLName : string;

@@ -6,11 +6,13 @@ export interface IProspect{
     FName : string,
     LName : string,
     MdInit : string,
+    PhoneNumber : string,
     employers : Iterable<IEmployer>,
     previousRentals : Iterable<IPreviousRental>,
     SSN: string,
     status: ProspectStatus,
-    prospectID: number,
+    prospectId: number,
+    roomId: number,
 }
 enum ProspectStatus {
     approved = 1,

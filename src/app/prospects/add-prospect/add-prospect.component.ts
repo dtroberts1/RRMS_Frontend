@@ -24,8 +24,7 @@ export class AddProspectComponent implements OnInit {
   phoneNumber = new FormControl('', [Validators.required, Validators.pattern(/((\(\d{3}\) ?)|(\d{3}-))?\d{3}-\d{4}/)]);
   employers : Array<IEmployer> = new Array<IEmployer>();
   prevRentals : Array<IPreviousRental> = new Array<IPreviousRental>();
-
-  homeID : number;
+  roomId : number = -1; // Change this!
   nickname : string;
   checked : boolean = false;
   nbrRooms : number;
@@ -98,7 +97,9 @@ export class AddProspectComponent implements OnInit {
         previousRentals : this.prevRentals,
         SSN: this.ssn.value,
         status: ProspectStatus.pending,
-        prospectID: -1,
+        PhoneNumber: this.phoneNumber.value,
+        roomId: this.roomId,
+        prospectId: -1,
       });
     });
   }

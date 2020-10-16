@@ -10,5 +10,6 @@ export interface IPreviousRental{
     addressZipCode: string,
     startDate: Date,
     endDate: Date,
+    current: boolean,
     prospectID: number,
 }
