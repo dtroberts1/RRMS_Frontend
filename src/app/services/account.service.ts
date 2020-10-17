@@ -32,7 +32,6 @@ export class AccountService{
       return new Promise((resolve, reject) => {
         this.http.post<User>(this.regURL, user).subscribe(
           data => {
-            console.log("Result of register is " + JSON.stringify(data));
             resolve();
           },
           error =>{
@@ -45,7 +44,6 @@ export class AccountService{
 
    async login(user: LoginUser){
     let body = `grant_type=password&username=${user.username} &password=${user.password}`;
-    console.log("body is " + body);
     //new URLSearchParams(); 
     //body.set('user', user.username);
     //body.set('password', user.password);
@@ -60,7 +58,6 @@ export class AccountService{
                 localStorage.setItem('user', JSON.stringify(data.access_token));
                 this.homesService.fetchHomes();
                   // If token is valid, login
-                  console.log("localStorage is " + JSON.parse(localStorage.getItem('user')));
                   resolve();
               },
             error => {

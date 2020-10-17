@@ -33,8 +33,6 @@ export class AddPrevRentalComponent {
   public dialog: MatDialog, 
 
   ) {
-    
-    console.log("data in the dialog is " + JSON.stringify(data));
   }
   closeAddRentalDialog(){
     this.dialogRef.close(null); // this needs to return a null

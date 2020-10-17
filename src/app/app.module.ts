@@ -32,6 +32,8 @@ import { OverlayModule } from "@angular/cdk/overlay";
 import { AddProspectComponent } from './prospects/add-prospect/add-prospect.component';
 import { AddEmployerComponent } from './prospects/add-employer/add-employer.component';
 import { AddPrevRentalComponent } from './prospects/add-prev-rental/add-prev-rental.component';
+import { HomeDetailsComponent } from './homes/home/home-details/home-details.component';
+import { ViewRoomComponent } from './homes/room/view-room/view-room.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomesComponent, data: { title: 'Homes' } },
@@ -44,8 +46,10 @@ const appRoutes: Routes = [
   { path: 'marketing', component: MarketingComponent, data: { title: 'Marketing' } },
   { path: 'settings', component: SettingsComponent, data: { title: 'Settings' } },
   { path: 'homes/home/:id', component: HomeComponent, data: { title: 'Home' } },
+  { path: 'homes/home/:id/:detail', component: HomeComponent, data: { title: 'Home' } },
   { path: 'homes/addhome', component: AddHomeComponent, data: { title: 'Add Home' } },
   { path: 'homes/room', component: RoomComponent, data: { title: 'Rooms' } },
+  { path: 'homes/viewroom/:id', component: ViewRoomComponent, data: { title: 'Add Room' } },
   { path: 'homes/addroom/:id/:nickname/:nbrRooms', component: AddRoomComponent, data: { title: 'Add Room' } },
   { path: 'prospects/add-prospect', component: AddProspectComponent, data: { title: 'Add Prospect' } },
 
@@ -75,7 +79,9 @@ const appRoutes: Routes = [
     DialogDataRRMSDialog,
     AddProspectComponent,
     AddEmployerComponent,
-    AddPrevRentalComponent
+    AddPrevRentalComponent,
+    HomeDetailsComponent,
+    ViewRoomComponent
     ],
   imports: [
     BrowserModule,

@@ -1,8 +1,10 @@
 export interface IRoom{
-    dimensions: string,
-    isMaster: boolean,
-    hasCloset: boolean,
-    hasCeilingFan: boolean,
-    hasPrivateBath: boolean,
-    monthlyRate: boolean,
+    RoomName: string,
+    Dimensions: string,
+    IsMaster: boolean,
+    HasCloset: boolean,
+    HasCeilingFan: boolean,
+    HasPrivateBath: boolean,
+    MonthlyRate: boolean,
+    HomeId,
 }

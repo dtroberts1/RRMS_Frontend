@@ -25,20 +25,16 @@ export class AppComponent implements OnInit{
       this.showCreateAcctScreen = !this.showCreateAcctScreen;
     }
     else{
-      console.log("updating state of creatacct email conf");
-      console.log("before rendering, email is " + this.email.value);
       this.showCreateAcctScreen = !this.showCreateAcctScreen;
       this.showCreateAcctEmailConfScreen = !this.showCreateAcctEmailConfScreen;
     }
   }
 
   async onNotifyFromLogin(msgFromLogin: string): Promise<void>{
-    console.log("message from login screen: " + msgFromLogin);
     this.showLoginScreen = !this.showLoginScreen;
 
     if (msgFromLogin == "loginSuccessful")
     {
-      console.log("Login successful in app.component");
       this.showDashboard = !this.showDashboard;
     }
   }

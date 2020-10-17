@@ -3,7 +3,8 @@ export interface User{
     Password: string;
     FName: string,
     LName: string,
-    ConfirmPassword: string;
+    ConfirmPassword: string,
+    PhoneNumber: string,
 }
 
 export interface LoginUser{

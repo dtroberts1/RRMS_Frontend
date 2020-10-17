@@ -1,7 +1,5 @@
 .homeItem{
-    border-width:5px;
-    border-color:red;
-    border-style:solid;
+
     width:100%;
     text-align: center;
     
@@ -14,6 +12,6 @@
 img{
     height:210px;
 }
-agm-map {
+agm-map,home-details {
     height:210px;
 }

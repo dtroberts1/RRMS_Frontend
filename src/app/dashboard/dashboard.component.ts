@@ -10,6 +10,5 @@ import {AccountService} from '../services/account.service';
 export class Dashboard implements OnInit{
 
   ngOnInit(){
-    console.log("dashboard is opened");
   }
 }

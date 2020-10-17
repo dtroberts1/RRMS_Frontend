@@ -12,14 +12,14 @@ export class HomesComponent implements OnInit {
 homes: Iterable<IHome>;
 simpleArg: string;
   constructor(private homeService: HomesService) {
-    this.homes = this.homeService.getHomes(); 
-    console.log("In homes component, homes is " + JSON.stringify(this.homes));
-    console.log(this.homes);
-    this.simpleArg = "somearg";
+
    }
 
    ngOnInit() {
-
+    this.homeService.getHomes().then((homes : Iterable<IHome>) => {
+      this.homes = homes;
+    });
+    this.simpleArg = "somearg";
   }
   getHomesCount(): number{
     let myCount;
@@ -28,7 +28,9 @@ simpleArg: string;
     else{
       myCount = (<any>this?.homes).length;
     }
-    console.log("homes count is " + myCount);
     return myCount;
   }
+  openSpecificHome(homeId: number){
+
+  } 
 }

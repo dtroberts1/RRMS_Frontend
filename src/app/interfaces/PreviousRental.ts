@@ -3,13 +3,13 @@ export interface IPreviousRental{
     PrevLandlordPhoneNumber : string;
     PrevLandlordFName : string;
     PrevLandlordLName : string;
-    addressStreet1: string,
-    addressStreet2: string,
-    addressCity: string,
-    addressState: string,
-    addressZipCode: string,
-    startDate: Date,
-    endDate: Date,
-    current: boolean,
-    prospectID: number,
+    AddressStreet1: string,
+    AddressStreet2: string,
+    AddressCity: string,
+    AddressState: string,
+    AddressZipCode: string,
+    StartDate: Date,
+    EndDate: Date,
+    Current: boolean,
+    ProspectId: number,
 }

@@ -7,12 +7,12 @@ export interface IProspect{
     LName : string,
     MdInit : string,
     PhoneNumber : string,
-    employers : Iterable<IEmployer>,
-    previousRentals : Iterable<IPreviousRental>,
+    Employers : Iterable<IEmployer>,
+    PreviousRentals : Iterable<IPreviousRental>,
     SSN: string,
-    status: ProspectStatus,
-    prospectId: number,
-    roomId: number,
+    Status: ProspectStatus,
+    ProspectId: number,
+    RoomId: number,
 }
 enum ProspectStatus {
     approved = 1,

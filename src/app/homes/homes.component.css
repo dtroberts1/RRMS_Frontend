@@ -1,9 +1,6 @@
 .homeContainer{
   display: flex;
-    border-width:5px;
-    border-color:blue;
-    border-style:solid;
-    
+   
     width:100%;
     height:80%;
     align-items: center;
@@ -12,14 +9,10 @@
 
 .homesUiView{
   /*display: flex; */
-  border-width:5px;
-  border-color:orange;
-  border-style:solid;
   /*margin-left:25%;*/
   width:60%;
   height:80%;
   overflow:auto;
-
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -31,4 +24,11 @@
 .homesUiView {
   -ms-overflow-style: none;  
   scrollbar-width: none;  
+}
+.appHomeItem:hover{
+  border-color: olive;
+  border-style:solid;
+  border-width:3px;
+  border-radius:4px;
+  cursor: pointer;
 }

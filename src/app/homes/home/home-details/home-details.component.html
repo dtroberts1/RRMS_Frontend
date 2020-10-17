@@ -1,0 +1,22 @@
+<div style="width: 100%;    text-align: center;
+height:100%; border-width:3px;border-color:gray; border-style:solid;">
+<h2 style="text-align: left;">Summary</h2>
+<p style="text-align: left;text-indent: 5%;">
+    {{home.Summary}}<br />
+</p>
+<h2 style="text-align: left;">Address</h2>
+<p style="text-align: left;text-indent: 5%;">
+    {{home?.AddressStreet1}}{{','}}{{home?.AddressStreet2.length > 0 ? ' ' : ''}}
+                    {{home?.AddressStreet2}}{{home?.AddressStreet2.length > 0 ? ', ' : ''}}
+                    {{home?.AddressCity}}{{', '}}{{home?.AddressState}}{{', '}}{{home?.AddressZipCode}}
+</p>
+<h2 style="text-align: left;">Rooms</h2>
+<button id="viewRoomBtn" mat-button (click)="openViewRoomDialog()">View&nbsp;{{roomCount}} Room{{roomCount > 1 ? "s" : ""}}</button>
+<button id="addAdditionalRoomBtn" mat-button (click)="addRoom()">Add New Room</button>
+<br />
+<br />
+<h2 style="text-align: left;">Tenants</h2>
+<button id="viewProspectBtn" mat-button (click)="openViewProspectDialog()">View&nbsp;Tenants</button>
+<button id="addAdditionalProspectBtn" mat-button (click)="addProspect()">Add Tenant</button>
+
+</div>

@@ -11,10 +11,13 @@ export class NavigationComponent implements OnInit {
 
   homes : Iterable<IHome>;
   constructor(private homesService: HomesService) { 
-    this.homes = homesService.getHomes();
+    this.homesService = homesService;
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.homesService.getHomes().then((homes : Iterable<IHome>) => {
+      this.homes = homes;
+    });
   }
 
 }

@@ -20,3 +20,7 @@ li {
 #file-label a {
       cursor: pointer;
 }
+
+#uploadImageBtn:hover{
+      color:green;
+}

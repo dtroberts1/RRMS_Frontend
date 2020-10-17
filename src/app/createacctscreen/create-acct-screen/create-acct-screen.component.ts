@@ -21,7 +21,6 @@ export class CreateAcctScreenComponent implements OnInit{
 
     createAccount(canCreateAct : boolean){
 // This was working!
-      console.log("canCreateAcct is " + canCreateAct);
       if (canCreateAct == false){
         this.notifyFromCreateAcct.emit("closeCreateAcctWindow");
       }
@@ -29,6 +28,7 @@ export class CreateAcctScreenComponent implements OnInit{
         this.accountService.register({
           Email : this.email.value,
           Password : this.password.value,
+          PhoneNumber : this.phoneNumber.value,
           FName : this.fName.value,
           LName : this.lName.value,
           ConfirmPassword : this.password.value

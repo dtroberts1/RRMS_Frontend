@@ -1,16 +1,22 @@
 <div class="homeContainer">
   <div class="homesUiView">
    
-    <li style="list-style: none;" *ngFor="let home of homes">
-      <app-home [myHome]="home">
-      </app-home>
+    <li style="list-style: none;" *ngFor="let home of homes"
+      routerLink='/homes/home/{{home.Id}}'
+    >
+        <div
+          class="appHomeItem"
+        >
+          <app-home 
+          [myHome]="home"
+          >
+        </app-home>
+        </div>
     </li>
 
     <div *ngIf="getHomesCount() == 0" style="border-width:5px; border-color:gray; border-style:solid">
         It appears that no homes exist for your account. Would you like to Add a home?
         <a routerLink='/homes/addhome'>Add Home</a>
     </div>
-    
-
   </div>
 </div>

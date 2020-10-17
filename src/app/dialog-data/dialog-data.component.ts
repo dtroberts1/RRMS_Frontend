@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 export interface DialogData {
   inError: boolean;
   title: string;
@@ -16,18 +16,18 @@ export class DialogDataRRMSDialog {
   title: string;
   contentSummary: string;
   errorItems: Array<any>;
-  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData,
+  public dialogRef: MatDialogRef<DialogDataRRMSDialog>,
+  ) {
     this.inError = data.inError;
     this.title = data.title;
     this.contentSummary = data.contentSummary;
     this.errorItems = data.errorItems;
   }
 
-  closeDialog(){
-    console.log("dialog closing");
-    
+  closeDialog(yes:boolean){
+    this.dialogRef.close(yes);
   }
   ngOnInit(): void {
-    console.log("errorItems" + JSON.stringify(this.errorItems));
   }
 }

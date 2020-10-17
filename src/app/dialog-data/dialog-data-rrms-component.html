@@ -1,11 +1,13 @@
-<h1 mat-dialog-title style="color:blue">{{inError == true ? title : ""}}</h1>
+<h1 mat-dialog-title style="color:blue">{{title}}</h1>
 <div mat-dialog-content>
-  {{inError == true ? contentSummary : ""}}
+  {{contentSummary}}
   <ul *ngFor="let item of errorItems">
     <li style="color:red">
       {{item}}
     </li>
   </ul>
   <br />
-  <button mat-button mat-dialog-close>Close</button>
+  <button mat-button *ngIf="title=='Saved'" (click)="closeDialog(true)">Yes</button>
+
+  <button mat-button (click)="closeDialog(false)">Close</button>
 </div>

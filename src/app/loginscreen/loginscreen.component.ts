@@ -26,17 +26,13 @@ export class LoginScreenComponent implements OnInit{
         return;
       }
       let result = await this.accountService.login({
-        username : "utfvyhts481@gmail.com", //this.email.value,
-        password : "Sky35t32t@#$T",//this.password.value,
+        username : "es1@email.com",// this.email.value,
+        password : 'Sky551er!N#@TG',
         grant_type : "password"
       }).then((response) => {
-       //if (result == 0){
-        console.log("response is " + response);
-        console.log("Login Successful, opening Dashboard...");
         this.notifyFromLogin.emit("loginSuccessful");
     }).catch((error) => {
       console.log("error is " + error);
-      console.log("response from service is error. Invalid login");
       this.notifyFromLogin.emit("loginNotSuccessful");
     });
 
@@ -59,6 +55,5 @@ export class LoginScreenComponent implements OnInit{
         }
     }
   ngOnInit(){
-      console.log("Rendering child");
   }
 }

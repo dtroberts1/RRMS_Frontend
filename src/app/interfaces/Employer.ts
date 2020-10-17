@@ -4,17 +4,17 @@ export interface IEmployer{
     MgrPhoneNumber: string;
     MgrFName : string;
     MgrLName : string;
-    addressStreet1: string,
-    addressStreet2: string,
-    addressCity: string,
-    addressState: string,
-    addressZipCode: string,
-    prospectJobTitle: string,
-    startDate: Date,
-    endDate: Date,
-    current: boolean,
-    salaryType: SalaryType,
-    prospectID: number,
+    AddressStreet1: string,
+    AddressStreet2: string,
+    AddressCity: string,
+    AddressState: string,
+    AddressZipCode: string,
+    ProspectJobTitle: string,
+    StartDate: Date,
+    EndDate: Date,
+    Current: boolean,
+    SalaryType: SalaryType,
+    ProspectId: number,
 }
 
 export enum SalaryType {

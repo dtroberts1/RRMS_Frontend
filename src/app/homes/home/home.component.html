@@ -1,23 +1,29 @@
 <div class="homeItem">
-    <table *ngIf="myHome != null" class="homesTable"style="border-width:5px; border-color:green; border-style:solid; width: 100%; height:50%;">
+    <table *ngIf="myHome != null" class="homesTable"style="width: 100%; height:50%;">
         <tr style="height:8%"> <!-- Home Nickname -->
             <td width="50%">
-                <h2>{{myHome?.nickname}}</h2>
+                <h2>{{myHome?.Nickname}}</h2>
             </td>
             <td width="50%"> <!-- Image -->
-                <h3>{{myHome?.addressStreet1}}{{','}}{{myHome?.addressStreet2.length >0 ? ' ' : ''}}
-                    {{myHome?.addressStreet2}}{{myHome?.addressStreet2.length >0 ? ', ' : ''}}
-                    {{myHome?.addressCity}}{{', '}}{{myHome?.addressState}}{{', '}}{{myHome?.addressZipCode}}</h3>
+                <h3>{{myHome?.AddressStreet1}}{{','}}{{myHome?.AddressStreet2.length > 0 ? ' ' : ''}}
+                    {{myHome?.AddressStreet2}}{{myHome?.AddressStreet2.length > 0 ? ', ' : ''}}
+                    {{myHome?.AddressCity}}{{', '}}{{myHome?.AddressState}}{{', '}}{{myHome?.AddressZipCode}}
+                </h3>
             </td>
         </tr>
         <tr style="height:92%">
             <td width="50%"> <!-- Address -->
-                <img [src]="myHome?.homeImagePath"/>
+                <img [src]="myHome?.HomeImagePath"/>
             </td>
             <td width="50%"> <!-- Map -->
-                <agm-map>
+                <agm-map *ngIf="individualView == false">
                     <agm-marker [latitude]="10.3207886" [longitude]="123.90250049999997"></agm-marker>
                 </agm-map>
+                <app-home-details *ngIf="individualView == true"
+                    [(home)]="myHome"
+                    style="width:100%; height:100%"
+                >
+                </app-home-details>
             </td>
         </tr>
     </table>

@@ -41,12 +41,15 @@ export class ProspectsComponent implements OnInit {
   prospects: Iterable<IProspect>;
   constructor(private prospectService: ProspectService) { 
     this.prospectService.fetchProspects();
-    this.prospects = this.prospectService.getProspects();
-    this.dataSource = Array.from(this.prospects);
+    this.prospectService.getProspects().then((prospects: Iterable<IProspect>) => {
+      this.prospects = prospects;
+      this.dataSource = Array.from(this.prospects);
+    }).catch((err) => {
+      console.log(err);
+    });
   }
 
   ngOnInit(): void {
-    console.log("in prospects component, prospects is " + JSON.stringify(this.prospects));
   }
 
 }

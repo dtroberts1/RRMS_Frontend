@@ -1,0 +1,34 @@
+#viewRoomBtn:hover{
+    background-color:green;
+    color:white;
+}
+#viewRoomBtn{
+    float:left;
+    color:blue;
+    margin-left:5%;
+}
+#viewProspectBtn:hover{
+    background-color:green;
+    color:white;
+}
+#viewProspectBtn{
+    float:left;
+    color:blue;
+    margin-left:5%;
+}
+#addAdditionalRoomBtn:hover{
+    background-color:green;
+    color:white;
+}
+#addAdditionalRoomBtn{
+    color:blue;
+    float:left;
+}
+#addAdditionalProspectBtn{
+    color:blue;
+    float:left;
+}
+#addAdditionalProspectBtn:hover{
+    background-color:green;
+    color:white;
+}

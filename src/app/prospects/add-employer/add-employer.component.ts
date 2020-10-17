@@ -32,8 +32,6 @@ export class AddEmployerComponent {
   public dialog: MatDialog, 
 
   ) {
-    
-    console.log("data in the dialog is " + JSON.stringify(data));
   }
   closeEmpDialog(){
     this.dialogRef.close(null); // this needs to return a null
@@ -94,7 +92,6 @@ export class AddEmployerComponent {
             errorItems: invalidElements
           }
         }).afterClosed().subscribe(result => {
-          console.log("prompt has closed");
           resolve(false);
 
         });

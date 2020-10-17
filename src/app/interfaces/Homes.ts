@@ -1,23 +1,17 @@
 import { IRoom } from './Rooms';
+import {IProspect} from './Prospect';
 
 export interface IHome{
-    id:number,
-    nickname: string,
-    summary: string,
-    addressStreet1: string,
-    addressStreet2: string,
-    addressCity: string,
-    addressState: string,
-    addressZipCode: string,
-    averageRate: number,
-    tenants: Iterable<ITenant>,
-    homeImagePath: string;
-    rooms: Iterable<IRoom>
-}
-
-
-export interface ITenant{
-    firstName: string,
-    lastName: string,
-    midInit: string
+    Id:number,
+    Nickname: string,
+    Summary: string,
+    AddressStreet1: string,
+    AddressStreet2: string,
+    AddressCity: string,
+    AddressState: string,
+    AddressZipCode: string,
+    HomeImagePath: string,
+    Rooms: Iterable<IRoom>,
+    Prospects: Iterable<IProspect>,
+    LandlordId: number,
 }

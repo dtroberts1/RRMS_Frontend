@@ -1,0 +1,78 @@
+<div style="float:left; border-width:3px; border-color:red; border-style:solid; width:25%; height:100%;margin-left:10%">
+  <h1 mat-dialog-title>{{room.RoomName}}</h1>
+  <div class="browseImage">
+    <img [(src)]="homeImagePath"/>
+    <br />
+    <div style="text-align:center">
+        <app-material-file-upload (complete)="onFileComplete($event)"></app-material-file-upload>
+  </div>
+</div>
+</div>
+<div style="float:right; border-width:3px; border-color:blue; border-style:solid; width:50%; height:100%">
+  <h3 class="h3link">Financial History</h3>
+  <table>
+    <tr>
+      <td width="90%">
+        <h3 style="white-space: nowrap;"><label>Monthly Rate:&nbsp;&nbsp;</label>
+          <span *ngIf="editRate == false">{{'$'}}{{room.MonthlyRate}}</span>
+        <span *ngIf="editRate == true">
+          <input  size="5" (blur)="updateInput('rate')" style="white-space: nowrap;" maxlength="5" required placeholder="550" 
+          [formControl]="monthlyRateInput">
+          <mat-icon *ngIf="monthlyRateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+          <mat-error *ngIf="monthlyRateInput.invalid">{{getInputErrorMessage(monthlyRateInput)}}</mat-error>
+        </span>
+          </h3>
+      </td>
+      <td width="10%">
+        <h3 *ngIf="editRate == false" class="editLinks" (click)="changeEditMode('rate')">Edit</h3>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <h3 *ngIf="editDimensions == false"><label>Dimensions:</label>&nbsp;&nbsp;{{room.Dimensions}}</h3>
+      </td>
+      <td>
+        <h3 class="editLinks" (click)="changeEditMode('dimensions')">Edit</h3>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <h3 *ngIf="editMaster == false"><label>Is Master:</label>&nbsp;&nbsp;{{room.IsMaster == true ? "Yes" : "No"}}</h3>
+      </td>
+      <td>
+        <h3 class="editLinks" (click)="changeEditMode('master')">Edit</h3>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <h3 *ngIf="editFan == false"><label>Has Ceiling Fan:</label>&nbsp;&nbsp;{{room.HasCeilingFan == true ? "Yes" : "No"}}</h3>
+      </td>
+      <td>
+        <h3 class="editLinks" (click)="changeEditMode('fan')">Edit</h3>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <h3 *ngIf="editBathroom == false"><label>Has Private Bathroom:</label>&nbsp;&nbsp;{{room.HasPrivateBath == true ? "Yes" : "No"}}</h3>
+      </td>
+      <td>
+        <h3 class="editLinks" (click)="changeEditMode('bathroom')">Edit</h3>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <h3 *ngIf="editCloset == false"><label>Has Closet:</label>&nbsp;&nbsp;{{room.HasCloset == true ? "Yes" : "No"}}</h3>
+      </td>
+      <td>
+        <h3 class="editLinks" (click)="changeEditMode('closet')">Edit</h3>
+      </td>
+    </tr>
+  
+  </table>
+  </div>
+<span style="margin-left:5%;">
+  <button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToPreviousRm()">Previous</button>
+  <button class="lowerViewRoomButtons" mat-button (click)="closeViewRoomDialog()">Close</button>
+  <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="addEmp()">Save</button>
+  <button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextRm()">Next</button>
+</span>

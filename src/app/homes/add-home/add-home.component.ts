@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { IHome, ITenant } from 'src/app/interfaces/Homes';
+import { IHome } from 'src/app/interfaces/Homes';
 import {HomesService} from '../../services/homes.service';
 import {MatDialog} from '@angular/material/dialog';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
@@ -48,7 +48,6 @@ export class AddHomeComponent implements OnInit {
     
   }
   onFileComplete(data: any) {
-    console.log(data); // We just print out data bubbled up from event emitter.
     this.homeImagePath = data.link;
   }
   async inputsAreValid():Promise<boolean> {
@@ -75,7 +74,6 @@ export class AddHomeComponent implements OnInit {
       if (this.addressZipCode.invalid){
         invalidElements.push("addressZipCode");
       }
-      console.log("about to send the following invalid items" + JSON.stringify(invalidElements));
       if (invalidElements.length > 0)
       {
         this.dialog.open(DialogDataRRMSDialog, {
@@ -86,7 +84,6 @@ export class AddHomeComponent implements OnInit {
             errorItems: invalidElements
           }
         }).afterClosed().subscribe(result => {
-          console.log("prompt has closed");
           if (invalidElements.length > 0){
             resolve(false);
           }
@@ -99,29 +96,25 @@ export class AddHomeComponent implements OnInit {
       }
     });
   }
-  saveHome(){
+  createHome(){
     this.inputsAreValid().then((res) => {
-      console.log("res is " + JSON.stringify(res));
       if (res == true){
-        console.log("inputs are valid");
-        console.log("attempting to save home");
-        this.homesService.saveHome(
+        this.homesService.createHome(
         {
-          homeImagePath : this.homeImagePath,
-          id : -1,
-          nickname : this.nickname.value,
-          summary : this.summary.value,
-          addressStreet1 : this.addressStreet1.value,
-          addressStreet2 : this.addressStreet2.value,
-          addressCity : this.addressCity.value,
-          addressState : this.addressState.value,
-          addressZipCode : this.addressZipCode.value,
-          tenants : [],
-          rooms : [],
-          averageRate : 0,
+          HomeImagePath : this.homeImagePath,
+          Id : -1,
+          Nickname : this.nickname.value,
+          Summary : this.summary.value,
+          AddressStreet1 : this.addressStreet1.value,
+          AddressStreet2 : this.addressStreet2.value,
+          AddressCity : this.addressCity.value,
+          AddressState : this.addressState.value,
+          AddressZipCode : this.addressZipCode.value,
+          Rooms : [],
+          Prospects : [],
+          LandlordId : -1,
           }
           ).then((home:IHome) => {
-            console.log("Service call complete");  
             this.home = home;
             this.dialog.open(DialogDataRRMSDialog, {
               data: {
@@ -131,9 +124,8 @@ export class AddHomeComponent implements OnInit {
                 errorItems: []
               }
             }).afterClosed().subscribe((addRooms: boolean)=> {
-              console.log("prompt has closed");
               if (addRooms == true ){
-                this.router.navigate([`homes/addroom/${this.home.id}/${this.home.nickname}/${(<any[]>this.home.rooms).length}`]);
+                this.router.navigate([`homes/addroom/${this.home.Id}/${this.home.Nickname}/${(<any[]>this.home.Rooms).length}`]);
               }
             });
 

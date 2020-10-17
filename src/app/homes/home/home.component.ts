@@ -9,27 +9,41 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  //@Input() myHome: IHome;
-  //myHome: IHome;
   @Input() myHome : IHome;
   latitude: number;
   longitude: number;
   zoom:number;
-  constructor(private route: ActivatedRoute, private homesService: HomesService) { }
+  paramsId = -1;
+  individualView: boolean = false; // If true, it will be displayed by itself in the UI view,
+                           // not as a list item of "Homes"
+  constructor(private route: ActivatedRoute, private homesService: HomesService) { 
+    this.homesService = homesService;
+  }
 
   ngOnInit(): void {
     if (this.route.queryParams != null){
       this.route.queryParams.subscribe(queryParams => {
         // do something with the query params
-        console.log("queryParams: " + queryParams.id);
       });
-      this.route.params.subscribe(routeParams => {
-        if (routeParams.id != undefined)
+      this.route.params.subscribe(params => {
+        if (params.id != undefined)
         {
-          this.myHome = this.homesService.getHomes()[routeParams.id - 1];
+          this.homesService.getHomes().then((homes : Iterable<IHome>) => {
+            this.myHome = homes[params.id - 1];
+            this.individualView = true;
+          }).catch((err) => {
+            console.log("error in getHomes (home Component): " + err);
+            this.individualView = false;
+          });
+        }
+        else{
+          this.individualView = false;
         }
       });
     }
+  }
+  ngOnChanges(){
+    
   }
 
 }

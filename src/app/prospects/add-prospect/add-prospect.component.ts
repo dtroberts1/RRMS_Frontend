@@ -64,7 +64,6 @@ export class AddProspectComponent implements OnInit {
       }
       if (invalidElements.length > 0)
       {
-        console.log("about to send the following invalid items" + JSON.stringify(invalidElements));
 
         this.dialog.open(DialogDataRRMSDialog, {
           data: {
@@ -74,7 +73,6 @@ export class AddProspectComponent implements OnInit {
             errorItems: invalidElements
           }
         }).afterClosed().subscribe(result => {
-          console.log("prompt has closed");
           resolve(false);
 
         });
@@ -86,20 +84,18 @@ export class AddProspectComponent implements OnInit {
 
   addProspect(){
     this.inputsAreValid().then(() =>{
-      console.log("Inputs are valid. sending..");
-
       this.prospectService.saveProspect({
         EmailAddress : this.email.value,
         FName : this.fName.value,
         LName : this.lName.value,
         MdInit : this.mdInit.value,
-        employers : this.employers,
-        previousRentals : this.prevRentals,
+        Employers : this.employers,
+        PreviousRentals : this.prevRentals,
         SSN: this.ssn.value,
-        status: ProspectStatus.pending,
+        Status: ProspectStatus.pending,
         PhoneNumber: this.phoneNumber.value,
-        roomId: this.roomId,
-        prospectId: -1,
+        RoomId: this.roomId,
+        ProspectId: -1,
       });
     });
   }
@@ -107,7 +103,6 @@ export class AddProspectComponent implements OnInit {
     this.dialog.open(AddPrevRentalComponent, {
       data: {}
     }).afterClosed().subscribe((prevRental : IPreviousRental) => {
-      console.log("In afterClosed(), employer is " + JSON.stringify(prevRental));
       if (prevRental)
       this.prevRentals.push(prevRental);
     });
@@ -117,7 +112,6 @@ export class AddProspectComponent implements OnInit {
     this.dialog.open(AddEmployerComponent, {
       data: {}
     }).afterClosed().subscribe((emp : IEmployer) => {
-      console.log("In afterClosed(), employer is " + JSON.stringify(emp));
       if (emp)
         this.employers.push(emp);
     });

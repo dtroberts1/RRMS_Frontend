@@ -14,23 +14,11 @@ export class CreateAcctEmailConfscrnComponent implements OnInit {
 
   constructor(private service : AccountService){}
   okClicked(){
-    console.log("create acct ok button clicked");
     this.notifyFromCreateAcctEmailConf.emit('emailConfirmationClicked');
 
   }
 
   ngOnInit(): void {
-    console.log("email conf has initialized");
-    console.log("Rendering email confirmation");
-    console.log("email is " + this.email.valid);
-    /*
-    // Make an API call to send an email
-    this.service.getAccounts().subscribe({
-      next: products =>{
-        this.products = products;
-      }
-    })
-    */
   }
 
 }
