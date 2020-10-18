@@ -1,0 +1,45 @@
+<div style="float:left; border-width:3px; border-color:red; border-style:solid; width:35%; height:100%;margin-left:10%">
+    <h1 mat-dialog-title>Add Room</h1>
+    <div class="browseImage">
+      <img [(src)]="homeImagePath"/>
+      <br />
+      <div style="text-align:center">
+          <app-material-file-upload (complete)="onFileComplete($event)"></app-material-file-upload>
+        </div>
+        <span>Room Name</span>
+        <mat-form-field appearance="outline">      
+            <input matInput placeholder="The Guest Room" 
+            [formControl]="roomNameInput">
+            <mat-icon *ngIf="roomNameInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+            <mat-error *ngIf="roomNameInput.invalid">{{getInputErrorMessage(roomNameInput)}}</mat-error>
+        </mat-form-field>
+  </div>
+  </div>
+  <div style="float:right; border-width:3px; border-color:blue; border-style:solid; width:50%; height:100%">
+    <h2 mat-dialog-title>Attributes</h2>
+        <mat-checkbox class="example-margin" [(ngModel)]="isMaster">Is Master</mat-checkbox>
+        <br />
+        <mat-checkbox class="example-margin" [(ngModel)]="hasCloset">Has Closet</mat-checkbox>
+        <br />
+        <mat-checkbox class="example-margin" [(ngModel)]="hasCeilingFan">Ceiling Fan</mat-checkbox>
+        <br />
+        <mat-checkbox  class="example-margin" [(ngModel)]="hasPrivateBath">Private Bath</mat-checkbox>
+        <h4>Dimensions:&nbsp;&nbsp;
+            <input matInput style="width:2em" size="4"placeholder="10" maxlength="3" [formControl]="dimension1">
+            ft&nbsp;By
+            <input matInput style="width:2em"  size="4"placeholder="10" maxlength="3" [formControl]="dimension2">
+            ft
+        </h4>
+        <span>Monthly Rate</span>
+        <mat-form-field appearance="outline">      
+            <input required size="4" maxlength="4" matInput placeholder="$500" 
+            [formControl]="monthlyRateInput">
+            <mat-icon *ngIf="monthlyRateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+            <mat-error *ngIf="monthlyRateInput.invalid">{{getInputErrorMessage(monthlyRateInput)}}</mat-error>
+        </mat-form-field>
+    </div>
+  <span style="margin-left:5%;">
+    <button class="lowerViewRoomButtons" mat-button (click)="closeViewRoomDialog()">Close</button>
+    <button id="saveViewRoomBtn" mat-button (click)="createRm()">Create</button>
+  </span>
+  

@@ -8,6 +8,7 @@
   </ul>
   <br />
   <button mat-button *ngIf="title=='Saved'" (click)="closeDialog(true)">Yes</button>
+  <button mat-button *ngIf="title=='Room Created'" (click)="closeDialog(false)">Ok</button>
 
-  <button mat-button (click)="closeDialog(false)">Close</button>
+  <button mat-button *ngIf="title != 'Room Created'" (click)="closeDialog(false)">Close</button>
 </div>

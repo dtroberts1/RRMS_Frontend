@@ -2,6 +2,7 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import {IHome} from '../../../interfaces/Homes';
+import { AddRoomModalComponent } from '../../room/add-room-modal/add-room-modal.component';
 import { ViewRoomComponent } from '../../room/view-room/view-room.component';
 
 @Component({
@@ -43,6 +44,16 @@ export class HomeDetailsComponent implements OnInit {
     
   }
   addRoom(){
-    console.log("adding room");
+    console.log("in home details, about to send " + JSON.stringify(this.home.Rooms));
+    this.dialog.open(AddRoomModalComponent, {
+      data: {
+        home : this.home,
+        rooms : this.home.Rooms,
+      },
+      width:'45%',
+      height: '45%'
+    }).afterClosed().subscribe(() => {
+
+    });
   }
 }
