@@ -26,10 +26,10 @@ export class AddRoomModalComponent {
   currentRoomIndex: number = 0;
   roomCount: number = 0;
 
-  dimension1 : FormControl = new FormControl('', [Validators.pattern('[a-zA-Z\\s]{1,3}')]);
-  dimension2 : FormControl = new FormControl('', [Validators.pattern('[a-zA-Z\\s]{1,3}')]);
+  dimension1 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
+  dimension2 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
   monthlyRateInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]{1,5}')]);
-  roomNameInput : FormControl = new FormControl('', [Validators.pattern('[a-zA-Z\\s]{2,15}')]);
+  roomNameInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,15}')]);
   isMaster : boolean = false;
   hasCloset : boolean = false;
   hasCeilingFan : boolean = false;
@@ -56,30 +56,35 @@ export class AddRoomModalComponent {
 
   }  
   createRm(){
-    console.log("about to save with HomeId = ", this.home.Id);
-    this.roomsService.createRoom({
-      RoomName: this.roomNameInput.value,
-      Dimensions: `${this.dimension1.value} x ${this.dimension2.value}`,
-      IsMaster: this.isMaster,
-      HasCloset: this.hasCloset,
-      HasCeilingFan: this.hasCeilingFan,
-      HasPrivateBath: this.hasPrivateBath,
-      MonthlyRate: this.monthlyRateInput.value,
-      HomeId: this.home.Id,
-    }).then(() => {
-      this.dialog.open(DialogDataRRMSDialog, {
-        data: {
-          inError: true,
-          title: "Room Created",
-          contentSummary: "New Room has been created",
-          errorItems: []
-        }
-      }).afterClosed().subscribe(result => {
-        this.dialogRef.close(null);
-      }),
-      err=> console.log(err);
-    }).catch((err) =>{
-      console.log(err)
+    this.inputsAreValid().then((isValid: boolean) => {
+      if (isValid == true){
+        console.log("about to save with HomeId = ", this.home.Id);
+        this.roomsService.createRoom({
+          RoomName: this.roomNameInput.value,
+          Dimensions: `${this.dimension1.value} x ${this.dimension2.value}`,
+          IsMaster: this.isMaster,
+          HasCloset: this.hasCloset,
+          HasCeilingFan: this.hasCeilingFan,
+          HasPrivateBath: this.hasPrivateBath,
+          MonthlyRate: this.monthlyRateInput.value,
+          HomeId: this.home.Id,
+          Id: -1,
+        }).then(() => {
+          this.dialog.open(DialogDataRRMSDialog, {
+            data: {
+              inError: true,
+              title: "Room Created",
+              contentSummary: "New Room has been created",
+              errorItems: []
+            }
+          }).afterClosed().subscribe(result => {
+            this.dialogRef.close(null);
+          }),
+          err=> console.log(err);
+        }).catch((err) =>{
+          console.log(err)
+        });
+      }
     });
   }
   canDispNextAndPrev(){
@@ -183,22 +188,45 @@ export class AddRoomModalComponent {
     this.dialogRef.close(null); // this needs to return a null
 
   }
-  updateRoom(){
-    //TODO
-    /*
-    console.log("about to save with HomeId = ", this.homeID);
-    this.roomsService.createRoom({
-      RoomName: this.nickname,
-      Dimensions: `${this.dimension1.value} x ${this.dimension2.value}`,
-      IsMaster: this.isMaster,
-      HasCloset: this.hasCloset,
-      HasCeilingFan: this.hasCeilingFan,
-      HasPrivateBath: this.hasPrivateBath,
-      MonthlyRate: this.monthlyRateInput.value,
-      HomeId: this.homeID,
+  async inputsAreValid():Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      let invalidElements = new Array();
+      if (this.dimension1.invalid){
+        invalidElements.push("Length");
+      }
+      if (this.dimension2.invalid){
+        invalidElements.push("Width");
+      }
+      if (this.monthlyRateInput.invalid){
+        invalidElements.push("Monthly Rate");
+      }
+      if (this.roomNameInput.invalid){
+        invalidElements.push("Room Name");
+      }
+
+      if (invalidElements.length > 0)
+      {
+        this.dialog.open(DialogDataRRMSDialog, {
+          data: {
+            inError: true,
+            title: "Invalid Items",
+            contentSummary: "The following items are invalid",
+            errorItems: invalidElements
+          }
+        }).afterClosed().subscribe(result => {
+          if (invalidElements.length > 0){
+            resolve(false);
+          }
+          else{
+            resolve(true);
+          }
+        });
+      }else{
+        resolve(true);
+      }
     });
-    */
   }
+
   getInputErrorMessage(inputField){
     
     if (inputField.hasError('required')) {

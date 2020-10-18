@@ -1,4 +1,5 @@
 export interface IRoom{
+    Id:number,
     RoomName: string,
     Dimensions: string,
     IsMaster: boolean,
@@ -6,5 +7,5 @@ export interface IRoom{
     HasCeilingFan: boolean,
     HasPrivateBath: boolean,
     MonthlyRate: boolean,
-    HomeId,
+    HomeId,    
 }

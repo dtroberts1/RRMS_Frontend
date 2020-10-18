@@ -16,6 +16,29 @@ export class HomesService{
   constructor(private http: HttpClient){
   }
 
+  getHome(homeId: number): Promise<IHome>{
+      // Important: room should already have a homeId at this point!
+      // Get token from localStorage
+      this.currToken = JSON.parse(localStorage.getItem('user'));
+      if (this.currToken != null){
+        let options = {
+          headers: new HttpHeaders().set('Content-Type', 'application/json')
+          .set('Authorization', "bearer " + this.currToken),
+          };
+          // Need to pass in the home ID into this!
+        return new Promise((resolve, reject) => { this.http
+            .get<IHome>(`${this.homesUrl}/${homeId}`, options).subscribe(
+                home => {
+                  resolve(home);
+                },
+                error => {
+                  reject(error);
+                }
+            )
+        });
+      }
+  }
+
   getHomes(): Promise<Iterable<IHome>>{
     return new Promise((resolve, reject) => {
 

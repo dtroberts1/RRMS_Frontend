@@ -5,7 +5,7 @@
                 <h2>{{myHome?.Nickname}}</h2>
             </td>
             <td width="50%"> <!-- Image -->
-                <h3>{{myHome?.AddressStreet1}}{{','}}{{myHome?.AddressStreet2.length > 0 ? ' ' : ''}}
+                <h3 *ngIf="individualView == false">{{myHome?.AddressStreet1}}{{','}}{{myHome?.AddressStreet2.length > 0 ? ' ' : ''}}
                     {{myHome?.AddressStreet2}}{{myHome?.AddressStreet2.length > 0 ? ', ' : ''}}
                     {{myHome?.AddressCity}}{{', '}}{{myHome?.AddressState}}{{', '}}{{myHome?.AddressZipCode}}
                 </h3>

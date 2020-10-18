@@ -1,6 +1,9 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { IRoom } from 'src/app/interfaces/Rooms';
+import { RoomsService } from 'src/app/services/room.service';
+import {HomesService} from '../../../services/homes.service';
 import {IHome} from '../../../interfaces/Homes';
 import { AddRoomModalComponent } from '../../room/add-room-modal/add-room-modal.component';
 import { ViewRoomComponent } from '../../room/view-room/view-room.component';
@@ -17,6 +20,8 @@ export class HomeDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     public dialog: MatDialog, 
     private router: Router,
+    private RoomsService: RoomsService,
+    private HomesService: HomesService,
     ) { 
 
     }
@@ -53,7 +58,13 @@ export class HomeDetailsComponent implements OnInit {
       width:'45%',
       height: '45%'
     }).afterClosed().subscribe(() => {
-
+      this.HomesService.getHome(this.home.Id).then((home : IHome) => {
+        console.log("rooms from getRooms returns: " + JSON.stringify(home));
+        this.home.Rooms = home.Rooms;
+        this.roomCount++;
+      }).catch((err) =>{
+        console.log(err);
+      });
     });
   }
 }

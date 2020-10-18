@@ -24,6 +24,9 @@ export class DialogDataRRMSDialog {
     this.contentSummary = data.contentSummary;
     this.errorItems = data.errorItems;
   }
+  closedWithSaved(save: boolean){
+    this.dialogRef.close(save);
+  }
 
   closeDialog(yes:boolean){
     this.dialogRef.close(yes);

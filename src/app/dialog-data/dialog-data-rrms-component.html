@@ -7,8 +7,15 @@
     </li>
   </ul>
   <br />
+  <br />
   <button mat-button *ngIf="title=='Saved'" (click)="closeDialog(true)">Yes</button>
   <button mat-button *ngIf="title=='Room Created'" (click)="closeDialog(false)">Ok</button>
+  <button mat-button *ngIf="title=='Room Saved'" (click)="closeDialog(false)">Ok</button>
 
-  <button mat-button *ngIf="title != 'Room Created'" (click)="closeDialog(false)">Close</button>
+  <button mat-button *ngIf="title=='Unsaved Changes'" (click)="closedWithSaved(false)">Continue</button>
+  <button mat-button *ngIf="title=='Unsaved Changes'" (click)="closedWithSaved(true)">Save</button>
+
+
+  <button mat-button *ngIf="title != 'Room Created' && title != 'Room Saved' && title != 'Unsaved Changes'" 
+  (click)="closeDialog(false)">Close</button>
 </div>
