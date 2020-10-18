@@ -38,8 +38,11 @@ export class HomeDetailsComponent implements OnInit {
       },
       width:'45%',
       height: '55%'
-    }).afterClosed().subscribe(() => {
-
+    }).afterClosed().subscribe((viewRoomOutput: string) => {
+      if (viewRoomOutput == "del"){
+        // Room was delete inside view-room component
+        this.roomCount--;
+      }  
     });
   }
   openViewProspectDialog(){
@@ -47,6 +50,13 @@ export class HomeDetailsComponent implements OnInit {
   }
   addProspect(){
     
+  }
+
+  dispRoomCount(){
+    if (this.roomCount == 0 || this.roomCount > 1)
+      return `${this.roomCount} Rooms`;
+    else if (this.roomCount == 1)
+      return `${this.roomCount} Room`;
   }
   addRoom(){
     console.log("in home details, about to send " + JSON.stringify(this.home.Rooms));

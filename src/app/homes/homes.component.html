@@ -1,8 +1,8 @@
 <div class="homeContainer">
   <div class="homesUiView">
    
-    <li style="list-style: none;" *ngFor="let home of homes"
-      routerLink='/homes/home/{{home.Id}}'
+    <li style="list-style: none;" *ngFor="let home of homes;let i = index"
+      routerLink='/homes/home/{{i + 1}}'
     >
         <div
           class="appHomeItem"

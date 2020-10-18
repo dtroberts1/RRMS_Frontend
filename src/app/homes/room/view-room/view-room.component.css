@@ -52,3 +52,8 @@ img{
   background-color:orange;
   color:white;
 }
+
+#deleteBtn:hover{
+  color:white;
+  background-color:Red;
+}

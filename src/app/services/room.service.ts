@@ -73,6 +73,29 @@ export class RoomsService{
       });
     }
 }
+async removeRoom(roomId: number){
+  // Important: room should already have a homeId at this point!
+  // Get token from localStorage
+  this.currToken = JSON.parse(localStorage.getItem('user'));
+  if (this.currToken != null){
+    let options = {
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+      .set('Authorization', "bearer " + this.currToken),
+      };
+      // Need to pass in the home ID into this!
+    return new Promise((resolve, reject) => { this.http
+        .delete<IRoom>(`${this.roomsUrl}/${roomId}`, options).subscribe(
+            room => {
+              // Get some logic for response (should just return id back for newly added room)
+              resolve(room);
+            },
+            error => {
+              reject(error);
+            }
+        )
+    });
+  }
+}
   fetchRooms(homeId: number){  
   // Get token from localStorage
   this.currToken = JSON.parse(localStorage.getItem('user'));

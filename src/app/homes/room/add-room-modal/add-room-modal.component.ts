@@ -78,7 +78,7 @@ export class AddRoomModalComponent {
               errorItems: []
             }
           }).afterClosed().subscribe(result => {
-            this.dialogRef.close(null);
+            this.dialogRef.close('roomAdded');
           }),
           err=> console.log(err);
         }).catch((err) =>{

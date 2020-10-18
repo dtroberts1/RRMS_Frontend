@@ -8,14 +8,16 @@
   </ul>
   <br />
   <br />
+  <button mat-button *ngIf="title=='Delete - Are you sure?'" (click)="closeDialog(true)">Yes</button>
   <button mat-button *ngIf="title=='Saved'" (click)="closeDialog(true)">Yes</button>
   <button mat-button *ngIf="title=='Room Created'" (click)="closeDialog(false)">Ok</button>
   <button mat-button *ngIf="title=='Room Saved'" (click)="closeDialog(false)">Ok</button>
 
   <button mat-button *ngIf="title=='Unsaved Changes'" (click)="closedWithSaved(false)">Continue</button>
   <button mat-button *ngIf="title=='Unsaved Changes'" (click)="closedWithSaved(true)">Save</button>
+  <button mat-button *ngIf="title=='Delete - Are you sure?'" (click)="closeDialog(false)">No</button>
 
 
-  <button mat-button *ngIf="title != 'Room Created' && title != 'Room Saved' && title != 'Unsaved Changes'" 
+  <button mat-button *ngIf="title != 'Room Created' && title != 'Room Saved' && title != 'Unsaved Changes' && title != 'Delete - Are you sure?'" 
   (click)="closeDialog(false)">Close</button>
 </div>

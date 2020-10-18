@@ -11,7 +11,7 @@ height:100%; border-width:3px;border-color:gray; border-style:solid;">
                     {{home?.AddressCity}}{{', '}}{{home?.AddressState}}{{', '}}{{home?.AddressZipCode}}
 </p>
 <h2 style="text-align: left;">Rooms</h2>
-<button id="viewRoomBtn" mat-button (click)="openViewRoomDialog()">View&nbsp;{{roomCount}} Room{{roomCount > 1 ? "s" : ""}}</button>
+<button id="viewRoomBtn" mat-button (click)="openViewRoomDialog()">View&nbsp;{{dispRoomCount()}}</button>
 <button id="addAdditionalRoomBtn" mat-button (click)="addRoom()">Add New Room</button>
 <br />
 <br />

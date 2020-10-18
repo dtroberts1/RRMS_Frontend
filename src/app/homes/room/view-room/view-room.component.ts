@@ -313,6 +313,22 @@ export class ViewRoomComponent {
     if (inputField.hasError(inputField)){
         return "Not a valid entry";
     }
-    
+  }
+
+  deleteBtnClicked(){
+    this.dialog.open(DialogDataRRMSDialog, {
+      data: {
+        inError: false,
+        title: "Delete - Are you sure?",
+        contentSummary: "Are you sure you would like to delete this room?",
+        errorItems: []
+      }
+    }).afterClosed().subscribe((deleteRoom: boolean)=> {
+      if (deleteRoom == true ){
+        this.roomsService.removeRoom(this.room.Id);
+        this.dialogRef.close("del"); // this needs to return a null
+      }
+    });
+
   }
 }

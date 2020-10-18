@@ -30,6 +30,7 @@ export class HomeComponent implements OnInit {
         {
           this.homesService.getHomes().then((homes : Iterable<IHome>) => {
             this.myHome = homes[params.id - 1];
+            console.log("myHome is the following: " + JSON.stringify(this.myHome));
             this.individualView = true;
           }).catch((err) => {
             console.log("error in getHomes (home Component): " + err);
