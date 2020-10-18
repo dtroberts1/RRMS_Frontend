@@ -1,31 +1,36 @@
 <div class="addRoomContainer">
     <div class="addRoomUiView">
-        <h1>{{nickname}}</h1>
-        <h2>Room#{{nbrRooms + 1}}</h2>
-        <mat-form-field appearance="standard">
-            <h4>Dimensions
-            <input matInput style="width:2em" placeholder="10" maxlength="3" [formControl]="dimension1">
-            By
-            <input matInput style="width:2em" placeholder="10" maxlength="3" [formControl]="dimension2">
-            </h4>
-            
-            <mat-checkbox class="example-margin" [(ngModel)]="isMaster">Is Master</mat-checkbox>
-            <br />
-            <mat-checkbox class="example-margin" [(ngModel)]="hasCloset">Has Closet</mat-checkbox>
-            <br />
-            <mat-checkbox class="example-margin" [(ngModel)]="hasCeilingFan">Ceiling Fan</mat-checkbox>
-            <br />
-            <mat-checkbox  class="example-margin" [(ngModel)]="hasPrivateBath">Private Bath</mat-checkbox>
-            <br />
-            <br />
-
-            Monthly Rate
+        <h1>Add Room</h1>
+            <h3>
+            <mat-form-field appearance="standard">
+                <mat-label>Room Name</mat-label>
+                <input required maxlength="25" matInput placeholder="The Guest Room" 
+                [formControl]="roomName">
+                <mat-icon *ngIf="roomName.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+                <mat-error *ngIf="roomName.invalid">{{getInputErrorMessage(roomName)}}</mat-error>
+            </mat-form-field>
+            </h3>
+            <h3>
+                <mat-label>Length</mat-label>
+                <input matInput style="width:2em" size="3em" placeholder="10" maxlength="3" [formControl]="dimension1">
+                <mat-label>Width</mat-label>
+                <input matInput style="width:2em" size="3em" placeholder="10" maxlength="3" [formControl]="dimension2">
+                <br />
+            </h3>
+            <h3>
+                <mat-checkbox class="example-margin" [(ngModel)]="isMaster">Is Master</mat-checkbox>
+                <mat-checkbox class="example-margin" [(ngModel)]="hasCloset">Has Closet</mat-checkbox>
+                <mat-checkbox class="example-margin" [(ngModel)]="hasCeilingFan">Ceiling Fan</mat-checkbox>
+                <mat-checkbox  class="example-margin" [(ngModel)]="hasPrivateBath">Private Bath</mat-checkbox>
+            </h3>
+                    <br />
+            <mat-form-field appearance="standard">
+                <mat-label>Monthly Rate</mat-label>
             <input required maxlength="4" matInput placeholder="$500" 
             [formControl]="monthlyRateInput">
             <mat-icon *ngIf="monthlyRateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
             <mat-error *ngIf="monthlyRateInput.invalid">{{getInputErrorMessage(monthlyRateInput)}}</mat-error>
-        </mat-form-field>
-        <br /> 
+            </mat-form-field>
         <button mat-stroked-button color="primary" (click)="saveRoom()">
             Submit
         </button>

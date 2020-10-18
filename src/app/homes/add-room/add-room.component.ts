@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import {RoomsService} from '../../services/room.service';
 
 @Component({
@@ -11,6 +13,7 @@ import {RoomsService} from '../../services/room.service';
 export class AddRoomComponent implements OnInit {
   dimension1 : FormControl = new FormControl('', [Validators.pattern('[a-zA-Z\\s]{1,3}')]);
   dimension2 : FormControl = new FormControl('', [Validators.pattern('[a-zA-Z\\s]{1,3}')]);
+  roomName : FormControl = new FormControl('', [Validators.pattern('[a-zA-Z\\s]{3,25}')]);
   monthlyRateInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]{1,5}')]);
   isMaster : boolean = false;
   hasCloset : boolean = false;
@@ -23,7 +26,8 @@ export class AddRoomComponent implements OnInit {
   nbrRooms : number;
   constructor(
     private route: ActivatedRoute,
-    private roomsService: RoomsService,    
+    private roomsService: RoomsService, 
+    public dialog: MatDialog,   
     ) { }
 
   ngOnInit(): void {
@@ -55,7 +59,21 @@ export class AddRoomComponent implements OnInit {
       MonthlyRate: this.monthlyRateInput.value,
       HomeId: this.homeID,
       Id: -1,
-    });
+    }).then(() => {
+      this.dialog.open(DialogDataRRMSDialog, {
+        data: {
+          inError: true,
+          title: "Room Created",
+          contentSummary: "New Room has been created",
+          errorItems: []
+        }
+      }).afterClosed().subscribe(result => {
+
+      }),
+      err=> console.log(err);
+    }).catch((err) =>{
+      console.log(err)
+    });;
   }
   getInputErrorMessage(inputField){
     

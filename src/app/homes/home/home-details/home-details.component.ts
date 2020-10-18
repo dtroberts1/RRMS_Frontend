@@ -7,6 +7,8 @@ import {HomesService} from '../../../services/homes.service';
 import {IHome} from '../../../interfaces/Homes';
 import { AddRoomModalComponent } from '../../room/add-room-modal/add-room-modal.component';
 import { ViewRoomComponent } from '../../room/view-room/view-room.component';
+import { TooltipPosition } from '@angular/material/tooltip';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-home-details',
@@ -15,6 +17,8 @@ import { ViewRoomComponent } from '../../room/view-room/view-room.component';
 })
 export class HomeDetailsComponent implements OnInit {
   @Input() home : IHome;
+  positionOptions: TooltipPosition[] = ['after', 'before', 'above', 'below', 'left', 'right'];
+  position = new FormControl(this.positionOptions[1]);
   roomCount: number;
   constructor(
     private route: ActivatedRoute,
@@ -29,6 +33,7 @@ export class HomeDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.roomCount = (<any[]>this.home.Rooms)?.length;
   }
+
   openViewRoomDialog(){
     console.log("in home details, about to send " + JSON.stringify(this.home.Rooms));
     this.dialog.open(ViewRoomComponent, {

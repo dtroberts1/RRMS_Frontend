@@ -16,6 +16,7 @@ import { MatTreeModule } from "@angular/material/tree";
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatTableModule} from '@angular/material/table';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 const MaterialComponents = [
@@ -36,6 +37,7 @@ const MaterialComponents = [
   MatCheckboxModule,
   MatRadioModule,
   MatTableModule,
+  MatTooltipModule,
 ];
 
 

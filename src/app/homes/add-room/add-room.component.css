@@ -6,8 +6,8 @@
     
     width:100%;
     height:80%;
-    align-items: center;
-    justify-content: center;
+    /*align-items: center;*/
+    justify-content: center; 
 }
 
 .addRoomUiView{

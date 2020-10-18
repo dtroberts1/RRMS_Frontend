@@ -5,7 +5,7 @@
 #viewRoomBtn{
     float:left;
     color:blue;
-    margin-left:5%;
+    margin-left:2%;
 }
 #viewProspectBtn:hover{
     background-color:green;
@@ -14,7 +14,7 @@
 #viewProspectBtn{
     float:left;
     color:blue;
-    margin-left:5%;
+    margin-left:2%;
 }
 #addAdditionalRoomBtn:hover{
     background-color:green;
@@ -23,12 +23,32 @@
 #addAdditionalRoomBtn{
     color:blue;
     float:left;
+    margin-left:2%;
 }
 #addAdditionalProspectBtn{
     color:blue;
     float:left;
+    margin-left:2%;
 }
 #addAdditionalProspectBtn:hover{
+    background-color:green;
+    color:white;
+}
+#moveProspectBtn{
+    color:blue;
+    float:left;
+    margin-left:2%;
+}
+#moveProspectBtn:hover{
+    background-color:green;
+    color:white;
+}
+#moveExistingTenant{
+    color:blue;
+    float:left;
+    margin-left:2%;
+}
+#moveExistingTenant:hover{
     background-color:green;
     color:white;
 }

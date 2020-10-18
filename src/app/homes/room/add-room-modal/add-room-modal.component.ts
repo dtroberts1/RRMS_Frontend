@@ -29,7 +29,7 @@ export class AddRoomModalComponent {
   dimension1 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
   dimension2 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
   monthlyRateInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]{1,5}')]);
-  roomNameInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,15}')]);
+  roomNameInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,25}')]);
   isMaster : boolean = false;
   hasCloset : boolean = false;
   hasCeilingFan : boolean = false;
