@@ -35,6 +35,7 @@ import { AddPrevRentalComponent } from './prospects/add-prev-rental/add-prev-ren
 import { HomeDetailsComponent } from './homes/home/home-details/home-details.component';
 import { ViewRoomComponent } from './homes/room/view-room/view-room.component';
 import { AddRoomModalComponent } from './homes/room/add-room-modal/add-room-modal.component';
+import { LinkRoomModalComponent } from './homes/room/link-room-modal/link-room-modal.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomesComponent, data: { title: 'Homes' } },
@@ -83,7 +84,8 @@ const appRoutes: Routes = [
     AddPrevRentalComponent,
     HomeDetailsComponent,
     ViewRoomComponent,
-    AddRoomModalComponent
+    AddRoomModalComponent,
+    LinkRoomModalComponent
     ],
   imports: [
     BrowserModule,

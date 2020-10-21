@@ -17,6 +17,21 @@
               <th mat-header-cell *matHeaderCellDef>Mid Initial</th>
               <td mat-cell *matCellDef="let element"> {{element.MdInit}} </td>
             </ng-container>     
+            <!-- Weight Column -->
+            <ng-container matColumnDef="RoomId">
+              <th mat-header-cell *matHeaderCellDef>Room Id</th>
+              <td mat-cell *matCellDef="let element"> {{element.RoomId}} </td>
+            </ng-container>     
+                        <!-- Weight Column -->
+            <ng-container matColumnDef="Move-in">
+              <th mat-header-cell *matHeaderCellDef>Move-in</th>
+              <td mat-cell *matCellDef="let element"> {{element.MoveInDate.toString("mm/dd/yyyy")}}</td>
+            </ng-container>     
+            <!-- Weight Column -->
+            <ng-container matColumnDef="Move-out">
+              <th mat-header-cell *matHeaderCellDef>Move-out</th>
+              <td mat-cell *matCellDef="let element"> {{element.MoveOutDate}} </td>
+            </ng-container>     
             <!-- Symbol Column -->
             <ng-container matColumnDef="EmailAddress">
               <th mat-header-cell *matHeaderCellDef>Email Address</th>

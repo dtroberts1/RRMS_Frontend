@@ -19,6 +19,7 @@ export class ProspectService{
 
     async saveProspect(prospect: IProspect){
      // Get token from localStorage
+     console.log("in saveProspect, about to send" + JSON.stringify(prospect));
      this.currToken = JSON.parse(localStorage.getItem('user'));
      if (this.currToken != null){
        let options = {

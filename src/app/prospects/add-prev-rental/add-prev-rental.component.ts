@@ -109,17 +109,17 @@ export class AddPrevRentalComponent {
       if (isValid == true){
         this.dialogRef.close(
           {
-            PrevLandlordEmailAddress : this.PrevLandlordEmailAddress,
-            PrevLandlordPhoneNumber : this.PrevLandlordPhoneNumber,
-            PrevLandlordFName : this.PrevLandlordFName,
-            PrevLandlordLName : this.PrevLandlordFName,
-            addressStreet1: this.addressStreet1,
-            addressStreet2: this.addressStreet2,
-            addressCity: this.addressCity,
-            addressState: this.addressState,
-            addressZipCode: this.addressZipCode,
-            startDate: this.startDate,
-            endDate: this.endDate,
+            PrevLandlordEmailAddress : this.PrevLandlordEmailAddress.value,
+            PrevLandlordPhoneNumber : this.PrevLandlordPhoneNumber.value,
+            PrevLandlordFName : this.PrevLandlordFName.value,
+            PrevLandlordLName : this.PrevLandlordFName.value,
+            addressStreet1: this.addressStreet1.value,
+            addressStreet2: this.addressStreet2.value,
+            addressCity: this.addressCity.value,
+            addressState: this.addressState.value,
+            addressZipCode: this.addressZipCode.value,
+            startDate: this.startDate.value,
+            endDate: this.endDate.value,
             prospectID: -1,
           }
         );

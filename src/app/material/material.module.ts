@@ -17,6 +17,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatTableModule} from '@angular/material/table';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatSelectModule} from '@angular/material/select';
 
 
 const MaterialComponents = [
@@ -38,6 +39,7 @@ const MaterialComponents = [
   MatRadioModule,
   MatTableModule,
   MatTooltipModule,
+  MatSelectModule,
 ];
 
 

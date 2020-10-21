@@ -24,8 +24,16 @@ export class AddEmployerComponent {
   endDate = new FormControl('',[Validators.required, Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
   current: string[] = ['No', 'Yes'];
   salaryType: string[] = ['Annual', 'Hourly'];
-  salType : SalaryType = SalaryType.annual;
+  salType : SalaryType = SalaryType.annual; // Possibly need to assign this to number instead of SalaryType
   currentEmp : boolean = false;
+  salaryTypeMap = new Map<string, SalaryType>([
+    ['Annual', SalaryType.annual],
+    ['Hourly', SalaryType.hourly]
+  ]);
+  currentMap = new Map<string, boolean>([
+    ['No', false],
+    ['Yes', true]
+  ]);
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, 
   public dialogRef: MatDialogRef<AddEmployerComponent>,
@@ -118,8 +126,8 @@ export class AddEmployerComponent {
             prospectJobTitle: this.prospectJobTitle.value,
             startDate: this.startDate.value,
             endDate: this.startDate.value,
-            current: this.currentEmp,
-            salaryType: this.salType,
+            current: this.currentMap.get(this.currentEmp.toString()),
+            salaryType: this.salaryTypeMap.get(this.salType.toString()),
             prospectID: -1, // Not created yet
           }
         );

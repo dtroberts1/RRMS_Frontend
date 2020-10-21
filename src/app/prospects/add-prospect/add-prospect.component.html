@@ -36,21 +36,58 @@
                     <mat-icon  *ngIf="phoneNumber.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
                     <mat-error *ngIf="phoneNumber.invalid">{{getInputErrorMessage(phoneNumber)}}</mat-error>
                 </mat-form-field>
-                <br />                <mat-form-field appearance="standard">
+                <br />                
+                <mat-form-field appearance="standard">
                     <mat-label>SSN</mat-label>
                     <input matInput placeholder="123-45-6789" [formControl]="ssn" required>
                     <mat-icon  *ngIf="ssn.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
                     <mat-error *ngIf="ssn.invalid">{{getInputErrorMessage(ssn)}}</mat-error>
                 </mat-form-field>
                 <br />
+                <mat-form-field appearance="standard">
+                    <mat-label>Move-in Date</mat-label>
+                    <input matInput placeholder="8/10/2021" [formControl]="moveInDate" required>
+                    <mat-icon  *ngIf="moveInDate.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error *ngIf="moveInDate.invalid">{{getInputErrorMessage(moveInDate)}}</mat-error>
+                </mat-form-field>
                 <br />
-                    <mat-label>Employers: {{this.employers.length}}</mat-label>
-                    <button mat-stroked-button color="primary"
-                        style="margin-left:10px;"
-                        (click)="addEmployer()"
-                    >
-                        Add Employer
-                    </button>
+                <mat-form-field appearance="standard">
+                    <mat-label>Move-out Date</mat-label>
+                    <input matInput placeholder="7/1/2022" [formControl]="moveOutDate" required>
+                    <mat-icon  *ngIf="moveOutDate.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error *ngIf="moveOutDate.invalid">{{getInputErrorMessage(moveOutDate)}}</mat-error>
+                </mat-form-field>
+                <br />
+                <mat-label>Term Type</mat-label>
+                <br />
+                <mat-radio-group
+                
+                aria-labelledby="example-radio-group-label"
+                class="example-radio-group"
+                [(ngModel)]="termType">
+  
+                <mat-radio-button *ngFor="let termType of termTypeStr" [value]="termType">
+                  {{termType}}
+                </mat-radio-button>
+              </mat-radio-group>
+              <br /><br />
+              <mat-label style="color:blue;" *ngIf="selectedRoomName != 'No Room Selected'">Selected Room: {{selectedRoomName}}</mat-label>
+              <mat-label style="color:red;" *ngIf="selectedRoomName == 'No Room Selected'">No Room Selected</mat-label>
+
+              <button mat-stroked-button color="primary"
+              style="margin-left:10px;"
+              (click)="openLinkRoomModal()"
+              >
+              Link to Room
+              </button>
+              <br />
+                <mat-label>Employers: {{this.employers.length}}</mat-label>
+                <button mat-stroked-button color="primary"
+                    style="margin-left:10px;"
+                    (click)="addEmployer()"
+                >
+                    Add Employer
+                </button>
                 <br />           
                 <mat-label>PreviousRentals: {{this.prevRentals.length}}</mat-label>
                 <button mat-stroked-button color="primary"

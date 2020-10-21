@@ -35,3 +35,9 @@
   ::ng-deep .mat-checkbox .mat-checkbox-frame {
     background-color: #69F0AE;
   }
+  .example-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin-left:45%;
+    margin-top:3%;
+  }
