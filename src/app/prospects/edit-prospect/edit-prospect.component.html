@@ -9,84 +9,119 @@
   </div>
   </div>
   <div style="float:right; width:50%; height:100%">
-    <h3 class="h3link">View Financial History</h3>
     <table>
       <tr>
         <td width="90%">
-          <h3 style="white-space: nowrap;"><label>Monthly Rate:&nbsp;&nbsp;</label>
-            <span *ngIf="editRate == false">{{'$'}}</span>
-            <span *ngIf="editRate == true">
-              <input  size="5" (blur)="updateInput('rate')" style="white-space: nowrap;" maxlength="5" required placeholder="550" 
-              [formControl]="monthlyRateInput">
-              <mat-icon *ngIf="monthlyRateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-              <mat-error *ngIf="monthlyRateInput.invalid">{{getInputErrorMessage(monthlyRateInput)}}</mat-error>
+          <h3 style="white-space: nowrap;"><label>First Name:&nbsp;&nbsp;</label>
+            <span *ngIf="editFName == false">{{prospect.FName}}</span>
+            <span *ngIf="editFName == true">
+              <input size="25" (blur)="updateInput('fname')" style="white-space: nowrap;" maxlength="25" required placeholder="Mark" 
+              [formControl]="fNameInput">
+              <mat-icon *ngIf="fNameInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+              <mat-error *ngIf="fNameInput.invalid">{{getInputErrorMessage(fNameInput)}}</mat-error>
             </span>
           </h3>
         </td>
         <td width="10%">
-          <h3 *ngIf="editRate == false" class="editLinks" (click)="changeEditMode('rate')">Edit</h3>
+          <h3 *ngIf="editFName == false" class="editLinks" (click)="changeEditMode('fname')">Edit</h3>
         </td>
       </tr>
       <tr>
         <td width="90%">
-          <h3 style="white-space: nowrap;"><label>Length:&nbsp;&nbsp;</label>
-            <span *ngIf="editDimension1 == false">{{dimension1.value}}&nbsp;{{"ft"}}</span>
-            <span *ngIf="editDimension1 == true">
-              <input  size="5" (blur)="updateInput('dimension1')" style="white-space: nowrap;" maxlength="5" required placeholder="550" 
-              [formControl]="dimension1">
-              <mat-icon *ngIf="dimension1.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-              <mat-error *ngIf="dimension1.invalid">{{getInputErrorMessage(dimension1)}}</mat-error>
+          <h3 style="white-space: nowrap;"><label>Last Name:&nbsp;&nbsp;</label>
+            <span *ngIf="editLName == false">{{prospect.LName}}</span>
+            <span *ngIf="editLName == true">
+              <input size="25" (blur)="updateInput('lname')" style="white-space: nowrap;" maxlength="25" required placeholder="Mark" 
+              [formControl]="lNameInput">
+              <mat-icon *ngIf="lNameInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+              <mat-error *ngIf="lNameInput.invalid">{{getInputErrorMessage(lNameInput)}}</mat-error>
             </span>
           </h3>
         </td>
         <td width="10%">
-          <h3 *ngIf="editDimension1 == false" class="editLinks" (click)="changeEditMode('dimension1')">Edit</h3>
+          <h3 *ngIf="editLName == false" class="editLinks" (click)="changeEditMode('lname')">Edit</h3>
         </td>
       </tr>
       <tr>
         <td width="90%">
-          <h3 style="white-space: nowrap;"><label>Width:&nbsp;&nbsp;</label>
-            <span *ngIf="editDimension2 == false">{{dimension2.value}}&nbsp;{{"ft"}}</span>
-            <span *ngIf="editDimension2 == true">
-              <input  size="5" (blur)="updateInput('dimension2')" style="white-space: nowrap;" maxlength="5" required placeholder="550" 
-              [formControl]="dimension2">
-              <mat-icon *ngIf="dimension2.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-              <mat-error *ngIf="dimension2.invalid">{{getInputErrorMessage(dimension2)}}</mat-error>
+          <h3 style="white-space: nowrap;"><label>Middle Initial:&nbsp;&nbsp;</label>
+            <span *ngIf="editMdInit == false">{{prospect.MdInit}}</span>
+            <span *ngIf="editMdInit == true">
+              <input size="1" (blur)="updateInput('mdinit')" style="white-space: nowrap;" maxlength="1" required placeholder="Mark" 
+              [formControl]="mdInitInput">
+              <mat-icon *ngIf="mdInitInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+              <mat-error *ngIf="mdInitInput.invalid">{{getInputErrorMessage(mdInitInput)}}</mat-error>
             </span>
           </h3>
         </td>
         <td width="10%">
-          <h3 *ngIf="editDimension2 == false" class="editLinks" (click)="changeEditMode('dimension2')">Edit</h3>
+          <h3 *ngIf="editMdInit == false" class="editLinks" (click)="changeEditMode('mdinit')">Edit</h3>
         </td>
       </tr>
       <tr>
-        <td>
-          <h3><label>Is Master:</label>&nbsp;&nbsp;
-            <span *ngIf="editMaster == false"></span>
-            <span *ngIf="editMaster == true">
-              <mat-checkbox (focusout)="updateInput('master')" [(ngModel)]="isMaster"></mat-checkbox>
+        <td width="90%">
+          <h3 style="white-space: nowrap;"><label>Email Address:&nbsp;&nbsp;</label>
+            <span *ngIf="editEmail == false">{{prospect.EmailAddress}}</span>
+            <span *ngIf="editEmail == true">
+              <input size="30" (blur)="updateInput('email')" style="white-space: nowrap;" maxlength="30" required placeholder="Mark" 
+              [formControl]="emailInput">
+              <mat-icon *ngIf="emailInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+              <mat-error *ngIf="emailInput.invalid">{{getInputErrorMessage(emailInput)}}</mat-error>
             </span>
           </h3>
         </td>
-        <td>
-          <h3 *ngIf="editMaster == false" class="editLinks" (click)="changeEditMode('master')">Edit</h3>
-          <h3 *ngIf="editMaster == true" class="editLinks" (click)="changeEditMode('master')">Update</h3>
+        <td width="10%">
+          <h3 *ngIf="editEmail == false" class="editLinks" (click)="changeEditMode('email')">Edit</h3>
         </td>
       </tr>
       <tr>
-        <td>
-          <h3><label>Has Closet:</label>&nbsp;&nbsp;
-            <span *ngIf="editCloset == false"></span>
-            <span *ngIf="editCloset == true">
-              <mat-checkbox (focusout)="updateInput('closet')" [(ngModel)]="hasCloset"></mat-checkbox>
+        <td width="90%">
+          <h3 style="white-space: nowrap;"><label>Phone Number:&nbsp;&nbsp;</label>
+            <span *ngIf="editPhoneNumber == false">{{prospect.PhoneNumber}}</span>
+            <span *ngIf="editPhoneNumber == true">
+              <input size="30" (blur)="updateInput('phone')" style="white-space: nowrap;" maxlength="30" required placeholder="Mark" 
+              [formControl]="phoneNumberInput">
+              <mat-icon *ngIf="phoneNumberInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+              <mat-error *ngIf="phoneNumberInput.invalid">{{getInputErrorMessage(phoneNumberInput)}}</mat-error>
             </span>
           </h3>
         </td>
-        <td>
-          <h3 *ngIf="editCloset == false" class="editLinks" (click)="changeEditMode('closet')">Edit</h3>
-          <h3 *ngIf="editCloset == true" class="editLinks" (click)="changeEditMode('closet')">Update</h3>
+        <td width="10%">
+          <h3 *ngIf="editPhoneNumber == false" class="editLinks" (click)="changeEditMode('phone')">Edit</h3>
         </td>
-      </tr>    
+      </tr> 
+      <tr>
+        <td width="90%">
+          <h3 style="white-space: nowrap;"><label>Move-in Date:&nbsp;&nbsp;</label>
+            <span *ngIf="editMoveinDate == false">{{prospect.MoveInDate}}</span>
+            <span *ngIf="editMoveinDate == true">
+              <input size="30" (blur)="updateInput('moveindate')" style="white-space: nowrap;" maxlength="30" required placeholder="Mark" 
+              [formControl]="moveInDateInput">
+              <mat-icon *ngIf="moveInDateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+              <mat-error *ngIf="moveInDateInput.invalid">{{getInputErrorMessage(moveInDateInput)}}</mat-error>
+            </span>
+          </h3>
+        </td>
+        <td width="10%">
+          <h3 *ngIf="editMoveinDate == false" class="editLinks" (click)="changeEditMode('moveindate')">Edit</h3>
+        </td>
+      </tr>
+      <tr>
+        <td width="90%">
+          <h3 style="white-space: nowrap;"><label>Move-out Date:&nbsp;&nbsp;</label>
+            <span *ngIf="editMoveOutDate == false">{{prospect.MoveOutDate}}</span>
+            <span *ngIf="editMoveOutDate == true">
+              <input size="30" (blur)="updateInput('moveoutdate')" style="white-space: nowrap;" maxlength="30" required placeholder="Mark" 
+              [formControl]="moveOutDateInput">
+              <mat-icon *ngIf="moveOutDateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+              <mat-error *ngIf="moveOutDateInput.invalid">{{getInputErrorMessage(moveOutDateInput)}}</mat-error>
+            </span>
+          </h3>
+        </td>
+        <td width="10%">
+          <h3 *ngIf="editMoveOutDate == false" class="editLinks" (click)="changeEditMode('moveoutdate')">Edit</h3>
+        </td>
+      </tr>
       <tr>
         <td>
           <h3><label>Has Ceiling Fan:</label>&nbsp;&nbsp;

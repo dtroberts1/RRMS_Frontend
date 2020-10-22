@@ -19,8 +19,13 @@ export class EditProspectComponent {
   origSettings : IProspect;
   prospects : Iterable<IProspect>;
   prospectIndex: number;
-  editRate: boolean = false;
-  editDimension1: boolean = false;
+  editFName: boolean = false;
+  editLName: boolean = false;
+  editMdInit: boolean = false;
+  editEmail: boolean = false;
+  editPhoneNumber: boolean = false;
+  editMoveinDate: boolean = false;
+  editMoveOutDate: boolean = false;
   editDimension2: boolean = false;
   editMaster: boolean = false;
   editFan: boolean = false;
@@ -29,10 +34,16 @@ export class EditProspectComponent {
   fieldsModified: boolean = false;
   currentProspectIndex: number = 0;
   prospectCount: number = 0;
-
+  prospect : IProspect;
   dimension1 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
   dimension2 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
-  monthlyRateInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]{1,5}')]);
+  fNameInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,25}')]);
+  lNameInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,25}')]);
+  mdInitInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{1}')]);
+  emailInput : FormControl = new FormControl('', [Validators.required, Validators.email]);
+  phoneNumberInput = new FormControl('', [Validators.required, Validators.pattern(/((\(\d{3}\) ?)|(\d{3}-))?\d{3}-\d{4}/)]);
+  moveInDateInput = new FormControl('', [Validators.required, Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|\[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
+  moveOutDateInput = new FormControl('', [Validators.required, Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|\[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
   isMaster : boolean;
   hasCloset : boolean;
   hasCeilingFan : boolean;
@@ -66,18 +77,8 @@ export class EditProspectComponent {
 
   setOrigSettings(prospect : IProspect)
   {
-    /*
-    this.origSettings.Dimensions = room.Dimensions;
-    this.origSettings.HasCloset = room.HasCeilingFan;
-    this.origSettings.HasCloset = room.HasCloset;
-    this.origSettings.HasPrivateBath = room.HasPrivateBath;
-    this.origSettings.HomeId = room.HomeId;
-    this.origSettings.Id = room.Id;
-    this.origSettings.IsMaster = room.IsMaster;
-    this.origSettings.MonthlyRate = room.MonthlyRate;
-    this.origSettings.RoomName = room.RoomName;
-    */
    this.origSettings = Object.assign({}, prospect);
+   console.log("in set OrigSettings, settings are " + JSON.stringify(this.origSettings ));
   }
   
   closeEmpDialog(){
@@ -95,32 +96,32 @@ export class EditProspectComponent {
   }
   changeEditMode(str:string){
     switch(str) { 
-      case 'rate': { 
-        this.editRate = !this.editRate;
+      case 'fname': { 
+        this.editFName = !this.editFName;
          break; 
       } 
-      case 'dimension1': { 
-        this.editDimension1 = !this.editDimension1;
+      case 'lname': { 
+        this.editLName = !this.editLName;
          break; 
       } 
-      case 'dimension2': { 
-        this.editDimension2 = !this.editDimension2;
+      case 'mdinit': { 
+        this.editMdInit = !this.editMdInit;
          break; 
       } 
-      case 'master': { 
-        this.editMaster = !this.editMaster;
+      case 'email': { 
+        this.editEmail = !this.editEmail;
       } 
       break; 
-      case 'fan': { 
-        this.editFan = !this.editFan;
+      case 'phone': { 
+        this.editPhoneNumber = !this.editPhoneNumber;
       } 
       break; 
-      case 'bathroom': { 
-        this.editBathroom = !this.editBathroom;
+      case 'moveindate': { 
+        this.editMoveinDate = !this.editMoveinDate;
       } 
       break; 
-      case 'closet': { 
-        this.editCloset = !this.editCloset;
+      case 'moveoutdate': { 
+        this.editMoveOutDate = !this.editMoveOutDate;
       }
       break;  
       default: { 
@@ -132,63 +133,83 @@ export class EditProspectComponent {
   updateInput(editStr : string){
     console.log("bluring");
     switch(editStr) { 
-      case 'rate': { /*
-        if (this.monthlyRateInput.valid == true)
+      case 'fname': { 
+        if (this.fNameInput.valid == true)
         {
-          //this.room.MonthlyRate = this.monthlyRateInput.value;
-          //console.log("new rate is " + this.monthlyRateInput.value)
+          this.prospect.FName = this.fNameInput.value;
         }
         else{
-          //console.log("monthlyRateInput is not valid. it is " + this.monthlyRateInput.value);
           this.changeEditMode(editStr);
           return;
-        } */
+        } 
       } 
       break; 
-      case 'dimension1': { 
-        /*if (this.dimension1.valid == true && this.dimension2.valid == true)
+      case 'lname': { 
+        if (this.lNameInput.valid == true)
         {
-          this.room.Dimensions = `${this.dimension1.value} x ${this.dimension2.value}`;
-          console.log("new rate is " + this.room.Dimensions)
+          this.prospect.LName = this.lNameInput.value;
         }
         else{
-          console.log("dimensions input is not valid. it is " + this.room.Dimensions);
           this.changeEditMode(editStr);
           return;
-        }*/
+        } 
       } 
       break; 
-      case 'dimension2': { 
-        /*
-        if (this.dimension1.valid == true && this.dimension2.valid == true)
+      case 'mdinit': { 
+        if (this.mdInitInput.valid == true)
         {
-          //this.room.Dimensions = `${this.dimension1.value} x ${this.dimension2.value}`;
-          //console.log("new rate is " + this.room.Dimensions)
+          this.prospect.MdInit = this.mdInitInput.value;
         }
         else{
-          //console.log("dimensions input is not valid. it is " + this.room.Dimensions);
           this.changeEditMode(editStr);
           return;
-        }
-              */
+        } 
       } 
       break; 
-      case 'master': { 
-        //this.room.IsMaster = this.isMaster;
+      case 'email': { 
+        if (this.emailInput.valid == true)
+        {
+          this.prospect.EmailAddress = this.emailInput.value;
+        }
+        else{
+          this.changeEditMode(editStr);
+          return;
+        } 
       } 
-      break;
-      case 'fan': { 
-        //this.room.HasCeilingFan = this.hasCeilingFan;
-      }
-      break;  
-      case 'bathroom': { 
-        //this.room.HasPrivateBath = this.hasPrivateBath;
-      }
-      break;  
-      case 'closet': { 
-        //this.room.HasCloset = this.hasCloset;
-      }
-      break;  
+      break; 
+      case 'phone': { 
+        if (this.phoneNumberInput.valid == true)
+        {
+          this.prospect.PhoneNumber = this.phoneNumberInput.value;
+        }
+        else{
+          this.changeEditMode(editStr);
+          return;
+        } 
+      } 
+      break; 
+      case 'moveindate': { 
+        if (this.moveInDateInput.valid == true)
+        {
+          this.prospect.MoveInDate = this.moveInDateInput.value;
+        }
+        else{
+          this.changeEditMode(editStr);
+          return;
+        } 
+      } 
+      break; 
+      case 'moveoutdate': { 
+        if (this.moveOutDateInput.valid == true)
+        {
+          this.prospect.MoveOutDate = this.moveOutDateInput.value;
+        }
+        else{
+          this.changeEditMode(editStr);
+          return;
+        } 
+      } 
+      break; 
       default: { 
          //statements; 
          break; 
@@ -196,13 +217,22 @@ export class EditProspectComponent {
     }
     this.changeEditMode(editStr);
     this.fieldsModified = true;
-    //console.log("editRate is " + this.editRate);
   }
   onFileComplete(data: any) {
     //this.homeImagePath = data.link;
   }
 
   getSettings(){
+    this.prospect = this.data.prospects[this.prospectIndex];
+    this.fNameInput.setValue(this.prospect.FName);
+    this.lNameInput.setValue(this.prospect.LName);
+    this.mdInitInput.setValue(this.prospect.MdInit);
+    this.emailInput.setValue(this.prospect.EmailAddress);
+    this.phoneNumberInput.setValue(this.prospect.PhoneNumber);
+    this.moveInDateInput.setValue(this.prospect.MoveInDate);
+    this.moveOutDateInput.setValue(this.prospect.MoveOutDate);
+
+
     /*
     this.room = this.data.home.Rooms[this.currentProspectIndex];
     this.dimension1.setValue(this.room.Dimensions.split("x")[0].toString().trim());
@@ -226,7 +256,7 @@ export class EditProspectComponent {
         }).afterClosed().subscribe((choosesSave: boolean)=> {
           if (choosesSave == true){
             this.updateProspect().then((saveSuccess: boolean) => {
-              console.log("updating room");
+              console.log("updating prospect");
               if (saveSuccess == true){
                 this.fieldsModified = false;
                 this.updateCurrentProspectIndex(next);
@@ -266,6 +296,14 @@ export class EditProspectComponent {
     this.dialogRef.close(null); // this needs to return a null
   }
   fillInputsWithOriginalSettings(){
+    this.prospect.FName = this.origSettings.FName;
+    this.prospect.LName = this.origSettings.LName;
+    this.prospect.MdInit = this.origSettings.MdInit;
+    this.prospect.EmailAddress = this.origSettings.EmailAddress;
+    this.prospect.PhoneNumber = this.origSettings.PhoneNumber;
+    this.prospect.MoveInDate = this.origSettings.MoveInDate;
+    this.prospect.MoveOutDate = this.origSettings.MoveOutDate;
+
     /*
     this.room.Dimensions = this.origSettings.Dimensions;
     this.room.MonthlyRate = this.origSettings.MonthlyRate;
