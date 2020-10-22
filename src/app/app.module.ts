@@ -36,6 +36,7 @@ import { HomeDetailsComponent } from './homes/home/home-details/home-details.com
 import { ViewRoomComponent } from './homes/room/view-room/view-room.component';
 import { AddRoomModalComponent } from './homes/room/add-room-modal/add-room-modal.component';
 import { LinkRoomModalComponent } from './homes/room/link-room-modal/link-room-modal.component';
+import { EditProspectComponent } from './prospects/edit-prospect/edit-prospect.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomesComponent, data: { title: 'Homes' } },
@@ -85,7 +86,8 @@ const appRoutes: Routes = [
     HomeDetailsComponent,
     ViewRoomComponent,
     AddRoomModalComponent,
-    LinkRoomModalComponent
+    LinkRoomModalComponent,
+    EditProspectComponent
     ],
   imports: [
     BrowserModule,

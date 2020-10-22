@@ -1,0 +1,128 @@
+<div style="float:left; width:25%; height:100%;margin-left:10%">
+    <h1 mat-dialog-title></h1>
+    <div class="browseImage">
+      <img [(src)]="homeImagePath"/>
+      <br />
+      <div style="text-align:center">
+          <app-material-file-upload (complete)="onFileComplete($event)"></app-material-file-upload>
+    </div>
+  </div>
+  </div>
+  <div style="float:right; width:50%; height:100%">
+    <h3 class="h3link">View Financial History</h3>
+    <table>
+      <tr>
+        <td width="90%">
+          <h3 style="white-space: nowrap;"><label>Monthly Rate:&nbsp;&nbsp;</label>
+            <span *ngIf="editRate == false">{{'$'}}</span>
+            <span *ngIf="editRate == true">
+              <input  size="5" (blur)="updateInput('rate')" style="white-space: nowrap;" maxlength="5" required placeholder="550" 
+              [formControl]="monthlyRateInput">
+              <mat-icon *ngIf="monthlyRateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+              <mat-error *ngIf="monthlyRateInput.invalid">{{getInputErrorMessage(monthlyRateInput)}}</mat-error>
+            </span>
+          </h3>
+        </td>
+        <td width="10%">
+          <h3 *ngIf="editRate == false" class="editLinks" (click)="changeEditMode('rate')">Edit</h3>
+        </td>
+      </tr>
+      <tr>
+        <td width="90%">
+          <h3 style="white-space: nowrap;"><label>Length:&nbsp;&nbsp;</label>
+            <span *ngIf="editDimension1 == false">{{dimension1.value}}&nbsp;{{"ft"}}</span>
+            <span *ngIf="editDimension1 == true">
+              <input  size="5" (blur)="updateInput('dimension1')" style="white-space: nowrap;" maxlength="5" required placeholder="550" 
+              [formControl]="dimension1">
+              <mat-icon *ngIf="dimension1.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+              <mat-error *ngIf="dimension1.invalid">{{getInputErrorMessage(dimension1)}}</mat-error>
+            </span>
+          </h3>
+        </td>
+        <td width="10%">
+          <h3 *ngIf="editDimension1 == false" class="editLinks" (click)="changeEditMode('dimension1')">Edit</h3>
+        </td>
+      </tr>
+      <tr>
+        <td width="90%">
+          <h3 style="white-space: nowrap;"><label>Width:&nbsp;&nbsp;</label>
+            <span *ngIf="editDimension2 == false">{{dimension2.value}}&nbsp;{{"ft"}}</span>
+            <span *ngIf="editDimension2 == true">
+              <input  size="5" (blur)="updateInput('dimension2')" style="white-space: nowrap;" maxlength="5" required placeholder="550" 
+              [formControl]="dimension2">
+              <mat-icon *ngIf="dimension2.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+              <mat-error *ngIf="dimension2.invalid">{{getInputErrorMessage(dimension2)}}</mat-error>
+            </span>
+          </h3>
+        </td>
+        <td width="10%">
+          <h3 *ngIf="editDimension2 == false" class="editLinks" (click)="changeEditMode('dimension2')">Edit</h3>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3><label>Is Master:</label>&nbsp;&nbsp;
+            <span *ngIf="editMaster == false"></span>
+            <span *ngIf="editMaster == true">
+              <mat-checkbox (focusout)="updateInput('master')" [(ngModel)]="isMaster"></mat-checkbox>
+            </span>
+          </h3>
+        </td>
+        <td>
+          <h3 *ngIf="editMaster == false" class="editLinks" (click)="changeEditMode('master')">Edit</h3>
+          <h3 *ngIf="editMaster == true" class="editLinks" (click)="changeEditMode('master')">Update</h3>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3><label>Has Closet:</label>&nbsp;&nbsp;
+            <span *ngIf="editCloset == false"></span>
+            <span *ngIf="editCloset == true">
+              <mat-checkbox (focusout)="updateInput('closet')" [(ngModel)]="hasCloset"></mat-checkbox>
+            </span>
+          </h3>
+        </td>
+        <td>
+          <h3 *ngIf="editCloset == false" class="editLinks" (click)="changeEditMode('closet')">Edit</h3>
+          <h3 *ngIf="editCloset == true" class="editLinks" (click)="changeEditMode('closet')">Update</h3>
+        </td>
+      </tr>    
+      <tr>
+        <td>
+          <h3><label>Has Ceiling Fan:</label>&nbsp;&nbsp;
+            <span *ngIf="editFan == false"></span>
+            <span *ngIf="editFan == true">
+              <mat-checkbox (focusout)="updateInput('fan')" [(ngModel)]="hasCeilingFan"></mat-checkbox>
+            </span>
+          </h3>
+        </td>
+        <td>
+          <h3 *ngIf="editFan == false" class="editLinks" (click)="changeEditMode('fan')">Edit</h3>
+          <h3 *ngIf="editFan == true" class="editLinks" (click)="changeEditMode('fan')">Update</h3>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3><label>Has Private Bathroom:</label>&nbsp;&nbsp;
+            <span *ngIf="editBathroom == false"></span>
+            <span *ngIf="editBathroom == true">
+              <mat-checkbox (focusout)="updateInput('bathroom')" [(ngModel)]="hasPrivateBath"></mat-checkbox>
+            </span>
+          </h3>
+        </td>
+        <td>
+          <h3 *ngIf="editBathroom == false" class="editLinks" (click)="changeEditMode('bathroom')">Edit</h3>
+          <h3 *ngIf="editBathroom == true" class="editLinks" (click)="changeEditMode('bathroom')">Update</h3>
+        </td>
+      </tr>
+    </table>
+    <span style="margin-left:5%;">
+      <br />
+      <button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevRm(false)">Previous</button>
+      <button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevRm(true)">Next</button>
+      <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="saveBtnClickedUpdate()">Save</button>
+      <button class="lowerViewRoomButtons" id="deleteBtn" mat-button (click)="deleteBtnClicked()">Delete</button>
+      <button class="lowerViewRoomButtons" mat-button (click)="closeViewRoomDialog()">Close</button>
+    </span>
+    </div>
+  
