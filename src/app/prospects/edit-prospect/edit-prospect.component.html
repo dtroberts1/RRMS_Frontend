@@ -122,6 +122,36 @@
           <h3 *ngIf="editMoveOutDate == false" class="editLinks" (click)="changeEditMode('moveoutdate')">Edit</h3>
         </td>
       </tr>
+      <tr width="90%">
+        <td>
+          <div>
+            <span>Term: {{termType}}</span>
+            <mat-radio-group
+              aria-labelledby="example-radio-group-label"
+              class="example-radio-group"
+              [(ngModel)]="termType">
+              <mat-radio-button *ngFor="let termType of termTypeStr" [value]="termType">
+                {{termType}}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </td>
+        <td>
+        </td>
+      </tr>
+      <tr width="90%">
+        <td>
+          <br /><br />
+          <mat-label style="color:blue;" *ngIf="selectedRoomName != 'No Room Selected'">Selected Room: {{selectedRoomName}}</mat-label>
+          <mat-label style="color:red;" *ngIf="selectedRoomName == 'No Room Selected'">No Room Selected</mat-label>
+          <button mat-stroked-button color="primary"
+            style="margin-left:10px;"
+            (click)="openLinkRoomModal()"
+            >
+            Link to Room
+          </button>
+        </td>
+      </tr>
       <tr>
         <td>
           <h3><label>Has Ceiling Fan:</label>&nbsp;&nbsp;
@@ -157,7 +187,7 @@
       <button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevRm(true)">Next</button>
       <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="saveBtnClickedUpdate()">Save</button>
       <button class="lowerViewRoomButtons" id="deleteBtn" mat-button (click)="deleteBtnClicked()">Delete</button>
-      <button class="lowerViewRoomButtons" mat-button (click)="closeViewRoomDialog()">Close</button>
+      <button class="lowerViewRoomButtons" mat-button (click)="updateProspect()">Close</button>
     </span>
     </div>
   
