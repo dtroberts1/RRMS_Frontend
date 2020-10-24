@@ -9,6 +9,7 @@ import {IEmployer, SalaryType} from '../../interfaces/Employer';
 import {IRoom} from '../../interfaces/Rooms';
 import {RoomsService} from '../../services/room.service';
 import { LinkRoomModalComponent } from 'src/app/homes/room/link-room-modal/link-room-modal.component';
+import { ModifyEmployerModalComponent } from 'src/app/modify-employer-modal/modify-employer-modal.component';
 
 export enum TermType {
   monthToMonth = 1,
@@ -79,24 +80,15 @@ export class EditProspectComponent {
     
     this.prospects = data.prospects;
     this.prospectIndex = data.prospectIndex;
-    console.log("prospect input is ", JSON.stringify(this.data.prospects[this.prospectIndex]));
     if (this.prospects != null)
     {
       this.setOrigSettings(this.data.prospects[this.prospectIndex]);
       this.getSettings();
       this.prospectIndex = this.prospect.RoomId;
-      console.log("selectedRoom is " + this.selectedRoomId);
       this.roomsService.getRoom(this.prospectIndex).then((room : IRoom) => {
         this.roomsService.getRoom(room.Id).then((room: IRoom) => {
           this.selectedRoomName = room.RoomName;
-          console.log("roomname: " + this.selectedRoomName);
         });
-      /*
-      console.log("initial dimensions:" + this.room.Dimensions);
-      console.log("dim1:" + this.dimension1.value);
-      console.log("dim2:" + this.dimension2.value);
-      console.log("rooms is " + JSON.stringify(this.room));
-      */
     });
     }
     else
@@ -107,7 +99,6 @@ export class EditProspectComponent {
   setOrigSettings(prospect : IProspect)
   {
    this.origSettings = Object.assign({}, prospect);
-   console.log("in set OrigSettings, settings are " + JSON.stringify(this.origSettings ));
   }
   
   closeEmpDialog(){
@@ -124,7 +115,6 @@ export class EditProspectComponent {
         if (selectedRoomId)
         {
           this.selectedRoomId = selectedRoomId;
-          console.log("selectedRoom is " + this.selectedRoomId);
           this.roomsService.getRoom(selectedRoomId).then((room : IRoom) => {
             this.selectedRoomName = room.RoomName;
           })
@@ -137,7 +127,21 @@ export class EditProspectComponent {
       console.log(err);
     });
   }
+  openEmployerModifyModal(){
 
+  this.dialog.open(ModifyEmployerModalComponent, {
+        data: {
+          employers : this.prospect.Employers,
+          employerIndex : 0,
+        }
+      }).afterClosed().subscribe((returnedEmployerList : Iterable<IEmployer>) => {
+        if (returnedEmployerList != null)
+          this.prospect.Employers = returnedEmployerList;
+        },
+        err =>{
+          console.log(err);
+        });
+  }
   addEmp(){
 
   }
@@ -187,12 +191,12 @@ export class EditProspectComponent {
    } 
   }
   updateInput(editStr : string){
-    console.log("bluring");
     switch(editStr) { 
       case 'fname': { 
         if (this.fNameInput.valid == true)
         {
           this.prospect.FName = this.fNameInput.value;
+          
         }
         else{
           this.changeEditMode(editStr);
@@ -267,7 +271,6 @@ export class EditProspectComponent {
       } 
       case 'term': 
           this.prospect.TermType = this.termType;
-          console.log("termType is now " + this.prospect.TermType);
       break; 
       default: { 
          //statements; 
@@ -315,7 +318,6 @@ export class EditProspectComponent {
         }).afterClosed().subscribe((choosesSave: boolean)=> {
           if (choosesSave == true){
             this.updateProspect().then((saveSuccess: boolean) => {
-              console.log("updating prospect");
               if (saveSuccess == true){
                 this.fieldsModified = false;
                 this.updateCurrentProspectIndex(next);
@@ -324,9 +326,7 @@ export class EditProspectComponent {
             });
           }
           else{
-            console.log("not updating room");
             this.fieldsModified = false;
-            console.log("original settings are " + JSON.stringify(this.origSettings));
             this.fillInputsWithOriginalSettings();
             this.updateCurrentProspectIndex(next);
             this.getSettings();

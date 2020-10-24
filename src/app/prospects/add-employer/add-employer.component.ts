@@ -10,6 +10,7 @@ import {IEmployer, SalaryType} from '../../interfaces/Employer';
   styleUrls: ['./add-employer.component.css']
 })
 export class AddEmployerComponent {
+  CmpyName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,45}')]);
   MgrFName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,30}')]);
   MgrLName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,30}')]);
   MgrEmailAddress = new FormControl('', [Validators.required, Validators.email]);
@@ -58,6 +59,9 @@ export class AddEmployerComponent {
   async inputsAreValid():Promise<boolean> {
     return new Promise((resolve, reject) => {
       let invalidElements = new Array();
+      if (this.CmpyName.invalid){
+        invalidElements.push("Company Name");
+      }
       if (this.MgrFName.invalid){
         invalidElements.push("First Name");
       }
@@ -115,6 +119,7 @@ export class AddEmployerComponent {
         this.dialogRef.close(
           // IEmployer
           {
+            CompanyName : this.CmpyName.value,
             MgrEmailAddress : this.MgrEmailAddress.value,
             MgrFName : this.MgrFName.value,
             MgrLName : this.MgrLName.value,

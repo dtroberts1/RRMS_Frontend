@@ -6,7 +6,13 @@
   prospectID: number,
 -->
 <h1>Add Employer</h1>
-
+<mat-form-field appearance="standard">
+  <mat-label>Company Name</mat-label>
+  <input matInput placeholder="Stacy" required [formControl]="CmpyName">
+  <mat-icon *ngIf="CmpyName.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+  <mat-error *ngIf="CmpyName.invalid">{{getInputErrorMessage(CmpyName)}}</mat-error>
+</mat-form-field>
+<br />
   <mat-form-field appearance="standard">
     <mat-label>First Name</mat-label>
     <input matInput placeholder="Stacy" required [formControl]="MgrFName">

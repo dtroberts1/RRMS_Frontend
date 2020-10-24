@@ -154,7 +154,12 @@
       </tr>
       <tr>
         <td>
-          <h3><label>Has Ceiling Fan:</label>&nbsp;&nbsp;
+          <h3><label>Employers</label>&nbsp;&nbsp;
+            <ul>
+              <li style="list-style:none" *ngFor="let emp of prospect.Employers">
+                {{emp.CompanyName}}
+              </li>
+            </ul>
             <span *ngIf="editFan == false"></span>
             <span *ngIf="editFan == true">
               <mat-checkbox (focusout)="updateInput('fan')" [(ngModel)]="hasCeilingFan"></mat-checkbox>
@@ -162,22 +167,7 @@
           </h3>
         </td>
         <td>
-          <h3 *ngIf="editFan == false" class="editLinks" (click)="changeEditMode('fan')">Edit</h3>
-          <h3 *ngIf="editFan == true" class="editLinks" (click)="changeEditMode('fan')">Update</h3>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <h3><label>Has Private Bathroom:</label>&nbsp;&nbsp;
-            <span *ngIf="editBathroom == false"></span>
-            <span *ngIf="editBathroom == true">
-              <mat-checkbox (focusout)="updateInput('bathroom')" [(ngModel)]="hasPrivateBath"></mat-checkbox>
-            </span>
-          </h3>
-        </td>
-        <td>
-          <h3 *ngIf="editBathroom == false" class="editLinks" (click)="changeEditMode('bathroom')">Edit</h3>
-          <h3 *ngIf="editBathroom == true" class="editLinks" (click)="changeEditMode('bathroom')">Update</h3>
+          <h3 class="editLinks" (click)="openEmployerModifyModal()">Edit</h3>
         </td>
       </tr>
     </table>

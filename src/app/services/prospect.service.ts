@@ -29,7 +29,7 @@ export class ProspectService{
        return new Promise((resolve, reject) => { this.http
            .post<IProspect>(this.prospectsUrl, prospect, options).subscribe(
             prospect => {
-                   // Get some logic for response (should just return id back for newly added home)
+                   // Get some logic for response (should just return id back for newly added home)'
                    resolve(prospect);
                },
                error => {
@@ -65,6 +65,7 @@ export class ProspectService{
             .get<Iterable<IProspect>>(this.prospectsUrl, options).subscribe(
                 prospects => {
                     // Get some logic for response (should just return id back for newly added home)
+                    console.log("Resolving with " + JSON.stringify(prospects));
                     resolve(prospects);
                 },
                 error => {
