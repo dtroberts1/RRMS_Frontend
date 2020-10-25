@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
+import { AbstractControl, FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IHome } from 'src/app/interfaces/Homes';
@@ -275,7 +275,6 @@ export class ViewRoomComponent {
   updateRoom(){
     //TODO
     return new Promise((resolve, reject) => {
-      console.log("about to save with HomeId = ", this.home.Id);
       this.roomsService.updateRoom({
         RoomName: this.room.RoomName,
         Dimensions: `${this.dimension1.value} x ${this.dimension2.value}`,
@@ -304,15 +303,17 @@ export class ViewRoomComponent {
       });
     });
   }
-  getInputErrorMessage(inputField){
-    
-    if (inputField.hasError('required')) {
-      return 'You must enter a value';
-    }
-    if (inputField.hasError(inputField)){
-        return "Not a valid entry";
+  getInputErrorMessage(inputField : AbstractControl){
+    if (inputField.dirty == true){
+      if (inputField.hasError('required')) {
+        return 'You must enter a value';
+      }
+      if (inputField.hasError(inputField.value)){
+          return "Not a valid entry"; 
+      }
     }
   }
+
 
   deleteBtnClicked(){
     this.dialog.open(DialogDataRRMSDialog, {

@@ -2,6 +2,7 @@ import {IEmployer} from './Employer';
 import {IPreviousRental} from './PreviousRental';
 
 export interface IProspect{
+    Id : number,
     EmailAddress : string,
     FName : string,
     LName : string,

@@ -108,6 +108,7 @@ export class AddProspectComponent implements OnInit {
   addProspect(){
     this.inputsAreValid().then(() =>{
       this.prospectService.saveProspect({
+        Id: -1,
         EmailAddress : this.email.value,
         FName : this.fName.value,
         LName : this.lName.value,

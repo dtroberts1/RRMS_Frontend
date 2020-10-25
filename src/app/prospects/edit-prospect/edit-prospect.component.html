@@ -154,7 +154,9 @@
       </tr>
       <tr>
         <td>
-          <h3><label>Employers</label>&nbsp;&nbsp;
+          <h3><label>Employers</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a class="editLinks" (click)="openEmployerModifyModal(false)">Edit</a>&nbsp;&nbsp;
+            <a class="editLinks" (click)="openEmployerModifyModal(true)">Add</a>
             <ul>
               <li style="list-style:none" *ngFor="let emp of prospect.Employers">
                 {{emp.CompanyName}}
@@ -163,7 +165,6 @@
           </h3>
         </td>
         <td>
-          <h3 class="editLinks" (click)="openEmployerModifyModal()">Edit</h3>
         </td>
       </tr>
       <tr>

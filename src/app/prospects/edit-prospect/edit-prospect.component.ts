@@ -129,12 +129,31 @@ export class EditProspectComponent {
       console.log(err);
     });
   }
-  openEmployerModifyModal(){
-
-  this.dialog.open(ModifyEmployerModalComponent, {
+  // If add is true, it will open the modal in 'Add Employer' mode
+  openEmployerModifyModal(add: boolean){
+    if (add == true){
+      this.dialog.open(ModifyEmployerModalComponent, {
+        data: {
+          addMode: true,
+          prospectId: this.prospect.Id,
+        },
+        width:'60%',
+        height: '55%'
+      }).afterClosed().subscribe((returnedEmployer : IEmployer) => {
+        // Push the newly added employer to the list
+        if (returnedEmployer != null)
+          (<IEmployer[]>(this.prospect.Employers)).push(returnedEmployer);
+        },
+        err =>{
+          console.log(err);
+        });
+    }
+    else if(add == false){
+      this.dialog.open(ModifyEmployerModalComponent, {
         data: {
           employers : this.prospect.Employers,
           employerIndex : 0,
+          addMode: false,
         },
         width:'60%',
         height: '55%'
@@ -145,6 +164,7 @@ export class EditProspectComponent {
         err =>{
           console.log(err);
         });
+    }
   }
   addEmp(){
 

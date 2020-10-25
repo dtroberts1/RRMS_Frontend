@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, Type } from '@angular/core';
-import { FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
+import { AbstractControl, FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IHome } from 'src/app/interfaces/Homes';
@@ -25,6 +25,7 @@ export enum TermType {
   styleUrls: ['./modify-employer-modal.component.css']
 })
 export class ModifyEmployerModalComponent implements OnInit{
+  addMode: boolean;
   currItem:string;
   salItem: string;
   homeImagePath : string;
@@ -99,16 +100,21 @@ currentMap = new Map<string, boolean>([
 
   }
   ngOnInit(): void {
-    console.log("in the modal, data is " + JSON.stringify(this.data));
-    this.employers = this.data.employers;
-    this.currentEmployerIndex = this.data.employerIndex;
-    console.log("employer input is ", JSON.stringify(this.data.employers[this.currentEmployerIndex]));  
-    if (this.employers != null)
-    {
-      this.setOrigSettings(this.data.employers[this.currentEmployerIndex]);
-      this.getSettings();
-    }
-      this.employerCount = (<any[]>this.data.employers).length;
+    if (this.data.addMode == true)
+      this.addMode = true;
+      else if (this.data.addMode == false){
+        this.addMode = false;
+        this.employers = this.data.employers; 
+        if (this.employers != null)
+        {  
+            this.currentEmployerIndex = this.data.employerIndex;
+            this.setOrigSettings(this.data.employers[this.currentEmployerIndex]);
+            this.getSettings();
+            this.employerCount = (<any[]>this.data.employers).length;
+        }
+      }
+
+    console.log("addMode is ***" + this.addMode);
     }
   setOrigSettings(employer : IEmployer)
   {
@@ -182,163 +188,165 @@ currentMap = new Map<string, boolean>([
    } 
   }
   updateInput(editStr : string){
-    console.log("bluring");
-    switch(editStr) { 
-      case 'cmpyname': { 
-        if (this.cmpyNameInput.valid == true)
-        {
-          console.log("is valid");
-          this.employer.CompanyName = this.cmpyNameInput.value;
-          
-        }
-        else{
-          console.log("is not valid");
-          this.changeEditMode(editStr);
-          return;
+    if (this.addMode == false){
+      console.log("bluring");
+      switch(editStr) { 
+        case 'cmpyname': { 
+          if (this.cmpyNameInput.valid == true)
+          {
+            console.log("is valid");
+            this.employer.CompanyName = this.cmpyNameInput.value;
+            
+          }
+          else{
+            console.log("is not valid");
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'fname': { 
-        if (this.fNameInput.valid == true)
-        {
-          console.log("is valid");
-          this.employer.MgrFName = this.fNameInput.value;
-          
-        }
-        else{
-          console.log("is not valid");
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'fname': { 
+          if (this.fNameInput.valid == true)
+          {
+            console.log("is valid");
+            this.employer.MgrFName = this.fNameInput.value;
+            
+          }
+          else{
+            console.log("is not valid");
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'lname': { 
-        if (this.lNameInput.valid == true)
-        {
-          console.log("is valid");
-          this.employer.MgrLName = this.lNameInput.value;
-          
-        }
-        else{
-          console.log("is not valid");
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'lname': { 
+          if (this.lNameInput.valid == true)
+          {
+            console.log("is valid");
+            this.employer.MgrLName = this.lNameInput.value;
+            
+          }
+          else{
+            console.log("is not valid");
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'email': { 
-        if (this.emailInput.valid == true)
-        {
-          this.employer.MgrEmailAddress = this.emailInput.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'email': { 
+          if (this.emailInput.valid == true)
+          {
+            this.employer.MgrEmailAddress = this.emailInput.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'phone': { 
-        if (this.phoneInput.valid == true)
-        {
-          this.employer.MgrPhoneNumber = this.phoneInput.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'phone': { 
+          if (this.phoneInput.valid == true)
+          {
+            this.employer.MgrPhoneNumber = this.phoneInput.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break;    
-      case 'stadd1': { 
-        if (this.addressStreet1Input.valid == true)
-        {
-          this.employer.AddressStreet1 = this.addressStreet1Input.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break;    
+        case 'stadd1': { 
+          if (this.addressStreet1Input.valid == true)
+          {
+            this.employer.AddressStreet1 = this.addressStreet1Input.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'stadd2': { 
-        if (this.addressStreet2Input.valid == true)
-        {
-          this.employer.AddressStreet2 = this.addressStreet2Input.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'stadd2': { 
+          if (this.addressStreet2Input.valid == true)
+          {
+            this.employer.AddressStreet2 = this.addressStreet2Input.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'city': { 
-        if (this.cityInput.valid == true)
-        {
-          this.employer.AddressCity = this.cityInput.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'city': { 
+          if (this.cityInput.valid == true)
+          {
+            this.employer.AddressCity = this.cityInput.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'state': { 
-        if (this.stateInput.valid == true)
-        {
-          this.employer.AddressState = this.stateInput.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'state': { 
+          if (this.stateInput.valid == true)
+          {
+            this.employer.AddressState = this.stateInput.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'zipcode': { 
-        if (this.zipcodeInput.valid == true)
-        {
-          this.employer.AddressZipCode = this.zipcodeInput.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'zipcode': { 
+          if (this.zipcodeInput.valid == true)
+          {
+            this.employer.AddressZipCode = this.zipcodeInput.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'jobtitle': { 
-        if (this.jobTitleInput.valid == true)
-        {
-          this.employer.ProspectJobTitle = this.jobTitleInput.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'jobtitle': { 
+          if (this.jobTitleInput.valid == true)
+          {
+            this.employer.ProspectJobTitle = this.jobTitleInput.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'start': { 
-        if (this.startDateInput.valid == true)
-        {
-          this.employer.StartDate = this.startDateInput.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'start': { 
+          if (this.startDateInput.valid == true)
+          {
+            this.employer.StartDate = this.startDateInput.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'end': { 
-        if (this.endDateInput.valid == true)
-        {
-          this.employer.EndDate = this.endDateInput.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'end': { 
+          if (this.endDateInput.valid == true)
+          {
+            this.employer.EndDate = this.endDateInput.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
+        break; 
+      }
+      this.changeEditMode(editStr);
+      this.fieldsModified = true;
     }
-    this.changeEditMode(editStr);
-    this.fieldsModified = true;
   }
 
   getSettings(){
@@ -427,7 +435,10 @@ currentMap = new Map<string, boolean>([
   closeModifyEmpDialog(){
     // If "Yes", the map will return true, otherwise, false. 
     console.log("Sending back " + JSON.stringify(this.employers));
-    this.dialogRef.close(this.employers);
+    if (this.addMode == false)
+      this.dialogRef.close(this.employers);
+    else if(this.addMode == true)
+      this.dialogRef.close(null);
   }
   fillInputsWithOriginalSettings(){
     this.employer.CompanyName = this.origSettings.CompanyName;
@@ -452,6 +463,56 @@ currentMap = new Map<string, boolean>([
     .catch((err) => {
       console.log(err);
     })
+  }
+  createBtnClickedUpdate(){
+    this.createEmp().then(() => {
+      // Do nothing
+      this.dialogRef.close(this.employer);
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+  }
+  createEmp(){
+    console.log("before creating, ProspectID is " + this.data.prospectId);
+    this.employer = {
+      CompanyName: this.cmpyNameInput.value,
+      Id: -1,
+      MgrEmailAddress : this.emailInput.value,
+      MgrPhoneNumber: this.phoneInput.value,
+      MgrFName : this.fNameInput.value,
+      MgrLName : this.lNameInput.value,
+      AddressStreet1: this.addressStreet1Input.value,
+      AddressStreet2: this.addressStreet2Input.value,
+      AddressCity: this.cityInput.value,
+      AddressState: this.stateInput.value,
+      AddressZipCode: this.zipcodeInput.value,
+      ProspectJobTitle: this.jobTitleInput.value,
+      StartDate: this.startDateInput.value,
+      EndDate: this.endDateInput.value,
+      Current: this.currentMap.get(this.currItem),
+      SalaryType: this.salMap.get(this.salItem),
+      ProspectId: this.data.prospectId,
+    }
+    return new Promise((resolve, reject) => {
+      console.log("about to save with EmployerId = ", this.employer.Id);
+      this.employerService.saveEmployer(this.employer).then(() => {
+        this.dialog.open(DialogDataRRMSDialog, {
+          data: {
+            inError: false,
+            title: "Employer Saved",
+            contentSummary: "This Employer has been Saved",
+            errorItems: []
+          }
+          }).afterClosed().subscribe((addRooms: boolean)=> {
+            this.fieldsModified = false;
+            resolve(true);
+          });
+      }).catch((err) => {
+        console.log(err);
+        reject(false);
+      });
+    });
   }
 
   updateEmp(){
@@ -496,13 +557,14 @@ currentMap = new Map<string, boolean>([
       });
     });
   }
-  getInputErrorMessage(inputField){
-    
-    if (inputField.hasError('required')) {
-      return 'You must enter a value';
-    }
-    if (inputField.hasError(inputField)){
-        return "Not a valid entry"; 
+  getInputErrorMessage(inputField : AbstractControl){
+    if (inputField.dirty == true){
+      if (inputField.hasError('required')) {
+        return 'You must enter a value';
+      }
+      if (inputField.hasError(inputField.value)){
+          return "Not a valid entry"; 
+      }
     }
   }
 
@@ -511,12 +573,13 @@ currentMap = new Map<string, boolean>([
       data: {
         inError: false,
         title: "Delete - Are you sure?",
-        contentSummary: "Are you sure you would like to delete this prospect?",
+        contentSummary: "Are you sure you would like to delete this Employer?",
         errorItems: []
       }
     }).afterClosed().subscribe((deleteEmp: boolean)=> {
-      if (deleteEmp == true ){
+      if (deleteEmp == true ){       
         this.employerService.removeEmployer(this.employer.Id);
+        this.employers = Array.from(this.employers).filter(emp => emp.Id != this.employer.Id);
         this.dialogRef.close(this.employers); // this needs to return a null
       }
     });

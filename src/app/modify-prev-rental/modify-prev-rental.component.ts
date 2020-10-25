@@ -1,6 +1,6 @@
 import { ArrayDataSource } from '@angular/cdk/collections';
 import { Component, Inject, OnInit, Type } from '@angular/core';
-import { FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
+import { AbstractControl, FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { toArray } from 'rxjs/operators';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
@@ -24,6 +24,7 @@ export enum TermType {
   styleUrls: ['./modify-prev-rental.component.css']
 })
 export class ModifyPrevRentalComponent implements OnInit{
+  addMode: boolean;
   currItem:string;
   salItem: string;
   homeImagePath : string;
@@ -89,8 +90,16 @@ currentMap = new Map<string, boolean>([
     this.currentprevRentalIndex = this.data.prevRentalIndex;
     if (this.prevRentals != null)
     {
-      this.setOrigSettings(this.data.prevRentals[this.currentprevRentalIndex]);
-      this.getSettings();
+      // Check add-mode
+      if (this.data.addMode == true)
+      {
+        this.addMode = true;
+      }
+      else{
+        this.addMode = false;
+        this.setOrigSettings(this.data.prevRentals[this.currentprevRentalIndex]);
+        this.getSettings();
+      }
     }
     this.prevRentalCount = (<any[]>this.data.prevRentals).length;
     console.log("prevRentaCount is " + this.prevRentalCount);
@@ -426,15 +435,17 @@ currentMap = new Map<string, boolean>([
       });
     });
   }
-  getInputErrorMessage(inputField){
-    
-    if (inputField.hasError('required')) {
-      return 'You must enter a value';
-    }
-    if (inputField.hasError(inputField)){
-        return "Not a valid entry"; 
+  getInputErrorMessage(inputField : AbstractControl){
+    if (inputField.dirty == true){
+      if (inputField.hasError('required')) {
+        return 'You must enter a value';
+      }
+      if (inputField.hasError(inputField.value)){
+          return "Not a valid entry"; 
+      }
     }
   }
+
 
   deleteBtnClicked(){
     this.dialog.open(DialogDataRRMSDialog, {
