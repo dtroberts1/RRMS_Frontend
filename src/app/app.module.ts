@@ -38,6 +38,7 @@ import { AddRoomModalComponent } from './homes/room/add-room-modal/add-room-moda
 import { LinkRoomModalComponent } from './homes/room/link-room-modal/link-room-modal.component';
 import { EditProspectComponent } from './prospects/edit-prospect/edit-prospect.component';
 import { ModifyEmployerModalComponent } from './modify-employer-modal/modify-employer-modal.component';
+import { ModifyPrevRentalComponent } from './modify-prev-rental/modify-prev-rental.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomesComponent, data: { title: 'Homes' } },
@@ -89,7 +90,8 @@ const appRoutes: Routes = [
     AddRoomModalComponent,
     LinkRoomModalComponent,
     EditProspectComponent,
-    ModifyEmployerModalComponent
+    ModifyEmployerModalComponent,
+    ModifyPrevRentalComponent
     ],
   imports: [
     BrowserModule,

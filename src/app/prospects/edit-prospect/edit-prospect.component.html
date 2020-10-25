@@ -160,14 +160,24 @@
                 {{emp.CompanyName}}
               </li>
             </ul>
-            <span *ngIf="editFan == false"></span>
-            <span *ngIf="editFan == true">
-              <mat-checkbox (focusout)="updateInput('fan')" [(ngModel)]="hasCeilingFan"></mat-checkbox>
-            </span>
           </h3>
         </td>
         <td>
           <h3 class="editLinks" (click)="openEmployerModifyModal()">Edit</h3>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3><label>Previous Rentals</label>&nbsp;&nbsp;
+            <ul>
+              <li style="list-style:none" *ngFor="let prevRental of prospect.PreviousRentals">
+                {{prevRental.AddressStreet1}}
+              </li>
+            </ul>
+          </h3>
+        </td>
+        <td>
+          <h3 class="editLinks" (click)="openPrevRentModifyModal()">Edit</h3>
         </td>
       </tr>
     </table>

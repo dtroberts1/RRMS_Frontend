@@ -1,13 +1,15 @@
 export interface IPreviousRental{
-    PrevLandlordEmailAddress : string;
-    PrevLandlordPhoneNumber : string;
-    PrevLandlordFName : string;
-    PrevLandlordLName : string;
+    Id: number,
     AddressStreet1: string,
     AddressStreet2: string,
     AddressCity: string,
     AddressState: string,
     AddressZipCode: string,
+    PrevLandlordFName : string;
+    PrevLandlordPhone: string,
+    PrevLandlordLName : string;
+    PrevLandlordEmailAddress : string;
+    PrevLandlordPhoneNumber : string;
     StartDate: Date,
     EndDate: Date,
     Current: boolean,

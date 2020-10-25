@@ -6,10 +6,12 @@ import {HomesService} from '../../services/homes.service';
 import { IHome } from 'src/app/interfaces/Homes';
 import { IProspect } from 'src/app/interfaces/Prospect';
 import {IEmployer, SalaryType} from '../../interfaces/Employer';
+import {IPreviousRental} from '../../interfaces/PreviousRental';
 import {IRoom} from '../../interfaces/Rooms';
 import {RoomsService} from '../../services/room.service';
 import { LinkRoomModalComponent } from 'src/app/homes/room/link-room-modal/link-room-modal.component';
 import { ModifyEmployerModalComponent } from 'src/app/modify-employer-modal/modify-employer-modal.component';
+import { ModifyPrevRentalComponent } from 'src/app/modify-prev-rental/modify-prev-rental.component';
 
 export enum TermType {
   monthToMonth = 1,
@@ -95,7 +97,7 @@ export class EditProspectComponent {
       console.log("rooms is null in view-room: " + data.home.Rooms[this.currentProspectIndex]);
     this.prospectCount = (<any[]>data.prospects).length;
   }
-  
+
   setOrigSettings(prospect : IProspect)
   {
    this.origSettings = Object.assign({}, prospect);
@@ -133,7 +135,9 @@ export class EditProspectComponent {
         data: {
           employers : this.prospect.Employers,
           employerIndex : 0,
-        }
+        },
+        width:'60%',
+        height: '55%'
       }).afterClosed().subscribe((returnedEmployerList : Iterable<IEmployer>) => {
         if (returnedEmployerList != null)
           this.prospect.Employers = returnedEmployerList;
@@ -144,6 +148,22 @@ export class EditProspectComponent {
   }
   addEmp(){
 
+  }
+  openPrevRentModifyModal(){
+    this.dialog.open(ModifyPrevRentalComponent, {
+      data: {
+        prevRentals : this.prospect.PreviousRentals,
+        prevRentalIndex : 0,
+      },
+      width:'60%',
+      height: '55%'
+    }).afterClosed().subscribe((returnedPrevRentalList : Iterable<IPreviousRental>) => {
+      if (returnedPrevRentalList != null)
+        this.prospect.PreviousRentals = returnedPrevRentalList;
+      },
+      err =>{
+        console.log(err);
+      });
   }
   canDispNextAndPrev(){
     if (this.prospectCount > 1)
@@ -383,7 +403,6 @@ export class EditProspectComponent {
 
   updateProspect(){
     //TODO
-    console.log("returning "+ this.termType);
     return new Promise((resolve, reject) => {
     });
   }

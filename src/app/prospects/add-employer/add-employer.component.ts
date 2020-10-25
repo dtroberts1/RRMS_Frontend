@@ -119,6 +119,7 @@ export class AddEmployerComponent {
         this.dialogRef.close(
           // IEmployer
           {
+            Id: -1,
             CompanyName : this.CmpyName.value,
             MgrEmailAddress : this.MgrEmailAddress.value,
             MgrFName : this.MgrFName.value,

@@ -1,35 +1,33 @@
+import { ArrayDataSource } from '@angular/cdk/collections';
 import { Component, Inject, OnInit, Type } from '@angular/core';
 import { FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { toArray } from 'rxjs/operators';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IHome } from 'src/app/interfaces/Homes';
 import { IProspect } from 'src/app/interfaces/Prospect';
-import {IEmployer, SalaryType} from '../interfaces/Employer';
-import {EmployerService} from '../services/employer.service';
+import {IPreviousRental} from '../interfaces/PreviousRental';
+import {PreviousRental} from '../services/prevrental.service';
 
 interface ICurrentEmp{
   name: string;
   current: boolean;
 };
-interface ISalaryType{
-  name: string,
-  salaryType: SalaryType,
-}
+
 export enum TermType {
   monthToMonth = 1,
   fixedTerm = 2,
 }
 @Component({
-  selector: 'app-modify-employer-modal',
-  templateUrl: './modify-employer-modal.component.html',
-  styleUrls: ['./modify-employer-modal.component.css']
+  selector: 'app-modify-prev-rental',
+  templateUrl: './modify-prev-rental.component.html',
+  styleUrls: ['./modify-prev-rental.component.css']
 })
-export class ModifyEmployerModalComponent implements OnInit{
+export class ModifyPrevRentalComponent implements OnInit{
   currItem:string;
   salItem: string;
   homeImagePath : string;
-  origSettings : IEmployer;
-  editCmpyName: boolean = false;
+  origSettings : IPreviousRental;
   editFName: boolean = false;
   editLName: boolean = false;
   editMdInit: boolean = false;
@@ -40,16 +38,14 @@ export class ModifyEmployerModalComponent implements OnInit{
   editCity: boolean = false;
   editState: boolean = false;
   editZipcode: boolean = false;
-  editJobTitle: boolean = false;
   editStartDate: boolean = false;
   editEndDate: boolean = false;
   fieldsModified: boolean = false;
-  currentEmployerIndex: number;
-  employerCount: number = 0;
-  employer: IEmployer;
-  employers: Iterable<IEmployer>;
+  currentprevRentalIndex: number;
+  prevRentalCount: number;
+  prevRental: IPreviousRental;
+  prevRentals: Iterable<IPreviousRental>;
   selectedRoomId : number;
-  cmpyNameInput : FormControl = new FormControl('', [Validators.required, Validators.pattern(/^[.@&]?[a-zA-Z0-9 ]+[ !.@&()]?[ a-zA-Z0-9!()]+/)]);
   fNameInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,25}')]);
   lNameInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,25}')]);
   emailInput : FormControl = new FormControl('', [Validators.required, Validators.email]);
@@ -60,7 +56,6 @@ export class ModifyEmployerModalComponent implements OnInit{
   cityInput = new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z\u0080-\u024F]+(?:. |-| |')*([1-9a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$")]);
   stateInput  = new FormControl('',[Validators.required, Validators.pattern('^((A[LKZR])|(C[AOT])|(D[EC])|(FL)|(GA)|(HI)|(I[DLNA])|(K[SY])|(LA)|(M[EDAINSOT])|(N[EVHJMYCD])|(O[HKR])|(PA)|(RI)|(S[CD])|(T[NX])|(UT)|(V[TA])|(W[AVIY]))$')]);
   zipcodeInput = new FormControl('',  [Validators.required, Validators.pattern('^[0-9]{5}(?:-[0-9]{4})?$')]);
-  jobTitleInput = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,30}')]);
   startDateInput = new FormControl('', [Validators.required, Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|\[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
   endDateInput = new FormControl('', [Validators.required, Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|\[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
   termTypeStr: string[] = ['Month-to-Month', 'Fixed-Term'];
@@ -69,21 +64,12 @@ export class ModifyEmployerModalComponent implements OnInit{
     { "name": "No", current: false},
     { "name": "Yes", current: true}
 ]
-  salList:Iterable<ISalaryType> = [
-    {"name": "Hourly", salaryType: SalaryType.hourly},
-    {"name": "Annual", salaryType: SalaryType.annual},
-  ]
 currentMap = new Map<string, boolean>([
   ['No', false],
   ['Yes', true]
 ]);
-  salMap = new Map<string, SalaryType>([
-    ["Hourly", SalaryType.hourly],
-    ["Annual", SalaryType.annual],
-  ])
+ 
 
-  salaryType: string[] = ['Annual', 'Hourly'];
-  salType : SalaryType = SalaryType.annual; // Possibly need to assign this to number instead of SalaryType
 
   isMaster : boolean;
   hasCloset : boolean;
@@ -92,41 +78,35 @@ currentMap = new Map<string, boolean>([
   selectedRoomName : string = 'No Room Selected';
  
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, 
-  public dialogRef: MatDialogRef<ModifyEmployerModalComponent>,
+  public dialogRef: MatDialogRef<ModifyPrevRentalComponent>,
   public dialog: MatDialog,
-  private employerService: EmployerService, 
+  private prevRentalService: PreviousRental, 
   ) {
 
   }
   ngOnInit(): void {
-    console.log("in the modal, data is " + JSON.stringify(this.data));
-    this.employers = this.data.employers;
-    this.currentEmployerIndex = this.data.employerIndex;
-    console.log("employer input is ", JSON.stringify(this.data.employers[this.currentEmployerIndex]));  
-    if (this.employers != null)
+    this.prevRentals = this.data.prevRentals;
+    this.currentprevRentalIndex = this.data.prevRentalIndex;
+    if (this.prevRentals != null)
     {
-      this.setOrigSettings(this.data.employers[this.currentEmployerIndex]);
+      this.setOrigSettings(this.data.prevRentals[this.currentprevRentalIndex]);
       this.getSettings();
     }
-      this.employerCount = (<any[]>this.data.employers).length;
+    this.prevRentalCount = (<any[]>this.data.prevRentals).length;
+    console.log("prevRentaCount is " + this.prevRentalCount);
     }
-  setOrigSettings(employer : IEmployer)
+  setOrigSettings(prevRental : IPreviousRental)
   {
-   this.origSettings = Object.assign({}, employer);
-   console.log("in set OrigSettings, settings are " + JSON.stringify(this.origSettings ));
+   this.origSettings = Object.assign({}, prevRental);
   }
 
   canDispNextAndPrev(){
-    if (this.employerCount > 1)
+    if (this.prevRentalCount > 1)
       return true;
     return false;
   }
   changeEditMode(str:string){
     switch(str) { 
-      case 'cmpyname': { 
-        this.editCmpyName = !this.editCmpyName;
-         break; 
-      } 
       case 'fname': { 
         this.editFName = !this.editFName;
          break; 
@@ -163,10 +143,6 @@ currentMap = new Map<string, boolean>([
         this.editZipcode = !this.editZipcode;
       }
       break;  
-      case 'jobtitle': { 
-        this.editJobTitle = !this.editJobTitle;
-      }
-      break; 
       case 'start': { 
         this.editStartDate = !this.editStartDate;
       }
@@ -182,31 +158,14 @@ currentMap = new Map<string, boolean>([
    } 
   }
   updateInput(editStr : string){
-    console.log("bluring");
     switch(editStr) { 
-      case 'cmpyname': { 
-        if (this.cmpyNameInput.valid == true)
-        {
-          console.log("is valid");
-          this.employer.CompanyName = this.cmpyNameInput.value;
-          
-        }
-        else{
-          console.log("is not valid");
-          this.changeEditMode(editStr);
-          return;
-        } 
-      } 
-      break; 
       case 'fname': { 
         if (this.fNameInput.valid == true)
         {
-          console.log("is valid");
-          this.employer.MgrFName = this.fNameInput.value;
+          this.prevRental.PrevLandlordFName = this.fNameInput.value;
           
         }
         else{
-          console.log("is not valid");
           this.changeEditMode(editStr);
           return;
         } 
@@ -215,12 +174,10 @@ currentMap = new Map<string, boolean>([
       case 'lname': { 
         if (this.lNameInput.valid == true)
         {
-          console.log("is valid");
-          this.employer.MgrLName = this.lNameInput.value;
+          this.prevRental.PrevLandlordLName = this.lNameInput.value;
           
         }
         else{
-          console.log("is not valid");
           this.changeEditMode(editStr);
           return;
         } 
@@ -229,7 +186,7 @@ currentMap = new Map<string, boolean>([
       case 'email': { 
         if (this.emailInput.valid == true)
         {
-          this.employer.MgrEmailAddress = this.emailInput.value;
+          this.prevRental.PrevLandlordEmailAddress = this.emailInput.value;
         }
         else{
           this.changeEditMode(editStr);
@@ -240,7 +197,7 @@ currentMap = new Map<string, boolean>([
       case 'phone': { 
         if (this.phoneInput.valid == true)
         {
-          this.employer.MgrPhoneNumber = this.phoneInput.value;
+          this.prevRental.PrevLandlordPhone = this.phoneInput.value;
         }
         else{
           this.changeEditMode(editStr);
@@ -251,7 +208,7 @@ currentMap = new Map<string, boolean>([
       case 'stadd1': { 
         if (this.addressStreet1Input.valid == true)
         {
-          this.employer.AddressStreet1 = this.addressStreet1Input.value;
+          this.prevRental.AddressStreet1 = this.addressStreet1Input.value;
         }
         else{
           this.changeEditMode(editStr);
@@ -262,7 +219,7 @@ currentMap = new Map<string, boolean>([
       case 'stadd2': { 
         if (this.addressStreet2Input.valid == true)
         {
-          this.employer.AddressStreet2 = this.addressStreet2Input.value;
+          this.prevRental.AddressStreet2 = this.addressStreet2Input.value;
         }
         else{
           this.changeEditMode(editStr);
@@ -273,7 +230,7 @@ currentMap = new Map<string, boolean>([
       case 'city': { 
         if (this.cityInput.valid == true)
         {
-          this.employer.AddressCity = this.cityInput.value;
+          this.prevRental.AddressCity = this.cityInput.value;
         }
         else{
           this.changeEditMode(editStr);
@@ -284,7 +241,7 @@ currentMap = new Map<string, boolean>([
       case 'state': { 
         if (this.stateInput.valid == true)
         {
-          this.employer.AddressState = this.stateInput.value;
+          this.prevRental.AddressState = this.stateInput.value;
         }
         else{
           this.changeEditMode(editStr);
@@ -295,18 +252,7 @@ currentMap = new Map<string, boolean>([
       case 'zipcode': { 
         if (this.zipcodeInput.valid == true)
         {
-          this.employer.AddressZipCode = this.zipcodeInput.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
-        } 
-      } 
-      break; 
-      case 'jobtitle': { 
-        if (this.jobTitleInput.valid == true)
-        {
-          this.employer.ProspectJobTitle = this.jobTitleInput.value;
+          this.prevRental.AddressZipCode = this.zipcodeInput.value;
         }
         else{
           this.changeEditMode(editStr);
@@ -317,7 +263,7 @@ currentMap = new Map<string, boolean>([
       case 'start': { 
         if (this.startDateInput.valid == true)
         {
-          this.employer.StartDate = this.startDateInput.value;
+          this.prevRental.StartDate = this.startDateInput.value;
         }
         else{
           this.changeEditMode(editStr);
@@ -328,7 +274,7 @@ currentMap = new Map<string, boolean>([
       case 'end': { 
         if (this.endDateInput.valid == true)
         {
-          this.employer.EndDate = this.endDateInput.value;
+          this.prevRental.EndDate = this.endDateInput.value;
         }
         else{
           this.changeEditMode(editStr);
@@ -342,38 +288,31 @@ currentMap = new Map<string, boolean>([
   }
 
   getSettings(){
-    console.log("in getsett, empindex is " + this.currentEmployerIndex);
-    this.employer = this.data.employers[this.currentEmployerIndex];
+    this.prevRental = this.data.prevRentals[this.currentprevRentalIndex];
 
-    this.cmpyNameInput.setValue(this.employer.CompanyName);
-    this.fNameInput.setValue(this.employer.MgrFName);
-    this.fNameInput.setValue(this.employer.MgrLName);
-    this.emailInput.setValue(this.employer.MgrEmailAddress);
-    this.phoneInput.setValue(this.employer.MgrPhoneNumber);
-    this.addressStreet1Input.setValue(this.employer.AddressStreet1);
-    this.addressStreet2Input.setValue(this.employer.AddressStreet2);
-    this.cityInput.setValue(this.employer.AddressCity);
-    this.stateInput.setValue(this.employer.AddressState);
-    this.zipcodeInput.setValue(this.employer.AddressZipCode);
-    this.jobTitleInput.setValue(this.employer.ProspectJobTitle);
-    this.startDateInput.setValue(this.employer.StartDate);
-    this.endDateInput.setValue(this.employer.EndDate);
-    this.setCurrentEmp(); // Radio button for if employer is current
-    this.setSalType(); // Radio button for salary item for employer
+    this.fNameInput.setValue(this.prevRental.PrevLandlordFName);
+    this.fNameInput.setValue(this.prevRental.PrevLandlordLName);
+    this.emailInput.setValue(this.prevRental.PrevLandlordEmailAddress);
+    this.phoneInput.setValue(this.prevRental.PrevLandlordPhone);
+    this.addressStreet1Input.setValue(this.prevRental.AddressStreet1);
+    this.addressStreet2Input.setValue(this.prevRental.AddressStreet2);
+    this.cityInput.setValue(this.prevRental.AddressCity);
+    this.stateInput.setValue(this.prevRental.AddressState);
+    this.zipcodeInput.setValue(this.prevRental.AddressZipCode);
+    this.startDateInput.setValue(this.prevRental.StartDate);
+    this.endDateInput.setValue(this.prevRental.EndDate);
+    this.setCurrentEmp(); // Radio button for if prevRental is current
+    this.setSalType(); // Radio button for salary item for prevRental
   }
 
   setCurrentEmp(){
-    console.log("this.employer.current: " + this.employer.Current);
-    if (this.employer.Current == true)
+    if (this.prevRental.Current == true)
       this.currItem = this.currentList[1].name;
-    else if (this.employer.Current == false)
+    else if (this.prevRental.Current == false)
       this.currItem = this.currentList[0].name;
   }
   setSalType(){
-    if (this.employer.SalaryType == SalaryType.annual)
-      this.salItem = this.salList[1].name;
-    else if(this.employer.SalaryType == SalaryType.hourly)
-      this.salItem = this.salList[0].name;
+
   }
 
   goToNextOrPrevEmp(next: boolean){
@@ -388,62 +327,56 @@ currentMap = new Map<string, boolean>([
         }).afterClosed().subscribe((choosesSave: boolean)=> {
           if (choosesSave == true){
             this.updateEmp().then((saveSuccess: boolean) => {
-              console.log("updating employer");
               if (saveSuccess == true){
                 this.fieldsModified = false;
-                this.updatecurrentEmployerIndex(next);
+                this.updatecurrentprevRentalIndex(next);
                 this.getSettings();
               }
             });
           }
           else{
-            console.log("not updating employer");
             this.fieldsModified = false;
-            console.log("original settings are " + JSON.stringify(this.origSettings));
             //this.fillInputsWithOriginalSettings();
-            this.updatecurrentEmployerIndex(next);
+            this.updatecurrentprevRentalIndex(next);
             this.getSettings();
           }
         });
     }
     else{
-      this.updatecurrentEmployerIndex(next);
+      this.updatecurrentprevRentalIndex(next);
       this.getSettings();
     }
   }
-  updatecurrentEmployerIndex(next: boolean)
+  updatecurrentprevRentalIndex(next: boolean)
   {
     if (next == true){
-      this.currentEmployerIndex = (this.currentEmployerIndex + 1) % (<any[]>this.data.employers).length;
+      this.currentprevRentalIndex = (this.currentprevRentalIndex + 1) % (<any[]>this.data.prevRentals).length;
     }
     else if(next == false){ // If navigating to "previous"
-      this.currentEmployerIndex--;
-      if (this.currentEmployerIndex < 0){
-        this.currentEmployerIndex = (<any[]>this.data.employers).length - 1;
+      this.currentprevRentalIndex--;
+      if (this.currentprevRentalIndex < 0){
+        this.currentprevRentalIndex = (<any[]>this.data.prevRentals).length - 1;
       }
     }
   }
 
   closeModifyEmpDialog(){
     // If "Yes", the map will return true, otherwise, false. 
-    console.log("Sending back " + JSON.stringify(this.employers));
-    this.dialogRef.close(this.employers);
+    this.dialogRef.close(this.prevRentals);
   }
   fillInputsWithOriginalSettings(){
-    this.employer.CompanyName = this.origSettings.CompanyName;
-    this.employer.MgrFName = this.origSettings.MgrFName;
-    this.employer.MgrLName = this.origSettings.MgrLName;
-    this.employer.MgrEmailAddress = this.origSettings.MgrEmailAddress;
-    this.employer.MgrPhoneNumber = this.origSettings.MgrPhoneNumber;
-    this.employer.AddressStreet1 = this.origSettings.AddressStreet1;
-    this.employer.AddressStreet2 = this.origSettings.AddressStreet2;
-    this.employer.AddressCity = this.origSettings.AddressCity;
-    this.employer.AddressState = this.origSettings.AddressState;
-    this.employer.AddressZipCode = this.origSettings.AddressZipCode;
-    this.employer.ProspectJobTitle = this.origSettings.ProspectJobTitle;
-    this.employer.StartDate = this.origSettings.StartDate;
-    this.employer.EndDate = this.origSettings.EndDate;
-    this.employer.Current = this.origSettings.Current;
+    this.prevRental.PrevLandlordFName = this.origSettings.PrevLandlordFName;
+    this.prevRental.PrevLandlordLName = this.origSettings.PrevLandlordLName;
+    this.prevRental.PrevLandlordEmailAddress = this.origSettings.PrevLandlordEmailAddress;
+    this.prevRental.PrevLandlordPhone = this.origSettings.PrevLandlordPhone;
+    this.prevRental.AddressStreet1 = this.origSettings.AddressStreet1;
+    this.prevRental.AddressStreet2 = this.origSettings.AddressStreet2;
+    this.prevRental.AddressCity = this.origSettings.AddressCity;
+    this.prevRental.AddressState = this.origSettings.AddressState;
+    this.prevRental.AddressZipCode = this.origSettings.AddressZipCode;
+    this.prevRental.StartDate = this.origSettings.StartDate;
+    this.prevRental.EndDate = this.origSettings.EndDate;
+    this.prevRental.Current = this.origSettings.Current;
   }
   saveBtnClickedUpdate(){
     this.updateEmp().then(() => {
@@ -456,34 +389,31 @@ currentMap = new Map<string, boolean>([
 
   updateEmp(){
     //TODO
-    this.employer = {
-      CompanyName: this.employer.CompanyName,
-      Id: this.employer.Id,
-      MgrEmailAddress : this.emailInput.value,
-      MgrPhoneNumber: this.phoneInput.value,
-      MgrFName : this.fNameInput.value,
-      MgrLName : this.lNameInput.value,
+    this.prevRental = {
+      Id: this.prevRental.Id,
+      PrevLandlordEmailAddress : this.emailInput.value,
+      PrevLandlordPhoneNumber : this.phoneInput.value,
+      PrevLandlordPhone: this.phoneInput.value,
+      PrevLandlordFName : this.fNameInput.value,
+      PrevLandlordLName : this.lNameInput.value,
       AddressStreet1: this.addressStreet1Input.value,
       AddressStreet2: this.addressStreet2Input.value,
       AddressCity: this.cityInput.value,
       AddressState: this.stateInput.value,
       AddressZipCode: this.zipcodeInput.value,
-      ProspectJobTitle: this.jobTitleInput.value,
       StartDate: this.startDateInput.value,
       EndDate: this.endDateInput.value,
       Current: this.currentMap.get(this.currItem),
-      SalaryType: this.salMap.get(this.salItem),
-      ProspectId: this.employer.ProspectId,
+      ProspectId: this.prevRental.ProspectId,
     }
-    this.employers[this.currentEmployerIndex] = this.employer;
+    this.prevRentals[this.currentprevRentalIndex] = this.prevRental;
     return new Promise((resolve, reject) => {
-      console.log("about to save with EmployerId = ", this.employer.Id);
-      this.employerService.updateEmployer(this.employer).then(() => {
+      this.prevRentalService.updatePrevRental(this.prevRental).then(() => {
         this.dialog.open(DialogDataRRMSDialog, {
           data: {
             inError: false,
-            title: "Employer Saved",
-            contentSummary: "This Employer has been Saved",
+            title: "prevRental Saved",
+            contentSummary: "This prevRental has been Saved",
             errorItems: []
           }
           }).afterClosed().subscribe((addRooms: boolean)=> {
@@ -511,13 +441,14 @@ currentMap = new Map<string, boolean>([
       data: {
         inError: false,
         title: "Delete - Are you sure?",
-        contentSummary: "Are you sure you would like to delete this prospect?",
+        contentSummary: "Are you sure you would like to delete this previous rental?",
         errorItems: []
       }
     }).afterClosed().subscribe((deleteEmp: boolean)=> {
-      if (deleteEmp == true ){
-        this.employerService.removeEmployer(this.employer.Id);
-        this.dialogRef.close(this.employers); // this needs to return a null
+      if (deleteEmp == true ){       
+        this.prevRentalService.removePrevRental(this.prevRental.Id);
+        this.prevRentals = Array.from(this.prevRentals).filter(prevRental => prevRental.Id != this.prevRental.Id);
+        this.dialogRef.close(this.prevRentals); // this needs to return a null
       }
     });
 

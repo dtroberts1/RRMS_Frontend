@@ -229,7 +229,6 @@ export class ViewRoomComponent {
             console.log("not updating room");
             this.fieldsModified = false;
             console.log("original settings are " + JSON.stringify(this.origSettings));
-            this.fillInputsWithOriginalSettings();
             this.updateCurrentRoomIndex(next);
             this.getSettings();
           }
