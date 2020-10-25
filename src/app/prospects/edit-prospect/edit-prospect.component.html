@@ -1,13 +1,67 @@
 <div style="float:left; width:25%; height:100%;margin-left:10%">
-    <h1 mat-dialog-title></h1>
-    <div class="browseImage">
-      <img [(src)]="homeImagePath"/>
-      <br />
-      <div style="text-align:center">
-          <app-material-file-upload (complete)="onFileComplete($event)"></app-material-file-upload>
-    </div>
-  </div>
-  </div>
+  <h1 mat-dialog-title>
+    Prospect: {{fNameInput.value}}{{" "}}{{mdInitInput.value != "" ? mdInitInput.value : ""}}
+      {{mdInitInput.value != "" ? " " : ""}}{{lNameInput.value}}
+  </h1>
+  <table>
+    <tr width="90%">
+      <td>
+        <div>
+          <h3 style="white-space: nowrap;"><label>Term&nbsp;&nbsp;</label>
+            <mat-radio-group name="termList"  fxLayout="column" [(ngModel)]="termType" (change)="fieldsModified = true">
+              <mat-radio-button *ngFor="let termType of termList" [value]="termType.name" name="termList" >{{ termType.name}}</mat-radio-button>
+            </mat-radio-group>
+          </h3>
+        </div>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr width="90%">
+      <td>
+        <h3><label>Room</label>&nbsp;&nbsp;&nbsp;
+            <a class="editLinks" (click)="openLinkRoomModal()">Modify</a>
+        <ul>
+          <li style="list-style:none;">     
+            <mat-label style="color:blue;" *ngIf="selectedRoomName != 'No Room Selected'">{{selectedRoomName}}</mat-label>
+            <mat-label style="color:red;" *ngIf="selectedRoomName == 'No Room Selected'"><h3>No Room Selected</h3></mat-label>
+          </li>
+        </ul>
+        </h3>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <h3><label>Employers</label>&nbsp;&nbsp;&nbsp;
+          <a class="editLinks" (click)="openEmployerModifyModal(false)">Modify</a>&nbsp;
+          <a class="editLinks" (click)="openEmployerModifyModal(true)">Add</a>
+          <ul>
+            <li style="list-style:none" *ngFor="let emp of prospect.Employers">
+              {{emp.CompanyName}}
+            </li>
+          </ul>
+        </h3>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <h3><label>Previous Rentals</label>&nbsp;&nbsp;
+          <a class="editLinks" (click)="openPrevRentModifyModal(false)">Modify</a>&nbsp;
+          <a class="editLinks" (click)="openPrevRentModifyModal(true)">Add</a>
+          <ul>
+            <li style="list-style:none" *ngFor="let prevRental of prospect.PreviousRentals">
+              {{prevRental.AddressStreet1}}
+            </li>
+          </ul>
+        </h3>
+      </td>
+      <td>
+      </td>
+    </tr>
+  </table>
+</div>
   <div style="float:right; width:50%; height:100%">
     <table>
       <tr>
@@ -122,64 +176,35 @@
           <h3 *ngIf="editMoveOutDate == false" class="editLinks" (click)="changeEditMode('moveoutdate')">Edit</h3>
         </td>
       </tr>
-      <tr width="90%">
-        <td>
-          <div>
-            <span>Term: {{termType}}</span>
-            <mat-radio-group
-              aria-labelledby="example-radio-group-label"
-              class="example-radio-group"
-              [(ngModel)]="termType">
-              <mat-radio-button *ngFor="let termType of termTypeStr" [value]="termType">
-                {{termType}}
-              </mat-radio-button>
-            </mat-radio-group>
-          </div>
+      <tr>
+        <td width="90%">
+          <h3 style="white-space: nowrap;"><label>SSN:&nbsp;&nbsp;</label>
+            <span *ngIf="editSSN == false">{{prospect.SSN}}</span>
+            <span *ngIf="editSSN == true">
+              <input size="30" (blur)="updateInput('ssn')" style="white-space: nowrap;" maxlength="30" required placeholder="222-22-2222" 
+              [formControl]="ssnInput">
+              <mat-icon *ngIf="ssnInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+              <mat-error *ngIf="ssnInput.invalid">{{getInputErrorMessage(ssnInput)}}</mat-error>
+            </span>
+          </h3>
         </td>
-        <td>
-        </td>
-      </tr>
-      <tr width="90%">
-        <td>
-          <br /><br />
-          <mat-label style="color:blue;" *ngIf="selectedRoomName != 'No Room Selected'">Selected Room: {{selectedRoomName}}</mat-label>
-          <mat-label style="color:red;" *ngIf="selectedRoomName == 'No Room Selected'">No Room Selected</mat-label>
-          <button mat-stroked-button color="primary"
-            style="margin-left:10px;"
-            (click)="openLinkRoomModal()"
-            >
-            Link to Room
-          </button>
+        <td width="10%">
+          <h3 *ngIf="editSSN == false" class="editLinks" (click)="changeEditMode('ssn')">Edit</h3>
         </td>
       </tr>
       <tr>
-        <td>
-          <h3><label>Employers</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a class="editLinks" (click)="openEmployerModifyModal(false)">Modify</a>&nbsp;&nbsp;
-            <a class="editLinks" (click)="openEmployerModifyModal(true)">Add</a>
-            <ul>
-              <li style="list-style:none" *ngFor="let emp of prospect.Employers">
-                {{emp.CompanyName}}
-              </li>
-            </ul>
-          </h3>
+        <td width="90%">
+          <mat-form-field appearance="fill">
+            <mat-label>Status</mat-label>
+            <mat-select [(value)]="selectedStatus" (selectionChange)="setModified($event)">
+            <mat-option *ngFor="let stat of statusList" [value]="stat.statusType">
+                {{stat.name}}
+            </mat-option>
+            </mat-select>
+        </mat-form-field>
         </td>
-        <td>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <h3><label>Previous Rentals</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a class="editLinks" (click)="openPrevRentModifyModal(false)">Modify</a>&nbsp;&nbsp;
-            <a class="editLinks" (click)="openPrevRentModifyModal(true)">Add</a>
-            <ul>
-              <li style="list-style:none" *ngFor="let prevRental of prospect.PreviousRentals">
-                {{prevRental.AddressStreet1}}
-              </li>
-            </ul>
-          </h3>
-        </td>
-        <td>
+        <td width="10%">
+
         </td>
       </tr>
     </table>
@@ -189,7 +214,7 @@
       <button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevRm(true)">Next</button>
       <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="saveBtnClickedUpdate()">Save</button>
       <button class="lowerViewRoomButtons" id="deleteBtn" mat-button (click)="deleteBtnClicked()">Delete</button>
-      <button class="lowerViewRoomButtons" mat-button (click)="updateProspect()">Close</button>
+      <button class="lowerViewRoomButtons" mat-button (click)="closeProspectDialog()">Close</button>
     </span>
     </div>
   

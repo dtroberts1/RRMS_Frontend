@@ -52,10 +52,11 @@ export class ProspectsComponent implements OnInit {
         prospects: this.prospects,
         prospectIndex : prosIndex,
       },
-      width:'45%',
-      height: '55%'
-    }).afterClosed().subscribe(() => {
+      width:'65%',
+      height: '65%'
+    }).afterClosed().subscribe((updatedProspectList: Iterable<IProspect>) => {
       // The EditProspectComponent shouldn't return back anything.
+      this.prospects = updatedProspectList;
     });
   }
 

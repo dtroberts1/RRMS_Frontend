@@ -3,6 +3,7 @@ import { FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/f
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import {HomesService} from '../../services/homes.service';
+import {ProspectService} from '../../services/prospect.service';
 import { IHome } from 'src/app/interfaces/Homes';
 import { IProspect } from 'src/app/interfaces/Prospect';
 import {IEmployer, SalaryType} from '../../interfaces/Employer';
@@ -17,17 +18,30 @@ export enum TermType {
   monthToMonth = 1,
   fixedTerm = 2,
 }
+enum ProspectStatus {
+  approved = 1,
+  declined = 2,
+  pending = 3,
+}
+interface ITermType{
+  name: string,
+  termType: TermType,
+}
+interface IStatus{
+  name: string,
+  statusType: ProspectStatus,
+}
 @Component({
   selector: 'app-edit-prospect',
   templateUrl: './edit-prospect.component.html',
   styleUrls: ['./edit-prospect.component.css']
 })
 export class EditProspectComponent {
+  selectedStatus : ProspectStatus;
   homeImagePath : string;
   room : IRoom;
   origSettings : IProspect;
   prospects : Iterable<IProspect>;
-  prospectIndex: number;
   editFName: boolean = false;
   editLName: boolean = false;
   editMdInit: boolean = false;
@@ -35,6 +49,7 @@ export class EditProspectComponent {
   editPhoneNumber: boolean = false;
   editMoveinDate: boolean = false;
   editMoveOutDate: boolean = false;
+  editSSN: boolean = false;
   editTermType: boolean = false;
   editDimension2: boolean = false;
   editMaster: boolean = false;
@@ -47,8 +62,6 @@ export class EditProspectComponent {
   homes: Iterable<IHome>;
   prospect : IProspect;
   selectedRoomId : number;
-  dimension1 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
-  dimension2 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
   fNameInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,25}')]);
   lNameInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,25}')]);
   mdInitInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{1}')]);
@@ -56,8 +69,18 @@ export class EditProspectComponent {
   phoneNumberInput = new FormControl('', [Validators.required, Validators.pattern(/((\(\d{3}\) ?)|(\d{3}-))?\d{3}-\d{4}/)]);
   moveInDateInput = new FormControl('', [Validators.required, Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|\[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
   moveOutDateInput = new FormControl('', [Validators.required, Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|\[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
+  ssnInput = new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{3}\-?[0-9]{2}\-?[0-9]{4}$/)]);
   termTypeStr: string[] = ['Month-to-Month', 'Fixed-Term'];
-  termType : TermType = TermType.monthToMonth;
+  termType : string;
+  termList:Iterable<ITermType> = [
+    { "name": "Month-to-Month", termType: TermType.monthToMonth},
+    { "name": "Fixed-Term", termType: TermType.fixedTerm}
+]
+statusList:Iterable<IStatus> = [
+  { "name": "Approved", statusType : ProspectStatus.approved},
+  { "name": "Declined", statusType : ProspectStatus.declined},
+  { "name": "Pending", statusType : ProspectStatus.pending}
+]
   termTypeMap = new Map<string, TermType>([
     ['Month-to-Month', TermType.monthToMonth],
     ['Fixed-Term', TermType.fixedTerm]
@@ -78,16 +101,16 @@ export class EditProspectComponent {
   private roomsService: RoomsService,
   public dialog: MatDialog, 
   private homesService: HomesService,
+  private prospectService: ProspectService,
   ) {
     
     this.prospects = data.prospects;
-    this.prospectIndex = data.prospectIndex;
+    this.currentProspectIndex = data.prospectIndex;
     if (this.prospects != null)
     {
-      this.setOrigSettings(this.data.prospects[this.prospectIndex]);
+      this.setOrigSettings(this.data.prospects[this.currentProspectIndex]);
       this.getSettings();
-      this.prospectIndex = this.prospect.RoomId;
-      this.roomsService.getRoom(this.prospectIndex).then((room : IRoom) => {
+      this.roomsService.getRoom(this.prospect.RoomId).then((room : IRoom) => {
         this.roomsService.getRoom(room.Id).then((room: IRoom) => {
           this.selectedRoomName = room.RoomName;
         });
@@ -103,8 +126,8 @@ export class EditProspectComponent {
    this.origSettings = Object.assign({}, prospect);
   }
   
-  closeEmpDialog(){
-
+  closeProspectDialog(){
+    this.dialogRef.close(this.prospects);
   }  
   openLinkRoomModal(){
     this.homesService.getHomes().then((homes) => {
@@ -116,9 +139,10 @@ export class EditProspectComponent {
       }).afterClosed().subscribe((selectedRoomId : number) => {
         if (selectedRoomId)
         {
-          this.selectedRoomId = selectedRoomId;
+          this.prospect.RoomId = selectedRoomId;
           this.roomsService.getRoom(selectedRoomId).then((room : IRoom) => {
             this.selectedRoomName = room.RoomName;
+            this.fieldsModified = true;
           })
           .catch((err) => {
             console.log(err);
@@ -241,10 +265,10 @@ export class EditProspectComponent {
         this.editMoveOutDate = !this.editMoveOutDate;
       }
       break;  
-      case 'term': { 
-        this.editTermType = !this.editTermType;
+      case 'ssn': { 
+        this.editSSN = !this.editSSN;
       }
-      break;  
+      break; 
       default: { 
          //statements; 
          break; 
@@ -330,8 +354,17 @@ export class EditProspectComponent {
           return;
         } 
       } 
-      case 'term': 
-          this.prospect.TermType = this.termType;
+      break; 
+      case 'ssn': { 
+        if (this.ssnInput.valid == true)
+        {
+          this.prospect.SSN = this.ssnInput.value;
+        }
+        else{
+          this.changeEditMode(editStr);
+          return;
+        } 
+      } 
       break; 
       default: { 
          //statements; 
@@ -346,7 +379,7 @@ export class EditProspectComponent {
   }
 
   getSettings(){
-    this.prospect = this.data.prospects[this.prospectIndex];
+    this.prospect = this.data.prospects[this.currentProspectIndex];
     this.fNameInput.setValue(this.prospect.FName);
     this.lNameInput.setValue(this.prospect.LName);
     this.mdInitInput.setValue(this.prospect.MdInit);
@@ -354,17 +387,20 @@ export class EditProspectComponent {
     this.phoneNumberInput.setValue(this.prospect.PhoneNumber);
     this.moveInDateInput.setValue(this.prospect.MoveInDate);
     this.moveOutDateInput.setValue(this.prospect.MoveOutDate);
-    this.termType = this.prospect.TermType;
+    this.ssnInput.setValue(this.prospect.SSN);
+    this.selectedStatus = this.prospect.Status;
+    this.roomsService.getRoom(this.prospect.RoomId).then((room : IRoom) => {
+      this.selectedRoomName = room.RoomName;
+    })
+    this.setTermType();
+  }
 
-    /*
-    this.room = this.data.home.Rooms[this.currentProspectIndex];
-    this.dimension1.setValue(this.room.Dimensions.split("x")[0].toString().trim());
-    this.dimension2.setValue(this.room.Dimensions.split("x")[1].toString().trim());
-    this.isMaster = this.room.IsMaster;
-    this.hasCloset = this.room.HasCloset;
-    this.hasCeilingFan = this.room.HasCeilingFan;
-    this.hasPrivateBath = this.room.HasPrivateBath;
-    */
+  setTermType(){
+    console.log("this.prospect.TermType is " + this.prospect.TermType);
+    if (this.prospect.TermType == TermType.fixedTerm)
+      this.termType = this.termList[1].name;
+    else if (this.prospect.TermType == TermType.monthToMonth)
+      this.termType = this.termList[0].name;
   }
 
   goToNextOrPrevRm(next: boolean){
@@ -412,6 +448,11 @@ export class EditProspectComponent {
     }
   }
 
+  setModified(event){
+    console.log("updating modified");
+    this.fieldsModified = true;
+  }
+
   closeViewRoomDialog(){
     this.dialogRef.close(null); // this needs to return a null
   }
@@ -424,6 +465,9 @@ export class EditProspectComponent {
     this.prospect.MoveInDate = this.origSettings.MoveInDate;
     this.prospect.MoveOutDate = this.origSettings.MoveOutDate;
     this.prospect.TermType = this.origSettings.TermType;
+    this.prospect.RoomId = this.origSettings.RoomId;
+    this.prospect.SSN = this.origSettings.SSN;
+    this.prospect.Status = this.origSettings.Status;
   }
   saveBtnClickedUpdate(){
     this.updateProspect().then(() => {
@@ -435,9 +479,44 @@ export class EditProspectComponent {
   }
 
   updateProspect(){
-    //TODO
-    return new Promise((resolve, reject) => {
-    });
+     //TODO
+     console.log("before updating, termType is " + this.termTypeMap.get(this.termType));
+     this.prospect = {
+      Id : this.prospect.Id,
+      EmailAddress : this.emailInput.value,
+      FName : this.fNameInput.value,
+      LName : this.lNameInput.value,
+      MdInit : this.mdInitInput.value,
+      PhoneNumber : this.phoneNumberInput.value,
+      Employers : this.prospect.Employers,
+      PreviousRentals : this.prospect.PreviousRentals,
+      SSN: this.ssnInput.value,
+      Status: this.selectedStatus,
+      ProspectId: this.prospect.Id,
+      RoomId: this.prospect.RoomId,
+      MoveInDate: this.moveInDateInput.value,
+      MoveOutDate: this.moveOutDateInput.value,
+      TermType: this.termTypeMap.get(this.termType),
+     }
+     this.prospects[this.currentProspectIndex] = this.prospect;
+     return new Promise((resolve, reject) => {
+       this.prospectService.updateProspect(this.prospect).then(() => {
+         this.dialog.open(DialogDataRRMSDialog, {
+           data: {
+             inError: false,
+             title: "Prospect Saved",
+             contentSummary: "This prospect has been Saved",
+             errorItems: []
+           }
+           }).afterClosed().subscribe((addRooms: boolean)=> {
+             this.fieldsModified = false;
+             resolve(true);
+           });
+       }).catch((err) => {
+         console.log(err);
+         reject(false);
+       });
+     });
   }
   getInputErrorMessage(inputField){
     
@@ -457,13 +536,12 @@ export class EditProspectComponent {
         contentSummary: "Are you sure you would like to delete this prospect?",
         errorItems: []
       }
-    }).afterClosed().subscribe((deleteRoom: boolean)=> {
-      /*
-      if (deleteRoom == true ){
-        this.roomsService.removeRoom(this.room.Id);
-        this.dialogRef.close("del"); // this needs to return a null
+    }).afterClosed().subscribe((deleteProspect: boolean)=> {
+      if (deleteProspect == true ){
+        this.prospectService.removeProspect(this.prospect.Id);
+        this.prospects = Array.from(this.prospects).filter(prevRental => prevRental.Id != this.prospect.Id);
+        this.dialogRef.close(this.prospects); // this needs to return a null
       }
-      */
     });
 
   }

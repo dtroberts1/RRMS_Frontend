@@ -12,7 +12,7 @@
     </div>
     <div>
         <mat-form-field *ngIf="roomsExist() == true" appearance="fill">
-            <mat-label>Select Home</mat-label>
+            <mat-label>Select Room</mat-label>
             <mat-select [(value)]="selectedRoom" (change)="showProductDetails()">
             <mat-option *ngFor="let room of homes[selected - 1].Rooms" [value]="room.Id">
                 {{room.RoomName}}
@@ -20,18 +20,6 @@
             </mat-select>
         </mat-form-field>
     </div>
-
-    <!--
-            <mat-form-field *ngIf="home != undefined" appearance="fill">
-        <mat-label>Select Room</mat-label>
-        <mat-select>
-        <mat-option *ngFor="let room of home.Rooms[i]" [value]="room.Id">
-            {{room.RoomName}}
-        </mat-option>
-        </mat-select>
-    </mat-form-field>
-        -->
-
     <span style="margin-left:5%;">
         <br />
         <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="linkRoomToProspect()">Link Room to Prospect</button>
