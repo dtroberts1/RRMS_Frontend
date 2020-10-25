@@ -70,8 +70,6 @@ currentMap = new Map<string, boolean>([
   ['Yes', true]
 ]);
  
-
-
   isMaster : boolean;
   hasCloset : boolean;
   hasCeilingFan : boolean;
@@ -85,25 +83,22 @@ currentMap = new Map<string, boolean>([
   ) {
 
   }
-  ngOnInit(): void {
-    this.prevRentals = this.data.prevRentals;
-    this.currentprevRentalIndex = this.data.prevRentalIndex;
+ngOnInit(): void {
+  if (this.data.addMode == true)
+      this.addMode = true;
+  else if (this.data.addMode == false){
+    this.addMode = false;
+    this.prevRentals = this.data.prevRentals; 
     if (this.prevRentals != null)
-    {
-      // Check add-mode
-      if (this.data.addMode == true)
-      {
-        this.addMode = true;
-      }
-      else{
-        this.addMode = false;
+    {  
+        this.currentprevRentalIndex = this.data.prevRentalIndex;
         this.setOrigSettings(this.data.prevRentals[this.currentprevRentalIndex]);
         this.getSettings();
-      }
+        this.prevRentalCount = (<any[]>this.data.prevRentals).length;
     }
-    this.prevRentalCount = (<any[]>this.data.prevRentals).length;
-    console.log("prevRentaCount is " + this.prevRentalCount);
-    }
+  }
+  console.log("addMode is " + this.addMode);
+  }
   setOrigSettings(prevRental : IPreviousRental)
   {
    this.origSettings = Object.assign({}, prevRental);
@@ -167,140 +162,143 @@ currentMap = new Map<string, boolean>([
    } 
   }
   updateInput(editStr : string){
-    switch(editStr) { 
-      case 'fname': { 
-        if (this.fNameInput.valid == true)
-        {
-          this.prevRental.PrevLandlordFName = this.fNameInput.value;
-          
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+    if (this.addMode == false){
+      console.log("updating input");
+      switch(editStr) { 
+        case 'fname': { 
+          if (this.fNameInput.valid == true)
+          {
+            this.prevRental.PrevLandlordFName = this.fNameInput.value;
+            
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'lname': { 
-        if (this.lNameInput.valid == true)
-        {
-          this.prevRental.PrevLandlordLName = this.lNameInput.value;
-          
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'lname': { 
+          if (this.lNameInput.valid == true)
+          {
+            this.prevRental.PrevLandlordLName = this.lNameInput.value;
+            
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'email': { 
-        if (this.emailInput.valid == true)
-        {
-          this.prevRental.PrevLandlordEmailAddress = this.emailInput.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'email': { 
+          if (this.emailInput.valid == true)
+          {
+            this.prevRental.PrevLandlordEmailAddress = this.emailInput.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'phone': { 
-        if (this.phoneInput.valid == true)
-        {
-          this.prevRental.PrevLandlordPhone = this.phoneInput.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'phone': { 
+          if (this.phoneInput.valid == true)
+          {
+            this.prevRental.PrevLandlordPhone = this.phoneInput.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break;    
-      case 'stadd1': { 
-        if (this.addressStreet1Input.valid == true)
-        {
-          this.prevRental.AddressStreet1 = this.addressStreet1Input.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break;    
+        case 'stadd1': { 
+          if (this.addressStreet1Input.valid == true)
+          {
+            this.prevRental.AddressStreet1 = this.addressStreet1Input.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'stadd2': { 
-        if (this.addressStreet2Input.valid == true)
-        {
-          this.prevRental.AddressStreet2 = this.addressStreet2Input.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'stadd2': { 
+          if (this.addressStreet2Input.valid == true)
+          {
+            this.prevRental.AddressStreet2 = this.addressStreet2Input.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'city': { 
-        if (this.cityInput.valid == true)
-        {
-          this.prevRental.AddressCity = this.cityInput.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'city': { 
+          if (this.cityInput.valid == true)
+          {
+            this.prevRental.AddressCity = this.cityInput.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'state': { 
-        if (this.stateInput.valid == true)
-        {
-          this.prevRental.AddressState = this.stateInput.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'state': { 
+          if (this.stateInput.valid == true)
+          {
+            this.prevRental.AddressState = this.stateInput.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'zipcode': { 
-        if (this.zipcodeInput.valid == true)
-        {
-          this.prevRental.AddressZipCode = this.zipcodeInput.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'zipcode': { 
+          if (this.zipcodeInput.valid == true)
+          {
+            this.prevRental.AddressZipCode = this.zipcodeInput.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'start': { 
-        if (this.startDateInput.valid == true)
-        {
-          this.prevRental.StartDate = this.startDateInput.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'start': { 
+          if (this.startDateInput.valid == true)
+          {
+            this.prevRental.StartDate = this.startDateInput.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
-      case 'end': { 
-        if (this.endDateInput.valid == true)
-        {
-          this.prevRental.EndDate = this.endDateInput.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
+        break; 
+        case 'end': { 
+          if (this.endDateInput.valid == true)
+          {
+            this.prevRental.EndDate = this.endDateInput.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+            return;
+          } 
         } 
-      } 
-      break; 
+        break; 
+      }
+      this.changeEditMode(editStr);
+      this.fieldsModified = true;
     }
-    this.changeEditMode(editStr);
-    this.fieldsModified = true;
   }
 
   getSettings(){
     this.prevRental = this.data.prevRentals[this.currentprevRentalIndex];
 
     this.fNameInput.setValue(this.prevRental.PrevLandlordFName);
-    this.fNameInput.setValue(this.prevRental.PrevLandlordLName);
+    this.lNameInput.setValue(this.prevRental.PrevLandlordLName);
     this.emailInput.setValue(this.prevRental.PrevLandlordEmailAddress);
     this.phoneInput.setValue(this.prevRental.PrevLandlordPhone);
     this.addressStreet1Input.setValue(this.prevRental.AddressStreet1);
@@ -395,9 +393,57 @@ currentMap = new Map<string, boolean>([
       console.log(err);
     })
   }
+  createBtnClickedUpdate(){
+    this.createPrevRental().then(() => {
+      this.dialogRef.close(this.prevRental);
+
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+  
+  createPrevRental(){
+    this.prevRental = {
+      Id: -1,
+      PrevLandlordEmailAddress : this.emailInput.value,
+      PrevLandlordPhoneNumber : this.phoneInput.value,
+      PrevLandlordPhone: this.phoneInput.value,
+      PrevLandlordFName : this.fNameInput.value,
+      PrevLandlordLName : this.lNameInput.value,
+      AddressStreet1: this.addressStreet1Input.value,
+      AddressStreet2: this.addressStreet2Input.value,
+      AddressCity: this.cityInput.value,
+      AddressState: this.stateInput.value,
+      AddressZipCode: this.zipcodeInput.value,
+      StartDate: this.startDateInput.value,
+      EndDate: this.endDateInput.value,
+      Current: this.currentMap.get(this.currItem),
+      ProspectId: this.data.prospectId,
+    }
+    return new Promise((resolve, reject) => {
+      this.prevRentalService.savePrevRental(this.prevRental).then(() => {
+        this.dialog.open(DialogDataRRMSDialog, {
+          data: {
+            inError: false,
+            title: "prevRental Saved",
+            contentSummary: "This prevRental has been Saved",
+            errorItems: []
+          }
+          }).afterClosed().subscribe((addPrevRental: boolean)=> {
+            this.fieldsModified = false;
+            resolve(true);
+          });
+      }).catch((err) => {
+        console.log(err);
+        reject(false);
+      });
+    });
+  }
 
   updateEmp(){
     //TODO
+    console.log("before updating, fname is " + this.fNameInput.value + ", and lastname is " + this.lNameInput.value);
     this.prevRental = {
       Id: this.prevRental.Id,
       PrevLandlordEmailAddress : this.emailInput.value,

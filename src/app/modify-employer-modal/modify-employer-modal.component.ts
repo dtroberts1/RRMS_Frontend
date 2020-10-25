@@ -113,13 +113,10 @@ currentMap = new Map<string, boolean>([
             this.employerCount = (<any[]>this.data.employers).length;
         }
       }
-
-    console.log("addMode is ***" + this.addMode);
-    }
+  }
   setOrigSettings(employer : IEmployer)
   {
    this.origSettings = Object.assign({}, employer);
-   console.log("in set OrigSettings, settings are " + JSON.stringify(this.origSettings ));
   }
 
   canDispNextAndPrev(){
@@ -189,7 +186,6 @@ currentMap = new Map<string, boolean>([
   }
   updateInput(editStr : string){
     if (this.addMode == false){
-      console.log("bluring");
       switch(editStr) { 
         case 'cmpyname': { 
           if (this.cmpyNameInput.valid == true)
@@ -355,7 +351,7 @@ currentMap = new Map<string, boolean>([
 
     this.cmpyNameInput.setValue(this.employer.CompanyName);
     this.fNameInput.setValue(this.employer.MgrFName);
-    this.fNameInput.setValue(this.employer.MgrLName);
+    this.lNameInput.setValue(this.employer.MgrLName);
     this.emailInput.setValue(this.employer.MgrEmailAddress);
     this.phoneInput.setValue(this.employer.MgrPhoneNumber);
     this.addressStreet1Input.setValue(this.employer.AddressStreet1);
@@ -371,7 +367,6 @@ currentMap = new Map<string, boolean>([
   }
 
   setCurrentEmp(){
-    console.log("this.employer.current: " + this.employer.Current);
     if (this.employer.Current == true)
       this.currItem = this.currentList[1].name;
     else if (this.employer.Current == false)
@@ -396,7 +391,6 @@ currentMap = new Map<string, boolean>([
         }).afterClosed().subscribe((choosesSave: boolean)=> {
           if (choosesSave == true){
             this.updateEmp().then((saveSuccess: boolean) => {
-              console.log("updating employer");
               if (saveSuccess == true){
                 this.fieldsModified = false;
                 this.updatecurrentEmployerIndex(next);
@@ -405,9 +399,7 @@ currentMap = new Map<string, boolean>([
             });
           }
           else{
-            console.log("not updating employer");
             this.fieldsModified = false;
-            console.log("original settings are " + JSON.stringify(this.origSettings));
             //this.fillInputsWithOriginalSettings();
             this.updatecurrentEmployerIndex(next);
             this.getSettings();
@@ -434,7 +426,6 @@ currentMap = new Map<string, boolean>([
 
   closeModifyEmpDialog(){
     // If "Yes", the map will return true, otherwise, false. 
-    console.log("Sending back " + JSON.stringify(this.employers));
     if (this.addMode == false)
       this.dialogRef.close(this.employers);
     else if(this.addMode == true)
@@ -474,7 +465,6 @@ currentMap = new Map<string, boolean>([
   })
   }
   createEmp(){
-    console.log("before creating, ProspectID is " + this.data.prospectId);
     this.employer = {
       CompanyName: this.cmpyNameInput.value,
       Id: -1,
@@ -495,7 +485,6 @@ currentMap = new Map<string, boolean>([
       ProspectId: this.data.prospectId,
     }
     return new Promise((resolve, reject) => {
-      console.log("about to save with EmployerId = ", this.employer.Id);
       this.employerService.saveEmployer(this.employer).then(() => {
         this.dialog.open(DialogDataRRMSDialog, {
           data: {
@@ -504,7 +493,7 @@ currentMap = new Map<string, boolean>([
             contentSummary: "This Employer has been Saved",
             errorItems: []
           }
-          }).afterClosed().subscribe((addRooms: boolean)=> {
+          }).afterClosed().subscribe((addEmployer: boolean)=> {
             this.fieldsModified = false;
             resolve(true);
           });
@@ -538,7 +527,6 @@ currentMap = new Map<string, boolean>([
     }
     this.employers[this.currentEmployerIndex] = this.employer;
     return new Promise((resolve, reject) => {
-      console.log("about to save with EmployerId = ", this.employer.Id);
       this.employerService.updateEmployer(this.employer).then(() => {
         this.dialog.open(DialogDataRRMSDialog, {
           data: {

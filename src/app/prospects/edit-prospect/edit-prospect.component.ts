@@ -169,21 +169,42 @@ export class EditProspectComponent {
   addEmp(){
 
   }
-  openPrevRentModifyModal(){
-    this.dialog.open(ModifyPrevRentalComponent, {
-      data: {
-        prevRentals : this.prospect.PreviousRentals,
-        prevRentalIndex : 0,
-      },
-      width:'60%',
-      height: '55%'
-    }).afterClosed().subscribe((returnedPrevRentalList : Iterable<IPreviousRental>) => {
-      if (returnedPrevRentalList != null)
-        this.prospect.PreviousRentals = returnedPrevRentalList;
-      },
-      err =>{
-        console.log(err);
-      });
+  openPrevRentModifyModal(add: boolean){
+    console.log("in openPrevRent, add is " + add);
+    if (add == true){
+      this.dialog.open(ModifyPrevRentalComponent, {
+        data: {
+          addMode: true,
+          prospectId: this.prospect.Id,
+        },
+        width:'60%',
+        height: '55%'
+      }).afterClosed().subscribe((returnedPrevRental : IPreviousRental) => {
+        // Push the newly added employer to the list
+        if (returnedPrevRental != null)
+          (<IPreviousRental[]>(this.prospect.PreviousRentals)).push(returnedPrevRental);
+        },
+        err =>{
+          console.log(err);
+        });
+    }
+    else if(add == false){
+      this.dialog.open(ModifyPrevRentalComponent, {
+        data: {
+          addMode: false,
+          prevRentals : this.prospect.PreviousRentals,
+          prevRentalIndex : 0,
+        },
+        width:'60%',
+        height: '55%'
+      }).afterClosed().subscribe((returnedPrevRentalList : Iterable<IPreviousRental>) => {
+        if (returnedPrevRentalList != null)
+          this.prospect.PreviousRentals = returnedPrevRentalList;
+        },
+        err =>{
+          console.log(err);
+        });
+    }
   }
   canDispNextAndPrev(){
     if (this.prospectCount > 1)
@@ -403,14 +424,6 @@ export class EditProspectComponent {
     this.prospect.MoveInDate = this.origSettings.MoveInDate;
     this.prospect.MoveOutDate = this.origSettings.MoveOutDate;
     this.prospect.TermType = this.origSettings.TermType;
-    /*
-    this.room.Dimensions = this.origSettings.Dimensions;
-    this.room.MonthlyRate = this.origSettings.MonthlyRate;
-    this.room.IsMaster = this.origSettings.IsMaster;
-    this.room.HasCloset = this.origSettings.HasCloset;
-    this.room.HasCeilingFan = this.origSettings.HasCeilingFan;
-    this.room.HasPrivateBath = this.origSettings.HasPrivateBath;
-    */
   }
   saveBtnClickedUpdate(){
     this.updateProspect().then(() => {
