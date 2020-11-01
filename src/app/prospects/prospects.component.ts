@@ -33,7 +33,6 @@ export class ProspectsComponent implements OnInit {
     private prospectService: ProspectService,
     public dialog: MatDialog, 
     ) { 
-    this.prospectService.fetchProspects();
     this.prospectService.getProspects().then((prospects: Iterable<IProspect>) => {
       this.prospects = prospects;
       this.dataSource = Array.from(this.prospects);

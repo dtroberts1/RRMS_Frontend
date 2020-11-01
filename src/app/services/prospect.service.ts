@@ -124,7 +124,10 @@ async removeProspect(prospectId: number){
 }
 
 enum ProspectStatus {
-    approved = 1,
-    declined = 2,
-    pending = 3,
+  approved = 1,
+  declined = 2,
+  pendingLandlordDecision = 3,
+  pendingLeaseSignature = 4,
+  leaseSigned = 5,
+  inBilling = 6,
   }

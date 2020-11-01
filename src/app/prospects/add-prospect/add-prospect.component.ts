@@ -116,7 +116,7 @@ export class AddProspectComponent implements OnInit {
         Employers : this.employers,
         PreviousRentals : this.prevRentals,
         SSN: this.ssn.value,
-        Status: ProspectStatus.pending,
+        Status: ProspectStatus.pendingLandlordDecision,
         PhoneNumber: this.phoneNumber.value,
         RoomId: this.selectedRoomId,
         ProspectId: -1,
@@ -196,5 +196,8 @@ export class AddProspectComponent implements OnInit {
 enum ProspectStatus {
   approved = 1,
   declined = 2,
-  pending = 3,
+  pendingLandlordDecision = 3,
+  pendingLeaseSignature = 4,
+  leasedSigned = 5,
+  inBilling = 6,
 }

@@ -15,7 +15,7 @@ export class RoomsService{
 
   constructor(private http: HttpClient){
   }
-
+  /*
   getRooms(homeId: number): Promise<Iterable<IRoom>>{
     return new Promise((resolve, reject) => {
 
@@ -27,9 +27,11 @@ export class RoomsService{
       });
     });
   }
+  */
   async createRoom(room: IRoom){
       // Important: room should already have a homeId at this point!
       // Get token from localStorage
+      
       this.currToken = JSON.parse(localStorage.getItem('user'));
       if (this.currToken != null){
         let options = {
@@ -73,9 +75,31 @@ export class RoomsService{
       });
     }
   }
+  async getAvailableRooms(houseId: number): Promise<Iterable<IRoom>>{
+    this.currToken = JSON.parse(localStorage.getItem('user'));
+    if (this.currToken != null){
+      let options = {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+        .set('Authorization', "bearer " + this.currToken),
+        };
+        return new Promise((resolve, reject) => { this.http
+          .get<Iterable<IRoom>>(`${this.roomsUrl}/getAvailableRooms/${houseId}`, options).subscribe(
+              rooms => {
+                // Get some logic for response (should just return id back for newly added room)
+                resolve(rooms);
+              },
+              error => {
+                reject(error);
+              }
+          )
+      });
+      }
+  }
+
   async updateRoom(room: IRoom){
     // Important: room should already have a homeId at this point!
     // Get token from localStorage
+    console.log("About to update with room montly rate at " + room.MonthlyRate);
     this.currToken = JSON.parse(localStorage.getItem('user'));
     if (this.currToken != null){
       let options = {
@@ -119,6 +143,7 @@ async removeRoom(roomId: number){
     });
   }
 }
+/*
   fetchRooms(homeId: number){  
   // Get token from localStorage
   this.currToken = JSON.parse(localStorage.getItem('user'));
@@ -144,4 +169,5 @@ async removeRoom(roomId: number){
       });
     }
   }
+  */
 }

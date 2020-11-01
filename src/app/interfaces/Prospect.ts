@@ -21,7 +21,10 @@ export interface IProspect{
 enum ProspectStatus {
     approved = 1,
     declined = 2,
-    pending = 3,
+    pendingLandlordDecision = 3,
+    pendingLeaseSignature = 4,
+    leasedSigned = 5,
+    inBilling = 6,
   }
   export enum TermType {
     monthToMonth = 1,

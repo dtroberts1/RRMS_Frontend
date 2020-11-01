@@ -24,7 +24,7 @@ export class HomeDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     public dialog: MatDialog, 
     private router: Router,
-    private RoomsService: RoomsService,
+    private roomsService: RoomsService,
     private HomesService: HomesService,
     ) { 
 
@@ -54,7 +54,9 @@ export class HomeDetailsComponent implements OnInit {
 
   }
   addProspect(){
-    
+    this.roomsService.getAvailableRooms(1).then((rooms : Iterable<IRoom>) => {
+      console.log("Rooms from request are " + JSON.stringify(rooms));
+    });
   }
 
   dispRoomCount(){
@@ -74,7 +76,6 @@ export class HomeDetailsComponent implements OnInit {
       height: '45%'
     }).afterClosed().subscribe(() => {
       this.HomesService.getHome(this.home.Id).then((home : IHome) => {
-        console.log("rooms from getRooms returns: " + JSON.stringify(home));
         this.home.Rooms = home.Rooms;
         this.roomCount++;
       }).catch((err) =>{

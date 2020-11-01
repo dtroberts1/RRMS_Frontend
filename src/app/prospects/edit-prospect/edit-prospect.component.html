@@ -33,7 +33,7 @@
     <tr>
       <td>
         <h3><label>Employers</label>&nbsp;&nbsp;&nbsp;
-          <a class="editLinks" (click)="openEmployerModifyModal(false)">Modify</a>&nbsp;
+          <a *ngIf="hasEmployers() == true"  class="editLinks" (click)="openEmployerModifyModal(false)">Modify</a>&nbsp;
           <a class="editLinks" (click)="openEmployerModifyModal(true)">Add</a>
           <ul>
             <li style="list-style:none" *ngFor="let emp of prospect.Employers">
@@ -48,7 +48,7 @@
     <tr>
       <td>
         <h3><label>Previous Rentals</label>&nbsp;&nbsp;
-          <a class="editLinks" (click)="openPrevRentModifyModal(false)">Modify</a>&nbsp;
+          <a *ngIf="hasPrevRentals() == true" class="editLinks" (click)="openPrevRentModifyModal(false)">Modify</a>&nbsp;
           <a class="editLinks" (click)="openPrevRentModifyModal(true)">Add</a>
           <ul>
             <li style="list-style:none" *ngFor="let prevRental of prospect.PreviousRentals">

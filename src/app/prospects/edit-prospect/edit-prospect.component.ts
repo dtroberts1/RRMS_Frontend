@@ -21,7 +21,10 @@ export enum TermType {
 enum ProspectStatus {
   approved = 1,
   declined = 2,
-  pending = 3,
+  pendingLandlordDecision = 3,
+  pendingLeaseSignature = 4,
+  leasedSigned = 5,
+  inBilling = 6,
 }
 interface ITermType{
   name: string,
@@ -79,7 +82,7 @@ export class EditProspectComponent {
 statusList:Iterable<IStatus> = [
   { "name": "Approved", statusType : ProspectStatus.approved},
   { "name": "Declined", statusType : ProspectStatus.declined},
-  { "name": "Pending", statusType : ProspectStatus.pending}
+  { "name": "Pending", statusType : ProspectStatus.pendingLandlordDecision}
 ]
   termTypeMap = new Map<string, TermType>([
     ['Month-to-Month', TermType.monthToMonth],
@@ -192,6 +195,18 @@ statusList:Iterable<IStatus> = [
   }
   addEmp(){
 
+  }
+  hasEmployers(){
+    if ((<any[]>this.prospect.Employers).length > 0)
+    return true;
+  else
+    return false;
+  }
+  hasPrevRentals(){
+    if ((<any[]>this.prospect.PreviousRentals).length > 0)
+      return true;
+    else
+      return false;
   }
   openPrevRentModifyModal(add: boolean){
     console.log("in openPrevRent, add is " + add);
