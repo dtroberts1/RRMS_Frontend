@@ -57,10 +57,8 @@ export class AddRoomModalComponent {
   }  
   createRm(){
     this.inputsAreValid().then((isValid: boolean) => {
-      if (isValid == true){
-        console.log("about to save with HomeId = ", this.home.Id);
-        this.roomsService.createRoom({
-          RoomName: this.roomNameInput.value,
+      this.room = {
+        RoomName: this.roomNameInput.value,
           Dimensions: `${this.dimension1.value} x ${this.dimension2.value}`,
           IsMaster: this.isMaster,
           HasCloset: this.hasCloset,
@@ -69,7 +67,11 @@ export class AddRoomModalComponent {
           MonthlyRate: this.monthlyRateInput.value,
           HomeId: this.home.Id,
           Id: -1,
-        }).then(() => {
+      };
+
+      if (isValid == true){
+        console.log("about to save with HomeId = ", this.home.Id);
+        this.roomsService.createRoom(this.room).then(() => {
           this.dialog.open(DialogDataRRMSDialog, {
             data: {
               inError: true,
@@ -78,7 +80,9 @@ export class AddRoomModalComponent {
               errorItems: []
             }
           }).afterClosed().subscribe(result => {
-            this.dialogRef.close('roomAdded');
+            (<any[]>this.home.Rooms).push(this.room);
+            console.log("about to return " + JSON.stringify(this.home));
+            this.dialogRef.close(this.home);
           }),
           err=> console.log(err);
         }).catch((err) =>{
@@ -185,7 +189,7 @@ export class AddRoomModalComponent {
     this.room = this.data.home.Rooms[this.currentRoomIndex];
   }
   closeViewRoomDialog(){
-    this.dialogRef.close(null); // this needs to return a null
+    this.dialogRef.close(this.home); // this needs to return a null
 
   }
   async inputsAreValid():Promise<boolean> {

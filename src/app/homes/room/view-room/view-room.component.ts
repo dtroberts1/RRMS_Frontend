@@ -253,7 +253,7 @@ export class ViewRoomComponent {
   }
 
   closeViewRoomDialog(){
-    this.dialogRef.close(null); // this needs to return a null
+    this.dialogRef.close(this.home); // this needs to return a null
   }
   fillInputsWithOriginalSettings(){
     this.room.Dimensions = this.origSettings.Dimensions;
@@ -274,18 +274,19 @@ export class ViewRoomComponent {
 
   updateRoom(){
     //TODO
-    return new Promise((resolve, reject) => {
-      this.roomsService.updateRoom({
-        RoomName: this.room.RoomName,
-        Dimensions: `${this.dimension1.value} x ${this.dimension2.value}`,
-        IsMaster: this.isMaster,
-        HasCloset: this.hasCloset,
-        HasCeilingFan: this.hasCeilingFan,
-        HasPrivateBath: this.hasPrivateBath,
-        MonthlyRate: this.monthlyRateInput.value,
-        HomeId: this.home.Id,
-        Id: this.room.Id,
-      }).then(() => {
+    this.room = {
+      RoomName: this.room.RoomName,
+      Dimensions: `${this.dimension1.value} x ${this.dimension2.value}`,
+      IsMaster: this.isMaster,
+      HasCloset: this.hasCloset,
+      HasCeilingFan: this.hasCeilingFan,
+      HasPrivateBath: this.hasPrivateBath,
+      MonthlyRate: this.monthlyRateInput.value,
+      HomeId: this.home.Id,
+      Id: this.room.Id,
+    };
+      return new Promise((resolve, reject) => {
+      this.roomsService.updateRoom(this.room).then(() => {
         this.dialog.open(DialogDataRRMSDialog, {
           data: {
             inError: false,
@@ -326,7 +327,9 @@ export class ViewRoomComponent {
     }).afterClosed().subscribe((deleteRoom: boolean)=> {
       if (deleteRoom == true ){
         this.roomsService.removeRoom(this.room.Id);
-        this.dialogRef.close("del"); // this needs to return a null
+        this.rooms = Array.from(this.home.Rooms).filter(rm => rm.Id != this.room.Id);
+        this.home.Rooms = this.rooms;
+        this.dialogRef.close(this.home); // this needs to return a null
       }
     });
 

@@ -56,10 +56,12 @@ export class ProspectsComponent implements OnInit {
       height: '65%'
     }).afterClosed().subscribe((updatedProspectList: Iterable<IProspect>) => {
       // The EditProspectComponent shouldn't return back anything.
-      
-      this.prospects = updatedProspectList;
-      this.dataSource = Array.from(this.prospects);
-      console.log("prospects has been updated to " + JSON.stringify(this.prospects));
+      if ((<any[]>updatedProspectList).length > 0)      
+      {
+        this.prospects = updatedProspectList;
+        this.dataSource = Array.from(this.prospects);
+        console.log("prospects has been updated to " + JSON.stringify(this.prospects));
+      }
     });
   }
 

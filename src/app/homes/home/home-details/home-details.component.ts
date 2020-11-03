@@ -46,11 +46,9 @@ export class HomeDetailsComponent implements OnInit {
       },
       width:'45%',
       height: '55%'
-    }).afterClosed().subscribe((viewRoomOutput: string) => {
-      if (viewRoomOutput == "del"){
-        // Room was delete inside view-room component
-        this.roomCount--;
-      }  
+    }).afterClosed().subscribe((home: IHome) => {
+        this.home.Rooms = home.Rooms;
+        this.roomCount = (<any[]>this.home.Rooms)?.length;
     });
   }
   openViewProspectDialog(){
@@ -63,6 +61,13 @@ export class HomeDetailsComponent implements OnInit {
       console.log("Rooms from request are " + JSON.stringify(rooms));
     });
     */
+  }
+
+  hasRooms(){
+    if (this.roomCount > 0)
+      return true;
+    else
+      return false;
   }
 
   dispRoomCount(){
@@ -80,13 +85,13 @@ export class HomeDetailsComponent implements OnInit {
       },
       width:'45%',
       height: '45%'
-    }).afterClosed().subscribe(() => {
-      this.HomesService.getHome(this.home.Id).then((home : IHome) => {
+    }).afterClosed().subscribe((home : IHome) => {
         this.home.Rooms = home.Rooms;
-        this.roomCount++;
-      }).catch((err) =>{
-        console.log(err);
-      });
+        this.roomCount = (<any[]>this.home.Rooms)?.length;
+
+    },
+    err => {
+      console.log(err);
     });
   }
 }
