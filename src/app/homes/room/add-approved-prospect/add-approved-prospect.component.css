@@ -1,0 +1,59 @@
+.example-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+  }
+  h1, h3>label{
+    color:blue
+  }
+  
+  .example-radio-button {
+    margin: 5px;
+  }
+  
+  .browseImage{
+    border-width:5px;
+    border-color:purple;
+    border-style:solid;
+  }
+  
+  img{
+    height:120px;
+    max-width: 100%;
+  }
+  
+  .h3link{
+    color:blue; cursor:pointer;
+  }
+  .h3link:hover{
+    color:green;
+  }
+  
+  
+  .editLinks{
+    color:orange; cursor:pointer;
+  }
+  .editLinks:hover{
+    color:green;
+  }
+  .lowerViewRoomButtons{
+    color:blue;
+  }
+  .lowerViewRoomButtons:hover{
+    background-color:green;
+    color:white;
+  }
+  #saveViewRoomBtn{
+    color:white;
+    background-color:Red;
+  
+  }
+  #saveViewRoomBtn:hover{
+    background-color:orange;
+    color:white;
+  }
+  
+  #deleteBtn:hover{
+    color:white;
+    background-color:Red;
+  }

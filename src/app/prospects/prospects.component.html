@@ -53,10 +53,13 @@
             <!-- Symbol Column -->
             <ng-container matColumnDef="status">
                 <th mat-header-cell *matHeaderCellDef>Status</th>
-                <td mat-cell *matCellDef="let element"><h5 *ngIf="element.status == 1"></h5>Approved</td>
-                <td mat-cell *matCellDef="let element"><h5 *ngIf="element.status == 2"></h5>Declined</td>
-                <td mat-cell *matCellDef="let element"><h5 *ngIf="element.status == 3"></h5>Pending</td>
-              </ng-container>            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <td mat-cell *matCellDef="let element">
+                  <span *ngIf="element.Status == 1">Approved</span>
+                  <span *ngIf="element.Status == 2">Declined</span>
+                  <span *ngIf="element.Status == 3">Pending</span>
+                </td>
+            </ng-container>            
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
     </div>

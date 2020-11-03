@@ -17,6 +17,7 @@ export interface IProspect{
     MoveInDate: Date,
     MoveOutDate: Date,
     TermType: TermType,
+    LandlordId: number,
 }
 enum ProspectStatus {
     approved = 1,

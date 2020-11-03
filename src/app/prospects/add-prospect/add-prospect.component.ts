@@ -123,6 +123,7 @@ export class AddProspectComponent implements OnInit {
         MoveInDate: this.moveInDate.value,
         MoveOutDate: this.moveOutDate.value,
         TermType: this.termTypeMap.get(this.termType.toString()),
+        LandlordId: -1,
       }).then(() => {
         this.dialog.open(DialogDataRRMSDialog, {
           data: {
@@ -143,6 +144,8 @@ export class AddProspectComponent implements OnInit {
   openLinkRoomModal(){
     this.homesService.getHomes().then((homes) => {
       this.homes = homes;
+      console.log("after home service, home count is is " + (<any[]>this.homes).length);
+
       this.dialog.open(LinkRoomModalComponent, {
         data: {
           homes : this.homes,
@@ -151,7 +154,7 @@ export class AddProspectComponent implements OnInit {
         if (selectedRoomId)
         {
           this.selectedRoomId = selectedRoomId;
-          console.log("selectedRoom is " + this.selectedRoomId);
+          //console.log("selectedRoom is " + this.selectedRoomId);
           this.roomsService.getRoom(selectedRoomId).then((room : IRoom) => {
             this.selectedRoomName = room.RoomName;
           })

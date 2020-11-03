@@ -130,6 +130,7 @@ statusList:Iterable<IStatus> = [
   }
   
   closeProspectDialog(){
+    //console.log("Before closing, propects is " + JSON.stringify(this.prospects));
     this.dialogRef.close(this.prospects);
   }  
   openLinkRoomModal(){
@@ -495,7 +496,7 @@ statusList:Iterable<IStatus> = [
 
   updateProspect(){
      //TODO
-     console.log("before updating, termType is " + this.termTypeMap.get(this.termType));
+     console.log("sending prospect. it's landlord id is " + this.prospect.LandlordId);
      this.prospect = {
       Id : this.prospect.Id,
       EmailAddress : this.emailInput.value,
@@ -512,10 +513,13 @@ statusList:Iterable<IStatus> = [
       MoveInDate: this.moveInDateInput.value,
       MoveOutDate: this.moveOutDateInput.value,
       TermType: this.termTypeMap.get(this.termType),
+      LandlordId: this.prospect.LandlordId,
      }
-     this.prospects[this.currentProspectIndex] = this.prospect;
      return new Promise((resolve, reject) => {
        this.prospectService.updateProspect(this.prospect).then(() => {
+         console.log("currentProspectIndex is " + this.currentProspectIndex);
+        this.prospects[this.currentProspectIndex] = this.prospect;
+
          this.dialog.open(DialogDataRRMSDialog, {
            data: {
              inError: false,

@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit, SimpleChanges } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IRoom } from 'src/app/interfaces/Rooms';
@@ -29,6 +29,9 @@ export class HomeDetailsComponent implements OnInit {
     ) { 
 
     }
+  ngOnChanges(changes: SimpleChanges): void{
+    this.roomCount = (<any[]>this.home.Rooms)?.length;
+  }
 
   ngOnInit(): void {
     this.roomCount = (<any[]>this.home.Rooms)?.length;
@@ -54,9 +57,12 @@ export class HomeDetailsComponent implements OnInit {
 
   }
   addProspect(){
+    console.log("houseDetails are :" + JSON.stringify(this.home));
+    /*
     this.roomsService.getAvailableRooms(1).then((rooms : Iterable<IRoom>) => {
       console.log("Rooms from request are " + JSON.stringify(rooms));
     });
+    */
   }
 
   dispRoomCount(){

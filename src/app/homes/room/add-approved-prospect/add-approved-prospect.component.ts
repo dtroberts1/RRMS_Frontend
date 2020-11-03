@@ -10,11 +10,11 @@ import {HomesService} from '../../../services/homes.service';
 
 
 @Component({
-  selector: 'app-link-room-modal',
-  templateUrl: './link-room-modal.component.html',
-  styleUrls: ['./link-room-modal.component.css']
+  selector: 'app-add-approved-prospect',
+  templateUrl: './add-approved-prospect.component.html',
+  styleUrls: ['./add-approved-prospect.component.css']
 })
-export class LinkRoomModalComponent implements OnInit {
+export class AddApprovedProspectComponentModal implements OnInit {
   homeImagePath : string;
   room : IRoom;
   origSettings : IRoom;
@@ -43,7 +43,7 @@ export class LinkRoomModalComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-  public dialogRef: MatDialogRef<LinkRoomModalComponent>,
+  public dialogRef: MatDialogRef<AddApprovedProspectComponentModal>,
   private roomsService: RoomsService,
   public dialog: MatDialog, 
   ) {
@@ -52,12 +52,14 @@ export class LinkRoomModalComponent implements OnInit {
     this.dialogRef.close(null);
   }
   returnChoice(){
+    console.log("before closing, room is " + (this.selectedRoom));
     this.dialogRef.close(this.selectedRoom); // important: returns the id, not the index!!
   }
   showProductDetails(){
+    console.log("Details are " + this.selectedRoom);
   }
   roomsExist(){
-    if (this.homes[(this.selected)] != null && this.homes[(this.selected)].Rooms != null && (<any[]>this.homes[(this.selected)].Rooms).length > 0)
+    if (this.homes[(this.selected - 1)] != null && this.homes[(this.selected - 1)].Rooms != null && (<any[]>this.homes[(this.selected - 1)].Rooms).length > 0)
       return true;
     return false;
   }
