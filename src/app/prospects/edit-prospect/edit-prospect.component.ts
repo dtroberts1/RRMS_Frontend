@@ -114,9 +114,10 @@ statusList:Iterable<IStatus> = [
       this.setOrigSettings(this.data.prospects[this.currentProspectIndex]);
       this.getSettings();
       this.roomsService.getRoom(this.prospect.RoomId).then((room : IRoom) => {
-        this.roomsService.getRoom(room.Id).then((room: IRoom) => {
+        if (room != null)
           this.selectedRoomName = room.RoomName;
-        });
+        else
+          this.selectedRoomName = "";
     });
     }
     else
@@ -406,7 +407,10 @@ statusList:Iterable<IStatus> = [
     this.ssnInput.setValue(this.prospect.SSN);
     this.selectedStatus = this.prospect.Status;
     this.roomsService.getRoom(this.prospect.RoomId).then((room : IRoom) => {
-      this.selectedRoomName = room.RoomName;
+      if (room != null)
+        this.selectedRoomName = room.RoomName;
+      else
+        this.selectedRoomName = "";
     })
     this.setTermType();
   }

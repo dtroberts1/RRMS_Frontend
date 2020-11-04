@@ -11,8 +11,8 @@ import { SalaryType } from '../interfaces/Employer';
 export class ProspectService{
     private tokenURL = 'http://localhost:64097/token';
     currToken : AToken;
-    prospects: Iterable<IProspect>;
-    private prospectsUrl = 'http://localhost:64097/api/Prospects';
+    public prospects: Iterable<IProspect>;
+    public prospectsUrl = 'http://localhost:64097/api/Prospects';
 
     constructor(private http: HttpClient){
     }
@@ -40,12 +40,14 @@ export class ProspectService{
      }
     }
 
-    getProspects(): Promise<Iterable<IProspect>>{
+    async getProspects(): Promise<Iterable<IProspect>>{
         return new Promise((resolve, reject) => {
     
           console.log("in getHomes, homes is " + this.prospects);
-          this.fetchProspects().then((homes: Iterable<IProspect>) => {
-            this.prospects = homes;
+          this.fetchProspects().then((prospects: Iterable<IProspect>) => {
+            this.prospects = prospects;
+            console.log("settings prospects to " + JSON.stringify(this.prospects));
+            console.log("getProspects() has completed");
             resolve(this.prospects);
           }).catch((err) => {
             reject(err);
@@ -53,7 +55,7 @@ export class ProspectService{
         });
       }
 
-   fetchProspects(){
+   async fetchProspects(){
     this.currToken = JSON.parse(localStorage.getItem('user'));
     if (this.currToken != null){
         let options = {

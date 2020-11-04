@@ -107,7 +107,7 @@ export class AddProspectComponent implements OnInit {
 
   addProspect(){
     this.inputsAreValid().then(() =>{
-      this.prospectService.saveProspect({
+      let pros = {
         Id: -1,
         EmailAddress : this.email.value,
         FName : this.fName.value,
@@ -124,7 +124,9 @@ export class AddProspectComponent implements OnInit {
         MoveOutDate: this.moveOutDate.value,
         TermType: this.termTypeMap.get(this.termType.toString()),
         LandlordId: -1,
-      }).then(() => {
+      }
+      this.prospectService.saveProspect(pros).then(() => {
+        (<any[]>this.prospectService.prospects).push(pros);
         this.dialog.open(DialogDataRRMSDialog, {
           data: {
             inError: false,

@@ -10,17 +10,23 @@ import {HomesService} from '../services/homes.service';
 export class HomesComponent implements OnInit {
 //  tenants : Tenants;
 homes: Iterable<IHome>;
-simpleArg: string;
   constructor(private homeService: HomesService,
 
     ) {}
 
    ngOnInit() {
-    this.homeService.getHomes().then((homes : Iterable<IHome>) => {
-      this.homes = homes;
-      console.log("in homes, homes is " + JSON.stringify(this.homes));
-    });
-    this.simpleArg = "somearg";
+     if (this.homeService.homes == null)
+     {
+      this.homeService.getHomes().then((homes : Iterable<IHome>) => {
+        this.homes = homes;
+        console.log("in homes, homes is " + JSON.stringify(this.homes));
+      });
+     }
+     else{
+        this.homes = this.homeService.homes;
+        console.log("in homes, homes is " + JSON.stringify(this.homes));
+     }
+
   }
   getHomesCount(): number{
     let myCount;

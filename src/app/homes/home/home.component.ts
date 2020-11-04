@@ -28,14 +28,20 @@ export class HomeComponent implements OnInit {
       this.route.params.subscribe(params => {
         if (params.id != undefined)
         {
-          this.homesService.getHomes().then((homes : Iterable<IHome>) => {
-            this.myHome = homes[params.id - 1];
-            console.log("myHome is the following: " + JSON.stringify(this.myHome));
+          if (this.homesService.homes == null){
+            this.homesService.getHomes().then((homes : Iterable<IHome>) => {
+              this.myHome = homes[params.id - 1];
+              console.log("myHome is the following: " + JSON.stringify(this.myHome));
+              this.individualView = true;
+            }).catch((err) => {
+              console.log("error in getHomes (home Component): " + err);
+              this.individualView = false;
+            });
+          }
+          else{
+            this.myHome = this.homesService.homes[params.id - 1];
             this.individualView = true;
-          }).catch((err) => {
-            console.log("error in getHomes (home Component): " + err);
-            this.individualView = false;
-          });
+          }
         }
         else{
           this.individualView = false;
