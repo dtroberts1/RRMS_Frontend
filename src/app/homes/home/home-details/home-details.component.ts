@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IRoom } from 'src/app/interfaces/Rooms';
 import { RoomsService } from 'src/app/services/room.service';
 import {HomesService} from '../../../services/homes.service';
+
 import {IHome} from '../../../interfaces/Homes';
 import { AddRoomModalComponent } from '../../room/add-room-modal/add-room-modal.component';
 import { ViewRoomComponent } from '../../room/view-room/view-room.component';
@@ -19,6 +20,7 @@ export class HomeDetailsComponent implements OnInit {
   @Input() home : IHome;
   positionOptions: TooltipPosition[] = ['after', 'before', 'above', 'below', 'left', 'right'];
   position = new FormControl(this.positionOptions[1]);
+  availRooms = null;
   roomCount: number;
   constructor(
     private route: ActivatedRoute,
@@ -26,8 +28,8 @@ export class HomeDetailsComponent implements OnInit {
     private router: Router,
     private roomsService: RoomsService,
     private HomesService: HomesService,
-    ) { 
 
+    ) { 
     }
   ngOnChanges(changes: SimpleChanges): void{
     this.roomCount = (<any[]>this.home.Rooms)?.length;
@@ -35,6 +37,18 @@ export class HomeDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.roomCount = (<any[]>this.home.Rooms)?.length;
+
+    // Note.. it doesn't appear that we should be retrieving this list of prospects 
+    if (this.roomsService.availableRoomsForRent == null){
+      this.roomsService.getAvailableRooms(this.home.Id).then((rooms : Iterable<IRoom>) => {
+        console.log("Available Rooms are are " + JSON.stringify(this.roomsService.availableRoomsForRent));
+        this.availRooms = rooms;
+      });
+    }
+    else{
+      this.availRooms = this.roomsService.availableRoomsForRent;
+    }
+
   }
 
   openViewRoomDialog(){
@@ -56,6 +70,8 @@ export class HomeDetailsComponent implements OnInit {
   }
   addProspect(){
     console.log("houseDetails are :" + JSON.stringify(this.home));
+    console.log("availRooms are :" + JSON.stringify(this.availRooms));
+
     /*
     this.roomsService.getAvailableRooms(1).then((rooms : Iterable<IRoom>) => {
       console.log("Rooms from request are " + JSON.stringify(rooms));

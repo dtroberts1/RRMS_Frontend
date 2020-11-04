@@ -12,6 +12,7 @@ export class RoomsService{
   private roomsUrl = 'http://localhost:64097/api/Rooms';
   currToken : AToken;
   rooms: Iterable<IRoom>;
+  availableRoomsForRent: Iterable<IRoom>
 
   constructor(private http: HttpClient){
   }
@@ -75,6 +76,7 @@ export class RoomsService{
       });
     }
   }
+  // Gets available rooms that are not "occupied" (where the rooms don't have a prospect with status > 4)
   async getAvailableRooms(houseId: number): Promise<Iterable<IRoom>>{
     this.currToken = JSON.parse(localStorage.getItem('user'));
     if (this.currToken != null){
@@ -85,6 +87,7 @@ export class RoomsService{
         return new Promise((resolve, reject) => { this.http
           .get<Iterable<IRoom>>(`${this.roomsUrl}/getAvailableRooms/${houseId}`, options).subscribe(
               rooms => {
+                this.availableRoomsForRent = rooms;
                 // Get some logic for response (should just return id back for newly added room)
                 resolve(rooms);
               },

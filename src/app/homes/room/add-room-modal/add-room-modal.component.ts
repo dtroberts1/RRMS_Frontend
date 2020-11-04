@@ -42,11 +42,9 @@ export class AddRoomModalComponent {
   public dialog: MatDialog,
   ) {
     this.home = data.home;
-    console.log("home input is ", JSON.stringify(this.home));
     if (this.home.Rooms != null)
     {
       this.room = data.home.Rooms[0];
-      console.log("rooms is " + JSON.stringify(this.room));
     }
     else
       console.log("rooms is null in view-room: " + data.home.Rooms[this.currentRoomIndex]);
@@ -70,7 +68,6 @@ export class AddRoomModalComponent {
       };
 
       if (isValid == true){
-        console.log("about to save with HomeId = ", this.home.Id);
         this.roomsService.createRoom(this.room).then(() => {
           this.dialog.open(DialogDataRRMSDialog, {
             data: {
@@ -81,7 +78,6 @@ export class AddRoomModalComponent {
             }
           }).afterClosed().subscribe(result => {
             (<any[]>this.home.Rooms).push(this.room);
-            console.log("about to return " + JSON.stringify(this.home));
             this.dialogRef.close(this.home);
           }),
           err=> console.log(err);

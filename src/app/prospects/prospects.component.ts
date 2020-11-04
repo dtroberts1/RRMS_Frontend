@@ -47,7 +47,6 @@ export class ProspectsComponent implements OnInit {
         this.prospects = this.prospectService.prospects;
         // If prospects are already in, retrieve them
         console.log("prospects in service already in (not null). They are " + JSON.stringify(this.prospects));
-        console.log("url is " + this.prospectService.prospectsUrl);
         this.dataSource = Array.from(this.prospects);
 
       }

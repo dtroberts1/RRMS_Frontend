@@ -10,7 +10,7 @@
     <br />
       <mat-form-field class="mainPageFormField" appearance="standard">
         <mat-label>Password</mat-label>
-        <input matInput placeholder="password" [formControl]="password">
+        <input type="password" matInput placeholder="password" [formControl]="password">
         <mat-icon *ngIf="password.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
         <mat-error *ngIf="password.invalid">{{getPasswordErrorMessage()}}</mat-error>
       </mat-form-field>
