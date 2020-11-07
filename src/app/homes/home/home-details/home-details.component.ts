@@ -4,13 +4,19 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IRoom } from 'src/app/interfaces/Rooms';
 import { RoomsService } from 'src/app/services/room.service';
 import {HomesService} from '../../../services/homes.service';
+import {ProspectService} from '../../../services/prospect.service';
 
 import {IHome} from '../../../interfaces/Homes';
 import { AddRoomModalComponent } from '../../room/add-room-modal/add-room-modal.component';
 import { ViewRoomComponent } from '../../room/view-room/view-room.component';
 import { TooltipPosition } from '@angular/material/tooltip';
 import { FormControl } from '@angular/forms';
-
+import { IProspect } from 'src/app/interfaces/Prospect';
+import { AddApprovedProspectComponentModal } from '../../room/add-approved-prospect/add-approved-prospect.component';
+interface AvailableRoomsAndProspects{
+  availRooms: Iterable<IRoom>,
+  availProspects: Iterable<IProspect>,
+}
 @Component({
   selector: 'app-home-details',
   templateUrl: './home-details.component.html',
@@ -22,33 +28,34 @@ export class HomeDetailsComponent implements OnInit {
   position = new FormControl(this.positionOptions[1]);
   availRooms = null;
   roomCount: number;
+  availProspects: Iterable<IProspect>;
   constructor(
     private route: ActivatedRoute,
     public dialog: MatDialog, 
     private router: Router,
     private roomsService: RoomsService,
-    private HomesService: HomesService,
-
+    private prospectService: ProspectService,
     ) { 
     }
-  ngOnChanges(changes: SimpleChanges): void{
+  async ngOnChanges(changes: SimpleChanges){
     this.roomCount = (<any[]>this.home.Rooms)?.length;
+    await this.roomsService.getAvailableRooms(this.home.Id).then((rooms : Iterable<IRoom>) => {
+      console.log("Available Rooms are are " + JSON.stringify(rooms));
+      this.availRooms = rooms;
+    });
   }
 
-  ngOnInit(): void {
-    this.roomCount = (<any[]>this.home.Rooms)?.length;
 
-    // Note.. it doesn't appear that we should be retrieving this list of prospects 
-    if (this.roomsService.availableRoomsForRent == null){
-      this.roomsService.getAvailableRooms(this.home.Id).then((rooms : Iterable<IRoom>) => {
-        console.log("Available Rooms are are " + JSON.stringify(this.roomsService.availableRoomsForRent));
-        this.availRooms = rooms;
-      });
+  async ngOnInit() {
+    this.roomCount = (<any[]>this.home.Rooms)?.length;
+    if (this.prospectService.availableProspects == null){
+      await this.prospectService.getAvailableProspects().then((availProspects: Iterable<IProspect>) => {
+        this.availProspects = availProspects;
+      })
     }
     else{
-      this.availRooms = this.roomsService.availableRoomsForRent;
+      this.availProspects = this.prospectService.availableProspects; 
     }
-
   }
 
   openViewRoomDialog(){
@@ -68,15 +75,26 @@ export class HomeDetailsComponent implements OnInit {
   openViewProspectDialog(){
 
   }
-  addProspect(){
-    console.log("houseDetails are :" + JSON.stringify(this.home));
-    console.log("availRooms are :" + JSON.stringify(this.availRooms));
-
-    /*
-    this.roomsService.getAvailableRooms(1).then((rooms : Iterable<IRoom>) => {
-      console.log("Rooms from request are " + JSON.stringify(rooms));
-    });
-    */
+  async openAddProspectDialog(){
+    console.log("availProspects are :" + JSON.stringify(this.availProspects));
+      this.roomsService.getAvailableRooms(this.home.Id).then((rooms : Iterable<IRoom>) => {
+        console.log("Available Rooms are are " + JSON.stringify(rooms));
+        this.availRooms = rooms;
+        this.dialog.open(AddApprovedProspectComponentModal, {
+          data: {
+            availRooms: this.availRooms,
+            availProspects: this.availProspects,
+          },
+          width:'18%',
+          height: '55%'
+        }).afterClosed().subscribe(() => {
+    
+        },
+          err =>{
+            console.log(err);
+          }
+        );
+      });
   }
 
   hasRooms(){

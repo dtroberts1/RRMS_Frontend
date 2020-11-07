@@ -26,8 +26,8 @@ export class LoginScreenComponent implements OnInit{
         return;
       }
       let result = await this.accountService.login({
-        username :  "es1@email.com",// "ssdfa2jg@email.com",//this.email.value, //"es1@email.com"
-        password : "Sky551er!N#@TG", //this.password.value, //'Sky551er!N#@TG'
+        username : this.email.value,// "es1@email.com",// "ssdfa2jg@email.com",//this.email.value, //"es1@email.com"
+        password : this.password.value, //"Sky551er!N#@TG", //this.password.value, //'Sky551er!N#@TG'
         grant_type : "password"
       }).then((response) => {
         this.notifyFromLogin.emit("loginSuccessful");

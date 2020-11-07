@@ -13,7 +13,7 @@ export class ProspectService{
     currToken : AToken;
     public prospects: Iterable<IProspect>;
     private prospectsUrl = 'http://localhost:64097/api/Prospects';
-
+    availableProspects : Iterable<IProspect>;
     constructor(private http: HttpClient){
     }
 
@@ -40,8 +40,11 @@ export class ProspectService{
     }
     
     async getProspects(): Promise<Iterable<IProspect>>{
+      // First, asynchronously call getAvailableProspects
+      this.getAvailableProspects();
+
+        // Also return all prospects
         return new Promise((resolve, reject) => {
-    
           this.fetchProspects().then((prospects: Iterable<IProspect>) => {
             this.prospects = prospects;
             resolve(this.prospects);
@@ -70,7 +73,7 @@ export class ProspectService{
                 }
             );
         });
-        }
+      }      
    }
    async updateProspect(prospect: IProspect){
     // Important: room should already have a homeId at this point!
@@ -94,6 +97,32 @@ export class ProspectService{
       });
     }
 }
+
+  // Gets available rooms that are not "occupied" (where the rooms don't have a prospect with status > 4)
+  async getAvailableProspects(): Promise<Iterable<IProspect>>{
+    this.currToken = JSON.parse(localStorage.getItem('user'));
+    if (this.currToken != null){
+      let options = {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+        .set('Authorization', "bearer " + this.currToken),
+        };
+        return new Promise((resolve, reject) => { this.http
+          .get<Iterable<IProspect>>(`${this.prospectsUrl}/GetAvailableProspects`, options).subscribe(
+              (prospects: Iterable<IProspect>) => {
+
+                // These prospects will have a status < 5
+                this.availableProspects = prospects;
+                // Get some logic for response (should just return id back for newly added room)
+                resolve(this.availableProspects);
+              },
+              error => {
+                reject(error);
+              }
+          )
+      });
+      }
+  }
+
 async removeProspect(prospectId: number){
   // Important: room should already have a homeId at this point!
   // Get token from localStorage

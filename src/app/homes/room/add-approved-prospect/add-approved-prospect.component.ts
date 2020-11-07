@@ -6,8 +6,22 @@ import { IHome } from 'src/app/interfaces/Homes';
 import {IEmployer, SalaryType} from '../../../interfaces/Employer';
 import {IRoom} from '../../../interfaces/Rooms';
 import {RoomsService} from '../../../services/room.service';
-import {HomesService} from '../../../services/homes.service';
+import {ProspectService} from '../../../services/prospect.service';
+import { IProspect } from 'src/app/interfaces/Prospect';
+import { Router } from '@angular/router';
 
+interface AvailableRoomsAndProspects{
+  availRooms: Iterable<IRoom>,
+  availProspects: Iterable<IProspect>,
+}
+enum ProspectStatus {
+  approved = 1,
+  declined = 2,
+  pendingLandlordDecision = 3,
+  pendingLeaseSignature = 4,
+  leasedSigned = 5,
+  inBilling = 6,
+}
 
 @Component({
   selector: 'app-add-approved-prospect',
@@ -15,83 +29,92 @@ import {HomesService} from '../../../services/homes.service';
   styleUrls: ['./add-approved-prospect.component.css']
 })
 export class AddApprovedProspectComponentModal implements OnInit {
-  homeImagePath : string;
   room : IRoom;
-  origSettings : IRoom;
-  homes : Iterable<IHome>;
-  home : IHome;
-  editRate: boolean = false;
-  editDimension1: boolean = false;
-  editDimension2: boolean = false;
-  editMaster: boolean = false;
-  editFan: boolean = false;
-  editBathroom: boolean = false;
-  editCloset: boolean = false;
-  fieldsModified: boolean = false;
-  currentRoomIndex: number = 0;
-  roomCount: number = 0;
-
-  dimension1 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
-  dimension2 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
-  monthlyRateInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]{1,5}')]);
-  isMaster : boolean;
-  hasCloset : boolean;
-  hasCeilingFan : boolean;
-  hasPrivateBath : boolean;
- selected: number;
- selectedRoom: number;
-
+  availRooms : Iterable<IRoom>;
+  availProspects: Iterable<IProspect>;
+  selectedRoom: number;
+  selectedProspect: number;//IProspect;
+  fieldsModified: boolean;
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public fromParent: AvailableRoomsAndProspects,
   public dialogRef: MatDialogRef<AddApprovedProspectComponentModal>,
   private roomsService: RoomsService,
+  private prospectService: ProspectService,
   public dialog: MatDialog, 
+  private router: Router,
   ) {
+
+  }
+  ngOnInit(): void {
+    this.fieldsModified == false;
+    this.availRooms = this.fromParent.availRooms;
+    this.availProspects = this.fromParent.availProspects;
+    console.log("in init, availRooms are " + JSON.stringify(this.availRooms));
+    console.log("and prospects are : " + JSON.stringify(this.availProspects));
+  }
+  ngOnChanges(){
+    this.availRooms = this.fromParent.availRooms;
+    this.availProspects = this.fromParent.availProspects;
+    console.log("and prospects are : " + JSON.stringify(this.availProspects));
+
   }
   closeNoSelection(){
     this.dialogRef.close(null);
   }
   returnChoice(){
     console.log("before closing, room is " + (this.selectedRoom));
-    this.dialogRef.close(this.selectedRoom); // important: returns the id, not the index!!
+    
+    this.dialogRef.close(null); // important: returns the id, not the index!!
   }
   showProductDetails(){
-    console.log("Details are " + this.selectedRoom);
   }
   roomsExist(){
-    if (this.homes[(this.selected - 1)] != null && this.homes[(this.selected - 1)].Rooms != null && (<any[]>this.homes[(this.selected - 1)].Rooms).length > 0)
+    if ((this.availRooms != null) && ((<any[]>this.availRooms).length > 0)){
       return true;
+    }
     return false;
   }
-  
-  ngOnInit(): void {
-    // load all homes for the landlord
-    this.homes = this.data.homes;
 
-    if (this.homes != null)
-      this.selected = this.homes[0];
-  }
-  fieldChanged(home: IHome){
-    console.log("field changed to " + JSON.stringify(home));
-  }
-  setOrigSettings(room : IRoom)
-  {
-   this.origSettings = Object.assign({}, room);
-  }
-
-  linkRoomToProspect(){
-
-  }
-  updateRoom(){
-
-  }
-  getInputErrorMessage(inputField){
-    
-    if (inputField.hasError('required')) {
-      return 'You must enter a value';
+  prospectsExist(){
+    if ((this.availProspects != null) && ((<any[]>this.availProspects).length > 0)){
+      return true;
     }
-    if (inputField.hasError(inputField)){
-        return "Not a valid entry";
-    }
+    return false;
+  }
+
+  addAppvdProsToRoom(){
+    console.log("setting:" + JSON.stringify(this.selectedProspect) + " to " + this.selectedRoom);
+    let myProspect : IProspect = (<IProspect[]>this.availProspects).find(pros => pros.Id == this.selectedProspect);
+    myProspect.Status = ProspectStatus.pendingLeaseSignature;
+    this.prospectService.updateProspect(myProspect)
+    .then(() => {
+      // Prompt user that the Prospect has been Linked to the Room and that the workflow is pending
+      // Lease Documentation Generation and Signature by Prospect
+      this.dialog.open(DialogDataRRMSDialog, {
+          data: {
+            inError: false,
+            title: "Saved",
+            contentSummary: "This home has been Saved! Would you like to proceed to add a rental room for this home?",
+            errorItems: []
+          }
+          }).afterClosed().subscribe((addRooms: boolean)=> {
+            if (addRooms == true ){
+              this.router.navigate([`leases/add-lease`]);
+              this.dialogRef.close();
+            }
+            else{
+              this.dialogRef.close();
+            }
+          });
+    }).catch((err) => {
+            this.dialog.open(DialogDataRRMSDialog, {
+              data: {
+                inError: true,
+                title: "Unable to process",
+                contentSummary: "We're sorry. We are unable to process",
+                errorItems: []
+              }
+            });
+          });
   }
 }

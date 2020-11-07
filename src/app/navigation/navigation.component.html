@@ -60,6 +60,21 @@
           <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header>
               <mat-panel-title>
+                <h3 matSubHeader><a routerLink='/leases'>Leases</a></h3>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <!--
+            <li style="list-style: none;" *ngFor="let currHome of homes; let i = index">
+              <a mat-list-item routerLink='/homes/home/{{i + 1}}'>Home {{i + 1}}</a>
+            </li>
+          -->
+            <a mat-list-item routerLink='/leases/pending-leases'>Pending Leases</a>
+            <a mat-list-item routerLink='/leases/add-lease'>&lt;Add Lease&gt;</a>
+            <a mat-list-item routerLink='/leases/lease-templates'>Lease Templates</a>
+          </mat-expansion-panel>
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
                 <h3 matSubHeader><a routerLink='/sales'>Sales</a></h3>
               </mat-panel-title>
             </mat-expansion-panel-header>

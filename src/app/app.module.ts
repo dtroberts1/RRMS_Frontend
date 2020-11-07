@@ -40,6 +40,10 @@ import { EditProspectComponent } from './prospects/edit-prospect/edit-prospect.c
 import { ModifyEmployerModalComponent } from './modify-employer-modal/modify-employer-modal.component';
 import { ModifyPrevRentalComponent } from './modify-prev-rental/modify-prev-rental.component';
 import { AddApprovedProspectComponentModal } from './homes/room/add-approved-prospect/add-approved-prospect.component';
+import { LeasesComponent } from './leases/leases/leases.component';
+import { PendingLeasesComponent } from './leases/pending-leases/pending-leases.component';
+import { AddLeaseComponent } from './leases/add-lease/add-lease.component';
+import { LeaseTemplatesComponent } from './leases/lease-templates/lease-templates.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomesComponent, data: { title: 'Homes' } },
@@ -57,7 +61,10 @@ const appRoutes: Routes = [
   { path: 'homes/room', component: RoomComponent, data: { title: 'Rooms' } },
   { path: 'homes/viewroom/:id', component: ViewRoomComponent, data: { title: 'Add Room' } },
   { path: 'homes/addroom/:id/:nickname/:nbrRooms', component: AddRoomComponent, data: { title: 'Add Room' } },
-  { path: 'prospects/add-prospect', component: AddProspectComponent, data: { title: 'Add Prospect' } },
+  { path: 'leases', component: LeasesComponent, data: { title: 'Leases' } },
+  { path: 'leases/pending-leases', component: PendingLeasesComponent, data: { title: 'Pending Leases' } },
+  { path: 'leases/add-lease', component: AddLeaseComponent, data: { title: 'Add Lease' } },
+  { path: 'leases/lease-templates', component: LeaseTemplatesComponent, data: { title: 'Lease Templates' } },
 
 ];
 @NgModule({
@@ -93,7 +100,11 @@ const appRoutes: Routes = [
     EditProspectComponent,
     ModifyEmployerModalComponent,
     ModifyPrevRentalComponent,
-    AddApprovedProspectComponentModal
+    AddApprovedProspectComponentModal,
+    LeasesComponent,
+    PendingLeasesComponent,
+    AddLeaseComponent,
+    LeaseTemplatesComponent
     ],
   imports: [
     BrowserModule,

@@ -1,30 +1,27 @@
-<p>add-approved-prospect works!</p>
-<div style="float:left; width:25%; height:100%;">
-    <h1 mat-dialog-title>Link Room</h1>
-    <div style="float:left;">
-        <mat-form-field appearance="fill">
-            <mat-label>Select Home</mat-label>
-            <mat-select [(ngModel)]="selected" (change)="showProductDetails()">
-            <mat-option *ngFor="let home of homes;" [value]="home.Id">
-                {{home.Nickname}}
-            </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
+<div style="width:25%; height:100%;">
+    <h3 mat-dialog-title>Link Room to (Approved) Propect</h3>
     <div>
         <mat-form-field *ngIf="roomsExist() == true" appearance="fill">
             <mat-label>Select Room</mat-label>
             <mat-select [(value)]="selectedRoom" (change)="showProductDetails()">
-            <mat-option *ngFor="let room of homes[selected - 1].Rooms" [value]="room.Id">
+            <mat-option *ngFor="let room of availRooms" [value]="room.Id">
                 {{room.RoomName}}
+            </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field *ngIf="prospectsExist() == true" appearance="fill">
+            <mat-label>Select Prospect</mat-label>
+            <mat-select [(value)]="selectedProspect" (change)="showProductDetails()">
+            <mat-option *ngFor="let pros of availProspects" [value]="pros.Id">
+                {{pros.FName}}
             </mat-option>
             </mat-select>
         </mat-form-field>
     </div>
     <span style="margin-left:5%;">
         <br />
-        <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="linkRoomToProspect()">Link Room to Prospect</button>
-        <button class="lowerViewRoomButtons" (click)="returnChoice()" mat-button>Ok</button>
+        <!--<button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="addAppvdProsToRoom()">Link Approved Prospect to Room</button>-->
+        <button class="lowerViewRoomButtons" (click)="addAppvdProsToRoom()" mat-button>Link</button>
         <button class="lowerViewRoomButtons" (click)="closeNoSelection()" mat-button>Close</button>
     </span>
 </div>
