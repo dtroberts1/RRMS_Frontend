@@ -61,6 +61,7 @@ const appRoutes: Routes = [
   { path: 'homes/room', component: RoomComponent, data: { title: 'Rooms' } },
   { path: 'homes/viewroom/:id', component: ViewRoomComponent, data: { title: 'Add Room' } },
   { path: 'homes/addroom/:id/:nickname/:nbrRooms', component: AddRoomComponent, data: { title: 'Add Room' } },
+  { path: 'prospects/add-prospect', component: AddProspectComponent, data: { title: 'Add Prospect' } },
   { path: 'leases', component: LeasesComponent, data: { title: 'Leases' } },
   { path: 'leases/pending-leases', component: PendingLeasesComponent, data: { title: 'Pending Leases' } },
   { path: 'leases/add-lease', component: AddLeaseComponent, data: { title: 'Add Lease' } },
