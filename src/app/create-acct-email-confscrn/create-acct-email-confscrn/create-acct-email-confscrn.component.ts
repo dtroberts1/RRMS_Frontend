@@ -10,15 +10,18 @@ import {AccountService} from '../../services/account.service';
 export class CreateAcctEmailConfscrnComponent implements OnInit {
   @Output() notifyFromCreateAcctEmailConf = new EventEmitter<string>();
   @Input() email: FormControl;
+  emailVal: string;
   products : any[];
 
-  constructor(private service : AccountService){}
+  constructor(private service : AccountService){
+  }
+  ngOnInit(): void {
+    if (this.email != null)
+      this.emailVal = this.email.value;
+  }
+
   okClicked(){
     this.notifyFromCreateAcctEmailConf.emit('emailConfirmationClicked');
 
   }
-
-  ngOnInit(): void {
-  }
-
 }

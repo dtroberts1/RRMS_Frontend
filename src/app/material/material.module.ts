@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import{MatFormFieldModule} from '@angular/material/form-field';
 import{MatInputModule} from '@angular/material/input';
@@ -48,6 +49,7 @@ const MaterialComponents = [
   imports: [
     MaterialComponents
   ],
-  exports:[MaterialComponents]
+  exports:[MaterialComponents],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class MaterialModule { }

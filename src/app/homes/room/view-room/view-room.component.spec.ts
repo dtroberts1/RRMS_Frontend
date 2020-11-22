@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { ViewRoomComponent } from './view-room.component';
+import {HttpClientModule} from '@angular/common/http';
 
 describe('ViewRoomComponent', () => {
   let component: ViewRoomComponent;
@@ -8,7 +9,12 @@ describe('ViewRoomComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ViewRoomComponent ]
+      declarations: [ ViewRoomComponent ],
+      imports: [HttpClientModule],
+      providers: [     
+        {provide: MatDialog, useValue: {}},
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: MatDialogRef, useValue: {} }],
     })
     .compileComponents();
   });

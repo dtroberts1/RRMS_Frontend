@@ -3,8 +3,8 @@
         <h1>Confirmation</h1>
     </mat-label>
 
-    <div style="margin-left:12%">
-        Email Confirmation has been sent to {{email.value}}
+    <div *ngIf="emailVal != null" style="margin-left:12%">
+        Email Confirmation has been sent to {{emailVal}}
     </div>
 
     <button class="loginScreenLoginButton" mat-stroked-button color="primary"

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BackgroundchecksComponent } from './backgroundchecks.component';
+import { BackgroundChecksComponent } from './backgroundchecks.component';
 
 describe('BackgroundchecksComponent', () => {
-  let component: BackgroundchecksComponent;
-  let fixture: ComponentFixture<BackgroundchecksComponent>;
+  let component: BackgroundChecksComponent;
+  let fixture: ComponentFixture<BackgroundChecksComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BackgroundchecksComponent ]
+      declarations: [ BackgroundChecksComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BackgroundchecksComponent);
+    fixture = TestBed.createComponent(BackgroundChecksComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
