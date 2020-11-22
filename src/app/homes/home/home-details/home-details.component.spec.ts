@@ -1,14 +1,39 @@
+import { HttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { MatDialog, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HomeDetailsComponent } from './home-details.component';
 
+let routerSpy: {navigate: jasmine.Spy};
+let httpClientSpy: {get: jasmine.Spy};
+
+const fakeActivatedRoute  = {
+  snapshot: {
+      paramMap: {
+          get(): string {
+              return '123';
+          },
+      },
+  },
+}
 describe('HomeDetailsComponent', () => {
   let component: HomeDetailsComponent;
   let fixture: ComponentFixture<HomeDetailsComponent>;
 
   beforeEach(async () => {
+    routerSpy = jasmine.createSpyObj(Router, ['navigate']);
+    httpClientSpy = jasmine.createSpyObj(HttpClient, ['get']);
+
     await TestBed.configureTestingModule({
-      declarations: [ HomeDetailsComponent ]
+      declarations: [ HomeDetailsComponent ],
+      providers: [
+        {provide: ActivatedRoute, useValue: fakeActivatedRoute},
+        {provide: MAT_DIALOG_DATA, useValue: {}},
+        {provide: MatDialog, useValue: {}},
+        {provide: MatDialogModule, useValue: {}},
+        {provide: Router, useValue: routerSpy},
+        {provide: HttpClient, useValue: httpClientSpy},
+      ]
     })
     .compileComponents();
   });

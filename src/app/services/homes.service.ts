@@ -65,7 +65,7 @@ export class HomesService{
   getHomes(): Promise<Iterable<IHome>>{
     return new Promise((resolve, reject) => {
 
-      this.fetchHomes().then((homes: Iterable<IHome>) => {
+      this.fetchHomes()?.then((homes: Iterable<IHome>) => {
         this.homes = homes;
         resolve(this.homes);
       }).catch((err) => {

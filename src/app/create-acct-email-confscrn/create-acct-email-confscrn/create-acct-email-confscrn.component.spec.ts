@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {HttpClientModule} from '@angular/common/http';
 import { CreateAcctEmailConfscrnComponent } from './create-acct-email-confscrn.component';
 import { FormControl } from '@angular/forms';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('CreateAcctEmailConfscrnComponent', () => {
   let component: CreateAcctEmailConfscrnComponent;
@@ -10,6 +11,7 @@ describe('CreateAcctEmailConfscrnComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ CreateAcctEmailConfscrnComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
       imports: [HttpClientModule],
     })
     .compileComponents();

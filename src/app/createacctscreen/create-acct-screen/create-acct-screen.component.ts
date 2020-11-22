@@ -18,13 +18,16 @@ export class CreateAcctScreenComponent implements OnInit{
     fName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,25}')]);
     lName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,25,}')]);
     phoneNumber = new FormControl('', [Validators.required, Validators.pattern(/((\(\d{3}\) ?)|(\d{3}-))?\d{3}-\d{4}/)]);
+    canCreateAct: boolean = false;
 
     createAccount(canCreateAct : boolean){
 // This was working!
       if (canCreateAct == false){
+        this.canCreateAct = false;
         this.notifyFromCreateAcct.emit("closeCreateAcctWindow");
       }
       if (canCreateAct == true){
+        this.canCreateAct = true;
         this.accountService.register({
           Email : this.email.value,
           Password : this.password.value,

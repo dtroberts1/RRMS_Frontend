@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {ProspectService} from '../services/prospect.service';
-import{IProspect} from '../interfaces/Prospect';
+import {IProspect} from '../interfaces/Prospect';
 import { ActivatedRoute } from '@angular/router';
 import { EditProspectComponent } from './edit-prospect/edit-prospect.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -33,22 +33,24 @@ export class ProspectsComponent implements OnInit {
     private prospectService: ProspectService,
     public dialog: MatDialog, 
     ) { 
-      if (this.prospectService.prospects == null)
+      if (this.prospectService != null)
       {
-        console.log("prospects in service is null");
-        this.prospectService.getProspects().then((prospects: Iterable<IProspect>) => {
-          this.prospects = prospects;
+        if (this.prospectService.prospects == null)
+        {
+          console.log("prospects in service is null");
+          this.prospectService.getProspects()?.then((prospects: Iterable<IProspect>) => {
+            this.prospects = prospects;
+            this.dataSource = Array.from(this.prospects);
+          }).catch((err) => {
+            console.log(err);
+          });
+        }
+        else{
+          this.prospects = this.prospectService?.prospects;
+          // If prospects are already in, retrieve them
+          console.log("prospects in service already in (not null). They are " + JSON.stringify(this.prospects));
           this.dataSource = Array.from(this.prospects);
-        }).catch((err) => {
-          console.log(err);
-        });
-      }
-      else{
-        this.prospects = this.prospectService.prospects;
-        // If prospects are already in, retrieve them
-        console.log("prospects in service already in (not null). They are " + JSON.stringify(this.prospects));
-        this.dataSource = Array.from(this.prospects);
-
+        }
       }
   }
 

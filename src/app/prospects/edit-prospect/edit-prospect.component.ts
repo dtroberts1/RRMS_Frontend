@@ -120,9 +120,7 @@ statusList:Iterable<IStatus> = [
           this.selectedRoomName = "";
     });
     }
-    else
-      console.log("rooms is null in view-room: " + data.home.Rooms[this.currentProspectIndex]);
-    this.prospectCount = (<any[]>data.prospects).length;
+    this.prospectCount = (<any[]>data.prospects)?.length;
   }
 
   setOrigSettings(prospect : IProspect)
@@ -159,52 +157,61 @@ statusList:Iterable<IStatus> = [
   }
   // If add is true, it will open the modal in 'Add Employer' mode
   openEmployerModifyModal(add: boolean){
-    if (add == true){
-      this.dialog.open(ModifyEmployerModalComponent, {
-        data: {
-          addMode: true,
-          prospectId: this.prospect.Id,
-        },
-        width:'60%',
-        height: '55%'
-      }).afterClosed().subscribe((returnedEmployer : IEmployer) => {
-        // Push the newly added employer to the list
-        if (returnedEmployer != null)
-          (<IEmployer[]>(this.prospect.Employers)).push(returnedEmployer);
-        },
-        err =>{
-          console.log(err);
-        });
-    }
-    else if(add == false){
-      this.dialog.open(ModifyEmployerModalComponent, {
-        data: {
-          employers : this.prospect.Employers,
-          employerIndex : 0,
-          addMode: false,
-        },
-        width:'60%',
-        height: '55%'
-      }).afterClosed().subscribe((returnedEmployerList : Iterable<IEmployer>) => {
-        if (returnedEmployerList != null)
-          this.prospect.Employers = returnedEmployerList;
-        },
-        err =>{
-          console.log(err);
-        });
+    if (this.prospect != null)
+    {
+      if (add == true){
+        this.dialog.open(ModifyEmployerModalComponent, {
+          data: {
+            addMode: true,
+            prospectId: this.prospect.Id,
+          },
+          width:'60%',
+          height: '55%'
+        }).afterClosed().subscribe((returnedEmployer : IEmployer) => {
+          // Push the newly added employer to the list
+          if (returnedEmployer != null)
+            (<IEmployer[]>(this.prospect.Employers)).push(returnedEmployer);
+          },
+          err =>{
+            console.log(err);
+          });
+      }
+      else if(add == false){
+        this.dialog.open(ModifyEmployerModalComponent, {
+          data: {
+            employers : this.prospect.Employers,
+            employerIndex : 0,
+            addMode: false,
+          },
+          width:'60%',
+          height: '55%'
+        }).afterClosed().subscribe((returnedEmployerList : Iterable<IEmployer>) => {
+          if (returnedEmployerList != null)
+            this.prospect.Employers = returnedEmployerList;
+          },
+          err =>{
+            console.log(err);
+          });
+      }
     }
   }
   addEmp(){
 
   }
   hasEmployers(){
-    if ((<any[]>this.prospect.Employers).length > 0)
-    return true;
-  else
-    return false;
+    if (this.prospect != null)
+    {
+      if ((<any[]>this.prospect.Employers)?.length > 0)
+        return true;
+      else
+        return false;
+    }
+    else{
+      return false;
+    }
   }
   hasPrevRentals(){
-    if ((<any[]>this.prospect.PreviousRentals).length > 0)
+    if ((<any[]>this.prospect.PreviousRentals)?.length > 0)
       return true;
     else
       return false;
@@ -456,12 +463,12 @@ statusList:Iterable<IStatus> = [
   updateCurrentProspectIndex(next: boolean)
   {
     if (next == true){
-      this.currentProspectIndex = (this.currentProspectIndex + 1) % (<any[]>this.data.prospects).length;
+      this.currentProspectIndex = (this.currentProspectIndex + 1) % (<any[]>this.data.prospects)?.length;
     }
     else if(next == false){ // If navigating to "previous"
       this.currentProspectIndex--;
       if (this.currentProspectIndex < 0){
-        this.currentProspectIndex = (<any[]>this.data.prospects).length - 1;
+        this.currentProspectIndex = (<any[]>this.data.prospects)?.length - 1;
       }
     }
   }
@@ -498,23 +505,25 @@ statusList:Iterable<IStatus> = [
 
   updateProspect(){
      //TODO
-     this.prospect = {
-      Id : this.prospect.Id,
-      EmailAddress : this.emailInput.value,
-      FName : this.fNameInput.value,
-      LName : this.lNameInput.value,
-      MdInit : this.mdInitInput.value,
-      PhoneNumber : this.phoneNumberInput.value,
-      Employers : this.prospect.Employers,
-      PreviousRentals : this.prospect.PreviousRentals,
-      SSN: this.ssnInput.value,
-      Status: this.selectedStatus,
-      ProspectId: this.prospect.Id,
-      RoomId: this.prospect.RoomId,
-      MoveInDate: this.moveInDateInput.value,
-      MoveOutDate: this.moveOutDateInput.value,
-      TermType: this.termTypeMap.get(this.termType),
-      LandlordId: this.prospect.LandlordId,
+     if (this.prospect != null){
+      this.prospect = {
+        Id : this.prospect.Id,
+        EmailAddress : this.emailInput.value,
+        FName : this.fNameInput.value,
+        LName : this.lNameInput.value,
+        MdInit : this.mdInitInput.value,
+        PhoneNumber : this.phoneNumberInput.value,
+        Employers : this.prospect.Employers,
+        PreviousRentals : this.prospect.PreviousRentals,
+        SSN: this.ssnInput.value,
+        Status: this.selectedStatus,
+        ProspectId: this.prospect.Id,
+        RoomId: this.prospect.RoomId,
+        MoveInDate: this.moveInDateInput.value,
+        MoveOutDate: this.moveOutDateInput.value,
+        TermType: this.termTypeMap.get(this.termType),
+        LandlordId: this.prospect.LandlordId,
+     }
      }
      return new Promise((resolve, reject) => {
        this.prospectService.updateProspect(this.prospect).then(() => {

@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
-import{MatFormFieldModule} from '@angular/material/form-field';
+import{MatFormFieldModule, MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
 import{MatInputModule} from '@angular/material/input';
 import{MatIconModule} from '@angular/material/icon';
+import {FormsModule} from '@angular/forms';
 import{ReactiveFormsModule} from '@angular/forms';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {ScrollingModule} from '@angular/cdk/scrolling';
@@ -47,9 +48,13 @@ const MaterialComponents = [
 @NgModule({
   declarations: [],
   imports: [
+    FormsModule,
     MaterialComponents
   ],
   exports:[MaterialComponents],
-  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+  providers: [
+    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } }
+  ]
 })
 export class MaterialModule { }

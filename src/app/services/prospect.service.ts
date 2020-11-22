@@ -15,6 +15,7 @@ export class ProspectService{
     private prospectsUrl = 'http://localhost:64097/api/Prospects';
     availableProspects : Iterable<IProspect>;
     constructor(private http: HttpClient){
+      
     }
 
     async saveProspect(prospect: IProspect){

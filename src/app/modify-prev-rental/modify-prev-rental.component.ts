@@ -97,7 +97,6 @@ ngOnInit(): void {
         this.prevRentalCount = (<any[]>this.data.prevRentals).length;
     }
   }
-  console.log("addMode is " + this.addMode);
   }
   setOrigSettings(prevRental : IPreviousRental)
   {

@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -105,27 +104,28 @@ const appRoutes: Routes = [
     LeasesComponent,
     PendingLeasesComponent,
     AddLeaseComponent,
-    LeaseTemplatesComponent
+    LeaseTemplatesComponent,
     ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    CommonModule,
-    FormsModule,
-    MaterialModule,
-    HttpClientModule,
-    RouterModule.forRoot(
-      appRoutes,
-      { useHash: true }
-    ),
-    MatDialogModule,
-    OverlayModule,
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyDmNBhieCcLQWf4Bk97IWi-0pYujLH-ODU',
-      libraries: ['places']
-    })
-  ],
-  providers: [MatDialogModule],
-  bootstrap: [AppComponent]
+    schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+    imports: [
+      BrowserModule,
+      BrowserAnimationsModule,
+      CommonModule,
+      MaterialModule,
+      HttpClientModule,
+      RouterModule.forRoot(
+        appRoutes,
+        { useHash: true }
+      ),
+      MatDialogModule,
+      OverlayModule,
+      AgmCoreModule.forRoot({
+        apiKey: 'AIzaSyDmNBhieCcLQWf4Bk97IWi-0pYujLH-ODU',
+        libraries: ['places']
+      })
+    ],
+    providers: [HttpClientModule, MatDialogModule],
+    bootstrap: [AppComponent],
+
 })
 export class AppModule { }

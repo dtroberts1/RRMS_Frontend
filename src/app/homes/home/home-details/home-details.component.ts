@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnInit, SimpleChanges } from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogModule} from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IRoom } from 'src/app/interfaces/Rooms';
 import { RoomsService } from 'src/app/services/room.service';
@@ -47,30 +47,38 @@ export class HomeDetailsComponent implements OnInit {
 
 
   async ngOnInit() {
-    this.roomCount = (<any[]>this.home.Rooms)?.length;
-    if (this.prospectService.availableProspects == null){
-      await this.prospectService.getAvailableProspects().then((availProspects: Iterable<IProspect>) => {
-        this.availProspects = availProspects;
-      })
+    if (this.home != null){
+        this.roomCount = (<any[]>this.home.Rooms)?.length;
+        if (this.prospectService.availableProspects == null){
+          await this.prospectService.getAvailableProspects().then((availProspects: Iterable<IProspect>) => {
+            this.availProspects = availProspects;
+          })
+        }
+        else{
+          this.availProspects = this.prospectService.availableProspects; 
+        }
+      }
+      else{
+        this.roomCount = 0;
+      }
     }
-    else{
-      this.availProspects = this.prospectService.availableProspects; 
-    }
-  }
+
 
   openViewRoomDialog(){
-    console.log("in home details, about to send " + JSON.stringify(this.home.Rooms));
-    this.dialog.open(ViewRoomComponent, {
-      data: {
-        home : this.home,
-        rooms : this.home.Rooms,
-      },
-      width:'45%',
-      height: '55%'
-    }).afterClosed().subscribe((home: IHome) => {
-        this.home.Rooms = home.Rooms;
-        this.roomCount = (<any[]>this.home.Rooms)?.length;
-    });
+    if (this.home != null){
+      console.log("in home details, about to send " + JSON.stringify(this.home.Rooms));
+      this.dialog.open(ViewRoomComponent, {
+        data: {
+          home : this.home,
+          rooms : this.home.Rooms,
+        },
+        width:'45%',
+        height: '55%'
+      }).afterClosed().subscribe((home: IHome) => {
+          this.home.Rooms = home.Rooms;
+          this.roomCount = (<any[]>this.home.Rooms)?.length;
+      });
+    }
   }
   openViewProspectDialog(){
 

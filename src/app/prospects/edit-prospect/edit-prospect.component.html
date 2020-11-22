@@ -32,7 +32,7 @@
     </tr>
     <tr>
       <td>
-        <h3><label>Employers</label>&nbsp;&nbsp;&nbsp;
+        <h3 *ngIf="prospect != null"><label>Employers</label>&nbsp;&nbsp;&nbsp;
           <a *ngIf="hasEmployers() == true"  class="editLinks" (click)="openEmployerModifyModal(false)">Modify</a>&nbsp;
           <a class="editLinks" (click)="openEmployerModifyModal(true)">Add</a>
           <ul>
@@ -47,7 +47,7 @@
     </tr>
     <tr>
       <td>
-        <h3><label>Previous Rentals</label>&nbsp;&nbsp;
+        <h3 *ngIf="prospect != null"><label>Previous Rentals</label>&nbsp;&nbsp;
           <a *ngIf="hasPrevRentals() == true" class="editLinks" (click)="openPrevRentModifyModal(false)">Modify</a>&nbsp;
           <a class="editLinks" (click)="openPrevRentModifyModal(true)">Add</a>
           <ul>
@@ -62,7 +62,7 @@
     </tr>
   </table>
 </div>
-  <div style="float:right; width:50%; height:100%">
+  <div *ngIf="prospect != null" style="float:right; width:50%; height:100%">
     <table>
       <tr>
         <td width="90%">

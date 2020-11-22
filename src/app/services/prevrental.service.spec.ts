@@ -1,18 +1,18 @@
 import { TestBed } from '@angular/core/testing';
-import { HomesService } from './homes.service';
+import { PreviousRental } from './prevrental.service';
 
 let httpClientSpy: { get: jasmine.Spy };
 
-describe('HomesService', () => {
-  let service: HomesService;
+describe('PreviousRental', () => {
+  let service: PreviousRental;
 
   beforeEach(() => {
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
 
     TestBed.configureTestingModule({});
-    service = new HomesService(httpClientSpy as any);
+    service = new PreviousRental(httpClientSpy as any);
 
-    //service = TestBed.inject(HomesService);
+    //service = TestBed.inject(PreviousRental);
   });
 
   it('should be created', () => {

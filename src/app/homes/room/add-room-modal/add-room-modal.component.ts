@@ -42,13 +42,15 @@ export class AddRoomModalComponent {
   public dialog: MatDialog,
   ) {
     this.home = data.home;
-    if (this.home.Rooms != null)
-    {
-      this.room = data.home.Rooms[0];
+    if (this.home != null){
+      if (this.home.Rooms != null)
+      {
+        this.room = data.home.Rooms[0];
+      }
+      else
+        console.log("rooms is null in view-room: " + data.home.Rooms[this.currentRoomIndex]);
+      this.roomCount = (<any[]>data.home.Rooms).length;
     }
-    else
-      console.log("rooms is null in view-room: " + data.home.Rooms[this.currentRoomIndex]);
-    this.roomCount = (<any[]>data.home.Rooms).length;
   }
   closeEmpDialog(){
 

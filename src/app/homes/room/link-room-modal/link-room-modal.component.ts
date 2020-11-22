@@ -5,7 +5,6 @@ import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component'
 import { IHome } from 'src/app/interfaces/Homes';
 import {IEmployer, SalaryType} from '../../../interfaces/Employer';
 import {IRoom} from '../../../interfaces/Rooms';
-import {RoomsService} from '../../../services/room.service';
 import {HomesService} from '../../../services/homes.service';
 
 
@@ -44,7 +43,6 @@ export class LinkRoomModalComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
   public dialogRef: MatDialogRef<LinkRoomModalComponent>,
-  private roomsService: RoomsService,
   public dialog: MatDialog, 
   ) {
   }
@@ -57,8 +55,11 @@ export class LinkRoomModalComponent implements OnInit {
   showProductDetails(){
   }
   roomsExist(){
-    if (this.homes[(this.selected)] != null && this.homes[(this.selected)].Rooms != null && (<any[]>this.homes[(this.selected)].Rooms).length > 0)
-      return true;
+    if (this.homes != null){
+        if (this.homes[(this.selected)] != null && this.homes[(this.selected)].Rooms != null && (<any[]>this.homes[(this.selected)].Rooms).length > 0)
+          return true;
+      return false;
+    }
     return false;
   }
   
@@ -70,7 +71,6 @@ export class LinkRoomModalComponent implements OnInit {
       this.selected = this.homes[0];
   }
   fieldChanged(home: IHome){
-    console.log("field changed to " + JSON.stringify(home));
   }
   setOrigSettings(room : IRoom)
   {

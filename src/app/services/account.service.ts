@@ -19,15 +19,7 @@ export class AccountService{
 
 
     constructor(private http: HttpClient, private homesService: HomesService){}
-    /*
-    getAccounts() : Observable<any[]>{
-        // IAccount -- set this up as well as observable
-        return this.http.get<any[]>(this.accountURL).pipe(
-            tap(data => console.log('All: '+ JSON.stringify(data))),
-            catchError(this.handleError)
-        );
-    }
-    */
+
     register(user : User){
       return new Promise((resolve, reject) => {
         this.http.post<User>(this.regURL, user).subscribe(
@@ -44,10 +36,7 @@ export class AccountService{
 
    async login(user: LoginUser){
     let body = `grant_type=password&username=${user.username} &password=${user.password}`;
-    //new URLSearchParams(); 
-    //body.set('user', user.username);
-    //body.set('password', user.password);
-    
+
     let options = {
         headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
     };

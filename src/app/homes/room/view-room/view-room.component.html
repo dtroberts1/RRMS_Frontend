@@ -1,5 +1,5 @@
 <div style="float:left; width:25%; height:100%;margin-left:10%">
-  <h1 mat-dialog-title>{{room.RoomName}}</h1>
+  <h1 *ngIf="room != null" mat-dialog-title>{{room.RoomName}}</h1>
   <div class="browseImage">
     <img [(src)]="homeImagePath"/>
     <br />
@@ -8,7 +8,7 @@
   </div>
 </div>
 </div>
-<div style="float:right; width:50%; height:100%">
+<div *ngIf="room != null" style="float:right; width:50%; height:100%">
   <h3 class="h3link">View Financial History</h3>
   <table>
     <tr>

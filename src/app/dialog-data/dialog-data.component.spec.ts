@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { DialogDataRRMSDialog } from './dialog-data.component';
 
@@ -8,7 +9,11 @@ describe('DialogDataComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DialogDataRRMSDialog ]
+      declarations: [ DialogDataRRMSDialog ],
+      providers: [
+        {provide: MAT_DIALOG_DATA, useValue: {}},
+        {provide: MatDialogRef, useValue: {}},
+      ]
     })
     .compileComponents();
   });

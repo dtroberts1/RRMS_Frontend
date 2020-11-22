@@ -20,7 +20,7 @@ export class NavigationComponent implements OnInit {
 
   async ngOnInit() {
     this.prospectService.getProspects();// asynchronous call
-    this.homesService.getHomes().then((homes : Iterable<IHome>) => {
+    this.homesService.getHomes()?.then((homes : Iterable<IHome>) => {
       this.homes = homes;
     });
   }

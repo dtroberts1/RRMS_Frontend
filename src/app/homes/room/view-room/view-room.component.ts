@@ -45,18 +45,20 @@ export class ViewRoomComponent {
     
     this.home = data.home;
     console.log("home input is ", JSON.stringify(this.home));
-    if (this.home.Rooms != null)
-    {
-      this.setOrigSettings(this.data.home.Rooms[this.currentRoomIndex]);
-      this.getSettings();
-      console.log("initial dimensions:" + this.room.Dimensions);
-      console.log("dim1:" + this.dimension1.value);
-      console.log("dim2:" + this.dimension2.value);
-      console.log("rooms is " + JSON.stringify(this.room));
+    if (this.home != null){
+      if (this.home.Rooms != null)
+      {
+        this.setOrigSettings(this.data.home.Rooms[this.currentRoomIndex]);
+        this.getSettings();
+        console.log("initial dimensions:" + this.room.Dimensions);
+        console.log("dim1:" + this.dimension1.value);
+        console.log("dim2:" + this.dimension2.value);
+        console.log("rooms is " + JSON.stringify(this.room));
+      }
+      else
+        console.log("rooms is null in view-room: " + data.home.Rooms[this.currentRoomIndex]);
+      this.roomCount = (<any[]>data.home.Rooms).length;
     }
-    else
-      console.log("rooms is null in view-room: " + data.home.Rooms[this.currentRoomIndex]);
-    this.roomCount = (<any[]>data.home.Rooms).length;
   }
 
   setOrigSettings(room : IRoom)
@@ -274,35 +276,37 @@ export class ViewRoomComponent {
 
   updateRoom(){
     //TODO
-    this.room = {
-      RoomName: this.room.RoomName,
-      Dimensions: `${this.dimension1.value} x ${this.dimension2.value}`,
-      IsMaster: this.isMaster,
-      HasCloset: this.hasCloset,
-      HasCeilingFan: this.hasCeilingFan,
-      HasPrivateBath: this.hasPrivateBath,
-      MonthlyRate: this.monthlyRateInput.value,
-      HomeId: this.home.Id,
-      Id: this.room.Id,
-    };
-      return new Promise((resolve, reject) => {
-      this.roomsService.updateRoom(this.room).then(() => {
-        this.dialog.open(DialogDataRRMSDialog, {
-          data: {
-            inError: false,
-            title: "Room Saved",
-            contentSummary: "This Room has been Saved",
-            errorItems: []
-          }
-          }).afterClosed().subscribe((addRooms: boolean)=> {
-            this.fieldsModified = false;
-            resolve(true);
-          });
-      }).catch((err) => {
-        console.log(err);
-        reject(false);
+    if (this.room != null){
+        this.room = {
+          RoomName: this.room.RoomName,
+          Dimensions: `${this.dimension1.value} x ${this.dimension2.value}`,
+          IsMaster: this.isMaster,
+          HasCloset: this.hasCloset,
+          HasCeilingFan: this.hasCeilingFan,
+          HasPrivateBath: this.hasPrivateBath,
+          MonthlyRate: this.monthlyRateInput.value,
+          HomeId: this.home.Id,
+          Id: this.room.Id,
+        };
+        return new Promise((resolve, reject) => {
+        this.roomsService.updateRoom(this.room).then(() => {
+          this.dialog.open(DialogDataRRMSDialog, {
+            data: {
+              inError: false,
+              title: "Room Saved",
+              contentSummary: "This Room has been Saved",
+              errorItems: []
+            }
+            }).afterClosed().subscribe((addRooms: boolean)=> {
+              this.fieldsModified = false;
+              resolve(true);
+            });
+        }).catch((err) => {
+          console.log(err);
+          reject(false);
+        });
       });
-    });
+    }
   }
   getInputErrorMessage(inputField : AbstractControl){
     if (inputField.dirty == true){
