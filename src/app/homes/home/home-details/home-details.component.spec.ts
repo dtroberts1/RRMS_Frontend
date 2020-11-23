@@ -24,9 +24,9 @@ describe('HomeDetailsComponent', () => {
   let fixture: ComponentFixture<HomeDetailsComponent>;
 
   beforeEach(async () => {
-    routerSpy = jasmine.createSpyObj(Router, ['navigate']);
-    roomsServiceSpy = jasmine.createSpyObj(RoomsService, ['getAvailableRooms']);
-    prospectServiceSpy = jasmine.createSpyObj(ProspectService, ['getAvailableProspects']);
+    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+    roomsServiceSpy = jasmine.createSpyObj('RoomsService', ['getAvailableRooms']);
+    prospectServiceSpy = jasmine.createSpyObj('ProspectService', ['getAvailableProspects']);
 
     await TestBed.configureTestingModule({
       declarations: [ HomeDetailsComponent ],

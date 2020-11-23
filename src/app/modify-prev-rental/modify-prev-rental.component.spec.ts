@@ -11,7 +11,7 @@ describe('ModifyPrevRentalComponent', () => {
   let fixture: ComponentFixture<ModifyPrevRentalComponent>;
 
   beforeEach(async () => {
-    prevRentalServiceSpy = jasmine.createSpyObj(PreviousRental, ['savePrevRental', 'updatePrevRental', 'removePrevRental']);
+    prevRentalServiceSpy = jasmine.createSpyObj('PreviousRental', ['savePrevRental', 'updatePrevRental', 'removePrevRental']);
     await TestBed.configureTestingModule({
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
       declarations: [ ModifyPrevRentalComponent ],

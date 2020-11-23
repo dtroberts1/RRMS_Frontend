@@ -11,7 +11,7 @@ describe('ProspectsComponent', () => {
   let fixture: ComponentFixture<ProspectsComponent>;
 
   beforeEach(async () => {
-    prospectServiceSpy = jasmine.createSpyObj(ProspectService, ['getProspects']);
+    prospectServiceSpy = jasmine.createSpyObj('ProspectService', ['getProspects']);
     await TestBed.configureTestingModule({
       declarations: [ ProspectsComponent ],
       providers: [

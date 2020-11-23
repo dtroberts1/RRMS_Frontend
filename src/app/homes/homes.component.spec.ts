@@ -9,7 +9,7 @@ describe('HomesComponent', () => {
   let fixture: ComponentFixture<HomesComponent>;
 
   beforeEach(async () => {
-    homeServiceSpy = jasmine.createSpyObj(HomesService, ['getHomes']);
+    homeServiceSpy = jasmine.createSpyObj('HomesService', ['getHomes']);
     await TestBed.configureTestingModule({
       declarations: [ HomesComponent ],
       providers: [

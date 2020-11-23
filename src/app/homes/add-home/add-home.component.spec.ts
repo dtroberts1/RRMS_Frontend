@@ -22,7 +22,7 @@ describe('AddHomeComponent', () => {
     },
 }
   beforeEach(async () => {
-    homeServiceSpy = jasmine.createSpyObj(HttpClient, ['createHome']);
+    homeServiceSpy = jasmine.createSpyObj('HttpClient', ['createHome']);
     routerSpy = jasmine.createSpyObj(Router, ['navigate']);
     await TestBed.configureTestingModule({
       declarations: [ AddHomeComponent ],

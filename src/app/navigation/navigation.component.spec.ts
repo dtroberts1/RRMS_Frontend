@@ -12,8 +12,8 @@ describe('NavigationComponent', () => {
   let fixture: ComponentFixture<NavigationComponent>;
 
   beforeEach(async () => {
-    homesServiceSpy = jasmine.createSpyObj(HomesService, ['getHomes']);
-    prospectServiceSpy = jasmine.createSpyObj(ProspectService, ['getProspects']);
+    homesServiceSpy = jasmine.createSpyObj('HomesService', ['getHomes']);
+    prospectServiceSpy = jasmine.createSpyObj('ProspectService', ['getProspects']);
 
     await TestBed.configureTestingModule({
       declarations: [ NavigationComponent ],

@@ -11,7 +11,7 @@ describe('ModifyEmployerModalComponent', () => {
   let fixture: ComponentFixture<ModifyEmployerModalComponent>;
 
   beforeEach(async () => {
-    employerServiceSpy = jasmine.createSpyObj(EmployerService, ['saveEmployer','updateEmployer','removeEmployer']);
+    employerServiceSpy = jasmine.createSpyObj('EmployerService', ['saveEmployer','updateEmployer','removeEmployer']);
     await TestBed.configureTestingModule({
       declarations: [ ModifyEmployerModalComponent ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ],

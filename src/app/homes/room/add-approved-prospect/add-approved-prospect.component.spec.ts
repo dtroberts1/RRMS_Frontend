@@ -13,8 +13,8 @@ describe('AddApprovedProspectComponentModal', () => {
   let fixture: ComponentFixture<AddApprovedProspectComponentModal>;
 
   beforeEach(async () => {
-    prospectServiceSpy = jasmine.createSpyObj(ProspectService, ['updateProspect']);
-    routerSpy = jasmine.createSpyObj(Router, ['navigate']);
+    prospectServiceSpy = jasmine.createSpyObj('ProspectService', ['updateProspect']);
+    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     await TestBed.configureTestingModule({
       declarations: [ AddApprovedProspectComponentModal ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -22,7 +22,7 @@ describe('AddRoomComponent', () => {
   let fixture: ComponentFixture<AddRoomComponent>;
 
   beforeEach(async () => {
-    roomsServiceSpy = jasmine.createSpyObj(RoomsService, ['createRoom']);
+    roomsServiceSpy = jasmine.createSpyObj('RoomsService', ['createRoom']);
     await TestBed.configureTestingModule({
       declarations: [ AddRoomComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
