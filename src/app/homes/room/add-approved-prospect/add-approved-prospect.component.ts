@@ -5,7 +5,6 @@ import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component'
 import { IHome } from 'src/app/interfaces/Homes';
 import {IEmployer, SalaryType} from '../../../interfaces/Employer';
 import {IRoom} from '../../../interfaces/Rooms';
-import {RoomsService} from '../../../services/room.service';
 import {ProspectService} from '../../../services/prospect.service';
 import { IProspect } from 'src/app/interfaces/Prospect';
 import { Router } from '@angular/router';
@@ -38,7 +37,6 @@ export class AddApprovedProspectComponentModal implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public fromParent: AvailableRoomsAndProspects,
   public dialogRef: MatDialogRef<AddApprovedProspectComponentModal>,
-  private roomsService: RoomsService,
   private prospectService: ProspectService,
   public dialog: MatDialog, 
   private router: Router,

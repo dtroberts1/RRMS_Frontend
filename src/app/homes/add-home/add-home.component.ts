@@ -32,8 +32,6 @@ export class AddHomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.homeImagePath = '../../../assets/anotherhomepic.jpg';
-    //this.router.navigate(['homes/addroom']); // Just for testing
-
   }
 
 
@@ -114,7 +112,7 @@ export class AddHomeComponent implements OnInit {
           Prospects : [],
           LandlordId : -1,
           }
-          ).then((home:IHome) => {
+          )?.then((home:IHome) => {
             this.home = home;
             this.dialog.open(DialogDataRRMSDialog, {
               data: {

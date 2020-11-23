@@ -2,10 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ProspectService } from 'src/app/services/prospect.service';
+import { RoomsService } from 'src/app/services/room.service';
 import { HomeDetailsComponent } from './home-details.component';
 
 let routerSpy: {navigate: jasmine.Spy};
-let httpClientSpy: {get: jasmine.Spy};
+let roomsServiceSpy: {getAvailableRooms: jasmine.Spy};
+let prospectServiceSpy: {getAvailableProspects: jasmine.Spy};
 
 const fakeActivatedRoute  = {
   snapshot: {
@@ -22,7 +25,8 @@ describe('HomeDetailsComponent', () => {
 
   beforeEach(async () => {
     routerSpy = jasmine.createSpyObj(Router, ['navigate']);
-    httpClientSpy = jasmine.createSpyObj(HttpClient, ['get']);
+    roomsServiceSpy = jasmine.createSpyObj(RoomsService, ['getAvailableRooms']);
+    prospectServiceSpy = jasmine.createSpyObj(ProspectService, ['getAvailableProspects']);
 
     await TestBed.configureTestingModule({
       declarations: [ HomeDetailsComponent ],
@@ -32,7 +36,8 @@ describe('HomeDetailsComponent', () => {
         {provide: MatDialog, useValue: {}},
         {provide: MatDialogModule, useValue: {}},
         {provide: Router, useValue: routerSpy},
-        {provide: HttpClient, useValue: httpClientSpy},
+        {provide: RoomsService, useValue: roomsServiceSpy},
+        {provide: ProspectService, useValue: prospectServiceSpy},
       ]
     })
     .compileComponents();

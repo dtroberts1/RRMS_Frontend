@@ -1,21 +1,21 @@
-import { HttpClient } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AccountService } from 'src/app/services/account.service';
 import { CreateAcctScreenComponent } from './create-acct-screen.component';
 
-let httpClientSpy: {get: jasmine.Spy};
+let accountServiceSpy: {register: jasmine.Spy};
 
 describe('CreateAcctScreenComponent', () => {
   let component: CreateAcctScreenComponent;
   let fixture: ComponentFixture<CreateAcctScreenComponent>;
 
   beforeEach(async () => {
-    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
+    accountServiceSpy = jasmine.createSpyObj('AccountService', ['register']);
     await TestBed.configureTestingModule({
       declarations: [ CreateAcctScreenComponent ],
       schemas:[CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        {provide:HttpClient, useValue: httpClientSpy},
+        {provide:AccountService, useValue: accountServiceSpy},
       ]
     })
     .compileComponents();

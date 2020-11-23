@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import {AccountService} from '../../services/account.service';
 
 @Component({
   selector: 'app-create-acct-email-confscrn',
@@ -13,8 +12,6 @@ export class CreateAcctEmailConfscrnComponent implements OnInit {
   emailVal: string;
   products : any[];
 
-  constructor(private service : AccountService){
-  }
   ngOnInit(): void {
     if (this.email != null)
       this.emailVal = this.email.value;

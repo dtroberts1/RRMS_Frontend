@@ -1,19 +1,19 @@
-import { HttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HomesService } from '../services/homes.service';
 import { HomesComponent } from './homes.component';
 
-let httpClientSpy: {get: jasmine.Spy};
+let homeServiceSpy: {getHomes: jasmine.Spy};
 
 describe('HomesComponent', () => {
   let component: HomesComponent;
   let fixture: ComponentFixture<HomesComponent>;
 
   beforeEach(async () => {
-    httpClientSpy = jasmine.createSpyObj(HttpClient, ['get']);
+    homeServiceSpy = jasmine.createSpyObj(HomesService, ['getHomes']);
     await TestBed.configureTestingModule({
       declarations: [ HomesComponent ],
       providers: [
-        {provide: HttpClient, useValue: httpClientSpy},
+        {provide: HomesService, useValue: homeServiceSpy},
       ]
     })
     .compileComponents();

@@ -17,7 +17,7 @@ homes: Iterable<IHome>;
    ngOnInit() {
      if (this.homeService.homes == null)
      {
-      this.homeService.getHomes().then((homes : Iterable<IHome>) => {
+      this.homeService.getHomes()?.then((homes : Iterable<IHome>) => {
         this.homes = homes;
         console.log("in homes, homes is " + JSON.stringify(this.homes));
       });
