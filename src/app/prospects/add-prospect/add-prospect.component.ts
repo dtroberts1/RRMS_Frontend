@@ -19,6 +19,14 @@ export enum TermType {
   monthToMonth = 1,
   fixedTerm = 2,
 }
+enum ProspectStatus {
+  approved = 1,
+  declined = 2,
+  pendingLandlordDecision = 3,
+  pendingLeaseSignature = 4,
+  leasedSigned = 5,
+  inBilling = 6,
+}
 @Component({
   selector: 'app-add-prospect',
   templateUrl: './add-prospect.component.html',
@@ -197,12 +205,4 @@ export class AddProspectComponent implements OnInit {
     }
     
   }
-}
-enum ProspectStatus {
-  approved = 1,
-  declined = 2,
-  pendingLandlordDecision = 3,
-  pendingLeaseSignature = 4,
-  leasedSigned = 5,
-  inBilling = 6,
 }

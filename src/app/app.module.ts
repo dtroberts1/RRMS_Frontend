@@ -2,6 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
 import { AppComponent } from './app.component';
+import {FormsModule} from '@angular/forms';
+import { DocumentEditorModule } from '@syncfusion/ej2-angular-documenteditor';
+import { DocumentEditorContainerModule } from '@syncfusion/ej2-angular-documenteditor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import{LoginScreenComponent} from './loginscreen/loginscreen.component';
@@ -111,6 +114,9 @@ const appRoutes: Routes = [
       BrowserModule,
       BrowserAnimationsModule,
       CommonModule,
+      DocumentEditorModule,
+      DocumentEditorContainerModule,
+      FormsModule,
       MaterialModule,
       HttpClientModule,
       RouterModule.forRoot(

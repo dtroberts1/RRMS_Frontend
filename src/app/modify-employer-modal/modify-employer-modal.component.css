@@ -40,12 +40,12 @@
     background-color:green;
     color:white;
   }
-  #saveViewRoomBtn{
+  #modifyEmpModalSaveEmp{
     color:white;
     background-color:Red;
   
   }
-  #saveViewRoomBtn:hover{
+  #modifyEmpModalSaveEmp:hover{
     background-color:orange;
     color:white;
   }

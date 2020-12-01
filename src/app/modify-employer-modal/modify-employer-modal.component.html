@@ -4,9 +4,9 @@
         <tr>
           <td width="90%">
             <h3 style="white-space: nowrap;"><label>Company Name:&nbsp;&nbsp;</label>
-              <span *ngIf="addMode == false && editCmpyName == false">{{employer.CompanyName}}</span>
+              <span *ngIf="addMode == false && editCmpyName == false && employer != null">{{employer.CompanyName}}</span>
               <span *ngIf="addMode == true || editCmpyName == true">
-                <input size="25" (blur)="updateInput('cmpyname')" style="white-space: nowrap;" maxlength="25" placeholder="Vans Towing" 
+modEmpMod_cmpyName                <input id="modifyEmployerModal_cmpyname" size="25" (blur)="updateInput('cmpyname')" style="white-space: nowrap;" maxlength="25" placeholder="Vans Towing" 
                 [formControl]="cmpyNameInput"
                 >
                 <mat-icon *ngIf="cmpyNameInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
@@ -14,13 +14,13 @@
             </h3>
           </td>
           <td width="10%">
-            <h3 *ngIf="addMode == false && editCmpyName == false" class="editLinks" (click)="changeEditMode('cmpyname')">Edit</h3>
+            <h3 id="modifyEmployerModal_cmpyeditbtn" *ngIf="addMode == false && editCmpyName == false" class="editLinks" (click)="changeEditMode('cmpyname')">Edit</h3>
           </td>
         </tr>
         <tr>
             <td width="90%">
               <h3 style="white-space: nowrap;"><label>Start Date:&nbsp;&nbsp;</label>
-                <span *ngIf="addMode == false && editStartDate == false">{{employer.StartDate}}</span>
+                <span *ngIf="addMode == false && editStartDate == false && employer != null">{{employer.StartDate}}</span>
                 <span *ngIf="addMode == true || editStartDate == true">
                   <input size="25" (blur)="updateInput('start')" style="white-space: nowrap;" maxlength="25" required placeholder="1/1/18" 
                   [formControl]="startDateInput">
@@ -36,7 +36,7 @@
           <tr>
             <td width="90%">
               <h3 style="white-space: nowrap;"><label>End Date:&nbsp;&nbsp;</label>
-                <span *ngIf="addMode == false && editEndDate == false">{{employer.EndDate}}</span>
+                <span *ngIf="addMode == false && editEndDate == false && employer != null">{{employer.EndDate}}</span>
                 <span *ngIf="addMode == true || editEndDate == true">
                   <input size="25" (blur)="updateInput('end')" style="white-space: nowrap;" maxlength="25" required placeholder="1/1/20" 
                   [formControl]="endDateInput">
@@ -52,7 +52,7 @@
           <tr>
           <td width="90%">
             <h3 style="white-space: nowrap;"><label>Company Street Address (1):&nbsp;&nbsp;</label>
-              <span *ngIf="addMode == false && editAddressStreet1 == false">{{employer.AddressStreet1}}</span>
+              <span *ngIf="addMode == false && editAddressStreet1 == false && employer != null">{{employer.AddressStreet1}}</span>
               <span *ngIf="addMode == true || editAddressStreet1 == true">
                 <input size="25" (blur)="updateInput('stadd1')" style="white-space: nowrap;" maxlength="25" required placeholder="111 Dunn Ave" 
                 [formControl]="addressStreet1Input">
@@ -68,7 +68,7 @@
         <tr>
           <td width="90%">
             <h3 style="white-space: nowrap;"><label>Company Street Address (2):&nbsp;&nbsp;</label>
-              <span *ngIf="addMode == false && editAddressStreet2 == false">{{employer.AddressStreet2}}</span>
+              <span *ngIf="addMode == false && editAddressStreet2 == false && employer != null">{{employer.AddressStreet2}}</span>
               <span *ngIf="addMode == true || editAddressStreet2 == true">
                 <input size="25" (blur)="updateInput('stadd2')" style="white-space: nowrap;" maxlength="25" required placeholder="Suite #150" 
                 [formControl]="addressStreet2Input">
@@ -84,7 +84,7 @@
         <tr>
           <td width="90%">
             <h3 style="white-space: nowrap;"><label>Company City:&nbsp;&nbsp;</label>
-              <span *ngIf="addMode == false && editCity == false">{{employer.AddressCity}}</span>
+              <span *ngIf="addMode == false && editCity == false && employer != null">{{employer.AddressCity}}</span>
               <span *ngIf="addMode == true || editCity == true">
                 <input size="25" (blur)="updateInput('city')" style="white-space: nowrap;" maxlength="25" required placeholder="San Diego" 
                 [formControl]="cityInput">
@@ -100,7 +100,7 @@
         <tr>
           <td width="90%">
             <h3 style="white-space: nowrap;"><label>Company State:&nbsp;&nbsp;</label>
-              <span *ngIf="addMode == false && editState == false">{{employer.AddressState}}</span>
+              <span *ngIf="addMode == false && editState == false && employer != null">{{employer.AddressState}}</span>
               <span *ngIf="addMode == true || editState == true">
                 <input size="25" (blur)="updateInput('state')" style="white-space: nowrap;" maxlength="25" required placeholder="CA" 
                 [formControl]="stateInput">
@@ -116,7 +116,7 @@
         <tr>
           <td width="90%">
             <h3 style="white-space: nowrap;"><label>Company Zipcode:&nbsp;&nbsp;</label>
-              <span *ngIf="addMode == false && editZipcode == false">{{employer.AddressZipCode}}</span>
+              <span *ngIf="addMode == false && editZipcode == false && employer != null">{{employer.AddressZipCode}}</span>
               <span *ngIf="addMode == true || editZipcode == true">
                 <input size="25" (blur)="updateInput('zipcode')" style="white-space: nowrap;" maxlength="25" required placeholder="22434" 
                 [formControl]="zipcodeInput">
@@ -136,7 +136,7 @@
         <tr>
           <td width="90%">
             <h3 style="white-space: nowrap;"><label>Manager's First Name:&nbsp;&nbsp;</label>
-              <span *ngIf="addMode == false && editFName == false">{{employer.MgrFName}}</span>
+              <span *ngIf="addMode == false && editFName == false && employer != null">{{employer.MgrFName}}</span>
               <span *ngIf="addMode == true || editFName == true">
                 <input size="25" (blur)="updateInput('fname')" style="white-space: nowrap;" maxlength="25" required placeholder="Sabrina" 
                 [formControl]="fNameInput">
@@ -151,7 +151,7 @@
         <tr>
           <td width="90%">
             <h3 style="white-space: nowrap;"><label>Manager's Last Name:&nbsp;&nbsp;</label>
-              <span *ngIf="addMode == false && editLName == false">{{employer.MgrLName}}</span>
+              <span *ngIf="addMode == false && editLName == false && employer != null">{{employer.MgrLName}}</span>
               <span *ngIf="addMode == true || editLName == true">
                 <input size="25" (blur)="updateInput('lname')" style="white-space: nowrap;" maxlength="25" required placeholder="James" 
                 [formControl]="lNameInput">
@@ -167,7 +167,7 @@
         <tr>
           <td width="90%">
             <h3 style="white-space: nowrap;"><label>Maneger's Email Address:&nbsp;&nbsp;</label>
-              <span *ngIf="addMode == false && editEmail == false">{{employer.MgrEmailAddress}}</span>
+              <span *ngIf="addMode == false && editEmail == false && employer != null">{{employer.MgrEmailAddress}}</span>
               <span *ngIf="addMode == true || editEmail == true">
                 <input size="25" (blur)="updateInput('email')" style="white-space: nowrap;" maxlength="25" required placeholder="sjames@aol.com" 
                 [formControl]="emailInput">
@@ -183,7 +183,7 @@
         <tr>
           <td width="90%">
             <h3 style="white-space: nowrap;"><label>Manager's Phone Number:&nbsp;&nbsp;</label>
-              <span *ngIf="addMode == false && editPhone == false">{{employer.MgrPhoneNumber}}</span>
+              <span *ngIf="addMode == false && editPhone == false && employer != null">{{employer.MgrPhoneNumber}}</span>
               <span *ngIf="addMode == true || editPhone == true">
                 <input size="25" (blur)="updateInput('phone')" style="white-space: nowrap;" maxlength="25" required placeholder="111-222-3333" 
                 [formControl]="phoneInput">
@@ -199,7 +199,7 @@
         <tr>
           <td width="90%">
             <h3 style="white-space: nowrap;"><label>Job Title:&nbsp;&nbsp;</label>
-              <span *ngIf="addMode == false && editJobTitle == false">{{employer.ProspectJobTitle}}</span>
+              <span *ngIf="addMode == false && editJobTitle == false && employer != null">{{employer.ProspectJobTitle}}</span>
               <span *ngIf="addMode == true || editJobTitle == true">
                 <input size="25" (blur)="updateInput('jobtitle')" style="white-space: nowrap;" maxlength="25" required placeholder="Customer Service Rep" 
                 [formControl]="jobTitleInput">
@@ -239,10 +239,10 @@
       </span>
       <button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevEmp(false)">Previous</button>
       <button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevEmp(true)">Next</button>
-      <button id="saveViewRoomBtn" *ngIf="fieldsModified == true && addMode == false" mat-button (click)="saveBtnClickedUpdate()">Save</button>
+      <button id="modifyEmpModalSaveEmp" *ngIf="fieldsModified == true && addMode == false" mat-button (click)="saveBtnClickedUpdate()">Save</button>
       <button class="lowerViewRoomButtons" *ngIf="addMode == true" mat-button (click)="createBtnClickedUpdate()">Create</button>
       <button *ngIf="addMode == false" class="lowerViewRoomButtons" id="deleteBtn" mat-button (click)="deleteBtnClicked()">Delete</button>
-      <button class="lowerViewRoomButtons" mat-button (click)="closeModifyEmpDialog()">Close</button>
+      <button id="myjwlefgcreatebtn" name="myjwlefgcreatebtn" class="lowerViewRoomButtons" mat-button (click)="closeModifyEmpDialog()">Close</button>
 
     </div>
   

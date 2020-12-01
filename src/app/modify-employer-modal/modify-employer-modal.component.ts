@@ -347,23 +347,27 @@ currentMap = new Map<string, boolean>([
 
   getSettings(){
     console.log("in getsett, empindex is " + this.currentEmployerIndex);
-    this.employer = this.data.employers[this.currentEmployerIndex];
+    if (this.data.employers != null)
+      this.employer = this.data.employers[this.currentEmployerIndex];
 
-    this.cmpyNameInput.setValue(this.employer.CompanyName);
-    this.fNameInput.setValue(this.employer.MgrFName);
-    this.lNameInput.setValue(this.employer.MgrLName);
-    this.emailInput.setValue(this.employer.MgrEmailAddress);
-    this.phoneInput.setValue(this.employer.MgrPhoneNumber);
-    this.addressStreet1Input.setValue(this.employer.AddressStreet1);
-    this.addressStreet2Input.setValue(this.employer.AddressStreet2);
-    this.cityInput.setValue(this.employer.AddressCity);
-    this.stateInput.setValue(this.employer.AddressState);
-    this.zipcodeInput.setValue(this.employer.AddressZipCode);
-    this.jobTitleInput.setValue(this.employer.ProspectJobTitle);
-    this.startDateInput.setValue(this.employer.StartDate);
-    this.endDateInput.setValue(this.employer.EndDate);
-    this.setCurrentEmp(); // Radio button for if employer is current
-    this.setSalType(); // Radio button for salary item for employer
+    if (this.employer != null)
+    {
+      this.cmpyNameInput.setValue(this.employer.CompanyName);
+      this.fNameInput.setValue(this.employer.MgrFName);
+      this.lNameInput.setValue(this.employer.MgrLName);
+      this.emailInput.setValue(this.employer.MgrEmailAddress);
+      this.phoneInput.setValue(this.employer.MgrPhoneNumber);
+      this.addressStreet1Input.setValue(this.employer.AddressStreet1);
+      this.addressStreet2Input.setValue(this.employer.AddressStreet2);
+      this.cityInput.setValue(this.employer.AddressCity);
+      this.stateInput.setValue(this.employer.AddressState);
+      this.zipcodeInput.setValue(this.employer.AddressZipCode);
+      this.jobTitleInput.setValue(this.employer.ProspectJobTitle);
+      this.startDateInput.setValue(this.employer.StartDate);
+      this.endDateInput.setValue(this.employer.EndDate);
+      this.setCurrentEmp(); // Radio button for if employer is current
+      this.setSalType(); // Radio button for salary item for employer
+    }
   }
 
   setCurrentEmp(){
