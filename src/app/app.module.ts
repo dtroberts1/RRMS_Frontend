@@ -3,7 +3,8 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
 import { AppComponent } from './app.component';
 import {FormsModule} from '@angular/forms';
-import { DocumentEditorModule } from '@syncfusion/ej2-angular-documenteditor';
+import { ButtonModule } from '@syncfusion/ej2-angular-buttons';
+import { DocumentEditorAllModule, DocumentEditorModule } from '@syncfusion/ej2-angular-documenteditor';
 import { DocumentEditorContainerModule } from '@syncfusion/ej2-angular-documenteditor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
@@ -114,7 +115,9 @@ const appRoutes: Routes = [
       BrowserModule,
       BrowserAnimationsModule,
       CommonModule,
+      ButtonModule,
       DocumentEditorModule,
+      DocumentEditorAllModule,
       DocumentEditorContainerModule,
       FormsModule,
       MaterialModule,
