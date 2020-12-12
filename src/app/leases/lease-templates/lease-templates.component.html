@@ -1,4 +1,4 @@
-<ejs-splitbutton (select)="serverBtnItemSelected($event)"  content="Templates" [items]='serverSplitBtnItems'></ejs-splitbutton>
+<ejs-splitbutton (click)="templatesMainBtnSelected()" (select)="serverBtnItemSelected($event)"  content="Templates" [items]='serverSplitBtnItems'></ejs-splitbutton>
 <ejs-splitbutton (click)="rlaBtnClicked()" (select)="rlaBtnItemSelected($event)" content="Default Templates" [items]='rlaSplitBtnItems'></ejs-splitbutton>
 <ejs-splitbutton (select)="mergeTagsBtnItemSelected($event)" content="Merge Tags" [items]='mergeTagsSplitBtnItems'></ejs-splitbutton>
 <button ejs-button (click)="saveAsDocx()" >Save</button>

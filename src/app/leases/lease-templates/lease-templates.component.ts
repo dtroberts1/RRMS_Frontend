@@ -153,7 +153,29 @@ rlaBtnClicked(){
             });
      }
  }
- serverBtnItemSelected(args: MenuEventArgs){
+ templatesMainBtnSelected(){
+        // First get list of custom filenames that exist for the landlord
+        this.templateService.getAvailableCustomTemplateFileNames().then((availableFileNames: Iterable<string>) => {
+            this.dialog.open(LeaseTemplatePopupModal, {
+                data: {
+                    title: "Load Template",
+                    contentSummary: "Choose Template",
+                    content: availableFileNames, // Need to set this up, also if returned list contains no elements, it should display different message
+                  }
+            })
+                .afterClosed().subscribe((selectedState: string) => {
+                    if (selectedState != null){
+                        this.templateService.getTemplate(selectedState).then((sfdt : any) => {
+                            this.documentEditorContainerComponent.documentEditor.open(sfdt);
+                            this.loadedFileName = `${selectedState}`;
+                            this.savedNote = null;
+                        })
+                    }
+                });
+        });
+ }
+
+serverBtnItemSelected(args: MenuEventArgs){
     let selectedItem: string = args.item.text;
     if (selectedItem == 'Save As'){
         let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
@@ -188,12 +210,24 @@ rlaBtnClicked(){
     
     }
     else if(selectedItem == 'Save'){
+        let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
+
         console.log(selectedItem + " has been selected");
         // Save file for the landlord for future use
-
+        this.templateService.updateCustomTemplate(sfdt,this.loadedFileName).then(()=>{
+            this.dialog.open(LeaseTemplatePopupModal, {
+                data: {
+                    title: "Saved",
+                    contentSummary: `${this.loadedFileName} has been saved`,
+                    content: null,
+                  }
+            })
+            .afterClosed().subscribe(() => {
+                this.savedNote = null;
+            })
+        })
     }
     else if(selectedItem == 'Load'){
-        console.log(selectedItem + " has been selected");
         // First get list of custom filenames that exist for the landlord
         this.templateService.getAvailableCustomTemplateFileNames().then((availableFileNames: Iterable<string>) => {
             this.dialog.open(LeaseTemplatePopupModal, {

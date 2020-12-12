@@ -38,6 +38,29 @@ export class TemplateService{
         });
       }
     }
+    async updateCustomTemplate(templateParam: any, fileName: string){
+      // Get token from localStorage
+      this.currToken = JSON.parse(localStorage.getItem('user'));
+      if (this.currToken != null){
+        let options = {
+          headers: new HttpHeaders().set('Content-Type', 'application/json')
+          .set('Authorization', "bearer " + this.currToken),
+          };
+          // Need to pass in the home ID into this!
+          console.log("sending a post request with filename set to " + fileName);
+        return new Promise((resolve, reject) => { this.http
+            .put(`${this.templatesUrl}/UpdateTemplate/${fileName}`, templateParam, options).subscribe(
+                sfdt => {
+                  // Returns Syncfusion Document Text
+                  resolve(sfdt);
+                },
+                error => {
+                  reject(error);
+                }
+            )
+        });
+      }
+    }
 
     async createCustomTemplate(templateParam: any, fileName: string){
       // Get token from localStorage
@@ -63,26 +86,26 @@ export class TemplateService{
       }
   }
     async createTemplate(templateParam: any, stateName: string){
-          // Get token from localStorage
-          this.currToken = JSON.parse(localStorage.getItem('user'));
-          if (this.currToken != null){
-            let options = {
-              headers: new HttpHeaders().set('Content-Type', 'application/json')
-              .set('Authorization', "bearer " + this.currToken),
-              };
-              // Need to pass in the home ID into this!
-            return new Promise((resolve, reject) => { this.http
-                .post(`${this.templatesUrl}/CreateTemplate/${stateName}`, templateParam, options).subscribe(
-                    sfdt => {
-                      // Returns Syncfusion Document Text
-                      resolve(sfdt);
-                    },
-                    error => {
-                      reject(error);
-                    }
-                )
-            });
-          }
+      // Get token from localStorage
+      this.currToken = JSON.parse(localStorage.getItem('user'));
+      if (this.currToken != null){
+        let options = {
+          headers: new HttpHeaders().set('Content-Type', 'application/json')
+          .set('Authorization', "bearer " + this.currToken),
+          };
+          // Need to pass in the home ID into this!
+        return new Promise((resolve, reject) => { this.http
+            .post(`${this.templatesUrl}/CreateTemplate/${stateName}`, templateParam, options).subscribe(
+                sfdt => {
+                  // Returns Syncfusion Document Text
+                  resolve(sfdt);
+                },
+                error => {
+                  reject(error);
+                }
+            )
+        });
+      }
     }
     async getStateRLATemplates(state: string){
       // Get token from localStorage
