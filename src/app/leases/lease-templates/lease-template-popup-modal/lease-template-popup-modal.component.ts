@@ -7,6 +7,10 @@ import {IEmployer, SalaryType} from '../../../interfaces/Employer';
 import {IRoom} from '../../../interfaces/Rooms';
 import {HomesService} from '../../../services/homes.service';
 
+export interface DialogData {
+  title: string,
+  contentSummary: string,
+}
 
 @Component({
   selector: 'lease-template-popup-modal',
@@ -16,61 +20,8 @@ import {HomesService} from '../../../services/homes.service';
 export class LeaseTemplatePopupModal implements OnInit {
   homeImagePath : string;
   room : IRoom;
+  fileName : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,25}')]);
   origSettings : IRoom;
-  states : Iterable<string> = [
-    'Alabama',
-    'Alaska',
-    'Arizona',
-    'Arkansas',
-    'California',
-    'Colorado',
-    'Connecticut',
-    'Delaware',
-    'Florida',
-    'Georgia',
-    'Hawaii',
-    'Idaho',
-    'Illinois',
-    'Indiana',
-    'Iowa',
-    'Kansas',
-    'Kentucky',
-    'Louisiana',
-    'Maine',
-    'Maryland',
-    'Massachusetts',
-    'Michigan',
-    'Maine',
-    'Minnesota',
-    'Mississippi',
-    'Missouri',
-    'Montana',
-    'Nebraska',
-    'Nevada',
-    'New Hampshire',
-    'Missouri',
-    'New Jersey',
-    'New Mexico',
-    'New York',
-    'North Carolina',
-    'North Dakota',
-    'Ohio',
-    'Oklahoma',
-    'Oregon',
-    'Pennsylvania',
-    'Rhode Island',
-    'South Carolina',
-    'South Dakota',
-    'Tennessee',
-    'Texas',
-    'Utah',
-    'Vermont',
-    'Virginia',
-    'Washington',
-    'West Virginia',
-    'Wisconsin',
-      'Wyoming',
-    ];
   editRate: boolean = false;
   editDimension1: boolean = false;
   editDimension2: boolean = false;
@@ -92,21 +43,44 @@ export class LeaseTemplatePopupModal implements OnInit {
  selected: number;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
   public dialogRef: MatDialogRef<LeaseTemplatePopupModal>,
   public dialog: MatDialog, 
   ) {
+    if (data != null){
+      
+    }
   }
   closeNoSelection(){
     this.dialogRef.close(null);
   }
   openTemplate(){
-    console.log("selected is " + this.selected);
-    this.dialogRef.close(this.selected); // important: returns the id, not the index!!
+    if (this.data.title == 'Save As')
+    {
+      if(this.fileName != null && this.fileName.value != '')
+        this.dialogRef.close(this.fileName.value);
+      else
+        this.dialogRef.close(null);
+    }
+    else if(this.data.title == 'Residential Lease Agreement')
+    {
+        this.dialogRef.close(this.selected);
+    }
+    else if(this.data.title == 'Saved')
+      this.dialogRef.close(null);
+    else if(this.data.title == 'Load Template'){
+      this.dialogRef.close(this.selected)
+    }
+    //this.dialogRef.close(this.selected); // important: returns the id, not the index!!
   }
   showProductDetails(){
   }
 
+  getFNameErrorMessage(){
+    if (this.fileName.hasError('fileName')) {
+      return 'You must enter a value';
+    }
+  }
   
   ngOnInit(): void {
 

@@ -1,19 +1,44 @@
 <div style="float:left; width:25%; height:100%;">
-    <h1 mat-dialog-title>Residential Lease Agreement</h1>
-    <div style="float:left;">
+    <h1 style="white-space: nowrap;" mat-dialog-title>{{data.title}}</h1>
+    <div *ngIf="data.contentSummary == 'Chose State for RLA'" style="float:left;">
         <mat-form-field appearance="fill">
-            <mat-label>Choose State for RLA</mat-label>
+            <mat-label>{{data.contentSummary}}</mat-label>
             <mat-select [(ngModel)]="selected" (selectionChange)="showProductDetails()">
-            <mat-option *ngFor="let state of states; let i = index" [value]="state">
+            <mat-option *ngFor="let state of data.content; let i = index" [value]="state">
                 {{state}}
             </mat-option>
             </mat-select>
         </mat-form-field>
     </div>
+
+    <div *ngIf="data.contentSummary == 'Choose Template'" style="float:left;">
+        <mat-form-field appearance="fill">
+            <mat-label>{{data.contentSummary}}</mat-label>
+            <mat-select [(ngModel)]="selected" (selectionChange)="showProductDetails()">
+            <mat-option *ngFor="let state of data.content; let i = index" [value]="state">
+                {{state}}
+            </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div *ngIf="data.title == 'Saved'" style="float:left;">
+        <mat-label>{{data.contentSummary}}</mat-label>
+    </div>
+    <div *ngIf="data.contentSummary == 'Enter Filename (without ext)'" style="float:left;">
+            <mat-form-field appearance="standard">
+                <mat-label>{{data.contentSummary}}</mat-label>
+                <input matInput placeholder="FlRLA" [formControl]="fileName">
+                <mat-icon *ngIf="fileName.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+                <mat-error *ngIf="fileName.invalid">{{getFNameErrorMessage()}}</mat-error>
+            </mat-form-field>
+    </div>
     <span style="margin-left:5%;">
         <br />
         <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="linkRoomToProspect()">Link Room to Prospect</button>
-        <button class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Open</button>
+        <button  *ngIf="data.contentSummary == 'Chose State for RLA'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Select</button>
+        <button  *ngIf="data.contentSummary == 'Choose Template'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Load</button>
+        <button  *ngIf="data.contentSummary == 'Enter Filename (without ext)'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Save</button>
+        <button  *ngIf="data.title == 'Saved'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Ok</button>
         <button class="lowerViewRoomButtons" (click)="closeNoSelection()" mat-button>Cancel</button>
     </span>
 </div>
