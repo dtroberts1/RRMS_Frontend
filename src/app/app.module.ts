@@ -47,28 +47,36 @@ import { LeasesComponent } from './leases/leases/leases.component';
 import { PendingLeasesComponent } from './leases/pending-leases/pending-leases.component';
 import { AddLeaseComponent } from './leases/add-lease/add-lease.component';
 import { LeaseTemplatesComponent } from './leases/lease-templates/lease-templates.component';
+import { SplitButtonModule } from '@syncfusion/ej2-angular-splitbuttons';
+import { LeaseTemplatePopupModal } from './leases/lease-templates/lease-template-popup-modal/lease-template-popup-modal.component';
 
 const appRoutes: Routes = [
-  { path: '', component: HomesComponent, data: { title: 'Homes' } },
-  { path: 'homes', component: HomesComponent, data: { title: 'Homes' } },
-  { path: 'tenants', component: TenantsComponent, data: { title: 'Tenants' } },
-  { path: 'billing', component: BillingComponent, data: { title: 'Billing' } },
-  { path: 'backgroundchecks', component: BackgroundChecksComponent, data: { title: 'Background Checks' } },
-  { path: 'prospects', component: ProspectsComponent, data: { title: 'Prospects' } },
-  { path: 'sales', component: SalesComponent, data: { title: 'Sales' } },
-  { path: 'marketing', component: MarketingComponent, data: { title: 'Marketing' } },
-  { path: 'settings', component: SettingsComponent, data: { title: 'Settings' } },
-  { path: 'homes/home/:id', component: HomeComponent, data: { title: 'Home' } },
-  { path: 'homes/home/:id/:detail', component: HomeComponent, data: { title: 'Home' } },
-  { path: 'homes/addhome', component: AddHomeComponent, data: { title: 'Add Home' } },
-  { path: 'homes/room', component: RoomComponent, data: { title: 'Rooms' } },
-  { path: 'homes/viewroom/:id', component: ViewRoomComponent, data: { title: 'Add Room' } },
-  { path: 'homes/addroom/:id/:nickname/:nbrRooms', component: AddRoomComponent, data: { title: 'Add Room' } },
-  { path: 'prospects/add-prospect', component: AddProspectComponent, data: { title: 'Add Prospect' } },
-  { path: 'leases', component: LeasesComponent, data: { title: 'Leases' } },
-  { path: 'leases/pending-leases', component: PendingLeasesComponent, data: { title: 'Pending Leases' } },
-  { path: 'leases/add-lease', component: AddLeaseComponent, data: { title: 'Add Lease' } },
-  { path: 'leases/lease-templates', component: LeaseTemplatesComponent, data: { title: 'Lease Templates' } },
+  { path: '', component: AppComponent, data: { title: 'Login' } },
+  { path: 'login', component: AppComponent},
+  { path: 'dashboard' , component: NavigationComponent, children :
+    [
+      { path: 'homes', component: HomesComponent, outlet:'view'},
+      { path: 'homes/home/:id', component: HomeComponent, outlet:'view' },
+      { path: 'homes/home/:id/:detail', component: HomeComponent, outlet:'view'},
+      { path: 'homes/addhome', component: AddHomeComponent, outlet:'view' },
+      { path: 'homes/room', component: RoomComponent, outlet:'view'},
+      { path: 'homes/viewroom/:id', component: ViewRoomComponent, outlet:'view' },
+      { path: 'homes/addroom/:id/:nickname/:nbrRooms', component: AddRoomComponent, outlet:'view' },
+      { path: 'tenants', component: TenantsComponent, outlet:'view' },
+      { path: 'billing', component: BillingComponent, outlet:'view' },
+      { path: 'backgroundchecks', component: BackgroundChecksComponent, outlet:'view' },
+      { path: 'prospects', component: ProspectsComponent, outlet:'view' },
+      { path: 'sales', component: SalesComponent, outlet:'view' },
+      { path: 'marketing', component: MarketingComponent, outlet:'view' },
+      { path: 'settings', component: SettingsComponent, outlet:'view' },
+      { path: 'prospects/add-prospect', component: AddProspectComponent, outlet:'view' },
+      { path: 'leases', component: LeasesComponent, outlet:'view' },
+      { path: 'leases/pending-leases', component: PendingLeasesComponent, outlet:'view' },
+      { path: 'leases/add-lease', component: AddLeaseComponent, outlet:'view' },
+      { path: 'leases/lease-templates', component: LeaseTemplatesComponent, outlet:'view' },
+    ]
+  },
+  { path: '**', redirectTo: '', data: { title: '' } },
 
 ];
 @NgModule({
@@ -109,6 +117,7 @@ const appRoutes: Routes = [
     PendingLeasesComponent,
     AddLeaseComponent,
     LeaseTemplatesComponent,
+    LeaseTemplatePopupModal,
     ],
     schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
     imports: [
@@ -116,6 +125,7 @@ const appRoutes: Routes = [
       BrowserAnimationsModule,
       CommonModule,
       ButtonModule,
+      SplitButtonModule,
       DocumentEditorModule,
       DocumentEditorAllModule,
       DocumentEditorContainerModule,

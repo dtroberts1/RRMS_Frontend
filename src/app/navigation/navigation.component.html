@@ -13,87 +13,71 @@
           <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <h3 matSubHeader><a routerLink='homes'>Homes</a></h3>
+                <h3 matSubHeader><a [routerLink]="[{outlets:{view:['homes']}}]">Homes</a></h3>
               </mat-panel-title>
             </mat-expansion-panel-header>
             <li style="list-style: none;" *ngFor="let currHome of homes; let i = index">
-              <a mat-list-item routerLink='/homes/home/{{i + 1}}'>Home {{i + 1}}</a>
+              <a mat-list-item [routerLink]="[{outlets:{view:['homes','home', i + 1]}}]">Home {{i + 1}}</a>
             </li>
-              <a mat-list-item routerLink='/homes/addhome'>&lt;Add Home&gt;</a>
+              <a mat-list-item [routerLink]="[{outlets:{view:['homes','addhome']}}]">&lt;Add Home&gt;</a>
           </mat-expansion-panel>
           <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <h3 matSubHeader><a routerLink='/tenants'>Tenants</a></h3>
+                <h3 matSubHeader><a [routerLink]="[{outlets:{view:['tenants']}}]">Tenants</a></h3>
               </mat-panel-title>
             </mat-expansion-panel-header>
-              <a mat-list-item routerLink='/homes/home'>Home #1</a>
-              <a mat-list-item routerLink='/homes/addroom'>&lt;Add Room&gt;</a>
           </mat-expansion-panel>
           <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <h3 matSubHeader><a routerLink='/billing'>Billing</a></h3>
+                <h3 matSubHeader><a [routerLink]="[{outlets:{view:['billing']}}]">Billing</a></h3>
               </mat-panel-title>
             </mat-expansion-panel-header>
-              <a mat-list-item routerLink='/homes/home'>Home #1</a>
-              <a mat-list-item routerLink='/homes/addroom'>&lt;Add Room&gt;</a>
           </mat-expansion-panel>
           <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <h3 matSubHeader><a routerLink='/backgroundchecks'>Background Checks</a></h3>
+                <h3 matSubHeader><a [routerLink]="[{outlets:{view:['backgroundchecks']}}]">Background Checks</a></h3>
               </mat-panel-title>
             </mat-expansion-panel-header>
-              <a mat-list-item routerLink='/homes/home'>Home #1</a>
-              <a mat-list-item routerLink='/homes/addroom'>&lt;Add Room&gt;</a>
           </mat-expansion-panel>
           <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <h3 matSubHeader><a routerLink='/prospects'>Prospects</a></h3>
+                <h3 matSubHeader><a [routerLink]="[{outlets:{view:['prospects']}}]">Prospects</a></h3>
               </mat-panel-title>
             </mat-expansion-panel-header>
-              <a mat-list-item routerLink='/homes/home'>Home #1</a>
-              <a mat-list-item routerLink='/prospects/add-prospect'>&lt;Add Prospect&gt;</a>
+              <a mat-list-item [routerLink]="[{outlets:{view:['prospects','add-prospect']}}]">&lt;Add Prospect&gt;</a>
           </mat-expansion-panel>
           <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <h3 matSubHeader><a routerLink='/leases'>Leases</a></h3>
+                <h3 matSubHeader><a [routerLink]="[{outlets:{view:['leases']}}]">Leases</a></h3>
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <!--
-            <li style="list-style: none;" *ngFor="let currHome of homes; let i = index">
-              <a mat-list-item routerLink='/homes/home/{{i + 1}}'>Home {{i + 1}}</a>
-            </li>
-          -->
-            <a mat-list-item routerLink='/leases/pending-leases'>Pending Leases</a>
-            <a mat-list-item routerLink='/leases/add-lease'>&lt;Add Lease&gt;</a>
-            <a mat-list-item routerLink='/leases/lease-templates'>Lease Templates</a>
+            <a mat-list-item [routerLink]="[{outlets:{view:['leases','pending-leases']}}]">Pending Leases</a>
+            <a mat-list-item [routerLink]="[{outlets:{view:['leases','add-lease']}}]">&lt;Add Lease&gt;</a>
+            <a mat-list-item [routerLink]="[{outlets:{view:['leases','lease-templates']}}]">Lease Templates</a>
           </mat-expansion-panel>
           <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <h3 matSubHeader><a routerLink='/sales'>Sales</a></h3>
+                <h3 matSubHeader><a [routerLink]="[{outlets:{view:['sales']}}]">Sales</a></h3>
               </mat-panel-title>
             </mat-expansion-panel-header>
-              <a mat-list-item routerLink='/homes/home'>Home #1</a>
-              <a mat-list-item routerLink='/homes/addroom'>&lt;Add Room&gt;</a>
           </mat-expansion-panel>
           <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <h3 matSubHeader><a routerLink='/marketing'>Marketing</a></h3>
+                <h3 matSubHeader><a [routerLink]="[{outlets:{view:['marketing']}}]">Marketing</a></h3>
               </mat-panel-title>
             </mat-expansion-panel-header>
-              <a mat-list-item routerLink='/homes/home'>Home #1</a>
-              <a mat-list-item routerLink='/homes/addroom'>&lt;Add Room&gt;</a>
           </mat-expansion-panel>
         </mat-accordion>
       </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content class="sidenav-content">
-     <router-outlet></router-outlet>
+     <router-outlet name="view"></router-outlet>
     </mat-sidenav-content>
 </mat-sidenav-container>

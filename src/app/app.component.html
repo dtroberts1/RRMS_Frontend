@@ -25,9 +25,9 @@
 
 <div class="home-page-container">
     <div class="dashboardContainer" *ngIf="showDashboard">
-      <dashboard>
+      <router-outlet>     <!-- <dashboard>
 
-      </dashboard>
+      </dashboard> --></router-outlet>
     </div>
     <div class="loginScreenContainer" *ngIf="showLoginScreen">
       <login-screen

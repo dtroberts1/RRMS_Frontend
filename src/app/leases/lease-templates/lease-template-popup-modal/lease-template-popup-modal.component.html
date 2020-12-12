@@ -1,0 +1,20 @@
+<div style="float:left; width:25%; height:100%;">
+    <h1 mat-dialog-title>Residential Lease Agreement</h1>
+    <div style="float:left;">
+        <mat-form-field appearance="fill">
+            <mat-label>Choose State for RLA</mat-label>
+            <mat-select [(ngModel)]="selected" (selectionChange)="showProductDetails()">
+            <mat-option *ngFor="let state of states; let i = index" [value]="state">
+                {{state}}
+            </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <span style="margin-left:5%;">
+        <br />
+        <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="linkRoomToProspect()">Link Room to Prospect</button>
+        <button class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Open</button>
+        <button class="lowerViewRoomButtons" (click)="closeNoSelection()" mat-button>Cancel</button>
+    </span>
+</div>
+  

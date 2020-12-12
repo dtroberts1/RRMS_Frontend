@@ -15,7 +15,7 @@ export class TemplateService{
 
     constructor(private http: HttpClient){
     }
-    async createTemplate(templateParam: any){
+    async createTemplate(templateParam: any, stateName: string){
           // Get token from localStorage
           this.currToken = JSON.parse(localStorage.getItem('user'));
           if (this.currToken != null){
@@ -25,7 +25,7 @@ export class TemplateService{
               };
               // Need to pass in the home ID into this!
             return new Promise((resolve, reject) => { this.http
-                .post(`${this.templatesUrl}/CreateTemplate`, templateParam, options).subscribe(
+                .post(`${this.templatesUrl}/CreateTemplate/${stateName}`, templateParam, options).subscribe(
                     sfdt => {
                       // Returns Syncfusion Document Text
                       resolve(sfdt);
@@ -36,6 +36,28 @@ export class TemplateService{
                 )
             });
           }
+    }
+    async getStateRLATemplates(state: string){
+      // Get token from localStorage
+      this.currToken = JSON.parse(localStorage.getItem('user'));
+      if (this.currToken != null){
+        let options = {
+          headers: new HttpHeaders().set('Content-Type', 'application/json')
+          .set('Authorization', "bearer " + this.currToken),
+          };
+          // Need to pass in the home ID into this!
+        return new Promise((resolve, reject) => { this.http
+            .get(`${this.templatesUrl}/GetStateRLATemplates/${state}`,options).subscribe(
+                sfdt => {
+                  // Returns Syncfusion Document Text
+                  resolve(sfdt);
+                },
+                error => {
+                  reject(error);
+                }
+            )
+        });
+      }
     }
 
     async getTemplate(fileName: string){

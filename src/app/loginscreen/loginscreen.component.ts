@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {AccountService} from '../services/account.service';
 import { HomesService } from '../services/homes.service';
 
@@ -14,7 +15,9 @@ export class LoginScreenComponent implements OnInit{
 
     email = new FormControl('', [Validators.required, Validators.email]);
     password = new FormControl('', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')]);
-    constructor (private accountService: AccountService, private homesService: HomesService){
+    constructor (private accountService: AccountService, 
+      private homesService: HomesService,
+      private activeRoute: ActivatedRoute){
       
     }
 

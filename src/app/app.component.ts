@@ -1,5 +1,6 @@
 import { Component,OnInit } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
+import { Router } from '@angular/router';
 import {AccountService} from './services/account.service';
 
 @Component({
@@ -7,6 +8,9 @@ import {AccountService} from './services/account.service';
   templateUrl: './app.component.html',  styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit{
+  constructor(private router: Router){
+
+  }
   title = 'RRMSWebapp';
   loginLogout = "Login";
   showLoginScreen: boolean = false;
@@ -36,6 +40,7 @@ export class AppComponent implements OnInit{
     if (msgFromLogin == "loginSuccessful")
     {
       this.showDashboard = !this.showDashboard;
+      this.router.navigate([`dashboard`]);
     }
   }
   toggleDashboard(): void{
@@ -47,7 +52,7 @@ export class AppComponent implements OnInit{
       // Clear Token
       localStorage.clear();
       this.showDashboard = !this.showDashboard;
-
+      this.router.navigate([``]);
     }
     this.showLoginScreen = !this.showLoginScreen;
   }
