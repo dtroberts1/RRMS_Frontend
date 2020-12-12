@@ -38,6 +38,29 @@ export class TemplateService{
         });
       }
     }
+    async deleteTemplate(fileName: string){
+      // Get token from localStorage
+      this.currToken = JSON.parse(localStorage.getItem('user'));
+      if (this.currToken != null){
+        let options = {
+          headers: new HttpHeaders().set('Content-Type', 'application/json')
+          .set('Authorization', "bearer " + this.currToken),
+          };
+          // Need to pass in the home ID into this!
+          console.log("sending a post request with filename set to " + fileName);
+        return new Promise((resolve, reject) => { this.http
+            .delete(`${this.templatesUrl}/DeleteTemplate/${fileName}`, options).subscribe(
+                sfdt => {
+                  // Returns Syncfusion Document Text
+                  resolve(sfdt);
+                },
+                error => {
+                  reject(error);
+                }
+            )
+        });
+      }
+    }
     async updateCustomTemplate(templateParam: any, fileName: string){
       // Get token from localStorage
       this.currToken = JSON.parse(localStorage.getItem('user'));

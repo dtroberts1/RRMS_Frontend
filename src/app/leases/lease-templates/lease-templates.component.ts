@@ -237,11 +237,11 @@ serverBtnItemSelected(args: MenuEventArgs){
                     content: availableFileNames, // Need to set this up, also if returned list contains no elements, it should display different message
                   }
             })
-                .afterClosed().subscribe((selectedState: string) => {
-                    if (selectedState != null){
-                        this.templateService.getTemplate(selectedState).then((sfdt : any) => {
+                .afterClosed().subscribe((selectedTemplate: string) => {
+                    if (selectedTemplate != null){
+                        this.templateService.getTemplate(selectedTemplate).then((sfdt : any) => {
                             this.documentEditorContainerComponent.documentEditor.open(sfdt);
-                            this.loadedFileName = `${selectedState}`;
+                            this.loadedFileName = `${selectedTemplate}`;
                             this.savedNote = null;
                         })
                     }
@@ -249,7 +249,32 @@ serverBtnItemSelected(args: MenuEventArgs){
         });
     }
     else if(selectedItem == 'Delete'){
-        console.log(selectedItem + " has been selected");
+        // First get list of custom filenames that exist for the landlord
+        this.templateService.getAvailableCustomTemplateFileNames().then((availableFileNames: Iterable<string>) => {
+            this.dialog.open(LeaseTemplatePopupModal, {
+                data: {
+                    title: "Delete Template", // from 'Load Template'
+                    contentSummary: "Choose Template",
+                    content: availableFileNames, // Need to set this up, also if returned list contains no elements, it should display different message
+                  }
+            })
+                .afterClosed().subscribe((selectedTemplate: string) => {
+                    if (selectedTemplate != null){
+                        this.templateService.deleteTemplate(selectedTemplate).then(()=>{
+                            this.dialog.open(LeaseTemplatePopupModal, {
+                                data: {
+                                    title: "Deleted",
+                                    contentSummary: `${selectedTemplate} has been removed`,
+                                    content: null,
+                                  }
+                            })
+                            .afterClosed().subscribe(() => {
+                                this.savedNote = null;
+                            })
+                        })
+                    }
+                });
+        });
     }
  }
  mergeTagsBtnItemSelected(args: MenuEventArgs){

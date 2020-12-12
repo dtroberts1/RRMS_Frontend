@@ -69,7 +69,13 @@ export class LeaseTemplatePopupModal implements OnInit {
     else if(this.data.title == 'Saved')
       this.dialogRef.close(null);
     else if(this.data.title == 'Load Template'){
-      this.dialogRef.close(this.selected)
+      this.dialogRef.close(this.selected);
+    }
+    else if(this.data.title == 'Delete Template'){
+      this.dialogRef.close(this.selected);
+    }
+    else if(this.data.title == 'Deleted'){
+      this.dialogRef.close(null);
     }
     //this.dialogRef.close(this.selected); // important: returns the id, not the index!!
   }

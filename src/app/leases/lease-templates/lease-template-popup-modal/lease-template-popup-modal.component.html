@@ -21,7 +21,7 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <div *ngIf="data.title == 'Saved'" style="float:left;">
+    <div *ngIf="data.title == 'Saved' || data.title == 'Deleted'" style="float:left;">
         <mat-label>{{data.contentSummary}}</mat-label>
     </div>
     <div *ngIf="data.contentSummary == 'Enter Filename (without ext)'" style="float:left;">
@@ -36,9 +36,10 @@
         <br />
         <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="linkRoomToProspect()">Link Room to Prospect</button>
         <button  *ngIf="data.contentSummary == 'Chose State for RLA'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Select</button>
-        <button  *ngIf="data.contentSummary == 'Choose Template'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Load</button>
+        <button  *ngIf="data.title == 'Load Template'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Load</button>
+        <button  *ngIf="data.title == 'Delete Template'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Delete</button>
         <button  *ngIf="data.contentSummary == 'Enter Filename (without ext)'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Save</button>
-        <button  *ngIf="data.title == 'Saved'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Ok</button>
+        <button  *ngIf="data.title == 'Saved' || data.title == 'Deleted'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Ok</button>
         <button class="lowerViewRoomButtons" (click)="closeNoSelection()" mat-button>Cancel</button>
     </span>
 </div>
