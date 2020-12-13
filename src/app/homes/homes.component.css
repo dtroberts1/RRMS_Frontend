@@ -24,7 +24,7 @@
   scrollbar-width: none;  
 }
 .appHomeItem:hover{
-  border-color: olive;
+  border-color: #78c1b8;
   border-style:solid;
   border-width:3px;
   border-radius:4px;

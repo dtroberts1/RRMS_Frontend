@@ -1,9 +1,13 @@
 <mat-toolbar >
     <mat-toolbar-row class="midTopToolbar">
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" color="primary">
+      <button id="sidebarToggler" type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" color="accent">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span></span>
+        <!-- This fills the remaining space of the current row -->
+      <span class="fill-space"></span>
+      <span (click)="logout()" id="logoutBtn" style="color:white;">
+        Logout
+      </span>
     </mat-toolbar-row>
 </mat-toolbar>
 <mat-sidenav-container class="container">
@@ -22,7 +26,7 @@
               </h3>
             </li>
             <h3>
-              <a mat-list-item [routerLink]="[{outlets:{view:['homes','addhome']}}]">&lt;Add Home&gt;</a>
+              <a mat-list-item [routerLink]="['/dashboard',{outlets:{view:['homes','add-home']}}]">&lt;Add Home&gt;</a>
             </h3>
           </mat-expansion-panel>
           <mat-expansion-panel hideToggle>

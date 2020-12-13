@@ -51,14 +51,14 @@ import { SplitButtonModule } from '@syncfusion/ej2-angular-splitbuttons';
 import { LeaseTemplatePopupModal } from './leases/lease-templates/lease-template-popup-modal/lease-template-popup-modal.component';
 
 const appRoutes: Routes = [
-  { path: '', component: AppComponent,pathMatch:'full' },
+  { path: '', component: AppComponent},
   { path: 'login', component: LoginScreenComponent},
   { path: 'dashboard' , component: Dashboard, children :
     [
       { path: 'homes', component: HomesComponent, outlet:'view'},
+      { path: 'homes/add-home', component: AddHomeComponent, outlet:'view'},
       { path: 'homes/:id', component: HomeComponent, outlet:'view'},
-     /* { path: 'homes/:id/:detail', component: HomeComponent, outlet:'view'},*/
-      { path: 'homes/addhome', component: AddHomeComponent, outlet:'view' },
+      { path: 'homes/:id/:detail', component: HomeComponent, outlet:'view'},
       { path: 'homes/room', component: RoomComponent, outlet:'view'},
       { path: 'homes/viewroom/:id', component: ViewRoomComponent, outlet:'view' },
       { path: 'homes/addroom/:id/:nickname/:nbrRooms', component: AddRoomComponent, outlet:'view' },

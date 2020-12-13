@@ -47,7 +47,6 @@ export class TemplateService{
           .set('Authorization', "bearer " + this.currToken),
           };
           // Need to pass in the home ID into this!
-          console.log("sending a post request with filename set to " + fileName);
         return new Promise((resolve, reject) => { this.http
             .delete(`${this.templatesUrl}/DeleteTemplate/${fileName}`, options).subscribe(
                 sfdt => {
@@ -63,7 +62,6 @@ export class TemplateService{
     }
     async updateCustomTemplate(templateParam: any, fileName: string){
       // Get token from localStorage
-      console.log("trying to save " + fileName);
       this.currToken = JSON.parse(localStorage.getItem('user'));
       if (this.currToken != null){
         let options = {
@@ -74,7 +72,6 @@ export class TemplateService{
         return new Promise((resolve, reject) => { this.http
             .put(`${this.templatesUrl}/UpdateTemplate/${fileName}`, templateParam, options).subscribe(
                 sfdt => {
-                  console.log("from update, returning " + JSON.stringify(sfdt));
                   // Returns Syncfusion Document Text
                   resolve(true); // return 0 to indicate the request went through
                 },
@@ -104,7 +101,6 @@ export class TemplateService{
           .set('Authorization', "bearer " + this.currToken),
           };
           // Need to pass in the home ID into this!
-          console.log("sending a post request with filename set to " + fileName);
         return new Promise((resolve, reject) => { this.http
             .post(`${this.templatesUrl}/CreateCustomTemplate/${fileName}`, templateParam, options).subscribe(
                 sfdt => {
@@ -185,27 +181,4 @@ export class TemplateService{
         });
       }
     }
-/*
-    async saveEmployer(employer: IEmployer){
-     // Get token from localStorage
-     console.log("in saveEmployer, about to send" + JSON.stringify(employer));
-     this.currToken = JSON.parse(localStorage.getItem('user'));
-     if (this.currToken != null){
-       let options = {
-         headers: new HttpHeaders().set('Content-Type', 'application/json')
-         .set('Authorization', "bearer " + this.currToken),
-         };
-       return new Promise((resolve, reject) => { this.http
-           .post<IEmployer>(this.employersUrl, employer, options).subscribe(
-            employer => {
-                   resolve(employer);
-               },
-               error => {
-                 reject(error);
-               }
-           )
-       });
-     }
-    }
-*/
 }

@@ -16,7 +16,7 @@
 
     <div *ngIf="getHomesCount() == 0" style="border-width:5px; border-color:gray; border-style:solid">
         It appears that no homes exist for your account. Would you like to Add a home?
-        <a [routerLink]="['/dashboard', {outlets:{view:['homes','addhome']}}]">Add Home</a>
+        <a [routerLink]="['/dashboard',{outlets:{view:['homes','add-home']}}]">Add Home</a>
     </div>
   </div>
 </div>

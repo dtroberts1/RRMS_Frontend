@@ -113,6 +113,7 @@ export class LeaseTemplatesComponent {
         this.uiReady = true;
         this.loadedFileName = null;
         this.savedNote = null;
+        this.astrisk = null;
     console.log("in init..");
  }
 rlaBtnClicked(){
@@ -130,6 +131,7 @@ rlaBtnClicked(){
                     this.documentEditorContainerComponent.documentEditor.open(sfdt);
                     this.loadedFileName = `rla_template_${selectedState}`;
                     this.savedNote = 'Not Saved';
+                    this.astrisk = "*";
                 })
             }
         });
@@ -151,6 +153,7 @@ rlaBtnClicked(){
                         this.documentEditorContainerComponent.documentEditor.open(sfdt);
                         this.loadedFileName = `rla_template_${selectedState}`;
                         this.savedNote = 'Not Saved';
+                        this.astrisk = "*";
                     })
                 }
             });
@@ -210,6 +213,7 @@ rlaBtnClicked(){
                         this.documentEditorContainerComponent.documentEditor.open(sfdt);
                         this.loadedFileName = `${selectedTemplate}`;
                         this.savedNote = null;
+                        this.astrisk = null;
                     })
                 }
             });
@@ -247,6 +251,7 @@ saveAs(selectedItem: string){
                 })
                 .afterClosed().subscribe(() => {
                     this.savedNote = null;
+                    this.astrisk = null;
                     this.loadedFileName = fileName;
                 })
             })
@@ -275,7 +280,7 @@ async saveHelper(selectedItem : string){
             })
             .afterClosed().subscribe(() => {
                 this.savedNote = null;
-                this.astrisk = "";
+                this.astrisk = null;
             })
         }
     })

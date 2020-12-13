@@ -44,19 +44,12 @@ export class ViewRoomComponent {
   ) {
     
     this.home = data.home;
-    console.log("home input is ", JSON.stringify(this.home));
     if (this.home != null){
       if (this.home.Rooms != null)
       {
         this.setOrigSettings(this.data.home.Rooms[this.currentRoomIndex]);
         this.getSettings();
-        console.log("initial dimensions:" + this.room.Dimensions);
-        console.log("dim1:" + this.dimension1.value);
-        console.log("dim2:" + this.dimension2.value);
-        console.log("rooms is " + JSON.stringify(this.room));
       }
-      else
-        console.log("rooms is null in view-room: " + data.home.Rooms[this.currentRoomIndex]);
       this.roomCount = (<any[]>data.home.Rooms).length;
     }
   }

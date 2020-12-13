@@ -31,6 +31,7 @@ export class AddHomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log("in addhome");
     this.homeImagePath = '../../../assets/anotherhomepic.jpg';
   }
 

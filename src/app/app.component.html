@@ -11,7 +11,7 @@
   <span class=headerText id=createAccountText
   (click)='toggleCreateAcctScreen()'
 > 
-  <span   *ngIf="showDashboard == false"
+  <span id="createAcctMainBtn"  *ngIf="showDashboard == false"
   >Create Account</span>
 </span>
 
@@ -22,8 +22,8 @@
   </span>
 </div>
 
-<div class="home-page-container">
-    <div class="dashboardContainer" *ngIf="showDashboard">
+<div [ngClass]="{'home-page-container':showDashboard == false, 'home-page-container-show-dashboard' : showDashboard == true}" class="home-page-container">
+    <div class="dashboardContainer" *ngIf="showDashboard == true">
       <router-outlet>     <!-- <dashboard>
 
       </dashboard> --></router-outlet>
