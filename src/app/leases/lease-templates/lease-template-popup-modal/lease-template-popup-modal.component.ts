@@ -54,7 +54,7 @@ export class LeaseTemplatePopupModal implements OnInit {
   closeNoSelection(){
     this.dialogRef.close(null);
   }
-  openTemplate(){
+  openTemplate(param: string){
     if (this.data.title == 'Save As')
     {
       if(this.fileName != null && this.fileName.value != '')
@@ -76,6 +76,9 @@ export class LeaseTemplatePopupModal implements OnInit {
     }
     else if(this.data.title == 'Deleted'){
       this.dialogRef.close(null);
+    }
+    else if(this.data.title == 'Unsaved Changes'){
+      this.dialogRef.close(param);
     }
     //this.dialogRef.close(this.selected); // important: returns the id, not the index!!
   }

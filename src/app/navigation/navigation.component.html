@@ -17,7 +17,7 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <li style="list-style: none;" *ngFor="let currHome of homes; let i = index">
-              <a mat-list-item [routerLink]="[{outlets:{view:['homes','home', i + 1]}}]">Home {{i + 1}}</a>
+              <a mat-list-item [routerLink]="[{outlets:{view:['homes', i + 1]}}]">Home {{i + 1}}</a>
             </li>
               <a mat-list-item [routerLink]="[{outlets:{view:['homes','addhome']}}]">&lt;Add Home&gt;</a>
           </mat-expansion-panel>
@@ -57,7 +57,6 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <a mat-list-item [routerLink]="[{outlets:{view:['leases','pending-leases']}}]">Pending Leases</a>
-            <a mat-list-item [routerLink]="[{outlets:{view:['leases','add-lease']}}]">&lt;Add Lease&gt;</a>
             <a mat-list-item [routerLink]="[{outlets:{view:['leases','lease-templates']}}]">Lease Templates</a>
           </mat-expansion-panel>
           <mat-expansion-panel hideToggle>

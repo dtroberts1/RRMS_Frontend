@@ -63,6 +63,7 @@ export class TemplateService{
     }
     async updateCustomTemplate(templateParam: any, fileName: string){
       // Get token from localStorage
+      console.log("trying to save " + fileName);
       this.currToken = JSON.parse(localStorage.getItem('user'));
       if (this.currToken != null){
         let options = {
@@ -70,15 +71,24 @@ export class TemplateService{
           .set('Authorization', "bearer " + this.currToken),
           };
           // Need to pass in the home ID into this!
-          console.log("sending a post request with filename set to " + fileName);
         return new Promise((resolve, reject) => { this.http
             .put(`${this.templatesUrl}/UpdateTemplate/${fileName}`, templateParam, options).subscribe(
                 sfdt => {
+                  console.log("from update, returning " + JSON.stringify(sfdt));
                   // Returns Syncfusion Document Text
-                  resolve(sfdt);
+                  resolve(true); // return 0 to indicate the request went through
                 },
                 error => {
-                  reject(error);
+                  if(error.status == 404){
+                    console.log("status is 404");
+                    resolve(404)
+                  }
+                  else if(error.status == 0){
+                    resolve(true);
+                  }
+                  else{
+                    reject(error);
+                  }
                 }
             )
         });

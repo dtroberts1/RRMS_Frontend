@@ -2,7 +2,7 @@
   <div class="homesUiView">
    
     <li style="list-style: none;" *ngFor="let home of homes;let i = index"
-      routerLink='/homes/home/{{i + 1}}'
+    [routerLink]="['/dashboard', {outlets:{view:['homes', i + 1]}}]"
     >
         <div
           class="appHomeItem"
@@ -16,7 +16,7 @@
 
     <div *ngIf="getHomesCount() == 0" style="border-width:5px; border-color:gray; border-style:solid">
         It appears that no homes exist for your account. Would you like to Add a home?
-        <a routerLink='/homes/addhome'>Add Home</a>
+        <a [routerLink]="['/dashboard', {outlets:{view:['homes','addhome']}}]">Add Home</a>
     </div>
   </div>
 </div>

@@ -1,22 +1,22 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
-import { AppComponent } from './app.component';
 import {FormsModule} from '@angular/forms';
 import { ButtonModule } from '@syncfusion/ej2-angular-buttons';
 import { DocumentEditorAllModule, DocumentEditorModule } from '@syncfusion/ej2-angular-documenteditor';
 import { DocumentEditorContainerModule } from '@syncfusion/ej2-angular-documenteditor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
-import{LoginScreenComponent} from './loginscreen/loginscreen.component';
+import {RouterModule, Routes} from "@angular/router";
 import {MaterialModule} from './material/material.module';
+import { AppComponent } from './app.component';
+import{LoginScreenComponent} from './loginscreen/loginscreen.component';
 import { CreateAcctScreenComponent } from './createacctscreen/create-acct-screen/create-acct-screen.component';
 import { CreateAcctEmailConfscrnComponent } from './create-acct-email-confscrn/create-acct-email-confscrn/create-acct-email-confscrn.component';
 import{Dashboard} from './dashboard/dashboard.component';
 import{NavigationComponent} from './navigation/navigation.component';
 import { HomesComponent } from './homes/homes.component';
 import { TenantsComponent } from './Tenants/tenants.component';
-import {RouterModule, Routes} from "@angular/router";
 import { BillingComponent } from './billing/billing.component';
 import { BackgroundChecksComponent } from './backgroundchecks/backgroundchecks.component';
 import { ProspectsComponent } from './prospects/prospects.component';
@@ -51,13 +51,13 @@ import { SplitButtonModule } from '@syncfusion/ej2-angular-splitbuttons';
 import { LeaseTemplatePopupModal } from './leases/lease-templates/lease-template-popup-modal/lease-template-popup-modal.component';
 
 const appRoutes: Routes = [
-  { path: '', component: AppComponent, data: { title: 'Login' } },
-  { path: 'login', component: AppComponent},
-  { path: 'dashboard' , component: NavigationComponent, children :
+  { path: '', component: AppComponent,pathMatch:'full' },
+  { path: 'login', component: LoginScreenComponent},
+  { path: 'dashboard' , component: Dashboard, children :
     [
       { path: 'homes', component: HomesComponent, outlet:'view'},
-      { path: 'homes/home/:id', component: HomeComponent, outlet:'view' },
-      { path: 'homes/home/:id/:detail', component: HomeComponent, outlet:'view'},
+      { path: 'homes/:id', component: HomeComponent, outlet:'view'},
+     /* { path: 'homes/:id/:detail', component: HomeComponent, outlet:'view'},*/
       { path: 'homes/addhome', component: AddHomeComponent, outlet:'view' },
       { path: 'homes/room', component: RoomComponent, outlet:'view'},
       { path: 'homes/viewroom/:id', component: ViewRoomComponent, outlet:'view' },
@@ -76,8 +76,7 @@ const appRoutes: Routes = [
       { path: 'leases/lease-templates', component: LeaseTemplatesComponent, outlet:'view' },
     ]
   },
-  { path: '**', redirectTo: '', data: { title: '' } },
-
+  { path: '**', redirectTo: ''},
 ];
 @NgModule({
   declarations: [
