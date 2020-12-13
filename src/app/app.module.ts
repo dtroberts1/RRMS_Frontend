@@ -49,6 +49,7 @@ import { AddLeaseComponent } from './leases/add-lease/add-lease.component';
 import { LeaseTemplatesComponent } from './leases/lease-templates/lease-templates.component';
 import { SplitButtonModule } from '@syncfusion/ej2-angular-splitbuttons';
 import { LeaseTemplatePopupModal } from './leases/lease-templates/lease-template-popup-modal/lease-template-popup-modal.component';
+import { LeasesPopupModal} from './leases/leases/leases-popup-modal/leases-popup-modal.component';
 
 const appRoutes: Routes = [
   { path: '', component: AppComponent},
@@ -57,11 +58,11 @@ const appRoutes: Routes = [
     [
       { path: 'homes', component: HomesComponent, outlet:'view'},
       { path: 'homes/add-home', component: AddHomeComponent, outlet:'view'},
-      { path: 'homes/:id', component: HomeComponent, outlet:'view'},
-      { path: 'homes/:id/:detail', component: HomeComponent, outlet:'view'},
       { path: 'homes/room', component: RoomComponent, outlet:'view'},
       { path: 'homes/viewroom/:id', component: ViewRoomComponent, outlet:'view' },
       { path: 'homes/addroom/:id/:nickname/:nbrRooms', component: AddRoomComponent, outlet:'view' },
+      { path: 'homes/:id', component: HomeComponent, outlet:'view'},
+      { path: 'homes/:id/:detail', component: HomeComponent, outlet:'view'},
       { path: 'tenants', component: TenantsComponent, outlet:'view' },
       { path: 'billing', component: BillingComponent, outlet:'view' },
       { path: 'backgroundchecks', component: BackgroundChecksComponent, outlet:'view' },
@@ -71,7 +72,6 @@ const appRoutes: Routes = [
       { path: 'settings', component: SettingsComponent, outlet:'view' },
       { path: 'prospects/add-prospect', component: AddProspectComponent, outlet:'view' },
       { path: 'leases', component: LeasesComponent, outlet:'view' },
-      { path: 'leases/pending-leases', component: PendingLeasesComponent, outlet:'view' },
       { path: 'leases/add-lease', component: AddLeaseComponent, outlet:'view' },
       { path: 'leases/lease-templates', component: LeaseTemplatesComponent, outlet:'view' },
     ]
@@ -112,6 +112,7 @@ const appRoutes: Routes = [
     ModifyEmployerModalComponent,
     ModifyPrevRentalComponent,
     AddApprovedProspectComponentModal,
+    LeasesPopupModal,
     LeasesComponent,
     PendingLeasesComponent,
     AddLeaseComponent,
