@@ -76,6 +76,26 @@ export class ProspectService{
         });
       }      
    }
+   async getProspect(prospectId: number){
+    this.currToken = JSON.parse(localStorage.getItem('user'));
+    if (this.currToken != null){
+      let options = {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+        .set('Authorization', "bearer " + this.currToken),
+        };
+        return new Promise((resolve, reject) => { this.http
+          .get<IProspect>(`${this.prospectsUrl}/${prospectId}`, options).subscribe(
+              (prospect: IProspect) => {
+                resolve(prospect);
+              },
+              error => {
+                reject(error);
+              }
+          )
+      });
+      }
+   }
+
    async updateProspect(prospect: IProspect){
     // Important: room should already have a homeId at this point!
     // Get token from localStorage

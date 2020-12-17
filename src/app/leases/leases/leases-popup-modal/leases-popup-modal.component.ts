@@ -10,6 +10,7 @@ import {HomesService} from '../../../services/homes.service';
 export interface DialogData {
   title: string,
   contentSummary: string,
+  content: any,
 }
 
 @Component({
@@ -48,7 +49,7 @@ export class LeasesPopupModal implements OnInit {
   public dialog: MatDialog, 
   ) {
     if (data != null){
-      
+     console.log("in popup, data is "+ JSON.stringify(data)); 
     }
   }
   closeNoSelection(){
@@ -80,9 +81,12 @@ export class LeasesPopupModal implements OnInit {
     else if(this.data.title == 'Unsaved Changes'){
       this.dialogRef.close(param);
     }
-    //this.dialogRef.close(this.selected); // important: returns the id, not the index!!
+     //this.dialogRef.close(this.selected); // important: returns the id, not the index!!
   }
-  showProductDetails(){
+  sendBackTenant(selectedProspectId : number){
+    console.log("selectedTenant index is " + selectedProspectId);
+    console.log("also sending back" + this.fileName);
+    this.dialogRef.close({prospectId: selectedProspectId, fileName: this.fileName.value});
   }
 
   getFNameErrorMessage(){

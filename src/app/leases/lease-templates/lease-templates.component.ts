@@ -95,7 +95,6 @@ export class LeaseTemplatesComponent {
     
     public saveAsDocx() :void {
         let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
-        console.log("attempting to send over " + JSON.stringify(sfdt));
         this.dialog.open(LeaseTemplatePopupModal, {
             data: {
                 title: "Residential Lease Agreement",
@@ -114,7 +113,6 @@ export class LeaseTemplatesComponent {
         this.loadedFileName = null;
         this.savedNote = null;
         this.astrisk = null;
-    console.log("in init..");
  }
 rlaBtnClicked(){
     // Default is choose State
@@ -221,7 +219,6 @@ rlaBtnClicked(){
  }
 
  documentChanged(args: ContentChangeEventArgs ){
-     console.log("the following changed: " + args.source);
      this.savedNote = 'Not Saved';
      this.astrisk = "*";
 }
@@ -229,7 +226,6 @@ rlaBtnClicked(){
 saveAs(selectedItem: string){
     let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
 
-    console.log(selectedItem + " has been selected");
     this.dialog.open(LeaseTemplatePopupModal, {
         data: {
             title: "Save As",
@@ -238,7 +234,6 @@ saveAs(selectedItem: string){
           }
     })
         .afterClosed().subscribe((fileName: string) => {
-            console.log("resulting file name is " + fileName);
         if (fileName != null){
             this.templateService.createCustomTemplate(sfdt, fileName).then((sfdt : any) => {
                 // Open the confirmation dialog and update the loadedFileName and savedNote
@@ -261,8 +256,6 @@ saveAs(selectedItem: string){
 
 async saveHelper(selectedItem : string){
     let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
-
-    console.log(this.loadedFileName + " has been selected");
     // Save file for the landlord for future use
     this.templateService.updateCustomTemplate(sfdt,this.loadedFileName).then((status: any)=>{
         if (status === 404){
