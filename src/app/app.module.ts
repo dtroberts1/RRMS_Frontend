@@ -50,6 +50,7 @@ import { LeaseTemplatesComponent } from './leases/lease-templates/lease-template
 import { SplitButtonModule } from '@syncfusion/ej2-angular-splitbuttons';
 import { LeaseTemplatePopupModal } from './leases/lease-templates/lease-template-popup-modal/lease-template-popup-modal.component';
 import { LeasesPopupModal} from './leases/leases/leases-popup-modal/leases-popup-modal.component';
+import { LeaseDocProspectTableModalComponent } from './leases/lease-doc-prospect-table/lease-doc-prospect-table-modal/lease-doc-prospect-table-modal.component';
 
 const appRoutes: Routes = [
   { path: '', component: AppComponent},
@@ -118,6 +119,7 @@ const appRoutes: Routes = [
     AddLeaseComponent,
     LeaseTemplatesComponent,
     LeaseTemplatePopupModal,
+    LeaseDocProspectTableModalComponent,
     ],
     schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
     imports: [

@@ -10,6 +10,7 @@ import { ProspectService } from 'src/app/services/prospect.service';
 import { IProspect } from 'src/app/interfaces/Prospect';
 import { LeaseDocumentService } from 'src/app/services/leaseDocument.service';
 import {IDocumentProspectDto} from '../../interfaces/DocumentProspect';
+import { LeaseDocProspectTableModalComponent } from '../lease-doc-prospect-table/lease-doc-prospect-table-modal/lease-doc-prospect-table-modal.component';
 
 @Component({
     selector: 'app-leases',
@@ -207,14 +208,11 @@ sendBtnItemSelected(args: MenuEventArgs){
 
  loadDocumentsHelper(){
     // First get list of custom filenames that exist for the landlord
-    this.leaseDocumentService.getDocumentProspectDtos().then((docProspectDto: Iterable<IDocumentProspectDto>) => {
-        console.log("back in loadDocumentsHelper, returned object is " + JSON.stringify(docProspectDto));
-        /*
-        this.dialog.open(LeasesPopupModal, {
+    this.leaseDocumentService.getDocumentProspectDtos().then((docProspectDtos: Iterable<IDocumentProspectDto>) => {
+        console.log("back in loadDocumentsHelper, returned object is " + JSON.stringify(docProspectDtos));
+        this.dialog.open(LeaseDocProspectTableModalComponent, {
             data: {
-                title: "Load Template",
-                contentSummary: "Choose Template",
-                content: availableFileNames, // Need to set this up, also if returned list contains no elements, it should display different message
+                content: docProspectDtos,
             }
         })
             .afterClosed().subscribe((selectedTemplate: string) => {
@@ -227,7 +225,6 @@ sendBtnItemSelected(args: MenuEventArgs){
                     })
                 }
             });
-            */
     });
  }
 

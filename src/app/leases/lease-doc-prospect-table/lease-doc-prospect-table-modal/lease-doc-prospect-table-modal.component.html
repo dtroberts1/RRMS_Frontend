@@ -1,0 +1,64 @@
+<div>
+    <div>
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+            <!-- Document Name Column -->
+            <ng-container matColumnDef="DocumentName">
+                <th mat-header-cell *matHeaderCellDef> Document Name</th>
+                <td mat-cell *matCellDef="let element"> {{element.DocumentName}} </td>
+              </ng-container>
+
+            <!-- First Name Column -->
+            <ng-container matColumnDef="FName">
+              <th mat-header-cell *matHeaderCellDef> First Name</th>
+              <td mat-cell *matCellDef="let element"> {{element.FName}} </td>
+            </ng-container>
+          
+            <!-- Last Name Column -->
+            <ng-container matColumnDef="LName">
+              <th mat-header-cell *matHeaderCellDef>Last Name</th>
+              <td mat-cell *matCellDef="let element"> {{element.LName}} </td>
+            </ng-container>
+
+            <!-- Signed Column -->
+            <ng-container matColumnDef="Signed">
+                <th mat-header-cell *matHeaderCellDef>Signed</th>
+                <td mat-cell *matCellDef="let element"> {{element.Signed}} </td>
+            </ng-container>    
+            
+            <!-- Move-in Date Column -->
+            <ng-container matColumnDef="Move-in-Date">
+                <th mat-header-cell *matHeaderCellDef>Move-in Date</th>
+                <td mat-cell *matCellDef="let element"> {{element.MoveInDate}} </td>
+            </ng-container>    
+            
+            <!-- Term Type Column -->
+            <ng-container matColumnDef="Term Type">
+                <th mat-header-cell *matHeaderCellDef>Term Type</th>
+                <td mat-cell *matCellDef="let element"> {{element.TermType}} </td>
+            </ng-container>    
+
+            <!-- Home Column -->
+            <ng-container matColumnDef="Home">
+                <th mat-header-cell *matHeaderCellDef>Home</th>
+                <td mat-cell *matCellDef="let element"> {{element.HomeName}} </td>
+            </ng-container>   
+
+            <!-- Room Column -->
+            <ng-container matColumnDef="Room">
+                <th mat-header-cell *matHeaderCellDef>Room</th>
+                <td mat-cell *matCellDef="let element"> {{element.RoomName}} </td>
+            </ng-container>   
+                     
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+          <div class="button-container">
+            <button class="flex-items" style="background-color:blue; color:white" mat-button >Send</button> <!-- or resend-->
+            <button class="flex-items" style="background-color:blue; color:white;" mat-button >Modify</button>
+            <button class="flex-items" style="background-color:blue; color:white;" mat-button >Delete</button>
+            <button class="flex-items" style="background-color:blue; color:white;" mat-button >Close</button><!-- or Open Editor--> 
+          </div>
+
+    </div>
+</div>
