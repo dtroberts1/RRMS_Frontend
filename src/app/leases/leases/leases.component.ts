@@ -11,6 +11,7 @@ import { IProspect } from 'src/app/interfaces/Prospect';
 import { LeaseDocumentService } from 'src/app/services/leaseDocument.service';
 import {IDocumentProspectDto} from '../../interfaces/DocumentProspect';
 import { LeaseDocProspectTableModalComponent } from '../lease-doc-prospect-table/lease-doc-prospect-table-modal/lease-doc-prospect-table-modal.component';
+import { LeaseTemplatePopupModal } from '../lease-templates/lease-template-popup-modal/lease-template-popup-modal.component';
 
 @Component({
     selector: 'app-leases',
@@ -165,7 +166,26 @@ sendBtnItemSelected(args: MenuEventArgs){
  rlaBtnItemSelected(args: MenuEventArgs){
      let selectedItem: string = args.item.text;
      if (selectedItem == 'Choose Template'){
-      this.loadDocumentsHelper();
+    // First get list of custom filenames that exist for the landlord
+    this.templateService.getAvailableCustomTemplateFileNames().then((availableFileNames: Iterable<string>) => {
+        this.dialog.open(LeaseTemplatePopupModal, {
+            data: {
+                title: "Load Template",
+                contentSummary: "Choose Template",
+                content: availableFileNames, // Need to set this up, also if returned list contains no elements, it should display different message
+            }
+        })
+            .afterClosed().subscribe((selectedTemplate: string) => {
+                if (selectedTemplate != null){
+                    this.templateService.getTemplate(selectedTemplate).then((sfdt : any) => {
+                        this.documentEditorContainerComponent.documentEditor.open(sfdt);
+                        this.loadedFileName = `${selectedTemplate}`;
+                        this.savedNote = null;
+                        this.astrisk = null;
+                    })
+                }
+            });
+    });
      }
  }
  templatesMainBtnSelected(){
