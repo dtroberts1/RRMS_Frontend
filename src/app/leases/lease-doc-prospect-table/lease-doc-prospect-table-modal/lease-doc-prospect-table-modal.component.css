@@ -9,6 +9,21 @@
     align-items: center;
     justify-content: center;
   }
+  #table-container{
+    max-height:500px;
+    overflow-y:scroll;
+  }
+  button.link {
+    background: transparent;
+    color: blue;
+    border: none;
+    outline: 0;
+    text-decoration: underline;
+}
+button.link:hover {
+    color: firebrick;
+    cursor: pointer;
+}
   
   .prospectsUiView{
     border-width:5px;
@@ -28,6 +43,7 @@
   .button-container {
     display: flex;
     justify-content: space-around;  
+    margin-top: 10px;
 }
     .flex-items {  
         margin: 10px;  
@@ -39,4 +55,8 @@
 
   .mat-row.highlighted {
     background: #f7cf1b/* #999;*/
+  }
+  th{
+    color: cadetblue;
+    width: 100px !important;
   }
