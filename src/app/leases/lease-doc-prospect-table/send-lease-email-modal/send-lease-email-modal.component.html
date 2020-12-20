@@ -1,0 +1,64 @@
+<div>
+    <h1 style="color:cadetblue">Future Tenant: {{data.docProspectDto.FName}}&nbsp;{{data.docProspectDto.LName}}</h1>
+    <br />
+    <!-- Email Address-->
+    <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <mat-select [(ngModel)]="selectedEmailOption" (selectionChange)="selectionChanged()">
+        <mat-option *ngFor="let emailOption of emailOptions let i = index" [value]="emailOption">
+            {{emailOption}}
+        </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <br />
+    <mat-form-field *ngIf="showEmailTextBox == true" appearance="standard">
+        <mat-label>Enter Email</mat-label>
+        <input matInput placeholder="myfuturetenant@email.com" [formControl]="emailAddressInput">
+        <mat-icon *ngIf="emailAddressInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+        <mat-error *ngIf="emailAddressInput.invalid">{{getErrorMessage(emailAddressInput)}}</mat-error>
+    </mat-form-field>
+    <br *ngIf="showEmailTextBox == true"/>
+    <!-- Email Subject-->
+    <mat-form-field appearance="fill">
+        <mat-label>Subject</mat-label>
+        <mat-select [(ngModel)]="selectedSubjectOption" (selectionChange)="subjectSelectionChanged()">
+        <mat-option *ngFor="let subjectOption of subjectOptions let i = index" [value]="subjectOption">
+            {{subjectOption}}
+        </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <br />
+    <mat-form-field *ngIf="showSubjectTextBox == true" appearance="standard">
+        <mat-label>Enter Subject</mat-label>
+        <input maxlength="45" matInput placeholder="Here is your lease agreement" [formControl]="subjectLineInput">
+        <mat-icon *ngIf="subjectLineInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+        <mat-error *ngIf="subjectLineInput.invalid">{{getErrorMessage(subjectLineInput)}}</mat-error>
+    </mat-form-field>
+    <br *ngIf="showSubjectTextBox == true"/>
+    <!-- Attachment -->
+    <mat-form-field appearance="fill">
+        <mat-label>Attachment</mat-label>
+        <mat-select [(ngModel)]="selectedAttachmentOption" (selectionChange)="attachmentSelectionChanged()">
+        <mat-option *ngFor="let attachmentOption of attachmentOptions let i = index" [value]="attachmentOption">
+            {{attachmentOption}}
+        </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <app-material-file-upload *ngIf="showAttachmentBrowse == true" text="Browse" (complete)="onFileComplete($event)"></app-material-file-upload>
+    <br />
+    <!--Body-->
+    <mat-form-field style="width:400px !important" appearance="standard">
+        <mat-label>Email Body</mat-label>
+        <textarea matInput cols="1000" rows="10" [formControl]="emailBodyInput">
+        </textarea>
+
+        <mat-icon *ngIf="emailBodyInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+        <mat-error *ngIf="emailBodyInput.invalid">{{getErrorMessage(emailBodyInput)}}</mat-error>
+    </mat-form-field>
+    <br />
+    <button (click)="sendEmail()" class="flex-items" style="background-color:blue; color:white" mat-button >Send</button> <!-- or resend-->
+    <button (click)="cancel()" class="flex-items" style="background-color:blue; color:white" mat-button >Cancel</button> <!-- or resend-->
+    <button mat-button (click)="clearText()" class="flex-items" style="float:right;background-color:blue; color:white;">
+        Clear Text
+      </button>
+</div>

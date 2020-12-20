@@ -16,7 +16,28 @@ export class LeaseDocumentService{
 
     constructor(private http: HttpClient){
     }
-
+    async getDocument(fileName: string, prospectId: number){
+      // Get token from localStorage
+      this.currToken = JSON.parse(localStorage.getItem('user'));
+      if (this.currToken != null){
+        let options = {
+          headers: new HttpHeaders().set('Content-Type', 'application/json')
+          .set('Authorization', "bearer " + this.currToken),
+          };
+          // Need to pass in the home ID into this!
+        return new Promise((resolve, reject) => { this.http
+            .get(`${this.leaseDocumentsUrl}/ImportDocument/${fileName}/${prospectId}`,options).subscribe(
+                sfdt => {
+                  // Returns Syncfusion Document Text
+                  resolve(sfdt);
+                },
+                error => {
+                  reject(error);
+                }
+            )
+        });
+      }
+    }
     async getDocumentProspectDtos(){
             // Get token from localStorage
             this.currToken = JSON.parse(localStorage.getItem('user'));

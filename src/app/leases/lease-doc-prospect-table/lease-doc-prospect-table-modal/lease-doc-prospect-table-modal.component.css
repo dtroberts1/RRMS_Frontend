@@ -32,3 +32,11 @@
     .flex-items {  
         margin: 10px;  
     }  
+  .mat-row.hovered {
+    background: #95dfb8;
+    cursor: pointer;
+  }
+
+  .mat-row.highlighted {
+    background: #f7cf1b/* #999;*/
+  }

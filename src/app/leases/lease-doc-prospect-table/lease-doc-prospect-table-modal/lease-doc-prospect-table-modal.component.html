@@ -51,13 +51,19 @@
             </ng-container>   
                      
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-row
+             *matRowDef="let row; columns: displayedColumns;"
+             (click)="selection.toggle(row)" 
+             [ngClass]="{hovered: row.hovered, highlighted: selection.isSelected(row)}"
+             (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"
+             ></tr>
           </table>
           <div class="button-container">
-            <button class="flex-items" style="background-color:blue; color:white" mat-button >Send</button> <!-- or resend-->
-            <button class="flex-items" style="background-color:blue; color:white;" mat-button >Modify</button>
+            <button (click)="sendEmail()" class="flex-items" style="background-color:blue; color:white" mat-button >Create Email</button> <!-- or resend-->
+            <button (click)="openDocument()" class="flex-items" style="background-color:blue; color:white;" mat-button >Open Document</button>
+            <button class="flex-items" style="background-color:blue; color:white;" mat-button >Modify Details</button>
             <button class="flex-items" style="background-color:blue; color:white;" mat-button >Delete</button>
-            <button class="flex-items" style="background-color:blue; color:white;" mat-button >Close</button><!-- or Open Editor--> 
+            <button (click)="closeBtnClicked()" class="flex-items" style="background-color:blue; color:white;" mat-button >Close</button><!-- or Open Editor--> 
           </div>
 
     </div>

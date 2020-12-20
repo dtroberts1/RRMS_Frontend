@@ -1,9 +1,9 @@
 import { Component, ViewEncapsulation, ViewChild } from '@angular/core';
 import {TemplateService} from '../../services/template.service';
 import {
-    FormatType, DocumentEditorComponent, DocumentEditorContainerComponent, EditorService, SelectionService, SfdtExportService, ToolbarService, WordExportService, ContentChangeEventArgs
+    FormatType, DocumentEditorComponent, DocumentEditorContainerComponent, EditorService, SelectionService, SfdtExportService, ToolbarService, WordExportService, ContentChangeEventArgs, DocumentChangeEventArgs
 } from '@syncfusion/ej2-angular-documenteditor';
-import { ItemModel, MenuEventArgs } from '@syncfusion/ej2-angular-splitbuttons';
+import { ClickEventArgs, ItemModel, MenuEventArgs } from '@syncfusion/ej2-angular-splitbuttons';
 import { MatDialog } from '@angular/material/dialog';
 import { LeasesPopupModal } from './leases-popup-modal/leases-popup-modal.component';
 import { ProspectService } from 'src/app/services/prospect.service';
@@ -235,23 +235,36 @@ sendBtnItemSelected(args: MenuEventArgs){
                 content: docProspectDtos,
             }
         })
-            .afterClosed().subscribe((selectedTemplate: string) => {
-                if (selectedTemplate != null){
-                    this.templateService.getTemplate(selectedTemplate).then((sfdt : any) => {
+            .afterClosed().subscribe((retFromTable: {selectedTemplate: string, prospectId: number}) => {
+                if (retFromTable != null && retFromTable.selectedTemplate != "" && retFromTable.prospectId != null){
+                    // First get prospect using ID (so you can later resave)
+                    this.prospectService.getProspect(retFromTable.prospectId)
+                    .then((pros: IProspect) => {
+                        this.currentProspect = pros;
+                        this.leaseDocumentService.getDocument(retFromTable.selectedTemplate, retFromTable.prospectId).then((sfdt : any) => {
                         this.documentEditorContainerComponent.documentEditor.open(sfdt);
-                        this.loadedFileName = `${selectedTemplate}`;
+                        this.loadedFileName = `${retFromTable.selectedTemplate}`;
                         this.savedNote = null;
                         this.astrisk = null;
+                        });
                     })
                 }
             });
     });
  }
 
- documentChanged(args: ContentChangeEventArgs ){
+ contentChanged(args: ContentChangeEventArgs ){
      this.savedNote = 'Not Saved';
      this.astrisk = "*";
 }
+/*
+documentChanged(args: DocumentChangeEventArgs){
+    console.log("documentChanged");
+    if (this.documentEditorContainerComponent.documentEditor.serialize() == null){
+        console.log("new button clicked");
+    }
+}
+*/
 
 saveAs(selectedItem: string){
     let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
