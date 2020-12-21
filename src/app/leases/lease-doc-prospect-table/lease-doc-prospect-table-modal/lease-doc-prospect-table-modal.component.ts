@@ -1,7 +1,10 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { IDocumentDeliveries } from 'src/app/interfaces/DocumentDeliveries';
 import { IDocumentProspectDto } from 'src/app/interfaces/DocumentProspect';
+import { DocumentDeliveryService } from 'src/app/services/documentDelivery.service';
+import { DocumentDeliveriesModalComponent } from '../document-deliveries-modal/document-deliveries-modal.component';
 import { SendLeaseEmailModalComponent } from '../send-lease-email-modal/send-lease-email-modal.component';
 
 interface ModalData {
@@ -27,16 +30,25 @@ export class LeaseDocProspectTableModalComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ModalData,
-  public dialogRef: MatDialogRef<LeaseDocProspectTableModalComponent>,
-  public dialog: MatDialog, 
-  ) {
+    public dialogRef: MatDialogRef<LeaseDocProspectTableModalComponent>,
+    public dialog: MatDialog, 
+    private documentDeliveryService : DocumentDeliveryService,
+    ) {
     if (data != null){
       this.dataSource = Array.from(this.data.content);
     }
 
   }
-  openDocDeliveries(){
-    console.log("opening doc deliveries")
+  openDocDeliveries(docPros: IDocumentProspectDto){
+    console.log("opening doc deliveries");
+      this.documentDeliveryService.GetDocumentDeliveries(docPros.DocumentId).then((documentDeliveries: Iterable<IDocumentDeliveries>) => {
+        console.log("back in loadDocumentsHelper, returned object is " + JSON.stringify(documentDeliveries));
+        this.dialog.open(DocumentDeliveriesModalComponent, {
+            data: {
+                content: documentDeliveries,
+            }
+        });
+    });
   }
   sendEmail(){
     // Should first open a modal

@@ -54,7 +54,7 @@
             <ng-container matColumnDef="Delivered Date">
               <th mat-header-cell *matHeaderCellDef>Delivered Date</th>
               <td mat-cell *matCellDef="let element">
-                <button (click)="openDocDeliveries()" class="link">{{element.LatestDocDelivery}}</button>
+                <button (click)="openDocDeliveries(element)" class="link">{{element.LatestDocDelivery}}</button>
               </td>
             </ng-container>              
   

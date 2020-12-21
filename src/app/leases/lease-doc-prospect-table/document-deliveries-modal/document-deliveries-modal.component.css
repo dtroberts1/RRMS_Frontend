@@ -1,5 +1,13 @@
-  #table-container{
-    max-height:500px;
+#close-button{
+    margin-left: auto; 
+    margin-right:auto; 
+    margin-top:12px; 
+    display: block; 
+    background-color:blue; 
+    color:white;
+}
+#table-container{
+    max-height:300px;
     overflow-y:auto;
   }
   button.link {

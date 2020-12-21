@@ -5,6 +5,7 @@ import{IEmployer} from '../interfaces/Employer';
 import { IProspect } from '../interfaces/Prospect';
 import {IDocumentProspectDto} from '../interfaces/DocumentProspect';
 import { IEmailedLeaseDocMessage } from '../interfaces/EmailedLeaseDocMessage';
+import { IDocumentDeliveries } from '../interfaces/DocumentDeliveries';
 
 @Injectable({
     providedIn: 'root'
@@ -16,6 +17,28 @@ export class DocumentDeliveryService{
     private documentDeliveryUrl = 'http://localhost:64097/api/DocumentDeliveries';
 
     constructor(private http: HttpClient){
+    }
+    async GetDocumentDeliveries(documentId: number){
+      // Get token from localStorage
+      this.currToken = JSON.parse(localStorage.getItem('user'));
+      if (this.currToken != null){
+        let options = {
+          headers: new HttpHeaders().set('Content-Type', 'application/json')
+          .set('Authorization', "bearer " + this.currToken),
+          };
+          // Need to pass in the home ID into this!
+        return new Promise((resolve, reject) => { this.http
+            .get(`${this.documentDeliveryUrl}/GetDocumentDeliveries/${documentId}`,options).subscribe(
+                (documentDeliveries: Iterable<IDocumentDeliveries>) => {
+                  // Returns Syncfusion Document Text
+                  resolve(documentDeliveries);
+                },
+                error => {
+                  reject(error);
+                }
+            )
+        });
+      }
     }
     
     async DeliverAddRecord(docMessage: IEmailedLeaseDocMessage){
