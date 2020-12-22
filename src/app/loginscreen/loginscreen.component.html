@@ -1,7 +1,8 @@
   <h1 style="cursor:context-menu; color:blue">
         Login
     </h1>
-    <mat-form-field class="mainPageFormField" appearance="standard">
+    <div>
+      <mat-form-field class="mainPageFormField" appearance="standard">
         <mat-label>Enter your email</mat-label>
         <input matInput placeholder="user@email.com" [formControl]="email" required>
         <mat-icon  *ngIf="email.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
@@ -14,16 +15,19 @@
         <mat-icon *ngIf="password.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
         <mat-error *ngIf="password.invalid">{{getPasswordErrorMessage()}}</mat-error>
       </mat-form-field>
-<button class="loginScreenLoginButton" mat-stroked-button color="primary"
+    </div>
+    <div class="button-container">
+      <button class="flex-items" mat-stroked-button color="primary"
       (click)="notifyParentClicked('attemptLogin')"
->  
-  <mat-label>
-    <h4>Login</h4>
-  </mat-label>
-</button>
-<button class="loginCloseButton" mat-stroked-button color="primary"
-      (click)="notifyParentClicked('closeLoginDialog')">
-      <mat-label>
-        <h4>Cancel</h4>
-      </mat-label>
-</button>
+      >  
+        <mat-label>
+        <h4>Login</h4>
+        </mat-label>
+      </button>
+      <button class="flex-items" mat-stroked-button color="primary"
+        (click)="notifyParentClicked('closeLoginDialog')">
+        <mat-label>
+          <h4>Cancel</h4>
+        </mat-label>
+      </button>
+    </div>

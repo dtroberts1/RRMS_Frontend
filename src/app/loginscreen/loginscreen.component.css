@@ -1,20 +1,12 @@
 .loginScreenLoginButton{
-    vertical-align:bottom;
-    top:70%;
     color:blue;
-    position:absolute;
     height:10%;
-    left:42%;
     background-color:#ddcd9d;
     text-align:center;
 }
 .loginCloseButton{
-    vertical-align:bottom;
-    top:70%;
     color:blue;
-    position:absolute;
     height:10%;
-    left:58%;
     background-color:#ddcd9d;
     text-align:center;
 }
@@ -27,3 +19,16 @@ h1{
     width:290px;
     left:12%;
 }
+
+.button-container {
+    height:90%;
+    display: flex;
+    justify-content: space-around;  
+    margin-top: 0px;
+}
+    .flex-items {  
+        color:blue;
+        height:10%;
+        background-color:#ddcd9d;
+        margin: 10px;  
+    }  

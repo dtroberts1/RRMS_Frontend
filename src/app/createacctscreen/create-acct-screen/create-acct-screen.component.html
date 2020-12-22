@@ -44,19 +44,19 @@
         <mat-button-toggle value="italic" style="left:9%">Tenant</mat-button-toggle>
     </mat-button-toggle-group>
 </div>
-
-    <button class="createAcctScreenCreateButton" mat-stroked-button color="primary"
+<div class="button-container">
+    <button class="flex-items" mat-stroked-button color="primary"
         (click)='createAccount(true)'
     >
         <mat-label><h4>Create</h4>
         </mat-label>
     </button>
 
-    <button class="createAcctScreenCancelButton" mat-stroked-button color="primary"
+    <button class="flex-items" mat-stroked-button color="primary"
     (click)="createAccount(false)">
     <mat-label>
-      <h4>Cancel</h4>
+    <h4>Cancel</h4>
     </mat-label>
     </button>
-
+</div>
 </div>
