@@ -47,15 +47,13 @@ export class AddRoomModalComponent {
       {
         this.room = data.home.Rooms[0];
       }
-      else
-        console.log("rooms is null in view-room: " + data.home.Rooms[this.currentRoomIndex]);
       this.roomCount = (<any[]>data.home.Rooms).length;
     }
   }
   closeEmpDialog(){
 
   }  
-  createRm(){
+  async createRm(){
     this.inputsAreValid().then((isValid: boolean) => {
       this.room = {
         RoomName: this.roomNameInput.value,
@@ -70,7 +68,7 @@ export class AddRoomModalComponent {
       };
 
       if (isValid == true){
-        this.roomsService.createRoom(this.room).then(() => {
+        this.roomsService.createRoom(this.room).then((room: IRoom) => {
           this.dialog.open(DialogDataRRMSDialog, {
             data: {
               inError: true,
@@ -79,7 +77,7 @@ export class AddRoomModalComponent {
               errorItems: []
             }
           }).afterClosed().subscribe(result => {
-            (<any[]>this.home.Rooms).push(this.room);
+            (<any[]>this.home.Rooms).push(room); 
             this.dialogRef.close(this.home);
           }),
           err=> console.log(err);
@@ -127,16 +125,13 @@ export class AddRoomModalComponent {
    } 
   }
   updateInput(editStr : string){
-    console.log("bluring");
     switch(editStr) { 
       case 'rate': { 
         if (this.monthlyRateInput.valid == true)
         {
           this.room.MonthlyRate = this.monthlyRateInput.value;
-          console.log("new rate is " + this.monthlyRateInput.value)
         }
         else{
-          console.log("monthlyRateInput is not valid. it is " + this.monthlyRateInput.value);
           this.changeEditMode(editStr);
           return;
         }
@@ -167,9 +162,8 @@ export class AddRoomModalComponent {
          break; 
       } 
     }
-      this.changeEditMode(editStr);
+    this.changeEditMode(editStr);
     this.fieldsModified = true;
-    console.log("editRate is " + this.editRate);
   }
   onFileComplete(data: any) {
     this.homeImagePath = data.link;

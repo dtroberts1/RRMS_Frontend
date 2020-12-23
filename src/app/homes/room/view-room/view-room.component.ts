@@ -49,6 +49,7 @@ export class ViewRoomComponent {
       {
         this.setOrigSettings(this.data.home.Rooms[this.currentRoomIndex]);
         this.getSettings();
+        console.log('this.data.home.Rooms = ' + JSON.stringify(this.data.home.Rooms))
       }
       this.roomCount = (<any[]>data.home.Rooms).length;
     }
@@ -120,16 +121,13 @@ export class ViewRoomComponent {
    } 
   }
   updateInput(editStr : string){
-    console.log("bluring");
     switch(editStr) { 
       case 'rate': { 
         if (this.monthlyRateInput.valid == true)
         {
           this.room.MonthlyRate = this.monthlyRateInput.value;
-          console.log("new rate is " + this.monthlyRateInput.value)
         }
         else{
-          console.log("monthlyRateInput is not valid. it is " + this.monthlyRateInput.value);
           this.changeEditMode(editStr);
           return;
         }
@@ -139,10 +137,8 @@ export class ViewRoomComponent {
         if (this.dimension1.valid == true && this.dimension2.valid == true)
         {
           this.room.Dimensions = `${this.dimension1.value} x ${this.dimension2.value}`;
-          console.log("new rate is " + this.room.Dimensions)
         }
         else{
-          console.log("dimensions input is not valid. it is " + this.room.Dimensions);
           this.changeEditMode(editStr);
           return;
         }
@@ -152,10 +148,8 @@ export class ViewRoomComponent {
         if (this.dimension1.valid == true && this.dimension2.valid == true)
         {
           this.room.Dimensions = `${this.dimension1.value} x ${this.dimension2.value}`;
-          console.log("new rate is " + this.room.Dimensions)
         }
         else{
-          console.log("dimensions input is not valid. it is " + this.room.Dimensions);
           this.changeEditMode(editStr);
           return;
         }
@@ -184,7 +178,6 @@ export class ViewRoomComponent {
     }
     this.changeEditMode(editStr);
     this.fieldsModified = true;
-    console.log("editRate is " + this.editRate);
   }
   onFileComplete(data: any) {
     this.homeImagePath = data.link;
@@ -212,7 +205,6 @@ export class ViewRoomComponent {
         }).afterClosed().subscribe((choosesSave: boolean)=> {
           if (choosesSave == true){
             this.updateRoom().then((saveSuccess: boolean) => {
-              console.log("updating room");
               if (saveSuccess == true){
                 this.fieldsModified = false;
                 this.updateCurrentRoomIndex(next);
@@ -221,9 +213,7 @@ export class ViewRoomComponent {
             });
           }
           else{
-            console.log("not updating room");
             this.fieldsModified = false;
-            console.log("original settings are " + JSON.stringify(this.origSettings));
             this.updateCurrentRoomIndex(next);
             this.getSettings();
           }
@@ -270,6 +260,8 @@ export class ViewRoomComponent {
   updateRoom(){
     //TODO
     if (this.room != null){
+      let monthlyRate = (this.monthlyRateInput.value != null ? this.monthlyRateInput.value : this.room.MonthlyRate);
+      console.log("before saving, monthly rate input is " + this.monthlyRateInput.value);
         this.room = {
           RoomName: this.room.RoomName,
           Dimensions: `${this.dimension1.value} x ${this.dimension2.value}`,
@@ -277,7 +269,7 @@ export class ViewRoomComponent {
           HasCloset: this.hasCloset,
           HasCeilingFan: this.hasCeilingFan,
           HasPrivateBath: this.hasPrivateBath,
-          MonthlyRate: this.monthlyRateInput.value,
+          MonthlyRate: this.room.MonthlyRate,
           HomeId: this.home.Id,
           Id: this.room.Id,
         };
