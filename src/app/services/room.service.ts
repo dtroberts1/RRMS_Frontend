@@ -11,24 +11,32 @@ import{IRoom} from '../interfaces/Rooms';
 export class RoomsService{
   private roomsUrl = 'http://localhost:64097/api/Rooms';
   currToken : AToken;
-  rooms: Iterable<IRoom>;
   availableRoomsForRent: Iterable<IRoom>
 
   constructor(private http: HttpClient){
   }
-  /*
-  getRooms(homeId: number): Promise<Iterable<IRoom>>{
-    return new Promise((resolve, reject) => {
-
-      this.fetchRooms(homeId).then((rooms: Iterable<IRoom>) => {
-        this.rooms = rooms;
-        resolve(this.rooms);
-      }).catch((err) => {
-        reject(err);
+  getRooms(homeId: number){
+    // Get token from localStorage
+    this.currToken = JSON.parse(localStorage.getItem('user'));
+    if (this.currToken != null){
+      let options = {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+        .set('Authorization', "bearer " + this.currToken),
+        };
+        // Need to pass in the home ID into this!
+      return new Promise((resolve, reject) => { this.http
+          .get(`${this.roomsUrl}/GetRooms/${homeId}`,options).subscribe(
+              (rooms: Iterable<IRoom>) => {
+                // Returns Syncfusion Document Text
+                resolve(rooms);
+              },
+              error => {
+                reject(error);
+              }
+          )
       });
-    });
+    }
   }
-  */
   async createRoom(room: IRoom){
       // Important: room should already have a homeId at this point!
       // Get token from localStorage
@@ -102,7 +110,6 @@ export class RoomsService{
   async updateRoom(room: IRoom){
     // Important: room should already have a homeId at this point!
     // Get token from localStorage
-    console.log("About to update with room montly rate at " + room.MonthlyRate);
     this.currToken = JSON.parse(localStorage.getItem('user'));
     if (this.currToken != null){
       let options = {
@@ -123,6 +130,29 @@ export class RoomsService{
       });
     }
 }
+async getProspectsAssignedToRoom(roomId: number){
+    // Get token from localStorage
+    this.currToken = JSON.parse(localStorage.getItem('user'));
+    if (this.currToken != null){
+      let options = {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+        .set('Authorization', "bearer " + this.currToken),
+        };
+        // Need to pass in the home ID into this!
+      return new Promise((resolve, reject) => { this.http
+          .get<IRoom>(`${this.roomsUrl}/GetProspectsAssignedToRoom/${roomId}`, options).subscribe(
+              room => {
+                // Get some logic for response (should just return id back for newly added room)
+                resolve(room);
+              },
+              error => {
+                reject(error);
+              }
+          )
+      });
+    }
+}
+
 async removeRoom(roomId: number){
   // Important: room should already have a homeId at this point!
   // Get token from localStorage
@@ -146,31 +176,4 @@ async removeRoom(roomId: number){
     });
   }
 }
-/*
-  fetchRooms(homeId: number){  
-  // Get token from localStorage
-  this.currToken = JSON.parse(localStorage.getItem('user'));
-  if (this.currToken != null){
-    let options = {
-      headers: new HttpHeaders().set('Content-Type', 'application/json')
-      .set('Authorization', "bearer " + this.currToken),
-      };
-    //options.headers.append('Authorization', JSON.stringify(this.currToken));
-    return new Promise((resolve, reject) => {
-      this.http
-        .get<Iterable<IRoom>>(this.roomsUrl, options).subscribe(
-            rooms => {
-                // Get some logic for response (should just return id back for newly added room)
-                resolve(rooms);
-            },
-            error => {
-              console.log("Room post to API was unsuccessful.");
-              console.log(error);
-              reject(error);
-            }
-        );
-      });
-    }
-  }
-  */
 }

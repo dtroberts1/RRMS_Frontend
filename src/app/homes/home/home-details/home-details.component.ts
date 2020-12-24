@@ -13,6 +13,7 @@ import { TooltipPosition } from '@angular/material/tooltip';
 import { FormControl } from '@angular/forms';
 import { IProspect } from 'src/app/interfaces/Prospect';
 import { AddApprovedProspectComponentModal } from '../../room/add-approved-prospect/add-approved-prospect.component';
+import { RemoveRoomModalComponent } from '../remove-room-modal/remove-room-modal.component';
 interface AvailableRoomsAndProspects{
   availRooms: Iterable<IRoom>,
   availProspects: Iterable<IProspect>,
@@ -34,13 +35,13 @@ export class HomeDetailsComponent implements OnInit {
     public dialog: MatDialog, 
     private router: Router,
     private roomsService: RoomsService,
+    private homeService: HomesService,
     private prospectService: ProspectService,
     ) { 
     }
   async ngOnChanges(changes: SimpleChanges){
     this.roomCount = (<any[]>this.home.Rooms)?.length;
     await this.roomsService.getAvailableRooms(this.home.Id).then((rooms : Iterable<IRoom>) => {
-      console.log("Available Rooms are are " + JSON.stringify(rooms));
       this.availRooms = rooms;
     });
   }
@@ -63,10 +64,34 @@ export class HomeDetailsComponent implements OnInit {
       }
     }
 
-
+    removeRoomBtnClicked(){
+    console.log("opening remove room dialog");
+    if (this.home != null){
+      this.dialog.open(RemoveRoomModalComponent, {
+        data: {
+          home: this.home,
+        },
+        width: '270px',
+        height: '300px',
+      }).afterClosed().subscribe((roomRemoved : boolean) => {
+        if (roomRemoved == true){
+          // Get updated list of rooms for the home
+          if (this.home != null){
+            this.roomsService.getRooms(this.home.Id).then((rooms: Iterable<IRoom>) => {
+              this.home.Rooms = rooms;
+              this.roomCount = (<any[]>this.home.Rooms)?.length;
+            })
+          }
+        }
+        else{
+          // If no room was removed, do nothing
+        }
+      })
+    }
+  }
+    
   openViewRoomDialog(){
     if (this.home != null){
-      console.log("in home details, about to send " + JSON.stringify(this.home.Rooms));
       this.dialog.open(ViewRoomComponent, {
         data: {
           home : this.home,
@@ -84,17 +109,15 @@ export class HomeDetailsComponent implements OnInit {
 
   }
   async openAddProspectDialog(){
-    console.log("availProspects are :" + JSON.stringify(this.availProspects));
       this.roomsService.getAvailableRooms(this.home.Id).then((rooms : Iterable<IRoom>) => {
-        console.log("Available Rooms are are " + JSON.stringify(rooms));
         this.availRooms = rooms;
         this.dialog.open(AddApprovedProspectComponentModal, {
           data: {
             availRooms: this.availRooms,
             availProspects: this.availProspects,
           },
-          width:'18%',
-          height: '55%'
+          width:'270px',
+          height: '300px'
         }).afterClosed().subscribe(() => {
     
         },
@@ -119,7 +142,6 @@ export class HomeDetailsComponent implements OnInit {
       return `${this.roomCount} Room`;
   }
   addRoom(){
-    console.log("in home details, about to send " + JSON.stringify(this.home.Rooms));
     this.dialog.open(AddRoomModalComponent, {
       data: {
         home : this.home,

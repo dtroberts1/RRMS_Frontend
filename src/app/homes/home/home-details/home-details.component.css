@@ -25,6 +25,16 @@
     float:left;
     margin-left:2%;
 }
+#removeRoomBtn:hover{
+    background-color:red;
+    color:white;
+}
+#removeRoomBtn{
+    color:blue;
+    float:left;
+    margin-left:2%;
+}
+
 #addAdditionalProspectBtn{
     color:blue;
     float:left;

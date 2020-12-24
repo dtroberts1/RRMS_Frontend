@@ -31,7 +31,6 @@ export class AddHomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("in addhome");
     this.homeImagePath = '../../../assets/anotherhomepic.jpg';
   }
 
@@ -124,7 +123,10 @@ export class AddHomeComponent implements OnInit {
               }
             }).afterClosed().subscribe((addRooms: boolean)=> {
               if (addRooms == true ){
-                this.router.navigate([`homes/addroom/${this.home.Id}/${this.home.Nickname}/${(<any[]>this.home.Rooms).length}`]);
+                this.router.navigate(['./dashboard/', { outlets: { view: ['homes','addroom', this.home.Id, this.home.Nickname, (<any[]>this.home.Rooms).length] } }]);
+              }
+              else if(addRooms == false){
+                this.router.navigate(['./dashboard/']);
               }
             });
 
@@ -133,14 +135,13 @@ export class AddHomeComponent implements OnInit {
               data: {
                 inError: true,
                 title: "Unable to process",
-                contentSummary: "We're sorry. We are unable to process",
+                contentSummary: "We're sorry. We are unable to process. Our engineers have been notified and are working on the issue to get this resolved asap",
                 errorItems: []
               }
             });
           });
         }
         else{
-          console.log("inputs are invalid");
         }
     });
   }

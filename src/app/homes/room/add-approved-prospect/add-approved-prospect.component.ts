@@ -47,21 +47,15 @@ export class AddApprovedProspectComponentModal implements OnInit {
     this.fieldsModified == false;
     this.availRooms = this.fromParent.availRooms;
     this.availProspects = this.fromParent.availProspects;
-    console.log("in init, availRooms are " + JSON.stringify(this.availRooms));
-    console.log("and prospects are : " + JSON.stringify(this.availProspects));
   }
   ngOnChanges(){
     this.availRooms = this.fromParent.availRooms;
     this.availProspects = this.fromParent.availProspects;
-    console.log("and prospects are : " + JSON.stringify(this.availProspects));
-
   }
   closeNoSelection(){
     this.dialogRef.close(null);
   }
-  returnChoice(){
-    console.log("before closing, room is " + (this.selectedRoom));
-    
+  returnChoice(){    
     this.dialogRef.close(null); // important: returns the id, not the index!!
   }
   showProductDetails(){
@@ -81,7 +75,6 @@ export class AddApprovedProspectComponentModal implements OnInit {
   }
 
   addAppvdProsToRoom(){
-    console.log("setting:" + JSON.stringify(this.selectedProspect) + " to " + this.selectedRoom);
     let myProspect : IProspect = (<IProspect[]>this.availProspects).find(pros => pros.Id == this.selectedProspect);
     myProspect.Status = ProspectStatus.pendingLeaseSignature;
     this.prospectService.updateProspect(myProspect)
@@ -91,13 +84,14 @@ export class AddApprovedProspectComponentModal implements OnInit {
       this.dialog.open(DialogDataRRMSDialog, {
           data: {
             inError: false,
-            title: "Saved",
-            contentSummary: "This home has been Saved! Would you like to proceed to add a rental room for this home?",
+            title: "Prospect Saved",
+            contentSummary: "This prospect has been Saved! Would you like to proceed to add a lease for this prospect?",
             errorItems: []
           }
           }).afterClosed().subscribe((addRooms: boolean)=> {
             if (addRooms == true ){
-              this.router.navigate([`leases/add-lease`]);
+              this.router.navigate(['./dashboard/', { outlets: { view: ['leases'] } }]);
+
               this.dialogRef.close();
             }
             else{
@@ -109,7 +103,7 @@ export class AddApprovedProspectComponentModal implements OnInit {
               data: {
                 inError: true,
                 title: "Unable to process",
-                contentSummary: "We're sorry. We are unable to process",
+                contentSummary: "We're sorry. We are unable to process. Our engineers have been notified and are working on the issue to get this resolved asap",
                 errorItems: []
               }
             });

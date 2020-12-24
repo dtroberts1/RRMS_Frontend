@@ -40,6 +40,8 @@ export class HomesService{
 }
 
   getHome(homeId: number): Promise<IHome>{
+      // This does not include all of the rooms with the home!!
+
       // Important: room should already have a homeId at this point!
       // Get token from localStorage
       this.currToken = JSON.parse(localStorage.getItem('user'));
@@ -111,7 +113,6 @@ export class HomesService{
                 resolve(homes);
             },
             error => {
-              console.log("Home post to API was unsuccessful.");
               console.log(error);
               reject(error);
             }

@@ -217,7 +217,6 @@ statusList:Iterable<IStatus> = [
       return false;
   }
   openPrevRentModifyModal(add: boolean){
-    console.log("in openPrevRent, add is " + add);
     if (add == true){
       this.dialog.open(ModifyPrevRentalComponent, {
         data: {
@@ -533,7 +532,7 @@ statusList:Iterable<IStatus> = [
            data: {
              inError: false,
              title: "Prospect Saved",
-             contentSummary: "This prospect has been Saved",
+             contentSummary: "This prospect has been saved",
              errorItems: []
            }
            }).afterClosed().subscribe((addRooms: boolean)=> {

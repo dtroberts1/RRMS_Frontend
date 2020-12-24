@@ -36,14 +36,14 @@ export class AddProspectComponent implements OnInit {
   homes : Iterable<IHome>;
   fName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,}')]);
   lName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,}')]);
-  mdInit = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{1}')]);
-  ssn = new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{3}\-?[0-9]{2}\-?[0-9]{4}$/)]);
+  mdInit = new FormControl('', [Validators.pattern('[a-zA-Z]{1}')]);
+  ssn = new FormControl('', [Validators.pattern(/^[0-9]{3}\-?[0-9]{2}\-?[0-9]{4}$/)]);
   email = new FormControl('', [Validators.required, Validators.email]);
   phoneNumber = new FormControl('', [Validators.required, Validators.pattern(/((\(\d{3}\) ?)|(\d{3}-))?\d{3}-\d{4}/)]);
   moveInDate = new FormControl('', [Validators.required, Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|\[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
   moveOutDate = new FormControl('', [Validators.required, Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|\[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
   termTypeStr: string[] = ['Month-to-Month', 'Fixed-Term'];
-  termType : TermType = TermType.monthToMonth;
+  termType : TermType = null;
   employers : Array<IEmployer> = new Array<IEmployer>();
   prevRentals : Array<IPreviousRental> = new Array<IPreviousRental>();
   selectedRoomId : number;
@@ -79,19 +79,19 @@ export class AddProspectComponent implements OnInit {
         invalidElements.push("Last Name");
       }
       if (this.mdInit.invalid){
-        invalidElements.push("Email");
+        invalidElements.push("Middle Initial");
       }
       if (this.ssn.invalid){
-        invalidElements.push("Phone Number");
+        invalidElements.push("Social Security Number (SSN)");
       }
       if (this.email.invalid){
-        invalidElements.push("Address (1)");
+        invalidElements.push("Email Address");
       }
-      if (this.employers.length == 0){
-        invalidElements.push("No Employers. Add Employer");
+      if (this.termType == null){
+        invalidElements.push("Term Type");
       }
-      if (this.prevRentals.length == 0){
-        invalidElements.push("No Previous Rentals. Add Rental");
+      if (this.selectedRoomName == 'No Room Selected'){
+        invalidElements.push('Selected Room ("Link to Room")');
       }
       if (invalidElements.length > 0)
       {
@@ -114,47 +114,49 @@ export class AddProspectComponent implements OnInit {
   }
 
   addProspect(){
-    this.inputsAreValid().then(() =>{
-      let pros = {
-        Id: -1,
-        EmailAddress : this.email.value,
-        FName : this.fName.value,
-        LName : this.lName.value,
-        MdInit : this.mdInit.value,
-        Employers : this.employers,
-        PreviousRentals : this.prevRentals,
-        SSN: this.ssn.value,
-        Status: ProspectStatus.pendingLandlordDecision,
-        PhoneNumber: this.phoneNumber.value,
-        RoomId: this.selectedRoomId,
-        ProspectId: -1,
-        MoveInDate: this.moveInDate.value,
-        MoveOutDate: this.moveOutDate.value,
-        TermType: this.termTypeMap.get(this.termType.toString()),
-        LandlordId: -1,
+    this.inputsAreValid().then((areValid: boolean) =>{
+      if (areValid == true){
+        let pros = {
+          Id: -1,
+          EmailAddress : this.email.value,
+          FName : this.fName.value,
+          LName : this.lName.value,
+          MdInit : this.mdInit.value,
+          Employers : this.employers,
+          PreviousRentals : this.prevRentals,
+          SSN: this.ssn.value,
+          Status: ProspectStatus.pendingLandlordDecision,
+          PhoneNumber: this.phoneNumber.value,
+          RoomId: this.selectedRoomId,
+          ProspectId: -1,
+          MoveInDate: this.moveInDate.value,
+          MoveOutDate: this.moveOutDate.value,
+          TermType: this.termTypeMap.get(this.termType.toString()),
+          LandlordId: -1,
+        }
+        this.prospectService.saveProspect(pros).then(() => {
+          (<any[]>this.prospectService.prospects).push(pros);
+          this.dialog.open(DialogDataRRMSDialog, {
+            data: {
+              inError: false,
+              title: "Prospect Saved",
+              contentSummary: "This Prospect has been Added",
+              errorItems: []
+            }
+            }).afterClosed().subscribe((addRooms: boolean)=> {
+              this.router.navigate(['./dashboard/', { outlets: { view: ['homes'] } }]);
+  
+  
+            });
+        }).catch((err) => {
+          console.log(err);
+        });
       }
-      this.prospectService.saveProspect(pros).then(() => {
-        (<any[]>this.prospectService.prospects).push(pros);
-        this.dialog.open(DialogDataRRMSDialog, {
-          data: {
-            inError: false,
-            title: "Prospect Saved",
-            contentSummary: "This Prospect has been Added",
-            errorItems: []
-          }
-          }).afterClosed().subscribe((addRooms: boolean)=> {
-            this.router.navigate([`homes`]);
-
-          });
-      }).catch((err) => {
-        console.log(err);
-      });
     });
   }
   openLinkRoomModal(){
     this.homesService.getHomes().then((homes) => {
       this.homes = homes;
-      console.log("after home service, home count is is " + (<any[]>this.homes).length);
 
       this.dialog.open(LinkRoomModalComponent, {
         data: {
@@ -164,7 +166,6 @@ export class AddProspectComponent implements OnInit {
         if (selectedRoomId)
         {
           this.selectedRoomId = selectedRoomId;
-          //console.log("selectedRoom is " + this.selectedRoomId);
           this.roomsService.getRoom(selectedRoomId).then((room : IRoom) => {
             this.selectedRoomName = room.RoomName;
           })

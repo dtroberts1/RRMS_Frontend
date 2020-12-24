@@ -18,7 +18,7 @@
                 <br />
                 <mat-form-field appearance="standard">
                     <mat-label>Mid Initial</mat-label>
-                    <input matInput placeholder="T" maxlength="1" required [formControl]="mdInit">
+                    <input matInput placeholder="T" maxlength="1" [formControl]="mdInit">
                     <mat-icon *ngIf="mdInit.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
                     <mat-error *ngIf="mdInit.invalid">{{getInputErrorMessage(mdInit)}}</mat-error>
                 </mat-form-field>

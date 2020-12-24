@@ -20,15 +20,19 @@ export class NavigationComponent implements OnInit {
     this.homesService = homesService;
     this.prospectService = prospectService;
   }
+  async ngOnChnages(){
+    console.log("in nav changes");
+
+  }
 
   async ngOnInit() {
+    console.log("in nav init");
     this.prospectService.getProspects();// asynchronous call
     this.homesService.getHomes()?.then((homes : Iterable<IHome>) => {
       this.homes = homes;
     });
   }
   logout(){
-    console.log("logging out");
     this.router.navigate([``]);
   }
 }

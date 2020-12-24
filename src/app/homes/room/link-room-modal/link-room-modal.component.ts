@@ -38,7 +38,7 @@ export class LinkRoomModalComponent implements OnInit {
   hasCeilingFan : boolean;
   hasPrivateBath : boolean;
  selected: number;
- selectedRoom: number;
+ selectedRoom: number = null;;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -50,7 +50,19 @@ export class LinkRoomModalComponent implements OnInit {
     this.dialogRef.close(null);
   }
   returnChoice(){
-    this.dialogRef.close(this.selectedRoom); // important: returns the id, not the index!!
+    if (this.selectedRoom == null){
+      this.dialog.open(DialogDataRRMSDialog, {
+        data: {
+          inError: true,
+          title: "No Room Selected",
+          contentSummary: "No Room has been selected. Please Select a room",
+          errorItems: []
+        }
+      });
+    }
+    else{
+      this.dialogRef.close(this.selectedRoom); // important: returns the id, not the index!!
+    }
   }
   showProductDetails(){
   }
