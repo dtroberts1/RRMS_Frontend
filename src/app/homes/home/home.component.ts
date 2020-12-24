@@ -1,7 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {HomesService} from '../../services/homes.service';
 import{IHome} from '../../interfaces/Homes';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { IRoom } from 'src/app/interfaces/Rooms';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 
 @Component({
   selector: 'app-home',
@@ -16,8 +19,53 @@ export class HomeComponent implements OnInit {
   paramsId = -1;
   individualView: boolean = false; // If true, it will be displayed by itself in the UI view,
                            // not as a list item of "Homes"
-  constructor(private route: ActivatedRoute, private homesService: HomesService) { 
+  constructor(private route: ActivatedRoute, 
+    private homesService: HomesService,
+    public dialog: MatDialog, 
+    private router: Router,
+    ) { 
     this.homesService = homesService;
+  }
+
+  removeHome(){
+    if (this.myHome.Rooms != null && (<any[]>this.myHome.Rooms).length > 0){
+      // If there are rooms assigned to this house, prompt the user (let them know which rooms).
+      // Do not remove the rooms from the home. Let the user remove the rooms manually
+      let roomNameStr : string[] = new Array<string>();
+      (<any[]>this.myHome.Rooms).forEach((room: IRoom) => {
+        roomNameStr.push(room.RoomName);
+      })
+      this.dialog.open(DialogDataRRMSDialog, {
+        data: {
+          inError: true,
+          title: "Unable To Delete",
+          contentSummary: `The following rooms are linked to this house and will need to first be removed:`,
+          errorItems: roomNameStr,
+        }
+      });
+    }
+    else{
+      // It's safe to remove home
+      // Call Service to remove the home
+      this.homesService.removeHome(this.myHome.Id)
+        .then(() => {
+          this.dialog.open(DialogDataRRMSDialog, {
+            data: {
+              inError: true,
+              title: "Home Deleted",
+              contentSummary: `Home ${this.myHome.Nickname} has been Removed`,
+              errorItems: []
+            }
+          }).afterClosed().subscribe(result => {
+            this.router.navigate(['./dashboard']);
+          });
+        })
+        .catch(() =>{
+          // Use our 'we're sorry.. our blablabla
+        })
+
+      // Then redirect to homes
+    }
   }
 
   ngOnInit(): void {
@@ -33,7 +81,6 @@ export class HomeComponent implements OnInit {
               this.myHome = homes[params.id - 1];
               this.individualView = true;
             }).catch((err) => {
-              console.log("error in getHomes (home Component): " + err);
               this.individualView = false;
             });
           }

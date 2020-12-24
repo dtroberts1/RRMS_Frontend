@@ -15,3 +15,11 @@ img{
 agm-map,home-details {
     height:210px;
 }
+
+.homeCtrlBtns:hover{
+    background-color:green;
+    color:white !important;
+}
+#homeCtrlBtns{
+    color:blue !important;
+}

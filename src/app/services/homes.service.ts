@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {AToken} from '../interfaces/Token';
 import{IHome} from '../interfaces/Homes';
+import { IRoom } from '../interfaces/Rooms';
 
 
 @Injectable({
@@ -62,6 +63,29 @@ export class HomesService{
             )
         });
       }
+  }
+
+  async getRoomsAssignedToHome(homeId: number){
+    // Get token from localStorage
+    this.currToken = JSON.parse(localStorage.getItem('user'));
+    if (this.currToken != null){
+      let options = {
+        headers: new HttpHeaders().set('Content-Type', 'application/json')
+        .set('Authorization', "bearer " + this.currToken),
+        };
+        // Need to pass in the home ID into this!
+      return new Promise((resolve, reject) => { this.http
+          .get<Iterable<IRoom>>(`${this.homesUrl}/GetRoomsAssignedToHome/${homeId}`, options).subscribe(
+              rooms => {
+                // Get some logic for response (should just return id back for newly added room)
+                resolve(rooms);
+              },
+              error => {
+                reject(error);
+              }
+          )
+      });
+    }
   }
 
   getHomes(): Promise<Iterable<IHome>>{

@@ -14,9 +14,9 @@ height:100%;">
 <button *ngIf="home != null && hasRooms() == true" mat-raised-button id="viewRoomBtn" (click)="openViewRoomDialog()">View&nbsp;{{dispRoomCount()}}</button>
 &nbsp;
 <button mat-raised-button id="addAdditionalRoomBtn"  
-matTooltipClass="tooltip"
+ matTooltipClass="tooltip"
  [matTooltip]="'Add new rental room for this house'"
-(click)="addRoom()">Add New Room</button>
+ (click)="addRoom()">Add New Room</button>
 <button mat-raised-button
  matTooltipClass="tooltip" id="removeRoomBtn"
  [matTooltip]="'Remove a room from this house'"
@@ -25,16 +25,17 @@ matTooltipClass="tooltip"
 <br />
 <h2 style="text-align: left;">Tenants</h2>
 <button mat-raised-button id="viewProspectBtn" 
-matTooltipClass="tooltip"
- [matTooltip]="'View Tenants Living Here'"
-(click)="openViewProspectDialog()">View Tenants</button>
-&nbsp;
+    matTooltipClass="tooltip"
+    [matTooltip]="'View Tenants Living Here'"
+    (click)="openViewProspectDialog()">View Tenants</button>
+    &nbsp;
 <button mat-raised-button id="moveProspectBtn"  
-matTooltipClass="tooltip"
- [matTooltip]="'Add Approved Prospect into this room'"
-(click)="openAddProspectDialog()">Add (Approved) Prospect</button>
+    matTooltipClass="tooltip"
+    [matTooltip]="'Add Approved Prospect into this room'"
+    (click)="openAddProspectDialog()">Add (Approved) Prospect
+</button>
 &nbsp;
 <button mat-raised-button id="moveExistingTenant"
-matTooltipClass="tooltip"
- [matTooltip]="'Move Existing Tenant from other room (or home) into this room'">Move Existing Tenant</button>
+    matTooltipClass="tooltip"
+    [matTooltip]="'Move Existing Tenant from other room (or home) into this room'">Move Existing Tenant</button>
 </div>
