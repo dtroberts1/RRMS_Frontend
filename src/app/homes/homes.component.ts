@@ -19,12 +19,10 @@ homes: Iterable<IHome>;
      {
       this.homeService.getHomes()?.then((homes : Iterable<IHome>) => {
         this.homes = homes;
-        console.log("in homes, homes is " + JSON.stringify(this.homes));
       });
      }
      else{
         this.homes = this.homeService.homes;
-        console.log("in homes, homes is " + JSON.stringify(this.homes));
      }
 
   }

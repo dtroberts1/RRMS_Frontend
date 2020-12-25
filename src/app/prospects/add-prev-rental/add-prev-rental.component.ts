@@ -84,8 +84,6 @@ export class AddPrevRentalComponent {
       
       if (invalidElements.length > 0)
       {
-        console.log("about to send the following invalid items" + JSON.stringify(invalidElements));
-
         this.dialog.open(DialogDataRRMSDialog, {
           data: {
             inError: true,
@@ -94,7 +92,6 @@ export class AddPrevRentalComponent {
             errorItems: invalidElements
           }
         }).afterClosed().subscribe(result => {
-          console.log("prompt has closed");
           resolve(false);
 
         });

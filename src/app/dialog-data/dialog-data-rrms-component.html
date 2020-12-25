@@ -15,13 +15,14 @@
   <button mat-button *ngIf="title=='Room Saved'" (click)="closeDialog(false)">Ok</button>
   <button mat-button *ngIf="title=='Employer Saved'" (click)="closeDialog(false)">Ok</button>
   <button mat-button *ngIf="title=='Room Deleted' || title == 'Home Deleted'" (click)="closeDialog(false)">Ok</button>
-  <button mat-button *ngIf="title=='Prospect Saved' && contentSummary != 'This prospect has been saved.'" (click)="closeDialog(true)">Yes</button>
+  <button mat-button *ngIf="title=='Prospect Saved' && contentSummary != 'This prospect has been added.'" (click)="closeDialog(true)">Yes</button>
+  <button mat-button *ngIf="title=='Prospect Saved' && contentSummary == 'This prospect has been added.'" (click)="closeDialog(true)">Ok</button>
 
   <button mat-button *ngIf="title=='Unsaved Changes'" (click)="closedWithSaved(false)">Continue</button>
   <button mat-button *ngIf="title=='Unsaved Changes'" (click)="closedWithSaved(true)">Save</button>
   <button mat-button *ngIf="title=='Delete - Are you sure?'" (click)="closeDialog(false)">No</button>
 
-  <button mat-button *ngIf="title=='Prospect Saved' && contentSummary != 'This prospect has been saved.'"
+  <button mat-button *ngIf="title=='Prospect Saved' && contentSummary != 'This prospect has been added.'"
   (click)="closeDialog(false)">No</button>
   <button mat-button *ngIf="title != 'Home Deleted' && title !='Room Deleted' && title != 'Prospect Saved' && title != 'Employer Saved' && title != 'Prospect Saved' && title != 'Room Created' && title != 'Room Saved' && title != 'Unsaved Changes' && title != 'Delete - Are you sure?' && title != 'Are you sure you would like to delete this previous rental?'&& title != 'Are you sure you would like to delete this previous Employer?'" 
   (click)="closeDialog(false)">Close</button>

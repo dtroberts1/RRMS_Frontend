@@ -83,7 +83,7 @@ export class AddRoomModalComponent {
           err=> console.log(err);
         }).catch((err) =>{
           console.log(err)
-        });
+        }); 
       }
     });
   }

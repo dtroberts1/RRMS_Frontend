@@ -190,12 +190,10 @@ currentMap = new Map<string, boolean>([
         case 'cmpyname': { 
           if (this.cmpyNameInput.valid == true)
           {
-            console.log("is valid");
             this.employer.CompanyName = this.cmpyNameInput.value;
             
           }
           else{
-            console.log("is not valid");
             this.changeEditMode(editStr);
             return;
           } 
@@ -204,12 +202,10 @@ currentMap = new Map<string, boolean>([
         case 'fname': { 
           if (this.fNameInput.valid == true)
           {
-            console.log("is valid");
             this.employer.MgrFName = this.fNameInput.value;
             
           }
           else{
-            console.log("is not valid");
             this.changeEditMode(editStr);
             return;
           } 
@@ -218,12 +214,10 @@ currentMap = new Map<string, boolean>([
         case 'lname': { 
           if (this.lNameInput.valid == true)
           {
-            console.log("is valid");
             this.employer.MgrLName = this.lNameInput.value;
             
           }
           else{
-            console.log("is not valid");
             this.changeEditMode(editStr);
             return;
           } 
@@ -346,7 +340,6 @@ currentMap = new Map<string, boolean>([
   }
 
   getSettings(){
-    console.log("in getsett, empindex is " + this.currentEmployerIndex);
     if (this.data.employers != null)
       this.employer = this.data.employers[this.currentEmployerIndex];
 

@@ -251,7 +251,7 @@ saveAs(selectedItem: string){
                 })
             })
         }
-    });;
+    });
 }
 
 async saveHelper(selectedItem : string){

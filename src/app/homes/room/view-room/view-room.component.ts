@@ -3,6 +3,7 @@ import { AbstractControl, FormControl, Validators, ɵInternalFormsSharedModule }
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IHome } from 'src/app/interfaces/Homes';
+import { IProspect } from 'src/app/interfaces/Prospect';
 import {IEmployer, SalaryType} from '../../../interfaces/Employer';
 import {IRoom} from '../../../interfaces/Rooms';
 import {RoomsService} from '../../../services/room.service';
@@ -315,10 +316,52 @@ export class ViewRoomComponent {
       }
     }).afterClosed().subscribe((deleteRoom: boolean)=> {
       if (deleteRoom == true ){
+        console.log("removing room");
+        // Should first check if prospects are assigned to this room, so they can be deleted if necessary
+        
+        this.roomsService.getProspectsAssignedToRoom(this.room.Id).then((prospects: Iterable<IProspect>) => {
+          console.log("prospects from query call is " + JSON.stringify(prospects))
+          if (prospects == null || (<any[]>prospects).length == 0){
+            // If there are no prospects assigned, it's safe to remove the room
+            this.roomsService.removeRoom(this.room.Id).then(() => {
+              this.dialog.open(DialogDataRRMSDialog, {
+                data: {
+                  inError: true,
+                  title: "Room Deleted",
+                  contentSummary: `Room ${this.room.RoomName} has been Removed`,
+                  errorItems: []
+                }
+              }).afterClosed().subscribe(result => {
+                this.home.Rooms = this.rooms;
+                this.dialogRef.close(this.home); // this needs to return a null
+              });
+          })
+            .catch((err) =>{
+              console.log("error on removal: " + err);
+            })
+          }
+          else{
+            let stringItems : string[] = new Array<string>();
+            Array.from(prospects).forEach(item => {
+              stringItems.push(item.FName + " " + item.LName);
+            })
+            console.log("Before opening error dialog, stringItems is " + JSON.stringify(stringItems))
+            this.dialog.open(DialogDataRRMSDialog, {
+              data: {
+                inError: true,
+                title: "Unable To Delete",
+                contentSummary: `The following prospects are linked to this room and will need to be either removed or linked to a different room:`,
+                errorItems: stringItems,
+              }
+            });
+          }
+        })
+        /*
         this.roomsService.removeRoom(this.room.Id);
         this.rooms = Array.from(this.home.Rooms).filter(rm => rm.Id != this.room.Id);
         this.home.Rooms = this.rooms;
         this.dialogRef.close(this.home); // this needs to return a null
+        */
       }
     });
 

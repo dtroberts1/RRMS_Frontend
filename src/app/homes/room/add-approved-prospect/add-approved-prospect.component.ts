@@ -85,7 +85,7 @@ export class AddApprovedProspectComponentModal implements OnInit {
           data: {
             inError: false,
             title: "Prospect Saved",
-            contentSummary: "This prospect has been Saved! Would you like to proceed to add a lease for this prospect?",
+            contentSummary: "This prospect has been saved! Would you like to proceed to add a lease for this prospect?",
             errorItems: []
           }
           }).afterClosed().subscribe((addRooms: boolean)=> {

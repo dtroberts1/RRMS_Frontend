@@ -41,14 +41,12 @@ export class AddRoomComponent implements OnInit {
           this.homeID = routeParams.id;
           this.nickname = routeParams.nickname;
           this.nbrRooms = routeParams.nbrRooms;
-
         }
       });
     }
   }
 
   saveRoom(){ // Creates room
-    console.log("about to save with HomeId = ", this.homeID);
     this.roomsService.createRoom({
       RoomName: this.nickname,
       Dimensions: `${this.dimension1.value} x ${this.dimension2.value}`,

@@ -140,11 +140,11 @@ export class AddProspectComponent implements OnInit {
             data: {
               inError: false,
               title: "Prospect Saved",
-              contentSummary: "This Prospect has been Added",
+              contentSummary: "This prospect has been added.",
               errorItems: []
             }
-            }).afterClosed().subscribe((addRooms: boolean)=> {
-              this.router.navigate(['./dashboard/', { outlets: { view: ['homes'] } }]);
+            }).afterClosed().subscribe(() => {
+              this.router.navigate(['./dashboard/', { outlets: { view: ['prospects'] } }]);
   
   
             });

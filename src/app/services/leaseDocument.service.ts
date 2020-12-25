@@ -16,6 +16,7 @@ export class LeaseDocumentService{
 
     constructor(private http: HttpClient){
     }
+    
     async getDocument(fileName: string, prospectId: number){
       // Get token from localStorage
       this.currToken = JSON.parse(localStorage.getItem('user'));

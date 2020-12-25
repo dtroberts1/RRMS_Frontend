@@ -74,44 +74,54 @@ export class RemoveRoomModalComponent implements OnInit {
   removeRoom(){
     console.log("removing room");
     // Should first check if prospects are assigned to this room, so they can be deleted if necessary
-    
-    this.roomService.getProspectsAssignedToRoom(this.selectedRoom.Id).then((prospects: Iterable<IProspect>) => {
-      console.log("prospects from query call is " + JSON.stringify(prospects))
-      if (prospects == null || (<any[]>prospects).length == 0){
-        // If there are no prospects assigned, it's safe to remove the room
-        this.roomService.removeRoom(this.selectedRoom.Id).then(() => {
+        this.dialog.open(DialogDataRRMSDialog, {
+      data: {
+        inError: false,
+        title: "Delete - Are you sure?",
+        contentSummary: "Are you sure you would like to delete this room?",
+        errorItems: []
+      }
+    }).afterClosed().subscribe((deleteRoom: boolean)=> {
+      if (deleteRoom == true ){
+        this.roomService.getProspectsAssignedToRoom(this.selectedRoom.Id).then((prospects: Iterable<IProspect>) => {
+        console.log("prospects from query call is " + JSON.stringify(prospects))
+        if (prospects == null || (<any[]>prospects).length == 0){
+          // If there are no prospects assigned, it's safe to remove the room
+          this.roomService.removeRoom(this.selectedRoom.Id).then(() => {
+            this.dialog.open(DialogDataRRMSDialog, {
+              data: {
+                inError: true,
+                title: "Room Deleted",
+                contentSummary: `Room ${this.selectedRoom.RoomName} has been Removed`,
+                errorItems: []
+              }
+            }).afterClosed().subscribe(result => {
+              this.dialogRef.close(true);
+            });
+                    })
+          .catch((err) =>{
+            console.log("error on removal: " + err);
+          })
+        }
+        else{
+          let stringItems : string[] = new Array<string>();
+          Array.from(prospects).forEach(item => {
+            stringItems.push(item.FName + " " + item.LName);
+          })
+          console.log("Before opening error dialog, stringItems is " + JSON.stringify(stringItems))
           this.dialog.open(DialogDataRRMSDialog, {
             data: {
               inError: true,
-              title: "Room Deleted",
-              contentSummary: `Room ${this.selectedRoom.RoomName} has been Removed`,
-              errorItems: []
+              title: "Unable To Delete",
+              contentSummary: `The following prospects are linked to this room and will need to be either removed or linked to a different room:`,
+              errorItems: stringItems,
             }
-          }).afterClosed().subscribe(result => {
-            this.dialogRef.close(true);
           });
-                  })
-        .catch((err) =>{
-          console.log("error on removal: " + err);
-        })
-      }
-      else{
-        let stringItems : string[] = new Array<string>();
-        Array.from(prospects).forEach(item => {
-          stringItems.push(item.FName + " " + item.LName);
-        })
-        console.log("Before opening error dialog, stringItems is " + JSON.stringify(stringItems))
-        this.dialog.open(DialogDataRRMSDialog, {
-          data: {
-            inError: true,
-            title: "Unable To Delete",
-            contentSummary: `The following prospects are linked to this room and will need to be either removed or linked to a different room:`,
-            errorItems: stringItems,
-          }
-        });
-      }
-    })
-  }
+        }
+      })
+    }
+  });
+}
   updateRoom(){
 
   }

@@ -21,6 +21,7 @@ export interface IDocumentProspectDto{
     MoveInDate: Date,
     MoveOutDate: Date,
     TermType: TermType,
+    LatestDocDelivery: Date,
 }
 enum ProspectStatus {
     approved = 1,

@@ -1,4 +1,9 @@
-label {
-   /* font-family: "Roboto", "Segoe UI", "GeezaPro", "DejaVu Serif", "sans-serif", "-apple-system", "BlinkMacSystemFont";*/
-   color: red !important;
+.leaseTemplateLabel {
+    font-family: "Roboto", "Segoe UI", "GeezaPro", "DejaVu Serif", "sans-serif", "-apple-system", "BlinkMacSystemFont";
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.143em;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
 }
