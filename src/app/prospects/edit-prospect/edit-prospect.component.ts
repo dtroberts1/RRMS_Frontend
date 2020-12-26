@@ -524,6 +524,7 @@ statusList:Iterable<IStatus> = [
         LandlordId: this.prospect.LandlordId,
      }
      }
+     console.log("Before updating prospect is "+ JSON.stringify(this.prospect))
      return new Promise((resolve, reject) => {
        this.prospectService.updateProspect(this.prospect).then(() => {
         this.prospects[this.currentProspectIndex] = this.prospect;

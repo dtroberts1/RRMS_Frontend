@@ -1,8 +1,6 @@
 <ejs-splitbutton (click)="sendMainBtnSelected()" (select)="sendBtnItemSelected($event)"  content="Send" [items]='sendSplitBtnItems'></ejs-splitbutton>
 <ejs-splitbutton (click)="templatesMainBtnSelected()" (select)="serverBtnItemSelected($event)"  content="Leases" [items]='serverSplitBtnItems'></ejs-splitbutton>
 <ejs-splitbutton (click)="rlaBtnClicked()" (select)="rlaBtnItemSelected($event)" content="Templates" [items]='rlaSplitBtnItems'></ejs-splitbutton>
-<ejs-splitbutton (select)="mergeTagsBtnItemSelected($event)" content="Merge Tags" [items]='mergeTagsSplitBtnItems'></ejs-splitbutton>
-<button ejs-button (click)="saveAsDocx()" >Save</button>
 <label 
 style=
     "font-family: 'Roboto', 'Segoe UI', 'GeezaPro', 'DejaVu Serif', 'sans-serif', '-apple-system', 'BlinkMacSystemFont';

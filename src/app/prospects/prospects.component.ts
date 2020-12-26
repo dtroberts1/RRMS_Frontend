@@ -1,9 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {ProspectService} from '../services/prospect.service';
 import {IProspect} from '../interfaces/Prospect';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EditProspectComponent } from './edit-prospect/edit-prospect.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { SelectionModel } from '@angular/cdk/collections';
+import { DialogDataRRMSDialog } from '../dialog-data/dialog-data.component';
 
 export interface PeriodicElement {
   name: string;
@@ -20,9 +22,10 @@ export interface PeriodicElement {
 export class ProspectsComponent implements OnInit {
   //@Input() myHome: IHome;
   //myHome: IHome;
-  displayedColumns: string[] = ['actions','FName', 'LName', 'MdInit', 'RoomId', 'Move-in', 'Move-out', 'EmailAddress','SSN', 'status'];
+  displayedColumns: string[] = ['FName', 'LName', 'MdInit', 'RoomId', 'Move-in', 'Move-out', 'EmailAddress','SSN', 'status'];
   dataSource : Array<IProspect>;
-  
+  selection = new SelectionModel<IProspect>(false, []);
+
   @Input() prospect : IProspect;
 
   latitude: number;
@@ -32,6 +35,7 @@ export class ProspectsComponent implements OnInit {
   constructor(
     private prospectService: ProspectService,
     public dialog: MatDialog, 
+    private router: Router,
     ) { 
       if (this.prospectService != null)
       {
@@ -56,27 +60,59 @@ export class ProspectsComponent implements OnInit {
     
   }
 
+  goToAddProspect(){
+    this.router.navigate(['./dashboard/', { outlets: { view: ['prospects','add-prospect'] } }]);
+  }
+
+  removeProspect(){
+    if (this.selection != null && this.selection.selected[0] != null)
+    {
+      this.dialog.open(DialogDataRRMSDialog, {
+        data: {
+          inError: false,
+          title: "Delete - Are you sure?",
+          contentSummary: "Are you sure you would like to delete this prospect?",
+          errorItems: []
+        }
+      }).afterClosed().subscribe((deleteProspect: boolean)=> {
+        if (deleteProspect == true ){
+          this.prospectService.removeProspect(this.selection.selected[0].Id);
+          this.prospects = Array.from(this.prospects).filter(prevRental => prevRental.Id != this.selection.selected[0].Id);
+          this.dataSource = Array.from(this.prospects);
+        }
+      });
+    }
+  }
+  modifyProspect(){
+    if (this.selection != null && this.selection.selected[0] != null)
+    {
+      this.dialog.open(EditProspectComponent, {
+        data: {
+          prospects: this.prospects,
+          prospectIndex : this.dataSource.indexOf(this.selection.selected[0]),
+        },
+        width:'65%',
+        height: '65%'
+      }).afterClosed().subscribe((updatedProspectList: Iterable<IProspect>) => {
+        // The EditProspectComponent shouldn't return back anything.
+        console.log("updated list: " + JSON.stringify(updatedProspectList))
+        if ((<any[]>updatedProspectList).length > 0)      
+        {
+          this.prospects = updatedProspectList;
+          this.dataSource = Array.from(this.prospects);
+        }
+        else{
+          this.prospects = null;
+          this.dataSource = [];
+        }
+      });
+    }
+    else{
+    }
+  }
+
   editProspect(prosIndex: number){
-    this.dialog.open(EditProspectComponent, {
-      data: {
-        prospects: this.prospects,
-        prospectIndex : prosIndex,
-      },
-      width:'65%',
-      height: '65%'
-    }).afterClosed().subscribe((updatedProspectList: Iterable<IProspect>) => {
-      // The EditProspectComponent shouldn't return back anything.
-      console.log("updated list: " + JSON.stringify(updatedProspectList))
-      if ((<any[]>updatedProspectList).length > 0)      
-      {
-        this.prospects = updatedProspectList;
-        this.dataSource = Array.from(this.prospects);
-      }
-      else{
-        this.prospects = null;
-        this.dataSource = [];
-      }
-    });
+
   }
 
 }

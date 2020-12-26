@@ -106,21 +106,6 @@ export class LeasesComponent {
     }
     @ViewChild('document_editor')
     public documentEditorContainerComponent: DocumentEditorContainerComponent;
-    
-    public saveAsDocx() :void {
-        let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
-        this.dialog.open(LeasesPopupModal, {
-            data: {
-                title: "Residential Lease Agreement",
-                contentSummary: "Chose State for RLA",
-                content: this.states,
-              }
-        }).afterClosed().subscribe((selectedState: string) => {
-            if (selectedState != null){
-                this.templateService.createTemplate(sfdt, selectedState);
-            }
-        });
-    }
   
   ngOnInit(){
   this.uiReady = true;
@@ -370,15 +355,6 @@ async serverBtnItemSelected(args: MenuEventArgs){
         });
     }
  }
- mergeTagsBtnItemSelected(args: MenuEventArgs){
-     let selectedItem: string = args.item.text;
-     if (selectedItem == 'Insert'){
-        console.log(selectedItem + " has been selected");
-     }
-     else if(selectedItem == 'Remove'){
-        console.log(selectedItem + " has been selected");
-     }
-}
 closeSplitBtn(){
     console.log("closing split button");
 }

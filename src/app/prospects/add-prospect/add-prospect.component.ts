@@ -134,6 +134,7 @@ export class AddProspectComponent implements OnInit {
           TermType: this.termTypeMap.get(this.termType.toString()),
           LandlordId: -1,
         }
+        
         this.prospectService.saveProspect(pros).then(() => {
           (<any[]>this.prospectService.prospects).push(pros);
           this.dialog.open(DialogDataRRMSDialog, {

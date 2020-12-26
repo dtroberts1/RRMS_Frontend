@@ -22,6 +22,42 @@
   /*float:left; */
   overflow:auto;
 }
+#table-container{
+  max-height:500px;
+  overflow-y:auto;
+}
 table {
   width: 100%;
+}
+.button-container {
+  display: flex;
+  justify-content: space-around;  
+  margin-top: 10px;
+}
+  .flex-items {  
+      margin: 10px;  
+  }  
+
+button.link {
+    background: transparent;
+    color: blue;
+    border: none;
+    outline: 0;
+    text-decoration: underline;
+}
+button.link:hover {
+    color: firebrick;
+    cursor: pointer;
+}
+.mat-row.hovered {
+  background: #95dfb8;
+  cursor: pointer;
+}
+
+.mat-row.highlighted {
+  background: #f7cf1b/* #999;*/
+}
+th{
+  color: cadetblue;
+  width: 100px !important;
 }
