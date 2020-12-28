@@ -19,6 +19,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatTableModule} from '@angular/material/table';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSelectModule} from '@angular/material/select';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 const MaterialComponents = [
@@ -41,6 +42,7 @@ const MaterialComponents = [
   MatTableModule,
   MatTooltipModule,
   MatSelectModule,
+  MatSlideToggleModule,
 ];
 
 

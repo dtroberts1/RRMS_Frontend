@@ -43,6 +43,7 @@ export class EditProspectComponent {
   selectedStatus : ProspectStatus;
   homeImagePath : string;
   room : IRoom;
+  uiEditMode : boolean;
   origSettings : IProspect;
   prospects : Iterable<IProspect>;
   editFName: boolean = false;
@@ -109,6 +110,7 @@ statusList:Iterable<IStatus> = [
     
     this.prospects = data.prospects;
     this.currentProspectIndex = data.prospectIndex;
+    this.uiEditMode = data.uiEditMode;
     if (this.prospects != null)
     {
       this.setOrigSettings(this.data.prospects[this.currentProspectIndex]);
@@ -504,6 +506,8 @@ statusList:Iterable<IStatus> = [
 
   updateProspect(){
      //TODO
+     console.log("Before updating prospect is "+ JSON.stringify(this.prospect))
+
      if (this.prospect != null){
       this.prospect = {
         Id : this.prospect.Id,
@@ -524,7 +528,6 @@ statusList:Iterable<IStatus> = [
         LandlordId: this.prospect.LandlordId,
      }
      }
-     console.log("Before updating prospect is "+ JSON.stringify(this.prospect))
      return new Promise((resolve, reject) => {
        this.prospectService.updateProspect(this.prospect).then(() => {
         this.prospects[this.currentProspectIndex] = this.prospect;
@@ -538,6 +541,7 @@ statusList:Iterable<IStatus> = [
            }
            }).afterClosed().subscribe((addRooms: boolean)=> {
              this.fieldsModified = false;
+             this.prospectService.prospects = null; // This should force prospects to reload
              resolve(true);
            });
        }).catch((err) => {

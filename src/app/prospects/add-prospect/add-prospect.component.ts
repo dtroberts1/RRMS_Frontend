@@ -145,9 +145,8 @@ export class AddProspectComponent implements OnInit {
               errorItems: []
             }
             }).afterClosed().subscribe(() => {
+              this.prospectService.prospects = null; // Clear cached prospects
               this.router.navigate(['./dashboard/', { outlets: { view: ['prospects'] } }]);
-  
-  
             });
         }).catch((err) => {
           console.log(err);

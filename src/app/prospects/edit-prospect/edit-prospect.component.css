@@ -28,10 +28,10 @@
   
   
   .editLinks{
-    color:orange; cursor:pointer;
+    color:green; cursor:pointer;
   }
   .editLinks:hover{
-    color:green;
+    color:lightblue;
   }
   .lowerViewRoomButtons{
     color:blue;
@@ -53,4 +53,19 @@
   #deleteBtn:hover{
     color:white;
     background-color:Red;
+  }
+
+  .example-h2 {
+    margin: 10px;
+  }
+  
+  .example-section {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+  }
+  
+  .example-margin {
+    margin: 10px;
   }

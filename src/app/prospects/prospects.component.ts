@@ -41,6 +41,7 @@ export class ProspectsComponent implements OnInit {
       {
         if (this.prospectService.prospects == null)
         {
+          console.log("this.prospectService.prospects is null");
           this.prospectService.getProspects()?.then((prospects: Iterable<IProspect>) => {
             this.prospects = prospects;
             this.dataSource = Array.from(this.prospects);
@@ -49,6 +50,7 @@ export class ProspectsComponent implements OnInit {
           });
         }
         else{
+          console.log("this.prospectService.prospects is " + JSON.stringify(this.prospectService?.prospects));
           this.prospects = this.prospectService?.prospects;
           // If prospects are already in, retrieve them
           this.dataSource = Array.from(this.prospects);
@@ -83,16 +85,17 @@ export class ProspectsComponent implements OnInit {
       });
     }
   }
-  modifyProspect(){
+  modifyProspect(isEditMode: boolean){
     if (this.selection != null && this.selection.selected[0] != null)
     {
       this.dialog.open(EditProspectComponent, {
         data: {
           prospects: this.prospects,
           prospectIndex : this.dataSource.indexOf(this.selection.selected[0]),
+          uiEditMode: isEditMode,
         },
-        width:'65%',
-        height: '65%'
+        width:'730px',
+        height: '600px'
       }).afterClosed().subscribe((updatedProspectList: Iterable<IProspect>) => {
         // The EditProspectComponent shouldn't return back anything.
         console.log("updated list: " + JSON.stringify(updatedProspectList))

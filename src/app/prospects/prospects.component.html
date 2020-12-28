@@ -1,5 +1,5 @@
 <div>
-    <div id="table-container" style="border-width:3px; border-color: blue; border-style:solid;">
+    <div id="table-container">
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
             <ng-container matColumnDef="FName">
               <th mat-header-cell *matHeaderCellDef> First Name</th>
@@ -60,8 +60,9 @@
           </table>
     </div>
     <div class="button-container">
+      <button (click)="modifyProspect(false)" class="flex-items" style="background-color:blue; color:white;" mat-button >View</button>
+      <button (click)="modifyProspect(true)" class="flex-items" style="background-color:blue; color:white;" mat-button >Modify</button>
       <button (click)="removeProspect()" class="flex-items" style="background-color:blue; color:white" mat-button >Remove</button> <!-- or resend-->
       <button (click)="goToAddProspect()" class="flex-items" style="background-color:blue; color:white;" mat-button >Add</button>
-      <button (click)="modifyProspect()" class="flex-items" style="background-color:blue; color:white;" mat-button >Modify</button>
     </div>
 </div>

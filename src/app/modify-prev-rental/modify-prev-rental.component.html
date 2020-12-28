@@ -4,114 +4,113 @@
       <table>
         <tr>
           <td width="90%">
-            <h3 style="white-space: nowrap;"><label>Street Address (1):&nbsp;&nbsp;</label>
-              <span *ngIf="addMode == false && editAddressStreet1 == false">{{prevRental.AddressStreet1}}</span>
-              <span *ngIf="addMode == true || editAddressStreet1 == true">
-                <input size="25" (blur)="updateInput('stadd1')" style="white-space: nowrap;" maxlength="25" required placeholder="113 Michigan Ave" 
+            <label><h3 style="white-space: nowrap; color:blue;">Street Address (1):</h3></label>
+            <span *ngIf="addMode == false && editAddressStreet1 == false">{{prevRental.AddressStreet1}}</span>
+              <mat-form-field *ngIf="addMode == true || editAddressStreet1 == true">
+                <input matInput size="25" (blur)="updateInput('stadd1')"maxlength="25" required placeholder="113 Michigan Ave" 
                 [formControl]="addressStreet1Input">
-                <mat-icon *ngIf="addressStreet1Input.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+                <mat-icon *ngIf="addressStreet1Input.invalid == false" matSuffix></mat-icon>
                 <mat-error *ngIf="addressStreet1Input.invalid">{{getInputErrorMessage(addressStreet1Input)}}</mat-error>
-              </span>
-            </h3>
+              </mat-form-field>
           </td>
           <td width="10%">
-            <h3 *ngIf="editAddressStreet1 == false" class="editLinks" (click)="changeEditMode('stadd1')">Edit</h3>
+            <h3 *ngIf="editAddressStreet1 == false && addMode == false" class="editLinks" (click)="changeEditMode('stadd1')">Modify</h3>
           </td>
         </tr>
         <tr>
           <td width="90%">
             <h3 style="white-space: nowrap;"><label>Street Address (2):&nbsp;&nbsp;</label>
               <span *ngIf="addMode == false && editAddressStreet2 == false">{{prevRental.AddressStreet2}}</span>
-              <span *ngIf="addMode == true || editAddressStreet2 == true">
-                <input size="25" (blur)="updateInput('stadd2')" style="white-space: nowrap;" maxlength="25" required placeholder="Suite #221" 
+              <mat-form-field *ngIf="addMode == true || editAddressStreet2 == true">
+                <input matInput size="25" (blur)="updateInput('stadd2')" style="white-space: nowrap;" maxlength="25" required placeholder="Suite #221" 
                 [formControl]="addressStreet2Input">
                 <mat-icon *ngIf="addressStreet2Input.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
                 <mat-error *ngIf="addressStreet2Input.invalid">{{getInputErrorMessage(addressStreet2Input)}}</mat-error>
-              </span>
+              </mat-form-field>
             </h3>
           </td>
           <td width="10%">
-            <h3 *ngIf="editAddressStreet2 == false" class="editLinks" (click)="changeEditMode('stadd2')">Edit</h3>
+            <h3 *ngIf="editAddressStreet2 == false && addMode == false" class="editLinks" (click)="changeEditMode('stadd2')">Modify</h3>
           </td>
         </tr>
         <tr>
           <td width="90%">
             <h3 style="white-space: nowrap;"><label>City:&nbsp;&nbsp;</label>
               <span *ngIf="addMode == false && editCity == false">{{prevRental.AddressCity}}</span>
-              <span *ngIf="addMode == true || editCity == true">
-                <input size="25" (blur)="updateInput('city')" style="white-space: nowrap;" maxlength="25" required placeholder="Austin" 
+              <mat-form-field *ngIf="addMode == true || editCity == true">
+                <input matInput size="25" (blur)="updateInput('city')" style="white-space: nowrap;" maxlength="25" required placeholder="Austin" 
                 [formControl]="cityInput">
                 <mat-icon *ngIf="cityInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
                 <mat-error *ngIf="cityInput.invalid">{{getInputErrorMessage(cityInput)}}</mat-error>
-              </span>
+              </mat-form-field>
             </h3>
           </td>
           <td width="10%">
-            <h3 *ngIf="editCity == false" class="editLinks" (click)="changeEditMode('city')">Edit</h3>
+            <h3 *ngIf="editCity == false && addMode == false" class="editLinks" (click)="changeEditMode('city')">Modify</h3>
           </td>
         </tr>
         <tr>
           <td width="90%">
             <h3 style="white-space: nowrap;"><label>State:&nbsp;&nbsp;</label>
               <span *ngIf="addMode == false && editState == false">{{prevRental.AddressState}}</span>
-              <span *ngIf="addMode == true || editState == true">
-                <input size="25" (blur)="updateInput('state')" style="white-space: nowrap;" maxlength="25" required placeholder="TX" 
+              <mat-form-field *ngIf="addMode == true || editState == true">
+                <input matInput size="25" (blur)="updateInput('state')" style="white-space: nowrap;" maxlength="25" required placeholder="TX" 
                 [formControl]="stateInput">
                 <mat-icon *ngIf="stateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
                 <mat-error *ngIf="stateInput.invalid">{{getInputErrorMessage(stateInput)}}</mat-error>
-              </span>
+              </mat-form-field>
             </h3>
           </td>
           <td width="10%">
-            <h3 *ngIf="editState == false" class="editLinks" (click)="changeEditMode('state')">Edit</h3>
+            <h3 *ngIf="editState == false && addMode == false" class="editLinks" (click)="changeEditMode('state')">Modify</h3>
           </td>
         </tr>
         <tr>
           <td width="90%">
             <h3 style="white-space: nowrap;"><label>Zipcode:&nbsp;&nbsp;</label>
               <span *ngIf="addMode == false && editZipcode == false">{{prevRental.AddressZipCode}}</span>
-              <span *ngIf="addMode == true || editZipcode == true">
-                <input size="25" (blur)="updateInput('zipcode')" style="white-space: nowrap;" maxlength="25" required placeholder="73301" 
+              <mat-form-field *ngIf="addMode == true || editZipcode == true">
+                <input matInput size="25" (blur)="updateInput('zipcode')" style="white-space: nowrap;" maxlength="25" required placeholder="73301" 
                 [formControl]="zipcodeInput">
                 <mat-icon *ngIf="zipcodeInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
                 <mat-error *ngIf="zipcodeInput.invalid">{{getInputErrorMessage(zipcodeInput)}}</mat-error>
-              </span>
+              </mat-form-field>
             </h3>
           </td>
           <td width="10%">
-            <h3 *ngIf="editZipcode == false" class="editLinks" (click)="changeEditMode('zipcode')">Edit</h3>
+            <h3 *ngIf="editZipcode == false && addMode == false" class="editLinks" (click)="changeEditMode('zipcode')">Modify</h3>
           </td>
         </tr>
         <tr>
           <td width="90%">
             <h3 style="white-space: nowrap;"><label>Move-in Date:&nbsp;&nbsp;</label>
               <span *ngIf="addMode == false && editStartDate == false">{{prevRental.StartDate}}</span>
-              <span *ngIf="addMode == true || editStartDate == true">
-                <input size="25" (blur)="updateInput('start')" style="white-space: nowrap;" maxlength="25" required placeholder="1/1/21" 
+              <mat-form-field *ngIf="addMode == true || editStartDate == true">
+                <input matInput size="25" (blur)="updateInput('start')" style="white-space: nowrap;" maxlength="25" required placeholder="1/1/21" 
                 [formControl]="startDateInput">
                 <mat-icon *ngIf="startDateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
                 <mat-error *ngIf="startDateInput.invalid">{{getInputErrorMessage(startDateInput)}}</mat-error>
-              </span>
+              </mat-form-field>
             </h3>
           </td>
           <td width="10%">
-            <h3 *ngIf="editStartDate == false" class="editLinks" (click)="changeEditMode('start')">Edit</h3>
+            <h3 *ngIf="editStartDate == false && addMode == false" class="editLinks" (click)="changeEditMode('start')">Modify</h3>
           </td>
         </tr>
         <tr>
           <td width="90%">
             <h3 style="white-space: nowrap;"><label>Move-out Date:&nbsp;&nbsp;</label>
               <span *ngIf="addMode == false && editEndDate == false">{{prevRental.EndDate}}</span>
-              <span *ngIf="addMode == true || editEndDate == true">
-                <input size="25" (blur)="updateInput('end')" style="white-space: nowrap;" maxlength="25" required placeholder="1/1/22" 
+              <mat-form-field *ngIf="addMode == true || editEndDate == true">
+                <input matInput size="25" (blur)="updateInput('end')" style="white-space: nowrap;" maxlength="25" required placeholder="1/1/22" 
                 [formControl]="endDateInput">
                 <mat-icon *ngIf="endDateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
                 <mat-error *ngIf="endDateInput.invalid">{{getInputErrorMessage(endDateInput)}}</mat-error>
-              </span>
+              </mat-form-field>
             </h3>
           </td>
           <td width="10%">
-            <h3 *ngIf="editEndDate == false" class="editLinks" (click)="changeEditMode('end')">Edit</h3>
+            <h3 *ngIf="editEndDate == false && addMode == false" class="editLinks" (click)="changeEditMode('end')">Modify</h3>
           </td>
         </tr>
       </table>
@@ -122,32 +121,32 @@
         <td width="90%">
           <h3 style="white-space: nowrap;"><label>Landlord First Name:&nbsp;&nbsp;</label>
             <span *ngIf="addMode == false && editFName == false">{{prevRental.PrevLandlordFName}}</span>
-            <span *ngIf="addMode == true || editFName == true">
-              <input size="25" (blur)="updateInput('fname')" style="white-space: nowrap;" maxlength="25" required placeholder="Blake" 
+            <mat-form-field *ngIf="addMode == true || editFName == true">
+              <input matInput size="25" (blur)="updateInput('fname')" style="white-space: nowrap;" maxlength="25" required placeholder="Blake" 
               [formControl]="fNameInput">
               <mat-icon *ngIf="fNameInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
               <mat-error *ngIf="fNameInput.invalid">{{getInputErrorMessage(fNameInput)}}</mat-error>
-            </span>
+            </mat-form-field>
           </h3>
         </td>
         <td width="10%">
-          <h3 *ngIf="editFName == false" class="editLinks" (click)="changeEditMode('fname')">Edit</h3>
+          <h3 *ngIf="editFName == false && addMode == false" class="editLinks" (click)="changeEditMode('fname')">Modify</h3>
         </td>
       </tr>
       <tr>
           <td width="90%">
             <h3 style="white-space: nowrap;"><label>Landlord Last Name:&nbsp;&nbsp;</label>
               <span *ngIf="addMode == false && editLName == false">{{prevRental.PrevLandlordLName}}</span>
-              <span *ngIf="addMode == true || editLName == true">
-                <input size="25" (blur)="updateInput('lname')" style="white-space: nowrap;" maxlength="25" required placeholder="Patterson" 
+              <mat-form-field *ngIf="addMode == true || editLName == true">
+                <input matInput size="25" (blur)="updateInput('lname')" style="white-space: nowrap;" maxlength="25" required placeholder="Patterson" 
                 [formControl]="lNameInput">
                 <mat-icon *ngIf="lNameInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
                 <mat-error *ngIf="lNameInput.invalid">{{getInputErrorMessage(lNameInput)}}</mat-error>
-              </span>
+              </mat-form-field>
             </h3>
           </td>
           <td width="10%">
-            <h3 *ngIf="editLName == false" class="editLinks" (click)="changeEditMode('lname')">Edit</h3>
+            <h3 *ngIf="editLName == false && addMode == false" class="editLinks" (click)="changeEditMode('lname')">Modify</h3>
           </td>
       </tr>
       <tr>
@@ -155,32 +154,32 @@
           <td width="90%">
             <h3 style="white-space: nowrap;"><label>Previous Landlord's Email Address:&nbsp;&nbsp;</label>
               <span *ngIf="addMode == false && editEmail == false">{{prevRental.PrevLandlordEmailAddress}}</span>
-              <span *ngIf="addMode == true || editEmail == true">
-                <input size="25" (blur)="updateInput('email')" style="white-space: nowrap;" maxlength="25" required placeholder="bp@email.com" 
+              <mat-form-field *ngIf="addMode == true || editEmail == true">
+                <input matInput size="25" (blur)="updateInput('email')" style="white-space: nowrap;" maxlength="25" required placeholder="bp@email.com" 
                 [formControl]="emailInput">
                 <mat-icon *ngIf="emailInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
                 <mat-error *ngIf="emailInput.invalid">{{getInputErrorMessage(emailInput)}}</mat-error>
-              </span>
+              </mat-form-field>
             </h3>
           </td>
           <td width="10%">
-            <h3 *ngIf="editEmail == false" class="editLinks" (click)="changeEditMode('email')">Edit</h3>
+            <h3 *ngIf="editEmail == false && addMode == false" class="editLinks" (click)="changeEditMode('email')">Modify</h3>
           </td>
         </tr>
         <tr>
             <td width="90%">
               <h3 style="white-space: nowrap;"><label>Phone Number:&nbsp;&nbsp;</label>
                 <span *ngIf="addMode == false && editPhone == false">{{prevRental.PhoneNumber}}</span>
-                <span *ngIf="addMode == true || editPhone == true">
-                  <input size="30" (blur)="updateInput('phone')" style="white-space: nowrap;" maxlength="30" required placeholder="111-222-3333" 
+                <mat-form-field *ngIf="addMode == true || editPhone == true">
+                  <input matInput size="30" (blur)="updateInput('phone')" style="white-space: nowrap;" maxlength="30" required placeholder="111-222-3333" 
                   [formControl]="phoneInput">
                   <mat-icon *ngIf="phoneInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
                   <mat-error *ngIf="phoneInput.invalid">{{getInputErrorMessage(phoneInput)}}</mat-error>
-                </span>
+                </mat-form-field>
               </h3>
             </td>
             <td width="10%">
-              <h3 *ngIf="editPhone == false" class="editLinks" (click)="changeEditMode('phone')">Edit</h3>
+              <h3 *ngIf="editPhone == false && addMode == false" class="editLinks" (click)="changeEditMode('phone')">Modify</h3>
             </td>
           </tr> 
       </table>

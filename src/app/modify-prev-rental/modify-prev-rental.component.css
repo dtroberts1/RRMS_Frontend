@@ -28,10 +28,10 @@
   
   
   .editLinks{
-    color:orange; cursor:pointer;
+    color:green; cursor:pointer;
   }
   .editLinks:hover{
-    color:green;
+    color:lightblue;
   }
   .lowerViewRoomButtons{
     color:blue;
