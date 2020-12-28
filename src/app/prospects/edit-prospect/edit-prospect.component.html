@@ -35,7 +35,7 @@
         <h3 style="white-space: nowrap;"><label>Last Name:&nbsp;&nbsp;</label>
           <span *ngIf="editLName == false">{{prospect.LName}}</span>
           <mat-form-field *ngIf="editLName == true">
-            <input matInput size="25" (blur)="updateInput('lname')" style="white-space: nowrap;" maxlength="25" required placeholder="Mark" 
+            <input matInput size="25" (blur)="updateInput('lname')" style="white-space: nowrap;" maxlength="25" required placeholder="Richards" 
             [formControl]="lNameInput">
             <mat-icon *ngIf="lNameInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
             <mat-error *ngIf="lNameInput.invalid">{{getInputErrorMessage(lNameInput)}}</mat-error>
@@ -51,7 +51,7 @@
         <h3 style="white-space: nowrap;"><label>Middle Initial:&nbsp;&nbsp;</label>
           <span *ngIf="editMdInit == false">{{prospect.MdInit}}</span>
           <mat-form-field *ngIf="editMdInit == true">
-            <input matInput size="1" (blur)="updateInput('mdinit')" style="white-space: nowrap;" maxlength="1" required placeholder="Mark" 
+            <input matInput size="1" (blur)="updateInput('mdinit')" style="white-space: nowrap;" maxlength="1" placeholder="T" 
             [formControl]="mdInitInput">
             <mat-icon *ngIf="mdInitInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
             <mat-error *ngIf="mdInitInput.invalid">{{getInputErrorMessage(mdInitInput)}}</mat-error>
@@ -67,7 +67,7 @@
         <h3 style="white-space: nowrap;"><label>Email Address:&nbsp;&nbsp;</label>
           <span *ngIf="editEmail == false">{{prospect.EmailAddress}}</span>
           <mat-form-field *ngIf="editEmail == true">
-            <input matInput size="30" (blur)="updateInput('email')" style="white-space: nowrap;" maxlength="30" required placeholder="Mark" 
+            <input matInput size="30" (blur)="updateInput('email')" style="white-space: nowrap;" maxlength="30" required placeholder="jrich@yahoo.com" 
             [formControl]="emailInput">
             <mat-icon *ngIf="emailInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
             <mat-error *ngIf="emailInput.invalid">{{getInputErrorMessage(emailInput)}}</mat-error>
@@ -83,7 +83,7 @@
         <h3 style="white-space: nowrap;"><label>Phone Number:&nbsp;&nbsp;</label>
           <span *ngIf="editPhoneNumber == false">{{prospect.PhoneNumber}}</span>
           <mat-form-field *ngIf="editPhoneNumber == true">
-            <input matInput size="30" (blur)="updateInput('phone')" style="white-space: nowrap;" maxlength="30" required placeholder="Mark" 
+            <input matInput size="30" (blur)="updateInput('phone')" style="white-space: nowrap;" maxlength="30" required placeholder="541-555-5555" 
             [formControl]="phoneNumberInput">
             <mat-icon *ngIf="phoneNumberInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
             <mat-error *ngIf="phoneNumberInput.invalid">{{getInputErrorMessage(phoneNumberInput)}}</mat-error>
@@ -115,8 +115,8 @@
           <a *ngIf="hasPrevRentals() == true && uiEditMode == true" class="editLinks" (click)="openPrevRentModifyModal(false)">Modify</a>&nbsp;
           <a *ngIf="uiEditMode == true" class="editLinks" (click)="openPrevRentModifyModal(true)">Add</a>
           <ul>
-            <li style="list-style:none" *ngFor="let prevRental of prospect.PreviousRentals">
-              {{prevRental.AddressStreet1}}
+            <li style="list-style:none; white-space: nowrap;" *ngFor="let prevRental of prospect.PreviousRentals">
+              {{prevRental.AddressStreet1}}{{", "}}{{prevRental.AddressCity}}{{", "}}{{prevRental.AddressState}}
             </li>
           </ul>
         </h3>
@@ -175,7 +175,7 @@
           <h3 style="white-space: nowrap;"><label>Move-in Date:&nbsp;&nbsp;</label>
             <span *ngIf="editMoveinDate == false">{{prospect.MoveInDate}}</span>
             <mat-form-field *ngIf="editMoveinDate == true">
-              <input matInput size="30" (blur)="updateInput('moveindate')" style="white-space: nowrap;" maxlength="30" required placeholder="Mark" 
+              <input matInput size="30" (blur)="updateInput('moveindate')" style="white-space: nowrap;" maxlength="30" required placeholder="1/1/20" 
               [formControl]="moveInDateInput">
               <mat-icon *ngIf="moveInDateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
               <mat-error *ngIf="moveInDateInput.invalid">{{getInputErrorMessage(moveInDateInput)}}</mat-error>
@@ -191,7 +191,7 @@
           <h3 style="white-space: nowrap;"><label>Move-out Date:&nbsp;&nbsp;</label>
             <span *ngIf="editMoveOutDate == false">{{prospect.MoveOutDate}}</span>
             <mat-form-field *ngIf="editMoveOutDate == true">
-              <input matInput size="30" (blur)="updateInput('moveoutdate')" style="white-space: nowrap;" maxlength="30" required placeholder="Mark" 
+              <input matInput size="30" (blur)="updateInput('moveoutdate')" style="white-space: nowrap;" maxlength="30" required placeholder="1/1/22" 
               [formControl]="moveOutDateInput">
               <mat-icon *ngIf="moveOutDateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
               <mat-error *ngIf="moveOutDateInput.invalid">{{getInputErrorMessage(moveOutDateInput)}}</mat-error>

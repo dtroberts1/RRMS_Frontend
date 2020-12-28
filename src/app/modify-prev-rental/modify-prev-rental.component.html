@@ -9,7 +9,7 @@
               <mat-form-field *ngIf="addMode == true || editAddressStreet1 == true">
                 <input matInput size="25" (blur)="updateInput('stadd1')"maxlength="25" required placeholder="113 Michigan Ave" 
                 [formControl]="addressStreet1Input">
-                <mat-icon *ngIf="addressStreet1Input.invalid == false" matSuffix></mat-icon>
+                <mat-icon *ngIf="addressStreet1Input.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
                 <mat-error *ngIf="addressStreet1Input.invalid">{{getInputErrorMessage(addressStreet1Input)}}</mat-error>
               </mat-form-field>
           </td>
@@ -169,7 +169,7 @@
         <tr>
             <td width="90%">
               <h3 style="white-space: nowrap;"><label>Phone Number:&nbsp;&nbsp;</label>
-                <span *ngIf="addMode == false && editPhone == false">{{prevRental.PhoneNumber}}</span>
+                <span *ngIf="addMode == false && editPhone == false">{{prevRental.PrevLandlordPhoneNumber}}</span>
                 <mat-form-field *ngIf="addMode == true || editPhone == true">
                   <input matInput size="30" (blur)="updateInput('phone')" style="white-space: nowrap;" maxlength="30" required placeholder="111-222-3333" 
                   [formControl]="phoneInput">
