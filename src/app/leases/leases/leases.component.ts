@@ -133,6 +133,26 @@ rlaBtnClicked(){
             }
         });
 }
+
+testBtnClicked(){
+    //this.documentEditorContainerComponent.documentEditor.editorModule.insertText("hereistext");
+    //this.documentEditorContainerComponent.documentEditor.editorModule.insertField('<div>here is text</div>')
+    //this worked->//console.log((Number)(this.documentEditorContainerComponent.documentEditor.editorModule.getSelectionInfo().start.split(';')[2].toString()));
+    this.insertField('CompanyName');
+}
+insertField(fieldName) {
+    let fileName : string = fieldName.replace(/\n/g, '').replace(/\r/g, '').replace(/\r\n/g, '');
+    console.log("fileName is " + fileName);
+    var fieldCode = 'MERGEFIELD  ' + fileName + "  \\* MERGEFORMAT ";
+    console.log("inserting " + fieldCode, '«' + fieldName + '»');
+
+    this.documentEditorContainerComponent.documentEditor.editor.insertField(fieldCode, '«' + fieldName + '»');
+    this.documentEditorContainerComponent.documentEditor.focusIn();
+    this.documentEditorContainerComponent.documentEditor.saveAsBlob("Docx").then(function (blob) {
+        console.log("blob is " + JSON.stringify(blob))
+    });
+
+}
 sendMainBtnSelected(){
   console.log("Email clicked");
 }

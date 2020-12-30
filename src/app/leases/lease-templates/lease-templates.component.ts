@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, ViewChild } from '@angular/core';
 import {TemplateService} from '../../services/template.service';
 import {
-    FormatType, DocumentEditorComponent, DocumentEditorContainerComponent, EditorService, SelectionService, SfdtExportService, ToolbarService, WordExportService, ContentChangeEventArgs
+    FormatType, DocumentEditorComponent, DocumentEditorContainerComponent, EditorService, SelectionService, SfdtExportService, ToolbarService, WordExportService, ContentChangeEventArgs, PositionInfo
 } from '@syncfusion/ej2-angular-documenteditor';
 import { ItemModel, MenuEventArgs } from '@syncfusion/ej2-angular-splitbuttons';
 import { MatDialog } from '@angular/material/dialog';
@@ -221,6 +221,11 @@ rlaBtnClicked(){
  documentChanged(args: ContentChangeEventArgs ){
      this.savedNote = 'Not Saved';
      this.astrisk = "*";
+     //this.documentEditorContainerComponent.documentEditor.editorHistory.
+     //console.log(args.source.editor.history)
+     //let position : PositionInfo = this.documentEditorContainerComponent.documentEditor.selection.getElementPosition()
+     //console.log(this.documentEditorContainerComponent.documentEditor.editorModule.getOffsetValue(this.documentEditorContainerComponent.documentEditor.selection));
+     //console.log(JSON.stringify(this.documentEditorContainerComponent.documentEditor.editorModule.getSelectionInfo().start.split(';')[2]));
 }
 
 saveAs(selectedItem: string){
@@ -324,10 +329,30 @@ async serverBtnItemSelected(args: MenuEventArgs){
      let selectedItem: string = args.item.text;
      if (selectedItem == 'Insert'){
         console.log(selectedItem + " has been selected");
-     }
+        console.log((Number)(this.documentEditorContainerComponent.documentEditor.editorModule.getSelectionInfo().start.split(';')[2].toString()));
+    }
      else if(selectedItem == 'Remove'){
         console.log(selectedItem + " has been selected");
      }
+}
+mergeTagMainBtnClicked(){
+    //this.documentEditorContainerComponent.documentEditor.editorModule.insertText("hereistext");
+    //this.documentEditorContainerComponent.documentEditor.editorModule.insertField('<div>here is text</div>')
+    //this worked->//console.log((Number)(this.documentEditorContainerComponent.documentEditor.editorModule.getSelectionInfo().start.split(';')[2].toString()));
+    this.insertField('stuff');
+}
+insertField(fieldName) {
+    let fileName : string = fieldName.replace(/\n/g, '').replace(/\r/g, '').replace(/\r\n/g, '');
+    console.log("fileName is " + fileName);
+    var fieldCode = 'MERGEFIELD  ' + fileName + "  \\* MERGEFORMAT ";
+    console.log("inserting " + fieldCode, '«' + fieldName + '»');
+
+    this.documentEditorContainerComponent.documentEditor.editor.insertField(fieldCode, '«' + fieldName + '»');
+    this.documentEditorContainerComponent.documentEditor.focusIn();
+    this.documentEditorContainerComponent.documentEditor.saveAsBlob("Docx").then(function (blob) {
+        console.log("blob is " + JSON.stringify(blob))
+    });
+
 }
 closeSplitBtn(){
     console.log("closing split button");
