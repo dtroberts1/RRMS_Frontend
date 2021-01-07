@@ -29,7 +29,7 @@ export class LoginScreenComponent implements OnInit{
         return;
       }
       let result = await this.accountService.login({
-        username : 'rj14564fbb@blm.com',//this.email.value,//"myEmail346346334@email.com", //this.email.value,// "es1@email.com",// "ssdfa2jg@email.com",//this.email.value, //"es1@email.com"
+        username : "myEmail346346334@email.com", //this.email.value,// "es1@email.com",// "ssdfa2jg@email.com",//this.email.value, //"es1@email.com"
         password : 'Sky551er!N#@TG',//this.password.value,//"Sky551er!N#@TG", //this.password.value, //"Sky551er!N#@TG", //this.password.value, //'Sky551er!N#@TG'
         grant_type : "password"
       }).then((response) => {

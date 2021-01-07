@@ -20,6 +20,16 @@
             </mat-select>
         </mat-form-field>
     </div>
+    <div *ngIf="data.contentSummary == 'Choose Merge Tag'" style="float:left;">
+        <mat-form-field appearance="fill">
+            <mat-label>{{data.contentSummary}}</mat-label>
+            <mat-select [(ngModel)]="selected" (selectionChange)="showProductDetails()">
+            <mat-option *ngFor="let mergeTag of data.content; let i = index" [value]="mergeTag">
+                {{mergeTag}}
+            </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
     <div *ngIf="data.title == 'Saved' || data.title == 'Deleted' || data.title == 'Unsaved Changes'" style="float:left;">
         <mat-label style="text-align: center;">{{data.contentSummary}}</mat-label>
     </div>
@@ -36,6 +46,7 @@
         <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="linkRoomToProspect()">Link Room to Prospect</button>
         <button  *ngIf="data.contentSummary == 'Chose State for RLA'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Select</button>
         <button  *ngIf="data.title == 'Load Template'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Load</button>
+        <button  *ngIf="data.title == 'Insert Merge Tag'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Insert</button>
         <button  *ngIf="data.title == 'Delete Template'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Delete</button>
         <button  *ngIf="data.contentSummary == 'Enter Filename (without ext)'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Save</button>
         <button  *ngIf="data.title == 'Saved' || data.title == 'Deleted'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Ok</button>

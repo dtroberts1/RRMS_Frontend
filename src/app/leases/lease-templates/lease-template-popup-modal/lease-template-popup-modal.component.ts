@@ -80,6 +80,9 @@ export class LeaseTemplatePopupModal implements OnInit {
     else if(this.data.title == 'Unsaved Changes'){
       this.dialogRef.close(param);
     }
+    else if(this.data.title == 'Insert Merge Tag'){
+      this.dialogRef.close(this.selected);
+    }
     //this.dialogRef.close(this.selected); // important: returns the id, not the index!!
   }
   showProductDetails(){

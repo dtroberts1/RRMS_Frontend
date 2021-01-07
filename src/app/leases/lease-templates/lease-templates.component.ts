@@ -27,11 +27,50 @@ export class LeaseTemplatesComponent {
     ]
     public mergeTagsSplitBtnItems: ItemModel[] = [
         { text: 'Insert'},
-        { text: 'Remove'},
         ];
         public rlaSplitBtnItems: ItemModel[] = [
             { text: 'Choose State'},
         ]
+        mergeTagKeys : Iterable<string> = [
+            'DateToday',
+            'LandlordName',
+            'LandlordMailingAddress',
+            'TenantNames',
+            'LeaseStartDate',
+            'LeaseEndDate',
+            //eformsToRRMSMap.Add("[#]", "MonthToMonthEndDateNotice");
+            'OtherResidenceType', // Other residence type that is not a house, apartment, or condo
+            'OtherUsesForPremise',// Other uses of premise besides "Residential Dwelling"
+            'OccupantNames', // Not including tenant
+            'LandlordName',
+            'NumberOfBedRooms',
+            'NumberOfBathRooms',
+            'PremiseFurnishings',
+            'PremiseAppliances',
+            'MonthlyRate',
+            'RentPaymentInstructions',
+            'NSFFee',
+            'LateFee',
+            'PrepayRentAmount',
+            'PrepayRentAmount',
+            'LeaseStartDate',
+            'LeaseEndDate',
+            'ProrationAmount',
+            'ProrationAmount',
+            'SecurityDepositAmount',
+            'ParkingFee',
+            'ParkingSpacesDescription',
+            'UtilitiesProvided',
+            'EarlyTerminationFee',
+            'SmokingAreas',
+            'AcceptableTypesOfPets',
+            'MaxPetWeight',
+            'PetFee',
+            'LandlordAgentAddress',
+            'TenantsMailingAddressForNotices',
+            'AgentsFullName',
+            'TotalAmount', // Amount due at signing
+        ];
         states : Iterable<string> = [
             'Alabama',
             'Alaska',
@@ -328,31 +367,26 @@ async serverBtnItemSelected(args: MenuEventArgs){
  mergeTagsBtnItemSelected(args: MenuEventArgs){
      let selectedItem: string = args.item.text;
      if (selectedItem == 'Insert'){
-        console.log(selectedItem + " has been selected");
-        console.log((Number)(this.documentEditorContainerComponent.documentEditor.editorModule.getSelectionInfo().start.split(';')[2].toString()));
+        this.mergeTagMainBtnClicked();
     }
-     else if(selectedItem == 'Remove'){
-        console.log(selectedItem + " has been selected");
-     }
 }
-mergeTagMainBtnClicked(){
-    //this.documentEditorContainerComponent.documentEditor.editorModule.insertText("hereistext");
-    //this.documentEditorContainerComponent.documentEditor.editorModule.insertField('<div>here is text</div>')
-    //this worked->//console.log((Number)(this.documentEditorContainerComponent.documentEditor.editorModule.getSelectionInfo().start.split(';')[2].toString()));
-    this.insertField('stuff');
-}
-insertField(fieldName) {
-    let fileName : string = fieldName.replace(/\n/g, '').replace(/\r/g, '').replace(/\r\n/g, '');
-    console.log("fileName is " + fileName);
-    var fieldCode = 'MERGEFIELD  ' + fileName + "  \\* MERGEFORMAT ";
-    console.log("inserting " + fieldCode, '«' + fieldName + '»');
 
-    this.documentEditorContainerComponent.documentEditor.editor.insertField(fieldCode, '«' + fieldName + '»');
-    this.documentEditorContainerComponent.documentEditor.focusIn();
-    this.documentEditorContainerComponent.documentEditor.saveAsBlob("Docx").then(function (blob) {
-        console.log("blob is " + JSON.stringify(blob))
-    });
+mergeTagMainBtnClicked() {
+    this.dialog.open(LeaseTemplatePopupModal, {
+        data: {
+            title: "Insert Merge Tag", // from 'Load Template'
+            contentSummary: "Choose Merge Tag", 
+            content: this.mergeTagKeys, // Need to set this up, also if returned list contains no elements, it should display different message
+          }
+    }).afterClosed().subscribe((selectedMergeTag: string) => {
+        let fileName : string = selectedMergeTag.replace(/\n/g, '').replace(/\r/g, '').replace(/\r\n/g, '');
+        var fieldCode = 'MERGEFIELD  ' + fileName + "  \\* MERGEFORMAT ";
 
+        this.documentEditorContainerComponent.documentEditor.editor.insertField(fieldCode, '«' + selectedMergeTag + '»');
+        this.documentEditorContainerComponent.documentEditor.focusIn();
+        this.documentEditorContainerComponent.documentEditor.saveAsBlob("Docx").then(function (blob) {
+        });
+    })
 }
 closeSplitBtn(){
     console.log("closing split button");
