@@ -43,7 +43,7 @@
     <div>
         <br />
         <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="linkRoomToProspect()">Link Room to Prospect</button>
-        <button  *ngIf="data.contentSummary == 'Chose State for RLA'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Select</button>
+        <button  *ngIf="data.contentSummary == 'Chose State for RLA'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Load</button>
         <button  *ngIf="data.title == 'Load Template'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Load</button>
         <button  *ngIf="data.title == 'Insert Merge Tag'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Insert</button>
         <button  *ngIf="data.title == 'Delete Template'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Delete</button>

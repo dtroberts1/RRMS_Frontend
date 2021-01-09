@@ -6,6 +6,7 @@ import {
 import { ItemModel, MenuEventArgs } from '@syncfusion/ej2-angular-splitbuttons';
 import { MatDialog } from '@angular/material/dialog';
 import { LeaseTemplatePopupModal } from './lease-template-popup-modal/lease-template-popup-modal.component';
+import { rejects } from 'assert';
 
 @Component({
     selector: 'app-lease-templates',
@@ -169,7 +170,34 @@ export class LeaseTemplatesComponent {
         }  
  }
 rlaBtnClicked(){
-    // Default is choose State
+    this.chooseRLAStateHelperWithPrompt();
+}
+chooseRLAStateHelperWithPrompt(){
+    if (this.savedNote != null){
+        this.dialog.open(LeaseTemplatePopupModal, {
+            data: {
+                title: "Unsaved Changes", // from 'Load Template'
+                contentSummary: "Unsaved Changes exist in the editor. Would you like to save?",
+                content: null, // Need to set this up, also if returned list contains no elements, it should display different message
+              }
+        })
+            .afterClosed().subscribe(async (saveNoOrCancel: string) => {
+                if (saveNoOrCancel == 'yes'){
+                    await this.saveHelper().then(()=>{
+                        this.chooseRLAStateHelper();
+                    });
+                }
+                else if(saveNoOrCancel == 'no'){
+                    this.chooseRLAStateHelper();
+                }
+            })
+        }
+    else{
+        this.chooseRLAStateHelper();
+    }
+}
+
+chooseRLAStateHelper(){
     this.dialog.open(LeaseTemplatePopupModal, {
         data: {
             title: "Residential Lease Agreement",
@@ -177,16 +205,16 @@ rlaBtnClicked(){
             content: this.states,
           }
     })
-        .afterClosed().subscribe((selectedState: string) => {
-            if (selectedState != null){
-                this.templateService.getStateRLATemplates(selectedState).then((sfdt : any) => {
-                    this.documentEditorContainerComponent.documentEditor.open(sfdt);
-                    this.loadedFileName = `rla_template_${selectedState}`;
-                    this.savedNote = 'Not Saved';
-                    this.astrisk = "*";
-                })
-            }
-        });
+    .afterClosed().subscribe((selectedState: string) => {
+        if (selectedState != null){
+            this.templateService.getStateRLATemplates(selectedState).then((sfdt : any) => {
+                this.documentEditorContainerComponent.documentEditor.open(sfdt);
+                this.loadedFileName = null;
+                this.savedNote = 'Not Saved';
+                this.astrisk = "*";
+            })
+        }
+    });
 }
 
  rlaBtnItemSelected(args: MenuEventArgs){
@@ -194,24 +222,8 @@ rlaBtnClicked(){
 
      let selectedItem: string = args.item.text;
      if (selectedItem == 'Choose State'){
-        this.dialog.open(LeaseTemplatePopupModal, {
-            data: {
-                title: "Residential Lease Agreement",
-                contentSummary: "Chose State for RLA",
-                content: this.states,
-              }
-        })
-            .afterClosed().subscribe((selectedState: string) => {
-                if (selectedState != null){
-                    this.templateService.getStateRLATemplates(selectedState).then((sfdt : any) => {
-                        this.documentEditorContainerComponent.documentEditor.open(sfdt);
-                        this.loadedFileName = `rla_template_${selectedState}`;
-                        this.savedNote = 'Not Saved';
-                        this.astrisk = "*";
-                    })
-                }
-            });
-     }
+        this.chooseRLAStateHelperWithPrompt();
+    }
  }
  templatesMainBtnSelected(){
     this.loadFromServer();
@@ -233,8 +245,9 @@ rlaBtnClicked(){
                     // First try to save, prompt if file doesn't yet exist on server
                     
                     // There should be a loadedFileName if savedNote != null
-                    await this.saveHelper(this.loadedFileName);
-                    this.loadTemplateHelper();
+                    await this.saveHelper().then(() => {
+                        this.loadTemplateHelper();
+                    })
                 }
                 else if(saveNoOrCancel == 'no'){
                     this.loadTemplateHelper();
@@ -277,66 +290,81 @@ rlaBtnClicked(){
  contentChanged(args: ContentChangeEventArgs ){
      this.savedNote = 'Not Saved';
      this.astrisk = "*";
-     //this.documentEditorContainerComponent.documentEditor.editorHistory.
-     //console.log(args.source.editor.history)
-     //let position : PositionInfo = this.documentEditorContainerComponent.documentEditor.selection.getElementPosition()
-     //console.log(this.documentEditorContainerComponent.documentEditor.editorModule.getOffsetValue(this.documentEditorContainerComponent.documentEditor.selection));
-     //console.log(JSON.stringify(this.documentEditorContainerComponent.documentEditor.editorModule.getSelectionInfo().start.split(';')[2]));
 }
 
 saveAs(selectedItem: string){
-    let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
+    return new Promise((resolve, reject) => {
+        let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
 
-    this.dialog.open(LeaseTemplatePopupModal, {
-        data: {
-            title: "Save As",
-            contentSummary: "Enter Filename",
-            content: null,
-          }
-    })
+        this.dialog.open(LeaseTemplatePopupModal, {
+            data: {
+                title: "Save As",
+                contentSummary: "Enter Filename",
+                content: null,
+              }
+        })
         .afterClosed().subscribe((fileName: string) => {
-        if (fileName != null){
-            this.templateService.createCustomTemplate(sfdt, fileName).then((sfdt : any) => {
-                // Open the confirmation dialog and update the loadedFileName and savedNote
+            if (fileName != null){
+                this.templateService.createCustomTemplate(sfdt, fileName).then((sfdt : any) => {
+                    // Open the confirmation dialog and update the loadedFileName and savedNote
+                    this.dialog.open(LeaseTemplatePopupModal, {
+                        data: {
+                            title: "Saved",
+                            contentSummary: `${fileName} has been saved`,
+                            content: null,
+                            }
+                    })
+                    .afterClosed().subscribe(() => {
+                        this.savedNote = null;
+                        this.astrisk = null;
+                        this.loadedFileName = fileName;
+                        resolve(true);
+                    })
+                })
+                .catch(() => {
+                    reject();
+                })
+            }
+            else{
+                reject();
+            }
+        });
+    });
+}
+
+async saveHelper(){
+    return new Promise((resolve, reject) => {
+        let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
+        // Save file for the landlord for future use
+        this.templateService.updateCustomTemplate(sfdt,this.loadedFileName).then((status: any)=>{
+            if (status === 404){
+                // If not found, prompt to save
+                console.log("status is 404");
+                this.saveAs(this.loadedFileName).then(() => {
+                    resolve(true);
+                })
+                .catch(() => {
+                    reject();
+                });
+            }
+            else{
                 this.dialog.open(LeaseTemplatePopupModal, {
                     data: {
                         title: "Saved",
-                        contentSummary: `${fileName} has been saved`,
+                        contentSummary: `${this.loadedFileName} has been saved`,
                         content: null,
                       }
                 })
                 .afterClosed().subscribe(() => {
                     this.savedNote = null;
                     this.astrisk = null;
-                    this.loadedFileName = fileName;
+                    resolve(true);
                 })
-            })
-        }
-    });
-}
-
-async saveHelper(selectedItem : string){
-    let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
-    // Save file for the landlord for future use
-    this.templateService.updateCustomTemplate(sfdt,this.loadedFileName).then((status: any)=>{
-        if (status === 404){
-            // If not found, prompt to save
-            console.log("status is 404");
-            this.saveAs(this.loadedFileName);
-        }
-        else{
-            this.dialog.open(LeaseTemplatePopupModal, {
-                data: {
-                    title: "Saved",
-                    contentSummary: `${this.loadedFileName} has been saved`,
-                    content: null,
-                  }
-            })
-            .afterClosed().subscribe(() => {
-                this.savedNote = null;
-                this.astrisk = null;
-            })
-        }
+            }
+        })
+        .catch(() => {
+            reject();
+        })
     })
 }
 
@@ -346,7 +374,7 @@ async serverBtnItemSelected(args: MenuEventArgs){
         this.saveAs(selectedItem);
     }
     else if(selectedItem == 'Save'){
-        await this.saveHelper(selectedItem);
+        await this.saveHelper();
 
     }
     else if(selectedItem == 'Load'){

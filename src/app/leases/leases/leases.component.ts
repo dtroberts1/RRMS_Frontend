@@ -118,7 +118,40 @@ export class LeasesComponent {
   this.savedNote = null;
   this.astrisk = null;
  }
-rlaBtnClicked(){
+ templatesBtnItemSelected(args: MenuEventArgs){
+    let selectedItem: string = args.item.text;
+    if (selectedItem == 'Choose Template'){
+        this.templatesHelperWithUnsavedPrompt();
+    }
+}
+templatesHelperWithUnsavedPrompt(){
+    if (this.savedNote != null){
+        this.dialog.open(LeasesPopupModal, {
+            data: {
+                title: "Unsaved Changes", // from 'Load Template'
+                contentSummary: "Unsaved Changes exist in the editor. Would you like to save?",
+                content: null, // Need to set this up, also if returned list contains no elements, it should display different message
+                }
+        })
+        .afterClosed().subscribe(async (saveNoOrCancel: string) => {
+            if (saveNoOrCancel == 'yes'){
+                await this.saveHelper().then(() => {
+                    this.loadTemplateHelper();
+                })
+            }
+            else if(saveNoOrCancel == 'no'){
+                this.loadTemplateHelper();
+            }
+            else if(saveNoOrCancel == 'cance'){
+                return;
+            }
+        });
+    }
+    else{
+        this.loadTemplateHelper();
+    }
+}
+loadTemplateHelper(){
     // First get list of custom filenames that exist for the landlord
     this.templateService.getAvailableCustomTemplateFileNames().then((availableFileNames: Iterable<string>) => {
         this.dialog.open(LeaseTemplatePopupModal, {
@@ -133,12 +166,15 @@ rlaBtnClicked(){
                     this.templateService.getTemplate(selectedTemplate).then((sfdt : any) => {
                         this.documentEditorContainerComponent.documentEditor.open(sfdt);
                         this.loadedFileName = null;
-                        this.savedNote = null;
+                        this.savedNote = "Not Saved";
                         this.astrisk = null;
                     })
                 }
             });
     });
+}
+templatesMainBtnClicked(){
+    this.templatesHelperWithUnsavedPrompt();
 }
 
 testBtnClicked(){
@@ -161,7 +197,7 @@ insertField(fieldName) {
 
 }
 sendMainBtnSelected(){
-  console.log("Email clicked");
+    this.emailHelper();
 }
 exportItemsSelected(args: MenuEventArgs){
     let selectedItem: string = args.item.text;
@@ -201,62 +237,38 @@ emailHelper(){
         ).afterClosed().subscribe((emailSent: boolean) => {
         })
 }
- rlaBtnItemSelected(args: MenuEventArgs){
-     let selectedItem: string = args.item.text;
-     if (selectedItem == 'Choose Template'){
-    // First get list of custom filenames that exist for the landlord
-    this.templateService.getAvailableCustomTemplateFileNames().then((availableFileNames: Iterable<string>) => {
-        this.dialog.open(LeaseTemplatePopupModal, {
-            data: {
-                title: "Load Template",
-                contentSummary: "Choose Template",
-                content: availableFileNames, // Need to set this up, also if returned list contains no elements, it should display different message
-            }
-        })
-            .afterClosed().subscribe((selectedTemplate: string) => {
-                if (selectedTemplate != null){
-                    this.templateService.getTemplate(selectedTemplate).then((sfdt : any) => {
-                        this.documentEditorContainerComponent.documentEditor.open(sfdt);
-                        this.loadedFileName = null;
-                        this.savedNote = null;
-                        this.astrisk = null;
-                    })
-                }
-            });
-    });
-     }
- }
- templatesMainBtnSelected(){
+
+ leasesMainBtnSelected(){
     this.loadFromServer();
  }
 
  loadFromServer(){
-       // Check and prompt if unsaved changes exist
-       if (this.savedNote != null){
+    // Check and prompt if unsaved changes exist
+    if (this.savedNote != null){
         this.dialog.open(LeasesPopupModal, {
             data: {
                 title: "Unsaved Changes", // from 'Load Template'
                 contentSummary: "Unsaved Changes exist in the editor. Would you like to save?",
                 content: null, // Need to set this up, also if returned list contains no elements, it should display different message
-              }
+            }
         })
-            .afterClosed().subscribe(async (saveNoOrCancel: string) => {
-                if (saveNoOrCancel == 'yes'){
-                    // Call Save and then proceed with the block inside the "No" condition
-                    // First try to save, prompt if file doesn't yet exist on server
-                    
-                    // There should be a loadedFileName if savedNote != null
-                    await this.saveHelper(this.loadedFileName);
-                    this.loadDocumentsHelper();
-                }
-                else if(saveNoOrCancel == 'no'){
-                    this.loadDocumentsHelper();
-                }
-                else if(saveNoOrCancel == 'cancel'){
-                    // Return and do nothing
-                    return;
-                }
-            });
+        .afterClosed().subscribe(async (saveNoOrCancel: string) => {
+            if (saveNoOrCancel == 'yes'){
+                // Call Save and then proceed with the block inside the "No" condition
+                // First try to save, prompt if file doesn't yet exist on server
+                
+                // There should be a loadedFileName if savedNote != null
+                await this.saveHelper();
+                this.loadDocumentsHelper();
+            }
+            else if(saveNoOrCancel == 'no'){
+                this.loadDocumentsHelper();
+            }
+            else if(saveNoOrCancel == 'cancel'){
+                // Return and do nothing
+                return;
+            }
+        });
     }
     else{
         // If there are no un-saved changes, freely load.
@@ -316,15 +328,6 @@ exportItemsMainBtnClicked(){
      this.savedNote = 'Not Saved';
      this.astrisk = "*";
     console.log("contentChanged");
-    /*
-    if (this.documentEditorContainerComponent.documentEditor.documentStart.paragraph == 
-        this.documentEditorContainerComponent.documentEditor.documentEnd.paragraph &&
-        this.documentEditorContainerComponent.documentEditor.documentEnd.paragraph.getLength() == 0
-        )
-        {
-            console.log("Content Length is Zero");
-        }  
-*/
 }
 contentChangeEventArgs(args: ContentChangeEventArgs){
     if (this.documentEditorContainerComponent.documentEditor.documentStart.paragraph == 
@@ -347,82 +350,109 @@ containerSelectionChangedEventArgs(args: ContainerSelectionChangeEventArgs){
 
 
 saveAs(selectedItem: string){
-    let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
-    this.prospectService.getAvailableProspects().then((prospects :Iterable<IProspect>)=>{
-        console.log("prospects in saveAs is " + JSON.stringify(prospects));
-        this.dialog.open(LeasesPopupModal, {
-            data: {
-                title: "Lease - Save As",
-                contentSummary: "Select Future Tenant",
-                content: prospects,
-              }
+    return new Promise((resolve, reject) => {
+        let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
+        this.prospectService.getAvailableProspects().then((prospects :Iterable<IProspect>)=>{
+            console.log("prospects in saveAs is " + JSON.stringify(prospects));
+            this.dialog.open(LeasesPopupModal, {
+                data: {
+                    title: "Lease - Save As",
+                    contentSummary: "Select Future Tenant",
+                    content: prospects,
+                  }
+            })
+                .afterClosed().subscribe((retVal : {prospectId: number, fileName: string}) => {
+                    this.prospectService.getProspect(retVal.prospectId)
+                        .then((pros: IProspect) => {
+                        this.currentProspect = pros;
+                        this.leaseDocumentService.addDocument(sfdt, pros, retVal.fileName)
+                            .then((res) => {    
+                                if (res == 0){
+                                    this.savedNote = null;
+                                    this.astrisk = null;
+                                    this.loadedFileName = retVal.fileName;
+                                    this.dialog.open(LeasesPopupModal, {
+                                        data: {
+                                            title: "Saved",
+                                            contentSummary: `${this.loadedFileName} has been saved`,
+                                            content: null,
+                                          }
+                                    }).afterClosed().subscribe(() => {
+                                        resolve(true);
+                                    })
+                                }
+                                else{
+                                    console.log("result is " + res);
+                                    reject();
+                                }
+                            })
+                            .catch((err) => {
+                                console.log("error. Unable to add document. Error is " + JSON.stringify(err));
+                                reject();
+                            })
+                    });
+            });
         })
-            .afterClosed().subscribe((retVal : {prospectId: number, fileName: string}) => {
-                this.prospectService.getProspect(retVal.prospectId)
-                    .then((pros: IProspect) => {
-                    this.currentProspect = pros;
-                    this.leaseDocumentService.addDocument(sfdt, pros, retVal.fileName)
-                        .then((res) => {    
-                            if (res == 0){
-                                this.savedNote = null;
-                                this.astrisk = null;
-                                this.loadedFileName = retVal.fileName;
-                                this.dialog.open(LeasesPopupModal, {
-                                    data: {
-                                        title: "Saved",
-                                        contentSummary: `${this.loadedFileName} has been saved`,
-                                        content: null,
-                                      }
-                                })
-                            }
-                            else{
-                                console.log("result is " + res);
-                            }
-                        })
-                        .catch((err) => {
-                            console.log("error. Unable to add document. Error is " + JSON.stringify(err));
-                        })
-                });
-        });
     })
 }
 
-async saveHelper(selectedItem : string){
-    let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
-    // Save file for the landlord for future use
-    console.log("In saveHelper, this.currentProspect is " + JSON.stringify(this.currentProspect));
-    this.leaseDocumentService.updateDocument(sfdt,this.loadedFileName, this.currentProspect.Id).then((status: any)=>{
-        if (status === 404){
-            // If not found, prompt to save
-            console.log("status is 404");
-            this.saveAs(this.loadedFileName);
-        }
-        else if (status === true){
-            this.dialog.open(LeasesPopupModal, {
-                data: {
-                    title: "Saved",
-                    contentSummary: `${this.loadedFileName} has been saved`,
-                    content: null,
-                  }
-            })
-            .afterClosed().subscribe(() => {
-                this.savedNote = null;
-                this.astrisk = null;
+async saveHelper(){
+    return new Promise((resolve, reject) => {
+        let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
+        // Save file for the landlord for future use
+        console.log("In saveHelper, this.currentProspect is " + JSON.stringify(this.currentProspect));
+        // If trying to save (not clicking save as), the prospect won't be linked, so check for prospect first
+        if (this.currentProspect != null){
+            this.leaseDocumentService.updateDocument(sfdt,this.loadedFileName, this.currentProspect.Id).then((status: any)=>{
+                if (status === 404){
+                    // If not found, prompt to save
+                    console.log("status is 404");
+                    this.saveAs(this.loadedFileName).then(() => {
+                        resolve(true);
+                    })
+                    .catch(() => {
+                        reject();
+                    });
+
+                }
+                else if (status === true){
+                    this.dialog.open(LeasesPopupModal, {
+                        data: {
+                            title: "Saved",
+                            contentSummary: `${this.loadedFileName} has been saved`,
+                            content: null,
+                          }
+                    })
+                    .afterClosed().subscribe(() => {
+                        this.savedNote = null;
+                        this.astrisk = null;
+                        resolve(true);
+                    })
+                }
+                else{
+                    console.log("error. Response is not unsuccessful")
+                    reject();
+                }
             })
         }
         else{
-            console.log("error. Response is not unsuccessful")
+            this.saveAs(this.loadedFileName).then(() => {
+                resolve(true);
+            })
+            .catch(() => {
+                reject();
+            });
         }
-    })
+    });
 }
 
-async serverBtnItemSelected(args: MenuEventArgs){
+async leasesBtnItemSelected(args: MenuEventArgs){
     let selectedItem: string = args.item.text;
     if (selectedItem == 'Save As'){
         this.saveAs(selectedItem);
     }
     else if(selectedItem == 'Save'){
-        await this.saveHelper(selectedItem);
+        await this.saveHelper();
 
     }
     else if(selectedItem == 'Load'){
