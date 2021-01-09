@@ -14,6 +14,7 @@ import { LeaseDocProspectTableModalComponent } from '../lease-doc-prospect-table
 import { LeaseTemplatePopupModal } from '../lease-templates/lease-template-popup-modal/lease-template-popup-modal.component';
 import { BeforeOpenEventArgs } from '@syncfusion/ej2-popups';
 import { SendLeaseEmailModalComponent } from '../lease-doc-prospect-table/send-lease-email-modal/send-lease-email-modal.component';
+import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 
 @Component({
     selector: 'app-leases',
@@ -471,20 +472,31 @@ async leasesBtnItemSelected(args: MenuEventArgs){
                 .afterClosed().subscribe((leaseDocDto: IDocumentProspectDto) => {
                     console.log("Back in leases, selected result is " + JSON.stringify(leaseDocDto));
                     if (leaseDocDto != null){
-                        this.leaseDocumentService.removeLeaseDocument(leaseDocDto.DocumentId).then(()=>{
-                            this.dialog.open(LeasesPopupModal, {
-                                data: {
-                                    title: "Deleted",
-                                    contentSummary: `${leaseDocDto.DocumentName} has been removed`,
-                                    content: null,
-                                  }
-                            })
-                            .afterClosed().subscribe(() => {
-                                // Dont' do any thing to the content in the editor or the changed status indicators
-                            })
-                        })
-                    }
-                });
+                        this.dialog.open(DialogDataRRMSDialog, {
+                            data: {
+                              inError: false,
+                              title: "Delete - Are you sure?",
+                              contentSummary: `Are you sure you would like to delete this template "${leaseDocDto.DocumentName}"?`,
+                              errorItems: []
+                            }
+                          }).afterClosed().subscribe((deleteLease: boolean)=> {
+                              if (deleteLease == true){
+                                this.leaseDocumentService.removeLeaseDocument(leaseDocDto.DocumentId).then(()=>{
+                                    this.dialog.open(LeasesPopupModal, {
+                                        data: {
+                                            title: "Deleted",
+                                            contentSummary: `${leaseDocDto.DocumentName} has been removed`,
+                                            content: null,
+                                          }
+                                    })
+                                    .afterClosed().subscribe(() => {
+                                        // Dont' do any thing to the content in the editor or the changed status indicators
+                                    })
+                                })
+                              }
+                            });
+                        }
+                    });
         });
     }
  }

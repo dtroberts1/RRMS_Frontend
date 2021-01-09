@@ -1,10 +1,12 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IDocumentDeliveries } from 'src/app/interfaces/DocumentDeliveries';
 import { IDocumentProspectDto } from 'src/app/interfaces/DocumentProspect';
 import { DocumentDeliveryService } from 'src/app/services/documentDelivery.service';
 import { LeaseDocumentService } from 'src/app/services/leaseDocument.service';
+import { LeasesPopupModal } from '../../leases/leases-popup-modal/leases-popup-modal.component';
 import { DocumentDeliveriesModalComponent } from '../document-deliveries-modal/document-deliveries-modal.component';
 import { SendLeaseEmailModalComponent } from '../send-lease-email-modal/send-lease-email-modal.component';
 
@@ -42,21 +44,37 @@ export class LeaseDocProspectTableModalComponent implements OnInit {
 
   }
   deleteDocument(){
-    if (this.selection != null && this.selection.selected[0] != null)
-    {
-      this.leaseDocumentService.removeLeaseDocument(this.selection.selected[0].DocumentId)
+    if (this.selection != null && this.selection.selected[0] != null){
+      this.dialog.open(DialogDataRRMSDialog, {
+        data: {
+          inError: false,
+          title: "Delete - Are you sure?",
+          contentSummary: `Are you sure you would like to delete this lease document "${this.selection.selected[0].DocumentName}"?`,
+          errorItems: []
+        }
+      }).afterClosed().subscribe((deleteLease: boolean)=> {
+        this.leaseDocumentService.removeLeaseDocument(this.selection.selected[0].DocumentId)
         .then((result) => {
-          console.log("Result of deletion is " + result);
           // Update UI List
           this.leaseDocumentService.getDocumentProspectDtos()
             .then((leaseDocDtos: Iterable<IDocumentProspectDto>) =>{
+              this.dialog.open(LeasesPopupModal, {
+                data: {
+                    title: "Deleted",
+                    contentSummary: `${this.selection.selected[0].DocumentName} has been removed`,
+                    content: null,
+                  }
+            })
+            .afterClosed().subscribe(() => {
               this.data.content = leaseDocDtos;
-              this.dataSource = Array.from(this.data.content);
+              this.dataSource = Array.from(this.data.content);            })
             })
           
         })
+      });
     }
     else{
+
     }
   }
 

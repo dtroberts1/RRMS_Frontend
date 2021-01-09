@@ -7,6 +7,7 @@ import { ItemModel, MenuEventArgs } from '@syncfusion/ej2-angular-splitbuttons';
 import { MatDialog } from '@angular/material/dialog';
 import { LeaseTemplatePopupModal } from './lease-template-popup-modal/lease-template-popup-modal.component';
 import { rejects } from 'assert';
+import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 
 @Component({
     selector: 'app-lease-templates',
@@ -392,18 +393,29 @@ async serverBtnItemSelected(args: MenuEventArgs){
             })
                 .afterClosed().subscribe((selectedTemplate: string) => {
                     if (selectedTemplate != null){
-                        this.templateService.deleteTemplate(selectedTemplate).then(()=>{
-                            this.dialog.open(LeaseTemplatePopupModal, {
-                                data: {
-                                    title: "Deleted",
-                                    contentSummary: `${selectedTemplate} has been removed`,
-                                    content: null,
-                                  }
-                            })
-                            .afterClosed().subscribe(() => {
-                                // Dont' do any thing to the content in the editor or the changed status indicators
-                            })
-                        })
+                        this.dialog.open(DialogDataRRMSDialog, {
+                            data: {
+                              inError: false,
+                              title: "Delete - Are you sure?",
+                              contentSummary: `Are you sure you would like to delete this template "${selectedTemplate}"?`,
+                              errorItems: []
+                            }
+                          }).afterClosed().subscribe((deleteTemplate: boolean)=> {
+                            if (deleteTemplate == true ){
+                                this.templateService.deleteTemplate(selectedTemplate).then(()=>{
+                                    this.dialog.open(LeaseTemplatePopupModal, {
+                                        data: {
+                                            title: "Deleted",
+                                            contentSummary: `${selectedTemplate} has been removed`,
+                                            content: null,
+                                        }
+                                    })
+                                    .afterClosed().subscribe(() => {
+                                        // Dont' do any thing to the content in the editor or the changed status indicators
+                                    })
+                                })
+                            }
+                        });
                     }
                 });
         });
