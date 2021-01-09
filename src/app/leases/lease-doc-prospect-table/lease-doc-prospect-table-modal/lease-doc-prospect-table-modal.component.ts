@@ -4,6 +4,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { IDocumentDeliveries } from 'src/app/interfaces/DocumentDeliveries';
 import { IDocumentProspectDto } from 'src/app/interfaces/DocumentProspect';
 import { DocumentDeliveryService } from 'src/app/services/documentDelivery.service';
+import { LeaseDocumentService } from 'src/app/services/leaseDocument.service';
 import { DocumentDeliveriesModalComponent } from '../document-deliveries-modal/document-deliveries-modal.component';
 import { SendLeaseEmailModalComponent } from '../send-lease-email-modal/send-lease-email-modal.component';
 
@@ -33,12 +34,25 @@ export class LeaseDocProspectTableModalComponent implements OnInit {
     public dialogRef: MatDialogRef<LeaseDocProspectTableModalComponent>,
     public dialog: MatDialog, 
     private documentDeliveryService : DocumentDeliveryService,
+    private leaseDocumentService : LeaseDocumentService,
     ) {
     if (data != null){
       this.dataSource = Array.from(this.data.content);
     }
 
   }
+  deleteDocument(){
+    if (this.selection != null && this.selection.selected[0] != null)
+    {
+      this.leaseDocumentService.removeLeaseDocument(this.selection.selected[0].DocumentId)
+        .then((result) => {
+          console.log("Result of deletion is " + result);
+        })
+    }
+    else{
+    }
+  }
+
   openDocDeliveries(docPros: IDocumentProspectDto){
     console.log("opening doc deliveries");
       this.documentDeliveryService.GetDocumentDeliveries(docPros.DocumentId).then((documentDeliveries: Iterable<IDocumentDeliveries>) => {

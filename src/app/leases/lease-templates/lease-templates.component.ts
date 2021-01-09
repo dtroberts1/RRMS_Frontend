@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, ViewChild } from '@angular/core';
 import {TemplateService} from '../../services/template.service';
 import {
-    FormatType, DocumentEditorComponent, DocumentEditorContainerComponent, EditorService, SelectionService, SfdtExportService, ToolbarService, WordExportService, ContentChangeEventArgs, PositionInfo
+    FormatType, DocumentEditorComponent, DocumentEditorContainerComponent, EditorService, SelectionService, SfdtExportService, ToolbarService, WordExportService, ContentChangeEventArgs, PositionInfo, CustomToolbarItemModel
 } from '@syncfusion/ej2-angular-documenteditor';
 import { ItemModel, MenuEventArgs } from '@syncfusion/ej2-angular-splitbuttons';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,6 +15,7 @@ import { LeaseTemplatePopupModal } from './lease-template-popup-modal/lease-temp
 })
 
 export class LeaseTemplatesComponent {
+
     loadedFileName : string = null;
     savedNote : string = null;
     astrisk: string = "";
@@ -127,11 +128,12 @@ export class LeaseTemplatesComponent {
             ];
     constructor(private templateService: TemplateService,public dialog: MatDialog, 
         ){
-        
+
     }
     @ViewChild('document_editor')
     public documentEditorContainerComponent: DocumentEditorContainerComponent;
-    
+    public toolbarItems = ['New','Undo','Redo','Separator','Image','Table','Hyperlink','Bookmark','Comments','TableOfContents','Separator','Header','Footer','PageSetup','PageNumber','Break','Separator','Find','Separator','LocalClipboard','RestrictEditing'];
+
     public saveAsDocx() :void {
         let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
         this.dialog.open(LeaseTemplatePopupModal, {
@@ -175,6 +177,8 @@ rlaBtnClicked(){
 }
 
  rlaBtnItemSelected(args: MenuEventArgs){
+    console.log("in constructor");
+
      let selectedItem: string = args.item.text;
      if (selectedItem == 'Choose State'){
         this.dialog.open(LeaseTemplatePopupModal, {
@@ -257,7 +261,7 @@ rlaBtnClicked(){
     });
  }
 
- documentChanged(args: ContentChangeEventArgs ){
+ contentChanged(args: ContentChangeEventArgs ){
      this.savedNote = 'Not Saved';
      this.astrisk = "*";
      //this.documentEditorContainerComponent.documentEditor.editorHistory.
@@ -380,8 +384,7 @@ mergeTagMainBtnClicked() {
           }
     }).afterClosed().subscribe((selectedMergeTag: string) => {
         let fileName : string = selectedMergeTag.replace(/\n/g, '').replace(/\r/g, '').replace(/\r\n/g, '');
-        var fieldCode = 'MERGEFIELD  ' + fileName + "  \\* MERGEFORMAT ";
-
+        var fieldCode = 'MERGEFIELD  ' + fileName + "  \\* MERGEFORMAT blue";
         this.documentEditorContainerComponent.documentEditor.editor.insertField(fieldCode, '«' + selectedMergeTag + '»');
         this.documentEditorContainerComponent.documentEditor.focusIn();
         this.documentEditorContainerComponent.documentEditor.saveAsBlob("Docx").then(function (blob) {

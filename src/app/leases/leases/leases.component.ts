@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, ViewChild } from '@angular/core';
 import {TemplateService} from '../../services/template.service';
 import {
-    FormatType, DocumentEditorComponent, DocumentEditorContainerComponent, EditorService, SelectionService, SfdtExportService, ToolbarService, WordExportService, ContentChangeEventArgs, DocumentChangeEventArgs
+    FormatType, DocumentEditorComponent, DocumentEditorContainerComponent, EditorService, SelectionService, SfdtExportService, ToolbarService, WordExportService, ContentChangeEventArgs, DocumentChangeEventArgs, ContainerSelectionChangeEventArgs
 } from '@syncfusion/ej2-angular-documenteditor';
 import { ClickEventArgs, ItemModel, MenuEventArgs } from '@syncfusion/ej2-angular-splitbuttons';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,6 +12,7 @@ import { LeaseDocumentService } from 'src/app/services/leaseDocument.service';
 import {IDocumentProspectDto} from '../../interfaces/DocumentProspect';
 import { LeaseDocProspectTableModalComponent } from '../lease-doc-prospect-table/lease-doc-prospect-table-modal/lease-doc-prospect-table-modal.component';
 import { LeaseTemplatePopupModal } from '../lease-templates/lease-template-popup-modal/lease-template-popup-modal.component';
+import { BeforeOpenEventArgs } from '@syncfusion/ej2-popups';
 
 @Component({
     selector: 'app-leases',
@@ -29,6 +30,9 @@ export class LeasesComponent {
     public sendSplitBtnItems: ItemModel[] =[
       {text: 'Email'},
       {text: 'Send to'},
+    ]
+    public exportItems : ItemModel[] = [
+        {text: 'Print'},
     ]
     public serverSplitBtnItems: ItemModel[] = [
         {text: 'Save As'},
@@ -106,7 +110,8 @@ export class LeasesComponent {
     }
     @ViewChild('document_editor')
     public documentEditorContainerComponent: DocumentEditorContainerComponent;
-  
+    public items = ['New','Undo','Redo','Separator','Image','Table','Hyperlink','Bookmark','Comments','TableOfContents','Separator','Header','Footer','PageSetup','PageNumber','Break','Separator','Find','Separator','LocalClipboard','RestrictEditing'];
+
   ngOnInit(){
   this.uiReady = true;
   this.loadedFileName = null;
@@ -156,7 +161,12 @@ insertField(fieldName) {
 sendMainBtnSelected(){
   console.log("Email clicked");
 }
-
+exportItemsSelected(args: MenuEventArgs){
+    let selectedItem: string = args.item.text;
+    if (selectedItem == "Print"){
+        this.documentEditorContainerComponent.documentEditor.print();
+    }
+}
 sendBtnItemSelected(args: MenuEventArgs){
   let selectedItem: string = args.item.text;
   if (selectedItem == 'Email'){
@@ -257,19 +267,36 @@ sendBtnItemSelected(args: MenuEventArgs){
             });
     });
  }
+ documentChanged(args: DocumentChangeEventArgs ){
+    console.log("document changed");
+    // Get rid of footer
+    this.documentEditorContainerComponent.element.style.height = "auto"; 
+    this.documentEditorContainerComponent.documentEditor.resize(); 
+ }
+somethingHappend(args: Event){
+    console.log("BeforeOpend");
+}
+exportItemsMainBtnClicked(){
+    // Export Item Main button clicked
+    // Open Print Dialog
+    this.documentEditorContainerComponent.documentEditor.print();
+}
 
  contentChanged(args: ContentChangeEventArgs ){
      this.savedNote = 'Not Saved';
      this.astrisk = "*";
+    console.log("contentChanged");
 }
-/*
-documentChanged(args: DocumentChangeEventArgs){
+contentChangeEventArgs(args: ContentChangeEventArgs){
     console.log("documentChanged");
-    if (this.documentEditorContainerComponent.documentEditor.serialize() == null){
-        console.log("new button clicked");
-    }
 }
-*/
+
+containerSelectionChangedEventArgs(args: ContainerSelectionChangeEventArgs){
+    console.log("containerselection changed");
+
+}
+
+
 
 saveAs(selectedItem: string){
     let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
@@ -277,8 +304,8 @@ saveAs(selectedItem: string){
         console.log("prospects in saveAs is " + JSON.stringify(prospects));
         this.dialog.open(LeasesPopupModal, {
             data: {
-                title: "Select Future Tenant",
-                contentSummary: "Select Future Tenant for this Lease Document",
+                title: "Lease - Save As",
+                contentSummary: "Select Future Tenant",
                 content: prospects,
               }
         })
@@ -292,6 +319,13 @@ saveAs(selectedItem: string){
                                 this.savedNote = null;
                                 this.astrisk = null;
                                 this.loadedFileName = retVal.fileName;
+                                this.dialog.open(LeasesPopupModal, {
+                                    data: {
+                                        title: "Saved",
+                                        contentSummary: `${this.loadedFileName} has been saved`,
+                                        content: null,
+                                      }
+                                })
                             }
                             else{
                                 console.log("result is " + res);

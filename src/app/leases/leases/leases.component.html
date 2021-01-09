@@ -1,7 +1,7 @@
 <ejs-splitbutton (click)="sendMainBtnSelected()" (select)="sendBtnItemSelected($event)"  content="Send" [items]='sendSplitBtnItems'></ejs-splitbutton>
+<ejs-splitbutton (click)="exportItemsMainBtnClicked()" (select)="exportItemsSelected($event)" content="Print" [items]='exportItems'></ejs-splitbutton>
 <ejs-splitbutton (click)="templatesMainBtnSelected()" (select)="serverBtnItemSelected($event)"  content="Leases" [items]='serverSplitBtnItems'></ejs-splitbutton>
 <ejs-splitbutton (click)="rlaBtnClicked()" (select)="rlaBtnItemSelected($event)" content="Templates" [items]='rlaSplitBtnItems'></ejs-splitbutton>
-<button (click)="testBtnClicked()">Insert</button>
 <label 
 style=
     "font-family: 'Roboto', 'Segoe UI', 'GeezaPro', 'DejaVu Serif', 'sans-serif', '-apple-system', 'BlinkMacSystemFont';
@@ -33,4 +33,4 @@ style=
     color:red;
     float:right"
 *ngIf="savedNote != null">{{savedNote}}</label>
-<ejs-documenteditorcontainer #document_editor  id="container" (contentChange)="contentChanged($event)" serviceUrl="https://ej2services.syncfusion.com/production/web-services/api/documenteditor/" [isReadOnly]=false [enableEditor]=true [enableWordExport]=true [enableSfdtExport]=true> </ejs-documenteditorcontainer>
+<ejs-documenteditorcontainer #document_editor [toolbarItems]="items" id="container" (documentChange)="documentChanged($event)" (loaded)="somethingHappend($event)" (open)="somethingHappend($event)" (contentChange)="contentChanged($event)" serviceUrl="https://ej2services.syncfusion.com/production/web-services/api/documenteditor/" [isReadOnly]=false [enableEditor]=true [enableWordExport]=true [enableSfdtExport]=true> </ejs-documenteditorcontainer>

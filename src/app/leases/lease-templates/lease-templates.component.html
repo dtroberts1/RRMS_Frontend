@@ -1,7 +1,6 @@
 <ejs-splitbutton (click)="templatesMainBtnSelected()" (select)="serverBtnItemSelected($event)"  content="Templates" [items]='serverSplitBtnItems'></ejs-splitbutton>
 <ejs-splitbutton (click)="rlaBtnClicked()" (select)="rlaBtnItemSelected($event)" content="Default Templates" [items]='rlaSplitBtnItems'></ejs-splitbutton>
 <ejs-splitbutton (click)="mergeTagMainBtnClicked()" (select)="mergeTagsBtnItemSelected($event)" content="Merge Tags" [items]='mergeTagsSplitBtnItems'></ejs-splitbutton>
-<button ejs-button (click)="saveAsDocx()" >Save</button>
 <label 
 style=
     "font-family: 'Roboto', 'Segoe UI', 'GeezaPro', 'DejaVu Serif', 'sans-serif', '-apple-system', 'BlinkMacSystemFont';
@@ -33,4 +32,4 @@ style=
     color:red;
     float:right"
 *ngIf="savedNote != null">{{savedNote}}</label>
-<ejs-documenteditorcontainer #document_editor  id="container" (contentChange)="documentChanged($event)" serviceUrl="https://ej2services.syncfusion.com/production/web-services/api/documenteditor/" [isReadOnly]=false [enableEditor]=true [enableWordExport]=true [enableSfdtExport]=true> </ejs-documenteditorcontainer>
+<ejs-documenteditorcontainer [toolbarItems]="toolbarItems" #document_editor  id="container" (contentChange)="contentChanged($event)" serviceUrl="https://ej2services.syncfusion.com/production/web-services/api/documenteditor/" [isReadOnly]=false [enableEditor]=true [enableWordExport]=true [enableSfdtExport]=true> </ejs-documenteditorcontainer>

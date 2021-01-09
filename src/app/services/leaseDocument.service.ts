@@ -16,6 +16,27 @@ export class LeaseDocumentService{
 
     constructor(private http: HttpClient){
     }
+
+    async removeLeaseDocument(leaseDocId: number){
+      this.currToken = JSON.parse(localStorage.getItem('user'));
+      if (this.currToken != null){
+        let options = {
+          headers: new HttpHeaders().set('Content-Type', 'application/json')
+          .set('Authorization', "bearer " + this.currToken),
+          };
+        return new Promise((resolve, reject) => { this.http
+            .delete<IProspect>(`${this.leaseDocumentsUrl}/RemoveLeaseDocument/${leaseDocId}`, options).subscribe(
+             document => {
+                    // Get some logic for response (should just return id back for newly added home)'
+                    resolve(document);
+                },
+                error => {
+                  reject(error);
+                }
+            )
+        });
+      }
+    }
     
     async getDocument(fileName: string, prospectId: number){
       // Get token from localStorage
