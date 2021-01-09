@@ -40,7 +40,7 @@
         <mat-error *ngIf="fileName.invalid">{{getFNameErrorMessage()}}</mat-error>
     </mat-form-field>
 </div>
-<div style="margin-left:5%;">
+<div>
     <br />
     <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="linkRoomToProspect()">Link Room to Prospect</button>
     <button  *ngIf="data.contentSummary == 'Chose State for RLA'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Select</button>

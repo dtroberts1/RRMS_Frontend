@@ -47,6 +47,13 @@ export class LeaseDocProspectTableModalComponent implements OnInit {
       this.leaseDocumentService.removeLeaseDocument(this.selection.selected[0].DocumentId)
         .then((result) => {
           console.log("Result of deletion is " + result);
+          // Update UI List
+          this.leaseDocumentService.getDocumentProspectDtos()
+            .then((leaseDocDtos: Iterable<IDocumentProspectDto>) =>{
+              this.data.content = leaseDocDtos;
+              this.dataSource = Array.from(this.data.content);
+            })
+          
         })
     }
     else{

@@ -1,6 +1,5 @@
-<div style="float:left; width:100%; height:100%;">
     <h1 style="white-space: nowrap;" mat-dialog-title>{{data.title}}</h1>
-    <div *ngIf="data.contentSummary == 'Chose State for RLA'" style="float:left;">
+    <div *ngIf="data.contentSummary == 'Chose State for RLA'">
         <mat-form-field appearance="fill">
             <mat-label>{{data.contentSummary}}</mat-label>
             <mat-select [(ngModel)]="selected" (selectionChange)="showProductDetails()">
@@ -10,7 +9,7 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <div *ngIf="data.contentSummary == 'Choose Template'" style="float:left;">
+    <div *ngIf="data.contentSummary == 'Choose Template'">
         <mat-form-field appearance="fill">
             <mat-label>{{data.contentSummary}}</mat-label>
             <mat-select [(ngModel)]="selected" (selectionChange)="showProductDetails()">
@@ -20,7 +19,7 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <div *ngIf="data.contentSummary == 'Choose Merge Tag'" style="float:left;">
+    <div *ngIf="data.contentSummary == 'Choose Merge Tag'">
         <mat-form-field appearance="fill">
             <mat-label>{{data.contentSummary}}</mat-label>
             <mat-select [(ngModel)]="selected" (selectionChange)="showProductDetails()">
@@ -30,18 +29,18 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <div *ngIf="data.title == 'Saved' || data.title == 'Deleted' || data.title == 'Unsaved Changes'" style="float:left;">
+    <div *ngIf="data.title == 'Saved' || data.title == 'Deleted' || data.title == 'Unsaved Changes'">
         <mat-label style="text-align: center;">{{data.contentSummary}}</mat-label>
     </div>
-    <div *ngIf="data.contentSummary == 'Enter Filename (without ext)'" style="float:left;">
-            <mat-form-field appearance="standard">
+    <div *ngIf="data.contentSummary == 'Enter Filename'">
+            <mat-form-field appearance="fill">
                 <mat-label>{{data.contentSummary}}</mat-label>
                 <input matInput placeholder="FlRLA" [formControl]="fileName">
                 <mat-icon *ngIf="fileName.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
                 <mat-error *ngIf="fileName.invalid">{{getFNameErrorMessage()}}</mat-error>
             </mat-form-field>
     </div>
-    <span style="margin-left:5%;">
+    <div>
         <br />
         <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="linkRoomToProspect()">Link Room to Prospect</button>
         <button  *ngIf="data.contentSummary == 'Chose State for RLA'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Select</button>
@@ -54,6 +53,5 @@
         <button  *ngIf="data.title == 'Unsaved Changes'" class="lowerViewRoomButtons" (click)="openTemplate('no')" mat-button>No</button>
         <button  *ngIf="data.title == 'Unsaved Changes'" class="lowerViewRoomButtons" (click)="openTemplate('cancel')" mat-button>Cancel</button>
         <button *ngIf="data.title != 'Unsaved Changes'" class="lowerViewRoomButtons" (click)="closeNoSelection()" mat-button>Cancel</button>
-    </span>
-</div>
+    </div>
   
