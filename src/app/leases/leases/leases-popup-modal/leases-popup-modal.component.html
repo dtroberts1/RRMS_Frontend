@@ -19,6 +19,16 @@
         </mat-select>
     </mat-form-field>
 </div>
+<div *ngIf="data.contentSummary == 'Choose Lease Document'" style="float:left;">
+    <mat-form-field appearance="fill">
+        <mat-label>{{data.contentSummary}}</mat-label>
+        <mat-select [(ngModel)]="selectedLeaseDoc">
+        <mat-option *ngFor="let leaseDoc of data.content; let i = index" [value]="leaseDoc">
+            {{leaseDoc.DocumentName}}
+        </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
 <div style="width:200px" *ngIf="data.title == 'Lease - Save As'" style="float:left;">
     <mat-form-field appearance="fill">
         <mat-label>{{data.contentSummary}}</mat-label>
@@ -32,7 +42,7 @@
 <div *ngIf="data.title == 'Saved' || data.title == 'Deleted' || data.title == 'Unsaved Changes'">
     <mat-label style="text-align: center;">{{data.contentSummary}}</mat-label>
 </div>
-<div style="width:200px;" *ngIf="data.contentSummary == 'Enter Filename (without ext)' || data.title == 'Lease - Save As'">
+<div style="width:200px;" *ngIf="data.contentSummary == 'Enter Filename' || data.title == 'Lease - Save As'">
     <mat-form-field appearance="fill">
         <mat-label>Enter Filename</mat-label>
         <input matInput placeholder="lease_agmt_for_dana" [formControl]="fileName">
@@ -47,7 +57,8 @@
     <button  *ngIf="data.title == 'Lease - Save As'" class="lowerViewRoomButtons" (click)="sendBackTenant(selected)" mat-button>Save As</button>
     <button  *ngIf="data.title == 'Load Template'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Load</button>
     <button  *ngIf="data.title == 'Delete Template'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Delete</button>
-    <button  *ngIf="data.contentSummary == 'Enter Filename (without ext)'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Save</button>
+    <button  *ngIf="data.title == 'Delete Lease Document'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Delete</button>
+    <button  *ngIf="data.contentSummary == 'Enter Filename'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Save</button>
     <button  *ngIf="data.title == 'Saved' || data.title == 'Deleted'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Ok</button>
     <button  *ngIf="data.title == 'Unsaved Changes'" class="lowerViewRoomButtons" (click)="openTemplate('yes')" mat-button>Yes</button>
     <button  *ngIf="data.title == 'Unsaved Changes'" class="lowerViewRoomButtons" (click)="openTemplate('no')" mat-button>No</button>

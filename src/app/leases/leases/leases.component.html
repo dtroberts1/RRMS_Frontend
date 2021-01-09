@@ -1,5 +1,5 @@
-<ejs-splitbutton (click)="sendMainBtnSelected()" (select)="sendBtnItemSelected($event)"  content="Send" [items]='sendSplitBtnItems'></ejs-splitbutton>
-<ejs-splitbutton (click)="exportItemsMainBtnClicked()" (select)="exportItemsSelected($event)" content="Print" [items]='exportItems'></ejs-splitbutton>
+<ejs-splitbutton *ngIf="loadedFileName != null && currentProspect != null" (click)="sendMainBtnSelected()" (select)="sendBtnItemSelected($event)"  content="Send" [items]='sendSplitBtnItems'></ejs-splitbutton>
+<ejs-splitbutton *ngIf="loadedFileName != null && savedNote != null" (click)="exportItemsMainBtnClicked()" (select)="exportItemsSelected($event)" content="Print" [items]='exportItems'></ejs-splitbutton>
 <ejs-splitbutton (click)="templatesMainBtnSelected()" (select)="serverBtnItemSelected($event)"  content="Leases" [items]='serverSplitBtnItems'></ejs-splitbutton>
 <ejs-splitbutton (click)="rlaBtnClicked()" (select)="rlaBtnItemSelected($event)" content="Templates" [items]='rlaSplitBtnItems'></ejs-splitbutton>
 <label 

@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, ViewChild } from '@angular/core';
 import {TemplateService} from '../../services/template.service';
 import {
-    FormatType, DocumentEditorComponent, DocumentEditorContainerComponent, EditorService, SelectionService, SfdtExportService, ToolbarService, WordExportService, ContentChangeEventArgs, PositionInfo, CustomToolbarItemModel
+    FormatType, DocumentEditorComponent, DocumentEditorContainerComponent, EditorService, SelectionService, SfdtExportService, ToolbarService, WordExportService, ContentChangeEventArgs, PositionInfo, CustomToolbarItemModel, DocumentChangeEventArgs
 } from '@syncfusion/ej2-angular-documenteditor';
 import { ItemModel, MenuEventArgs } from '@syncfusion/ej2-angular-splitbuttons';
 import { MatDialog } from '@angular/material/dialog';
@@ -155,6 +155,19 @@ export class LeaseTemplatesComponent {
         this.savedNote = null;
         this.astrisk = null;
  }
+ documentChanged(args: DocumentChangeEventArgs ){
+    if (this.documentEditorContainerComponent.documentEditor.documentStart.paragraph == 
+        this.documentEditorContainerComponent.documentEditor.documentEnd.paragraph &&
+        this.documentEditorContainerComponent.documentEditor.documentEnd.paragraph.getLength() == 0
+        )
+        {
+            // This should mean that the "New" button was clicked, clearing out the text with empty doc
+            console.log("Content Length is Zero");
+            this.savedNote = null;
+            this.astrisk = "";
+            this.loadedFileName = null;
+        }  
+ }
 rlaBtnClicked(){
     // Default is choose State
     this.dialog.open(LeaseTemplatePopupModal, {
@@ -277,7 +290,7 @@ saveAs(selectedItem: string){
     this.dialog.open(LeaseTemplatePopupModal, {
         data: {
             title: "Save As",
-            contentSummary: "Enter Filename (without ext)",
+            contentSummary: "Enter Filename",
             content: null,
           }
     })

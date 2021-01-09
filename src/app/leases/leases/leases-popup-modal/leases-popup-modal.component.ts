@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
+import { IDocumentProspectDto } from 'src/app/interfaces/DocumentProspect';
 import { IHome } from 'src/app/interfaces/Homes';
 import {IEmployer, SalaryType} from '../../../interfaces/Employer';
 import {IRoom} from '../../../interfaces/Rooms';
@@ -42,6 +43,7 @@ export class LeasesPopupModal implements OnInit {
   hasCeilingFan : boolean;
   hasPrivateBath : boolean;
  selected: number;
+ selectedLeaseDoc: IDocumentProspectDto;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -80,6 +82,9 @@ export class LeasesPopupModal implements OnInit {
     }
     else if(this.data.title == 'Unsaved Changes'){
       this.dialogRef.close(param);
+    }
+    else if (this.data.title == 'Delete Lease Document'){
+      this.dialogRef.close(this.selectedLeaseDoc);
     }
      //this.dialogRef.close(this.selected); // important: returns the id, not the index!!
   }

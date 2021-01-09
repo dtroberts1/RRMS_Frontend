@@ -48,7 +48,7 @@ export class LeaseTemplatePopupModal implements OnInit {
   public dialog: MatDialog, 
   ) {
     if (data != null){
-      
+      console.log("in popup, contentSummary is " + JSON.stringify(data.contentSummary))
     }
   }
   closeNoSelection(){

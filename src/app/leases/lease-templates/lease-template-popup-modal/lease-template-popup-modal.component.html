@@ -33,7 +33,7 @@
         <mat-label style="text-align: center;">{{data.contentSummary}}</mat-label>
     </div>
     <div *ngIf="data.contentSummary == 'Enter Filename'">
-            <mat-form-field appearance="fill">
+            <mat-form-field appearance="standard">
                 <mat-label>{{data.contentSummary}}</mat-label>
                 <input matInput placeholder="FlRLA" [formControl]="fileName">
                 <mat-icon *ngIf="fileName.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
@@ -47,7 +47,7 @@
         <button  *ngIf="data.title == 'Load Template'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Load</button>
         <button  *ngIf="data.title == 'Insert Merge Tag'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Insert</button>
         <button  *ngIf="data.title == 'Delete Template'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Delete</button>
-        <button  *ngIf="data.contentSummary == 'Enter Filename (without ext)'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Save</button>
+        <button  *ngIf="data.contentSummary == 'Enter Filename'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Save</button>
         <button  *ngIf="data.title == 'Saved' || data.title == 'Deleted'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Ok</button>
         <button  *ngIf="data.title == 'Unsaved Changes'" class="lowerViewRoomButtons" (click)="openTemplate('yes')" mat-button>Yes</button>
         <button  *ngIf="data.title == 'Unsaved Changes'" class="lowerViewRoomButtons" (click)="openTemplate('no')" mat-button>No</button>

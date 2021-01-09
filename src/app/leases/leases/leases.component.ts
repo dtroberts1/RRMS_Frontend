@@ -13,6 +13,7 @@ import {IDocumentProspectDto} from '../../interfaces/DocumentProspect';
 import { LeaseDocProspectTableModalComponent } from '../lease-doc-prospect-table/lease-doc-prospect-table-modal/lease-doc-prospect-table-modal.component';
 import { LeaseTemplatePopupModal } from '../lease-templates/lease-template-popup-modal/lease-template-popup-modal.component';
 import { BeforeOpenEventArgs } from '@syncfusion/ej2-popups';
+import { SendLeaseEmailModalComponent } from '../lease-doc-prospect-table/send-lease-email-modal/send-lease-email-modal.component';
 
 @Component({
     selector: 'app-leases',
@@ -28,7 +29,6 @@ export class LeasesComponent {
     uiReady: boolean = false;
     currentProspect: IProspect = null;
     public sendSplitBtnItems: ItemModel[] =[
-      {text: 'Email'},
       {text: 'Send to'},
     ]
     public exportItems : ItemModel[] = [
@@ -119,24 +119,26 @@ export class LeasesComponent {
   this.astrisk = null;
  }
 rlaBtnClicked(){
-    // Default is choose State
-    this.dialog.open(LeasesPopupModal, {
-        data: {
-            title: "Residential Lease Agreement",
-            contentSummary: "Chose State for RLA",
-            content: this.states,
-          }
-    })
-        .afterClosed().subscribe((selectedState: string) => {
-            if (selectedState != null){
-                this.templateService.getStateRLATemplates(selectedState).then((sfdt : any) => {
-                    this.documentEditorContainerComponent.documentEditor.open(sfdt);
-                    this.loadedFileName = `rla_template_${selectedState}`;
-                    this.savedNote = 'Not Saved';
-                    this.astrisk = "*";
-                })
+    // First get list of custom filenames that exist for the landlord
+    this.templateService.getAvailableCustomTemplateFileNames().then((availableFileNames: Iterable<string>) => {
+        this.dialog.open(LeaseTemplatePopupModal, {
+            data: {
+                title: "Load Template",
+                contentSummary: "Choose Template",
+                content: availableFileNames, // Need to set this up, also if returned list contains no elements, it should display different message
             }
-        });
+        })
+            .afterClosed().subscribe((selectedTemplate: string) => {
+                if (selectedTemplate != null){
+                    this.templateService.getTemplate(selectedTemplate).then((sfdt : any) => {
+                        this.documentEditorContainerComponent.documentEditor.open(sfdt);
+                        this.loadedFileName = null;
+                        this.savedNote = null;
+                        this.astrisk = null;
+                    })
+                }
+            });
+    });
 }
 
 testBtnClicked(){
@@ -169,15 +171,36 @@ exportItemsSelected(args: MenuEventArgs){
 }
 sendBtnItemSelected(args: MenuEventArgs){
   let selectedItem: string = args.item.text;
-  if (selectedItem == 'Email'){
-    console.log("Email clicked");
-  }
-  else if(selectedItem == 'Send to'){
-    console.log("'Send to' clicked");
-
+  if(selectedItem == 'Send to'){
+    this.emailHelper();
   }
 }
-
+emailHelper(){
+    this.dialog.open(SendLeaseEmailModalComponent,{
+        data: {docProspectDto: {
+            DocumentName : this.loadedFileName,
+            EmailAddress : this.currentProspect.EmailAddress,
+            FName : this.currentProspect.FName,
+            LName : this.currentProspect.LName,
+            MdInit : this.currentProspect.MdInit,
+            PhoneNumber : this.currentProspect.PhoneNumber,
+            SSN: this.currentProspect.SSN,
+            Status: this.currentProspect.Status,
+            CompletedBackgroundCheck: null,
+            ProspectId: this.currentProspect.ProspectId,
+            DocumentId: null,
+            Signed: null,
+            HomeName: null,
+            RoomName: null,
+            MoveInDate: null,
+            MoveOutDate: null,
+            TermType: null,
+            LatestDocDelivery: null,
+        },
+        }}
+        ).afterClosed().subscribe((emailSent: boolean) => {
+        })
+}
  rlaBtnItemSelected(args: MenuEventArgs){
      let selectedItem: string = args.item.text;
      if (selectedItem == 'Choose Template'){
@@ -194,7 +217,7 @@ sendBtnItemSelected(args: MenuEventArgs){
                 if (selectedTemplate != null){
                     this.templateService.getTemplate(selectedTemplate).then((sfdt : any) => {
                         this.documentEditorContainerComponent.documentEditor.open(sfdt);
-                        this.loadedFileName = `${selectedTemplate}`;
+                        this.loadedFileName = null;
                         this.savedNote = null;
                         this.astrisk = null;
                     })
@@ -268,10 +291,17 @@ sendBtnItemSelected(args: MenuEventArgs){
     });
  }
  documentChanged(args: DocumentChangeEventArgs ){
-    console.log("document changed");
-    // Get rid of footer
-    this.documentEditorContainerComponent.element.style.height = "auto"; 
-    this.documentEditorContainerComponent.documentEditor.resize(); 
+    if (this.documentEditorContainerComponent.documentEditor.documentStart.paragraph == 
+        this.documentEditorContainerComponent.documentEditor.documentEnd.paragraph &&
+        this.documentEditorContainerComponent.documentEditor.documentEnd.paragraph.getLength() == 0
+        )
+        {
+            // This should mean that the "New" button was clicked, clearing out the text with empty doc
+            console.log("Content Length is Zero");
+            this.savedNote = null;
+            this.astrisk = "";
+            this.loadedFileName = null;
+        }  
  }
 somethingHappend(args: Event){
     console.log("BeforeOpend");
@@ -286,9 +316,27 @@ exportItemsMainBtnClicked(){
      this.savedNote = 'Not Saved';
      this.astrisk = "*";
     console.log("contentChanged");
+    /*
+    if (this.documentEditorContainerComponent.documentEditor.documentStart.paragraph == 
+        this.documentEditorContainerComponent.documentEditor.documentEnd.paragraph &&
+        this.documentEditorContainerComponent.documentEditor.documentEnd.paragraph.getLength() == 0
+        )
+        {
+            console.log("Content Length is Zero");
+        }  
+*/
 }
 contentChangeEventArgs(args: ContentChangeEventArgs){
-    console.log("documentChanged");
+    if (this.documentEditorContainerComponent.documentEditor.documentStart.paragraph == 
+        this.documentEditorContainerComponent.documentEditor.documentEnd.paragraph &&
+        this.documentEditorContainerComponent.documentEditor.documentEnd.paragraph.getLength() == 0
+        )
+        {
+            console.log("Content Length is Zero");
+        }  
+    else{
+        console.log("in else, length is " + this.documentEditorContainerComponent.documentEditor.documentEnd.paragraph.getLength())
+    }
 }
 
 containerSelectionChangedEventArgs(args: ContainerSelectionChangeEventArgs){
@@ -382,21 +430,22 @@ async serverBtnItemSelected(args: MenuEventArgs){
     }
     else if(selectedItem == 'Delete'){
         // First get list of custom filenames that exist for the landlord
-        this.templateService.getAvailableCustomTemplateFileNames().then((availableFileNames: Iterable<string>) => {
+        this.leaseDocumentService.getDocumentProspectDtos().then((leaseDocDtos: Iterable<IDocumentProspectDto>) => {
             this.dialog.open(LeasesPopupModal, {
                 data: {
-                    title: "Delete Template", // from 'Load Template'
-                    contentSummary: "Choose Template",
-                    content: availableFileNames, // Need to set this up, also if returned list contains no elements, it should display different message
+                    title: "Delete Lease Document", // from 'Load Template'
+                    contentSummary: "Choose Lease Document",
+                    content: leaseDocDtos, // Need to set this up, also if returned list contains no elements, it should display different message
                   }
             })
-                .afterClosed().subscribe((selectedTemplate: string) => {
-                    if (selectedTemplate != null){
-                        this.templateService.deleteTemplate(selectedTemplate).then(()=>{
+                .afterClosed().subscribe((leaseDocDto: IDocumentProspectDto) => {
+                    console.log("Back in leases, selected result is " + JSON.stringify(leaseDocDto));
+                    if (leaseDocDto != null){
+                        this.leaseDocumentService.removeLeaseDocument(leaseDocDto.DocumentId).then(()=>{
                             this.dialog.open(LeasesPopupModal, {
                                 data: {
                                     title: "Deleted",
-                                    contentSummary: `${selectedTemplate} has been removed`,
+                                    contentSummary: `${leaseDocDto.DocumentName} has been removed`,
                                     content: null,
                                   }
                             })
