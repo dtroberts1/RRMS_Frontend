@@ -67,9 +67,9 @@ export class LeaseDocProspectTableModalComponent implements OnInit {
             })
             .afterClosed().subscribe(() => {
               this.data.content = leaseDocDtos;
-              this.dataSource = Array.from(this.data.content);            })
+              this.dataSource = Array.from(this.data.content);            
             })
-          
+          })
         })
       });
     }
@@ -117,8 +117,11 @@ export class LeaseDocProspectTableModalComponent implements OnInit {
   openDocument(){
     if (this.selection != null && this.selection.selected[0] != null)
     {
-      this.dialogRef.close({selectedTemplate: this.selection.selected[0].DocumentName, 
-        prospectId: this.selection.selected[0].ProspectId }); // Return the filename (without ext)
+      this.dialogRef.close({
+        selectedTemplate: this.selection.selected[0].DocumentName, 
+        prospectId: this.selection.selected[0].ProspectId,
+        selectedDocId: this.selection.selected[0].DocumentId,
+      }); // Return the filename (without ext)
     }
     else{
     }

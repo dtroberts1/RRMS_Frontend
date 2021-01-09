@@ -39,7 +39,9 @@ export class SendLeaseEmailModalComponent implements OnInit {
     this.emailOptions = [this.data.docProspectDto.EmailAddress, 'Enter a different email'];
     this.subjectOptions = ['"Your Lease Agreement"', 'Customize Subject'];
     this.attachmentOptions = [this.data.docProspectDto.DocumentName, 'Browse local File']
-
+    if (this.data != null){
+      console.log("In modal, data is " + JSON.stringify(this.data));
+    }
   }
   attachmentSelectionChanged(){
     if (this.selectedAttachmentOption == 'Browse local File'){

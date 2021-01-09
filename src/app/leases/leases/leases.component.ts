@@ -15,6 +15,7 @@ import { LeaseTemplatePopupModal } from '../lease-templates/lease-template-popup
 import { BeforeOpenEventArgs } from '@syncfusion/ej2-popups';
 import { SendLeaseEmailModalComponent } from '../lease-doc-prospect-table/send-lease-email-modal/send-lease-email-modal.component';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
+import { stringify } from '@angular/compiler/src/util';
 
 @Component({
     selector: 'app-leases',
@@ -25,6 +26,7 @@ import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component'
 
 export class LeasesComponent {
     loadedFileName : string = null;
+    loadedDocumentId: number = null;
     savedNote : string = null;
     astrisk: string = "";
     uiReady: boolean = false;
@@ -213,27 +215,29 @@ sendBtnItemSelected(args: MenuEventArgs){
   }
 }
 emailHelper(){
+    let dtoData = {
+        DocumentName : this.loadedFileName,
+        EmailAddress : this.currentProspect.EmailAddress,
+        FName : this.currentProspect.FName,
+        LName : this.currentProspect.LName,
+        MdInit : this.currentProspect.MdInit,
+        PhoneNumber : this.currentProspect.PhoneNumber,
+        SSN: this.currentProspect.SSN,
+        Status: this.currentProspect.Status,
+        CompletedBackgroundCheck: null,
+        ProspectId: this.currentProspect.ProspectId,
+        DocumentId: this.loadedDocumentId,
+        Signed: null,
+        HomeName: null,
+        RoomName: null,
+        MoveInDate: null,
+        MoveOutDate: null,
+        TermType: null,
+        LatestDocDelivery: null,
+    }
+    console.log("Attempting to send" + JSON.stringify(dtoData))
     this.dialog.open(SendLeaseEmailModalComponent,{
-        data: {docProspectDto: {
-            DocumentName : this.loadedFileName,
-            EmailAddress : this.currentProspect.EmailAddress,
-            FName : this.currentProspect.FName,
-            LName : this.currentProspect.LName,
-            MdInit : this.currentProspect.MdInit,
-            PhoneNumber : this.currentProspect.PhoneNumber,
-            SSN: this.currentProspect.SSN,
-            Status: this.currentProspect.Status,
-            CompletedBackgroundCheck: null,
-            ProspectId: this.currentProspect.ProspectId,
-            DocumentId: null,
-            Signed: null,
-            HomeName: null,
-            RoomName: null,
-            MoveInDate: null,
-            MoveOutDate: null,
-            TermType: null,
-            LatestDocDelivery: null,
-        },
+        data: {docProspectDto: dtoData,
         }}
         ).afterClosed().subscribe((emailSent: boolean) => {
         })
@@ -285,22 +289,23 @@ emailHelper(){
             data: {
                 content: docProspectDtos,
             }
-        })
-            .afterClosed().subscribe((retFromTable: {selectedTemplate: string, prospectId: number}) => {
-                if (retFromTable != null && retFromTable.selectedTemplate != "" && retFromTable.prospectId != null){
-                    // First get prospect using ID (so you can later resave)
-                    this.prospectService.getProspect(retFromTable.prospectId)
-                    .then((pros: IProspect) => {
-                        this.currentProspect = pros;
-                        this.leaseDocumentService.getDocument(retFromTable.selectedTemplate, retFromTable.prospectId).then((sfdt : any) => {
+    })
+        .afterClosed().subscribe((retFromTable: {selectedTemplate: string, prospectId: number, selectedDocId: number}) => {
+            if (retFromTable != null && retFromTable.selectedTemplate != "" && retFromTable.prospectId != null){
+                // First get prospect using ID (so you can later resave)
+                this.prospectService.getProspect(retFromTable.prospectId)
+                .then((pros: IProspect) => {
+                    this.currentProspect = pros;
+                    this.leaseDocumentService.getDocument(retFromTable.selectedTemplate, retFromTable.prospectId).then((sfdt : any) => {
                         this.documentEditorContainerComponent.documentEditor.open(sfdt);
                         this.loadedFileName = `${retFromTable.selectedTemplate}`;
                         this.savedNote = null;
                         this.astrisk = null;
-                        });
-                    })
-                }
-            });
+                        this.loadedDocumentId = retFromTable.selectedDocId;
+                    });
+                })
+            }
+        });
     });
  }
  documentChanged(args: DocumentChangeEventArgs ){
@@ -367,8 +372,9 @@ saveAs(selectedItem: string){
                         .then((pros: IProspect) => {
                         this.currentProspect = pros;
                         this.leaseDocumentService.addDocument(sfdt, pros, retVal.fileName)
-                            .then((res) => {    
-                                if (res == 0){
+                            .then((documentId: number) => {    
+                                if (documentId != null){
+                                    this.loadedDocumentId = documentId;
                                     this.savedNote = null;
                                     this.astrisk = null;
                                     this.loadedFileName = retVal.fileName;
@@ -383,7 +389,7 @@ saveAs(selectedItem: string){
                                     })
                                 }
                                 else{
-                                    console.log("result is " + res);
+                                    console.log("result is " + documentId);
                                     reject();
                                 }
                             })

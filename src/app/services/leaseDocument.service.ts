@@ -126,9 +126,9 @@ export class LeaseDocumentService{
           console.log("about to send through: filename: " + fileName + " prospect: " + prospect + " and sfdt: " + JSON.stringify(sfdt));
         return new Promise((resolve, reject) => { this.http
             .post<IProspect>(`${this.leaseDocumentsUrl}/CreateLeaseDocument/${fileName}/${prospect.Id}`, sfdt, options).subscribe(
-             document => {
+             documentId => {
                     // Get some logic for response (should just return id back for newly added home)'
-                    resolve(document);
+                    resolve(documentId);
                 },
                 error => {
                   reject(error);
