@@ -6,6 +6,7 @@ import {IPreviousRental} from './PreviousRental';
 export interface IEmailedLeaseDocMessage{
     message: string,
     subject: string,
-    leaseDocumentId: number,
+    leaseDocumentId: number, // optional
     emailAddress: string,
+    localFileData: any, // optional
 }

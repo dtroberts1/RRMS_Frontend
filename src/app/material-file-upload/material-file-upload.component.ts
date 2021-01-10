@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { HttpClient, HttpResponse, HttpRequest, 
-         HttpEventType, HttpErrorResponse } from '@angular/common/http';
+         HttpEventType, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { of } from 'rxjs';
 import { catchError, last, map, tap } from 'rxjs/operators';
@@ -25,10 +25,9 @@ export class MaterialFileUploadComponent implements OnInit {
       /** Name used in form which will be sent in HTTP request. */
       @Input() param = 'file';
       /** Target URL for file uploading. */
-      @Input() target = 'https://file.io';
+      @Input() target = 'http://localhost:64097/api/DocumentDeliveries/DeliverAddRecordCustom';
       /** File extension that accepted, same as 'accept' of <input type="file" />. 
           By the default, it's set to 'image/*'. */
-      @Input() accept = 'image/*';
       /** Allow you to add handler after its completion. Bubble up response text from remote. */
       @Output() complete = new EventEmitter<string>();
 
@@ -63,12 +62,22 @@ export class MaterialFileUploadComponent implements OnInit {
       }
 
       private uploadFile(file: FileUploadModel) {
-            const fd = new FormData();
-            fd.append(this.param, file.data);
+        let token = JSON.parse(localStorage.getItem('user'));
+          let options = {
+            headers: new HttpHeaders()
+            .set('Authorization', "bearer " + token),
+            };
 
-            const req = new HttpRequest('POST', this.target, fd, {
-                  reportProgress: true
-            });
+            const fd = new FormData();
+            console.log("this.param is " + this.param);
+            fd.append(this.param, file.data);
+            fd.append("Email", "myemail@email.com");
+            fd.append("SubjectLine", "Here's my custom subject");
+            fd.append("EmailBody", "Here's my body");
+            fd.append("Ext", file.data.name.substr(file.data.name.lastIndexOf('.') + 1));
+
+
+            const req = new HttpRequest('POST', this.target, fd, options);
 
             file.inProgress = true;
             file.sub = this._http.request(req).pipe(
@@ -115,13 +124,12 @@ export class MaterialFileUploadComponent implements OnInit {
       }
 
 }
-
 export class FileUploadModel {
-      data: File;
-      state: string;
-      inProgress: boolean;
-      progress: number;
-      canRetry: boolean;
-      canCancel: boolean;
-      sub?: Subscription;
+    data: File;
+    state: string;
+    inProgress: boolean;
+    progress: number;
+    canRetry: boolean;
+    canCancel: boolean;
+    sub?: Subscription;
 }

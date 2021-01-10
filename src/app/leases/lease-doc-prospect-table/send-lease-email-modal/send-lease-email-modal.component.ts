@@ -16,6 +16,7 @@ export class SendLeaseEmailModalComponent implements OnInit {
   emailOptions: Iterable<string>;
   subjectOptions: Iterable<string>;
   attachmentOptions: Iterable<string>;
+  localFileData: any;
 
   selectedEmailOption: string = null;
   selectedSubjectOption: string = null;
@@ -49,10 +50,12 @@ export class SendLeaseEmailModalComponent implements OnInit {
     }
     else{
       this.showAttachmentBrowse = false;
+      this.localFileData = null;
     }
   }
-    onFileComplete(data: any) {
-      console.log("attachment data is " + JSON.stringify(data))
+    onFileComplete(file: any) {
+      console.log("attachment file.data.size is " + JSON.stringify(file.data.size))
+      this.localFileData = file.data;
   }
 
   getSubject(){
@@ -81,6 +84,7 @@ export class SendLeaseEmailModalComponent implements OnInit {
       subject: this.getSubject(),
       leaseDocumentId: this.data.docProspectDto.DocumentId,
       emailAddress: this.getEmail(),
+      localFileData: this.localFileData,
     }).then((result : number) => {
       if (result == 0){
         // Result is Ok

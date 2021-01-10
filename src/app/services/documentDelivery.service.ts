@@ -42,7 +42,6 @@ export class DocumentDeliveryService{
     }
     
     async DeliverAddRecord(docMessage: IEmailedLeaseDocMessage){
-      console.log("In the service, param is " + JSON.stringify(docMessage))
       // Get token from localStorage
       this.currToken = JSON.parse(localStorage.getItem('user'));
       if (this.currToken != null){
