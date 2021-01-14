@@ -56,7 +56,8 @@ import { DocumentDeliveriesModalComponent } from './leases/lease-doc-prospect-ta
 import { RemoveRoomModalComponent } from './homes/home/remove-room-modal/remove-room-modal.component';
 import { LeaseDocumentApprovalComponent } from './lease-document-approval/lease-document-approval.component';
 import { AdminGuard } from './admin/admin.guard';
-import { PdfViewerComponent } from '@syncfusion/ej2-angular-pdfviewer';
+import { PdfViewerModule  } from '@syncfusion/ej2-angular-pdfviewer';
+
 
 const appRoutes: Routes = [
  { path: '', children: [
@@ -138,7 +139,7 @@ const appRoutes: Routes = [
     schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
     imports: [
       BrowserModule,
-      PdfViewerComponent,
+      PdfViewerModule,
       BrowserAnimationsModule,
       CommonModule,
       ButtonModule,
@@ -159,6 +160,19 @@ const appRoutes: Routes = [
         apiKey: 'AIzaSyDmNBhieCcLQWf4Bk97IWi-0pYujLH-ODU',
         libraries: ['places']
       })
+    ],
+    entryComponents:[
+      LeaseTemplatePopupModal,
+      LeaseDocProspectTableModalComponent,
+      SendLeaseEmailModalComponent,
+      RemoveRoomModalComponent,
+      AddApprovedProspectComponentModal,
+      LinkRoomModalComponent,
+      AddEmployerComponent,
+      AddPrevRentalComponent,
+      LeasesPopupModal,
+      DialogDataRRMSDialog,
+      EditProspectComponent,
     ],
     providers: [HttpClientModule, MatDialogModule],
     bootstrap: [AppComponent],

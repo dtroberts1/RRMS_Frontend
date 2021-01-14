@@ -40,6 +40,7 @@ export class MaterialFileUploadComponent implements OnInit {
         ) { }
 
       ngOnInit() {
+          
       }
 
       onClick() {
