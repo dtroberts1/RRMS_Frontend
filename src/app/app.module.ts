@@ -1,5 +1,5 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import { ButtonModule } from '@syncfusion/ej2-angular-buttons';
@@ -56,6 +56,7 @@ import { DocumentDeliveriesModalComponent } from './leases/lease-doc-prospect-ta
 import { RemoveRoomModalComponent } from './homes/home/remove-room-modal/remove-room-modal.component';
 import { LeaseDocumentApprovalComponent } from './lease-document-approval/lease-document-approval.component';
 import { AdminGuard } from './admin/admin.guard';
+import { PdfViewerComponent } from '@syncfusion/ej2-angular-pdfviewer';
 
 const appRoutes: Routes = [
  { path: '', children: [
@@ -137,6 +138,7 @@ const appRoutes: Routes = [
     schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
     imports: [
       BrowserModule,
+      PdfViewerComponent,
       BrowserAnimationsModule,
       CommonModule,
       ButtonModule,

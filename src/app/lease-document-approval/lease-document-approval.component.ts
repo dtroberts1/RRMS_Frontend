@@ -1,8 +1,11 @@
 import { Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import {
-  FormatType, DocumentEditorComponent, DocumentEditorContainerComponent, EditorService, SelectionService, SfdtExportService, ToolbarService, WordExportService, ContentChangeEventArgs, DocumentChangeEventArgs, ContainerSelectionChangeEventArgs
-} from '@syncfusion/ej2-angular-documenteditor';
+  LinkAnnotationService, BookmarkViewService, MagnificationService, ThumbnailViewService,
+  ToolbarService, NavigationService, AnnotationService, TextSearchService, TextSelectionService, PrintService
+} from '@syncfusion/ej2-angular-pdfviewer';
+import { ActivatedRoute, Router } from '@angular/router';
+// import the PdfViewer Module for the PDF Viewer component
+import { PdfViewerComponent } from '@syncfusion/ej2-angular-pdfviewer';
 import { LeaseDocumentService } from '../services/leaseDocument.service';
 import { TemplateService } from '../services/template.service';
 
@@ -10,13 +13,14 @@ import { TemplateService } from '../services/template.service';
   selector: 'app-lease-document-approval',
   templateUrl: './lease-document-approval.component.html',
   styleUrls: ['./lease-document-approval.component.css'],
-  encapsulation: ViewEncapsulation.None,
-  providers: [ToolbarService, EditorService, SelectionService, SfdtExportService,WordExportService, TemplateService]
+  providers: [LinkAnnotationService, BookmarkViewService, MagnificationService,
+    ThumbnailViewService, ToolbarService, NavigationService, AnnotationService, TextSearchService, TextSelectionService,PrintService]
 })
 export class LeaseDocumentApprovalComponent implements OnInit {
-  @ViewChild('document_editor')
+  public service = 'https://ej2services.syncfusion.com/production/web-services/api/pdfviewer';
+  public document = 'PDF_Succinctly.pdf';
+
   // Issue is here
-  public documentEditor: DocumentEditorContainerComponent;
   public items = [];
   leaseDocConfCode: number = null;;
 
@@ -53,13 +57,11 @@ export class LeaseDocumentApprovalComponent implements OnInit {
   onCreated(){
     console.log("created..");
     // Make the editor read only and remove properties pane
-    this.documentEditor.documentEditor.isReadOnly = true;
-    this.documentEditor.showPropertiesPane = false;
 
     // Call the service to load the document in the editor
     this.leaseDocService.getDocumentUsingConfCode(this.leaseDocConfCode)
       .then((sfdt : string) => {
-        this.documentEditor.documentEditor.open(sfdt);
+
       })
   }
 }
