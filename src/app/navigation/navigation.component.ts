@@ -36,6 +36,7 @@ export class NavigationComponent implements OnInit {
     });
   }
   logout(){
-    this.router.navigate([``]);
+    // Should notify parent (dashboard, which should notify parent app to set showdashboard to false)
+    this.router.navigate(['login']);
   }
 }

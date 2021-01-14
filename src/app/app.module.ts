@@ -54,10 +54,12 @@ import { LeaseDocProspectTableModalComponent } from './leases/lease-doc-prospect
 import { SendLeaseEmailModalComponent } from './leases/lease-doc-prospect-table/send-lease-email-modal/send-lease-email-modal.component';
 import { DocumentDeliveriesModalComponent } from './leases/lease-doc-prospect-table/document-deliveries-modal/document-deliveries-modal.component';
 import { RemoveRoomModalComponent } from './homes/home/remove-room-modal/remove-room-modal.component';
+import { LeaseDocumentApprovalComponent } from './lease-document-approval/lease-document-approval.component';
+import { AdminGuard } from './admin/admin.guard';
 
 const appRoutes: Routes = [
-  { path: '', component: AppComponent},
-  { path: 'login', component: LoginScreenComponent},
+ { path: '', children: [
+  { path: 'login', component: AppComponent}, /*Using this for when user clicks logout from dashboard */
   { path: 'dashboard' , component: Dashboard, children :
     [
       { path: 'homes', component: HomesComponent, outlet:'view'},
@@ -80,7 +82,11 @@ const appRoutes: Routes = [
       { path: 'leases/lease-templates', component: LeaseTemplatesComponent, outlet:'view' },
     ]
   },
-  /*{ path: '**', redirectTo: ''},*/
+ ]}, 
+ { path: 'lease-appvdcode/:id', component: LeaseDocumentApprovalComponent},
+ { path: '**', redirectTo: 'login'},
+
+/* { path: 'login', component: LoginScreenComponent},*/
 ];
 @NgModule({
   declarations: [
@@ -126,6 +132,7 @@ const appRoutes: Routes = [
     SendLeaseEmailModalComponent,
     DocumentDeliveriesModalComponent,
     RemoveRoomModalComponent,
+    LeaseDocumentApprovalComponent,
     ],
     schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
     imports: [

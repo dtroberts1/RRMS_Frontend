@@ -46,7 +46,7 @@
     </mat-form-field>
     <app-material-file-upload *ngIf="showAttachmentBrowse == true" text="Browse" (complete)="onFileComplete($event)"></app-material-file-upload>
     <br />
-    <h6 *ngIf="localFileData != null && localFileData.size > 0">{{localFileData.name}}</h6>
+    <h3 style="color:blue;" *ngIf="localFileNameIsValid() == true">Attachment: {{localFileName}}</h3>
     <!--Body-->
     <mat-form-field style="width:400px !important" appearance="standard">
         <mat-label>Email Body</mat-label>

@@ -1,6 +1,3 @@
-<style>
-</style>
-
 <!-- Toolbar -->
 <div *ngIf="showDashboard == false" class="toolbar">
   <img
@@ -22,12 +19,16 @@
   </span>
 </div>
 
-<div [ngClass]="{'home-page-container':showDashboard == false, 'home-page-container-show-dashboard' : showDashboard == true}" class="home-page-container">
-    <div class="dashboardContainer" *ngIf="showDashboard == true">
-      <router-outlet>     <!-- <dashboard>
 
-      </dashboard> --></router-outlet>
-    </div>
+<div [ngClass]="{'home-page-container':showDashboard == false, 'home-page-container-show-dashboard' : showDashboard == true}" class="home-page-container">
+  <router-outlet>
+  </router-outlet>
+  <app-lease-document-approval *ngIf="canShowLeaseDocApprovalScrn == true"
+    [confCode]="leaseDocApprvConfCode"
+  >
+    here is some stuff
+  </app-lease-document-approval>
+
     <div class="loginScreenContainer" *ngIf="showLoginScreen">
       <login-screen
       (notifyFromLogin)="onNotifyFromLogin($event)"

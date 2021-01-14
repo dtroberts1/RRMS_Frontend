@@ -1,6 +1,6 @@
 import { Component,OnInit } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {AccountService} from './services/account.service';
 
 @Component({
@@ -8,7 +8,9 @@ import {AccountService} from './services/account.service';
   templateUrl: './app.component.html',  styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit{
-  constructor(private router: Router){
+  constructor(private router: Router,
+    private route: ActivatedRoute,
+    ){
 
   }
   title = 'RRMSWebapp';
@@ -17,6 +19,7 @@ export class AppComponent implements OnInit{
   showCreateAcctScreen: boolean = false;
   showCreateAcctEmailConfScreen: boolean = false;
   showDashboard: boolean = false;
+  canShowLeaseDocApprovalScrn: boolean = false;
   email = new FormControl('', [Validators.required, Validators.email]);
 
   onNotifyFromCreateAcctEmailConf(message: string): void{
@@ -45,6 +48,7 @@ export class AppComponent implements OnInit{
   }
   toggleDashboard(): void{
     this.showDashboard = !this.showDashboard;
+    console.log("showDashboard is "+ this.showDashboard);
   }
   toggleLoginScreen(): void{
     if (this.showDashboard)
@@ -52,7 +56,7 @@ export class AppComponent implements OnInit{
       // Clear Token
       localStorage.clear();
       this.showDashboard = !this.showDashboard;
-      this.router.navigate([``]);
+      this.router.navigate([`login`]);
     }
     this.showLoginScreen = !this.showLoginScreen;
   }
@@ -60,5 +64,20 @@ export class AppComponent implements OnInit{
     this.showCreateAcctScreen = !this.showCreateAcctScreen;
   }
   ngOnInit(){   
+    if (this.route.queryParams != null){
+      this.route.queryParams.subscribe(queryParams => {
+        console.log("queryParams is " + JSON.stringify(queryParams))
+        // do something with the query params
+      });
+      this.route.params.subscribe(routeParams => {
+        console.log("routeParam is " + JSON.stringify(routeParams))
+        if (routeParams.id != undefined)
+        {
+          console.log("displaying ui");
+          this.canShowLeaseDocApprovalScrn = true;
+
+        }
+      });
+    }
   }
 }

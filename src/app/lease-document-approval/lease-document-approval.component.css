@@ -5,7 +5,7 @@
     right:0;
     top:0%;
     height:96%;
-    background-image:url('../assets/ralph-ravi-kayden-2d4lAQAlbDA-unsplash.jpg');
+    background-image:url('../../assets/ralph-ravi-kayden-2d4lAQAlbDA-unsplash.jpg');
     background-size:cover;
     background-repeat:no-repeat;
   }
@@ -16,10 +16,33 @@
     right:0;
     top:4%;
     height:100%;
-    background-image:url('../assets/ralph-ravi-kayden-2d4lAQAlbDA-unsplash.jpg');
+    background-image:url('../../assets/ralph-ravi-kayden-2d4lAQAlbDA-unsplash.jpg');
     background-size:cover;
     background-repeat:no-repeat;
   }
+
+  .button-container {
+    display: flex;
+    justify-content: space-around;  
+    margin-top: 10px;
+  }
+    .flex-items {  
+        margin: 10px;  
+    }  
+  
+
+  .lease-approval-confirm-container{
+    background-color: #f6edd5;
+    position:absolute;
+    height:750px;
+    top:10%;
+    width:50%;
+    left:25%;
+    opacity: .95;
+    border-radius:15px;
+    background-color: #ece9e3;
+  }
+
   
   .toolbar {
     position: absolute;
@@ -60,28 +83,6 @@
     background-color: #f6edd5;
     position:absolute;
     height:245px;
-    top:20%;
-    width:25%;
-    left:37.5%;
-    opacity: .8;
-    border-radius:15px;
-  }
-
-  .createAcctScreenContainer{
-    background-color: #f6edd5;
-    position:absolute;
-    height:350px;
-    top:20%;
-    width:25%;
-    left:37.5%;
-    opacity: .8;
-    border-radius:15px;
-  }
-
-  .createAcctEmailConf{
-    background-color: #f6edd5;
-    position:absolute;
-    height: 16%;
     top:20%;
     width:25%;
     left:37.5%;

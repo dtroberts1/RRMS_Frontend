@@ -5,6 +5,8 @@ import { HttpClient, HttpResponse, HttpRequest,
 import { Subscription } from 'rxjs';
 import { of } from 'rxjs';
 import { catchError, last, map, tap } from 'rxjs/operators';
+import { DialogDataRRMSDialog } from '../dialog-data/dialog-data.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-material-file-upload',
@@ -29,11 +31,13 @@ export class MaterialFileUploadComponent implements OnInit {
       /** File extension that accepted, same as 'accept' of <input type="file" />. 
           By the default, it's set to 'image/*'. */
       /** Allow you to add handler after its completion. Bubble up response text from remote. */
-      @Output() complete = new EventEmitter<string>();
+      @Output() complete = new EventEmitter<FormData>();
 
       private files: Array<FileUploadModel> = [];
 
-      constructor(private _http: HttpClient) { }
+      constructor(private _http: HttpClient,
+        public dialog: MatDialog, 
+        ) { }
 
       ngOnInit() {
       }
@@ -57,54 +61,34 @@ export class MaterialFileUploadComponent implements OnInit {
       }
 
       retryFile(file: FileUploadModel) {
+          console.log("in retryFile");
             this.uploadFile(file);
             file.canRetry = false;
       }
 
       private uploadFile(file: FileUploadModel) {
-        let token = JSON.parse(localStorage.getItem('user'));
-          let options = {
-            headers: new HttpHeaders()
-            .set('Authorization', "bearer " + token),
-            };
-
+            let fileExt : string = file.data.name.split('.').pop().toLowerCase();
+            if (fileExt != 'pdf' && fileExt != 'doc' && fileExt != 'docx'){
+                // Prompt invalid file type
+                this.dialog.open(DialogDataRRMSDialog, {
+                    data: {
+                      inError: true,
+                      title: "Invalid File Type",
+                      contentSummary: "Invalid Filetype. Try loading a file extension ending with .pdf, .doc, or .docx",
+                      errorItems: []
+                    }
+                  });
+                  this.removeFileFromArray(file);
+                  file = null;
+                return;
+            }
             const fd = new FormData();
             console.log("this.param is " + this.param);
             fd.append(this.param, file.data);
-            fd.append("Email", "myemail@email.com");
-            fd.append("SubjectLine", "Here's my custom subject");
-            fd.append("EmailBody", "Here's my body");
-            fd.append("Ext", file.data.name.substr(file.data.name.lastIndexOf('.') + 1));
-
-
-            const req = new HttpRequest('POST', this.target, fd, options);
-
-            file.inProgress = true;
-            file.sub = this._http.request(req).pipe(
-                  map(event => {
-                        switch (event.type) {
-                              case HttpEventType.UploadProgress:
-                                    file.progress = Math.round(event.loaded * 100 / event.total);
-                                    break;
-                              case HttpEventType.Response:
-                                    return event;
-                        }
-                  }),
-                  tap(message => { }),
-                  last(),
-                  catchError((error: HttpErrorResponse) => {
-                        file.inProgress = false;
-                        file.canRetry = true;
-                        return of(`${file.data.name} upload failed.`);
-                  })
-            ).subscribe(
-                  (event: any) => {
-                        if (typeof (event) === 'object') {
-                              this.removeFileFromArray(file);
-                              this.complete.emit(event.body);
-                        }
-                  }
-            );
+            fd.append('LocalFileName', file.data.name);
+            this.removeFileFromArray(file);
+            file = null;
+            this.complete.emit(fd);
       }
 
       private uploadFiles() {

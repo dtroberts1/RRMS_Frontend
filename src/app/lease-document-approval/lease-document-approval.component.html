@@ -1,0 +1,12 @@
+<!-- Toolbar -->
+
+<div class="lease-approval-confirm-container">
+    <h1 style="text-align: center;color:blue;">Your Lease Agreement</h1>
+    <div style="height:650px">
+        <ejs-documenteditorcontainer #document_editor id="container" [toolbarItems]="items" (created)="onCreated()" serviceUrl="https://ej2services.syncfusion.com/production/web-services/api/documenteditor/" [isReadOnly]=true [enableEditor]=false [enableWordExport]=true [enableSfdtExport]=true> </ejs-documenteditorcontainer>
+    </div>
+    <div class="button-container">
+        <button  class="flex-items" style="background-color:blue; color:white;" mat-button >Accept</button>
+        <button  class="flex-items" style="background-color:blue; color:white;" mat-button >Decline</button>
+    </div>
+</div>

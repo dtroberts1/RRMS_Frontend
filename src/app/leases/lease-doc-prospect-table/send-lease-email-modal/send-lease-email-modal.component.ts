@@ -1,6 +1,10 @@
+import { HttpClient, HttpErrorResponse, HttpEventType, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { of } from 'rxjs';
+import { catchError, last, map, tap } from 'rxjs/operators';
+import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IDocumentProspectDto } from 'src/app/interfaces/DocumentProspect';
 import { DocumentDeliveryService } from 'src/app/services/documentDelivery.service';
 
@@ -16,7 +20,8 @@ export class SendLeaseEmailModalComponent implements OnInit {
   emailOptions: Iterable<string>;
   subjectOptions: Iterable<string>;
   attachmentOptions: Iterable<string>;
-  localFileData: any;
+  localFileName: string;
+  fd: FormData = null;
 
   selectedEmailOption: string = null;
   selectedSubjectOption: string = null;
@@ -30,6 +35,7 @@ export class SendLeaseEmailModalComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    private _http: HttpClient,
     public dialogRef: MatDialogRef<SendLeaseEmailModalComponent>,
     public dialog: MatDialog, 
     private documentDeliveryService: DocumentDeliveryService,
@@ -50,14 +56,24 @@ export class SendLeaseEmailModalComponent implements OnInit {
     }
     else{
       this.showAttachmentBrowse = false;
-      this.localFileData = null;
+      this.localFileName = null;
     }
   }
-    onFileComplete(file: any) {
-      console.log("attachment file.data.size is " + JSON.stringify(file.data.size))
-      this.localFileData = file.data;
+  onFileComplete(fd: FormData) {
+    console.log("emailBodyInput is " + this.emailBodyInput.value);
+    this.localFileName = fd.get('LocalFileName').toString();
+    console.log("localFileName is " + this.localFileName);
+    this.fd = fd;
   }
-
+  localFileNameIsValid() : boolean{
+    if (this.localFileName != null && this.localFileName != "")
+      {
+        return true;
+      }
+      else{
+        return false;
+      }
+  }
   getSubject(){
     // Used for API call -- based on what user chooses from combobox
     if (this.showSubjectTextBox == false){
@@ -78,24 +94,79 @@ export class SendLeaseEmailModalComponent implements OnInit {
   }
 
   sendEmail(){
-    console.log("sending email..");
-    this.documentDeliveryService.DeliverAddRecord({
-      message: this.emailBodyInput.value,
-      subject: this.getSubject(),
-      leaseDocumentId: this.data.docProspectDto.DocumentId,
-      emailAddress: this.getEmail(),
-      localFileData: this.localFileData,
-    }).then((result : number) => {
-      if (result == 0){
-        // Result is Ok
-        console.log("result is ok, closing dialog with true");
-        this.dialogRef.close(true); // Should actually open a modal saying it's been sent
-      }
-      else{
-        console.log("result is error");
-        // Should actually open a modal saying it's been sent
-      }
-    })
+    if (this.localFileName != null){
+      this.fd.append("Email", this.getEmail());
+      this.fd.append("SubjectLine", this.getSubject());
+      this.fd.append("EmailBody", this.emailBodyInput.value);
+      this.documentDeliveryService.DeliverAddRecordCustom(this.fd)
+      .then(() => {
+        this.fd = null;
+        this.dialog.open(DialogDataRRMSDialog, {
+          data: {
+            inError: false,
+            title: "Lease Document Sent",
+            contentSummary: "Lease Email has been sent to " + this.getEmail(),
+            errorItems: []
+          }
+          }).afterClosed().subscribe(() => {
+            this.dialogRef.close(true);
+          })
+      })
+      .catch((err) => {
+        this.dialog.open(DialogDataRRMSDialog, {
+          data: {
+            inError: true,
+            title: "Unable to process",
+            contentSummary: "We're sorry. We are unable to process. Our engineers have been notified and are working on the issue to get this resolved asap",
+            errorItems: []
+          }
+        });
+      })
+    }
+    else{
+      console.log("sending email..");
+      this.documentDeliveryService.DeliverAddRecord({
+        message: this.emailBodyInput.value,
+        subject: this.getSubject(),
+        leaseDocumentId: this.data.docProspectDto.DocumentId,
+        emailAddress: this.getEmail(),
+        localFileData: this.localFileName,
+      }).then((result : number) => {
+        if (result == 0){
+          this.fd = null;
+          this.dialog.open(DialogDataRRMSDialog, {
+            data: {
+              inError: false,
+              title: "Lease Document Sent",
+              contentSummary: "Lease Email has been sent to " + this.getEmail(),
+              errorItems: []
+            }
+            }).afterClosed().subscribe(() => {
+              this.dialogRef.close(true);
+            })
+          }
+          else{
+              this.dialog.open(DialogDataRRMSDialog, {
+                data: {
+                  inError: true,
+                  title: "Unable to process",
+                  contentSummary: "We're sorry. We are unable to process. Our engineers have been notified and are working on the issue to get this resolved asap",
+                  errorItems: []
+                }
+              });
+          }
+        })
+        .catch((err) => {
+          this.dialog.open(DialogDataRRMSDialog, {
+            data: {
+              inError: true,
+              title: "Unable to process",
+              contentSummary: "We're sorry. We are unable to process. Our engineers have been notified and are working on the issue to get this resolved asap",
+              errorItems: []
+            }
+          });
+        })
+    }
   }
   cancel(){
     this.dialogRef.close(null);
