@@ -151,7 +151,7 @@ const appRoutes: Routes = [
       HttpClientModule,
       RouterModule.forRoot(
         appRoutes,
-        { useHash: true }
+        { useHash: true, relativeLinkResolution: 'legacy' }
       ),
       MatDialogModule,
       OverlayModule,
