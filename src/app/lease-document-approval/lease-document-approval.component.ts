@@ -16,6 +16,7 @@ import { TemplateService } from '../services/template.service';
     ThumbnailViewService, ToolbarService, NavigationService, TextSearchService, TextSelectionService, PrintService, AnnotationService, FormFieldsService]
 })
 export class LeaseDocumentApprovalComponent implements OnInit {
+  @ViewChild('myviewer')
   public pdfviewerControl : PdfViewerComponent;
   public service = 'https://ej2services.syncfusion.com/production/web-services/api/pdfviewer';
      public document = 'PDF Succinctly.pdf';
@@ -48,18 +49,19 @@ export class LeaseDocumentApprovalComponent implements OnInit {
           console.log("displaying ui");
           this.leaseDocConfCode = routeParams.id;
           console.log("code is " + this.leaseDocConfCode);
+          console.log("value in init is " + this.pdfviewerControl);
         }
       });
     }
   }
-  onCreated(){
+  onCreated(args){
     console.log("created..");
     // Make the editor read only and remove properties pane
 
     // Call the service to load the document in the editor
     this.leaseDocService.getDocumentUsingConfCode(this.leaseDocConfCode)
       .then((sfdt : string) => {
-        //this.pdfviewerControl.load(sfdt); // need to replace this with something
+        this.pdfviewerControl.load(sfdt, ''); // need to replace this with something
 
       })
   }

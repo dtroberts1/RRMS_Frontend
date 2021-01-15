@@ -18,6 +18,7 @@ export class LeaseDocumentService{
     }
 
     async getDocumentUsingConfCode(docDeliveryConfCode: number){
+      console.log("in getDocumentUsingConfCode()")
       this.currToken = JSON.parse(localStorage.getItem('user'));
       if (this.currToken != null){
         let options = {
