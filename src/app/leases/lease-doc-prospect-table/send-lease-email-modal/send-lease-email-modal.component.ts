@@ -98,6 +98,7 @@ export class SendLeaseEmailModalComponent implements OnInit {
       this.fd.append("Email", this.getEmail());
       this.fd.append("SubjectLine", this.getSubject());
       this.fd.append("EmailBody", this.emailBodyInput.value);
+      this.fd.append("prospectId",this.data.docProspectDto.ProspectId.toString());
       this.documentDeliveryService.DeliverAddRecordCustom(this.fd)
       .then(() => {
         this.fd = null;

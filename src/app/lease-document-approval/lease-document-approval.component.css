@@ -20,22 +20,19 @@
     background-size:cover;
     background-repeat:no-repeat;
   }
-
   .button-container {
     display: flex;
     justify-content: space-around;  
-    margin-top: 10px;
   }
     .flex-items {  
         margin: 10px;  
     }  
-  
 
   .lease-approval-confirm-container{
     background-color: #f6edd5;
-    position:absolute;
-    height:750px;
-    top:10%;
+    position: relative; 
+    top:5%;
+    height:85% !important;
     width:50%;
     left:25%;
     opacity: .95;

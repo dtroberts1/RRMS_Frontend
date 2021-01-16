@@ -86,7 +86,7 @@ const appRoutes: Routes = [
   },
  ]}, 
  { path: 'lease-appvdcode/:id', component: LeaseDocumentApprovalComponent},
- { path: '**', redirectTo: 'login'},
+ { path: '**', redirectTo: ''},
 
 /* { path: 'login', component: LoginScreenComponent},*/
 ];
@@ -173,6 +173,8 @@ const appRoutes: Routes = [
       LeasesPopupModal,
       DialogDataRRMSDialog,
       EditProspectComponent,
+      AddRoomModalComponent,
+      DocumentDeliveriesModalComponent,
     ],
     providers: [HttpClientModule, MatDialogModule],
     bootstrap: [AppComponent],

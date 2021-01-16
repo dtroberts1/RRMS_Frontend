@@ -20,7 +20,7 @@ export class LeaseDocumentApprovalComponent implements OnInit {
   public pdfviewerControl : PdfViewerComponent;
   public service = 'https://ej2services.syncfusion.com/production/web-services/api/pdfviewer';
      public document = 'PDF Succinctly.pdf';
-
+     buttonsCanEnable: boolean = false;
   // Issue is here
   public items = [];
   leaseDocConfCode: number = null;;
@@ -56,6 +56,7 @@ export class LeaseDocumentApprovalComponent implements OnInit {
   }
   onCreated(args){
     console.log("created..");
+    this.buttonsCanEnable = true;
     // Make the editor read only and remove properties pane
 
     // Call the service to load the document in the editor
