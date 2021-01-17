@@ -42,7 +42,7 @@ export class DocumentDeliveryService{
         });
       }
     }
-    async sendApprovedLeaseDoc(originalDeliveryGuid: number, blob:Blob){
+    async sendApprovedLeaseDoc(originalDeliveryGuid: number, blob:Blob, landlordSigned: boolean){
       this.currToken = JSON.parse(localStorage.getItem('user'));
         if (this.currToken != null){
           let options = {
@@ -53,7 +53,7 @@ export class DocumentDeliveryService{
             formData.append('fileName', 'sample.docx');
             formData.append('data', blob);
             return new Promise((resolve, reject) => { this.http
-              this.http.put(`${this.documentDeliveryUrl}/SendApprovedLeaseDoc/${originalDeliveryGuid}`, formData, options).subscribe(
+              this.http.put(`${this.documentDeliveryUrl}/SendApprovedLeaseDoc/${originalDeliveryGuid}/${landlordSigned}`, formData, options).subscribe(
                 sfdt => {
                   // Returns Syncfusion Document Text
                   resolve(true); // return 0 to indicate the request went through

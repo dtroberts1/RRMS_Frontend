@@ -85,7 +85,7 @@ const appRoutes: Routes = [
     ]
   },
  ]}, 
- { path: 'lease-appvdcode/:id', component: LeaseDocumentApprovalComponent},
+ { path: 'lease-appvdcode/:landlordsigned/:confcode', component: LeaseDocumentApprovalComponent},
  { path: '**', redirectTo: ''},
 
 /* { path: 'login', component: LoginScreenComponent},*/

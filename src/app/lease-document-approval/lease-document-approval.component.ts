@@ -22,12 +22,13 @@ export class LeaseDocumentApprovalComponent implements OnInit {
   @ViewChild('myviewer')
   public pdfViewer : PdfViewerComponent;
   public service = 'https://ej2services.syncfusion.com/production/web-services/api/pdfviewer';
-     //public document = 'PDF_Succinctly.pdf';
+     public document = 'PDF_Succinctly.pdf';
      buttonsCanEnable: boolean = false;
   // Issue is here
   public items = [];
   leaseDocConfCode: number = null;
   enableSendApprvdBtn: boolean = false;
+  landlordSigned: boolean = false;
 
   constructor(
     private router: Router,
@@ -50,10 +51,15 @@ export class LeaseDocumentApprovalComponent implements OnInit {
       });
       this.route.params.subscribe(routeParams => {
         console.log("routeParam is " + JSON.stringify(routeParams))
-        if (routeParams.id != undefined)
+        if (routeParams.landlordsigned != undefined)
         {
           console.log("displaying ui");
-          this.leaseDocConfCode = routeParams.id;
+          if (routeParams.landlordsigned == "0")
+            this.landlordSigned = false;
+          else if (routeParams.landlordsigned == "1")
+            this.landlordSigned = true;
+
+          this.leaseDocConfCode = routeParams.confcode;
           console.log("code is " + this.leaseDocConfCode);
           console.log("value in init is " + this.pdfViewer);
         }
@@ -62,6 +68,10 @@ export class LeaseDocumentApprovalComponent implements OnInit {
   }
   onCreated(args){
     console.log("created..");
+    console.log("signed is " + this.landlordSigned);
+    console.log("code is " + this.leaseDocConfCode);
+    console.log("value in init is " + this.pdfViewer);
+
     this.buttonsCanEnable = true;
     // Make the editor read only and remove properties pane
     this.pdfViewer.enableHandwrittenSignature = true;
@@ -118,7 +128,7 @@ export class LeaseDocumentApprovalComponent implements OnInit {
         console.log("saving blob as " + JSON.stringify(blob));
 
         // Need to now pass this into Backend
-        this.documentDeliveryService.sendApprovedLeaseDoc(this.leaseDocConfCode, blob)
+        this.documentDeliveryService.sendApprovedLeaseDoc(this.leaseDocConfCode, blob, this.landlordSigned)
           .then((result) => {
             console.log("Result from delivery of approval is ");
           });
