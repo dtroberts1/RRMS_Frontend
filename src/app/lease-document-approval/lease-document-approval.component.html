@@ -3,11 +3,12 @@
 <div class="lease-approval-confirm-container">
     <h1 *ngIf="buttonsCanEnable == true" style="text-align: center;color:blue; margin-top:12px; height:5%">Your Lease Agreement
     </h1>
-    <div style="height: 85% !important;" >
-        <ejs-pdfviewer #myviewer id="pdfViewer" (created)="onCreated($event)" [serviceUrl]='service' [documentPath]='document' style="height:80%; margin-bottom: 2%;"></ejs-pdfviewer>
+    <div class="content-wrapper" style="height: 85% !important;" >
+        <ejs-pdfviewer #myviewer id="viewer" (addSignature)="addedSignature($event)" enableAnnotation=true (created)="onCreated($event)" IsSignatureEditable="true" [serviceUrl]='service' style="height:80%; margin-bottom: 2%;"></ejs-pdfviewer>
         <div *ngIf="buttonsCanEnable == true" style="height:10%;">
             <div class="button-container">
-                <button  class="flex-items" style="background-color:blue; color:white;" mat-button >Accept</button>
+                <button (click)="sign()" class="flex-items" style="background-color:blue; color:white;" mat-button >Sign</button>
+                <button *ngIf="enableSendApprvdBtn == true" (click)="saveSendApproval()" class="flex-items" style="background-color:blue; color:white;" mat-button >Send Approval</button>
                 <button  class="flex-items" style="background-color:blue; color:white;" mat-button >Decline</button>
             </div>
         </div>

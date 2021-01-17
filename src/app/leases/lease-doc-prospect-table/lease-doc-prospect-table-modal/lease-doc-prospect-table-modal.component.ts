@@ -27,7 +27,7 @@ interface EmailedLeaseDocMessage{
   styleUrls: ['./lease-doc-prospect-table-modal.component.css']
 })
 export class LeaseDocProspectTableModalComponent implements OnInit {
-  displayedColumns: string[] = ['DocumentName','FName', 'LName', 'Signed', 'Move-in-Date', 'Term Type', 'Home', 'Room', 'Delivered Date'];
+  displayedColumns: string[] = ['DocumentName','FName', 'LName', 'TenantSigned', 'LandlordSigned', 'Move-in-Date', 'Term Type', 'Home', 'Room', 'Delivered Date'];
   dataSource : Array<IDocumentProspectDto>;
   selection = new SelectionModel<IDocumentProspectDto>(false, []);
 

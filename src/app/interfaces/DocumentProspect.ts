@@ -15,7 +15,8 @@ export interface IDocumentProspectDto{
     CompletedBackgroundCheck: boolean,
     ProspectId: number,
     DocumentId: number,
-    Signed: boolean,
+    TenantSigned: boolean,
+    LandlordSigned: boolean,
     HomeName: string,
     RoomName: string;
     MoveInDate: Date,

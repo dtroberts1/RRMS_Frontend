@@ -1,4 +1,7 @@
 <h1 style="white-space: nowrap;" mat-dialog-title>{{data.title}}</h1>
+<mat-label *ngIf="data.title == 'Ready to Send'">
+    {{data.contentSummary}}
+</mat-label>
 <div *ngIf="data.contentSummary == 'Chose State for RLA'" style="float:left;">
     <mat-form-field appearance="fill">
         <mat-label>{{data.contentSummary}}</mat-label>
@@ -59,7 +62,7 @@
     <button  *ngIf="data.title == 'Delete Template'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Delete</button>
     <button  *ngIf="data.title == 'Delete Lease Document'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Delete</button>
     <button  *ngIf="data.contentSummary == 'Enter Filename'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Save</button>
-    <button  *ngIf="data.title == 'Saved' || data.title == 'Deleted'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Ok</button>
+    <button  *ngIf="data.title == 'Saved' || data.title == 'Deleted' || data.title == 'Ready to Send'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Ok</button>
     <button  *ngIf="data.title == 'Unsaved Changes'" class="lowerViewRoomButtons" (click)="openTemplate('yes')" mat-button>Yes</button>
     <button  *ngIf="data.title == 'Unsaved Changes'" class="lowerViewRoomButtons" (click)="openTemplate('no')" mat-button>No</button>
     <button  *ngIf="data.title == 'Unsaved Changes'" class="lowerViewRoomButtons" (click)="openTemplate('cancel')" mat-button>Cancel</button>

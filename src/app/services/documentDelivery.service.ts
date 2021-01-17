@@ -42,6 +42,39 @@ export class DocumentDeliveryService{
         });
       }
     }
+    async sendApprovedLeaseDoc(originalDeliveryGuid: number, blob:Blob){
+      this.currToken = JSON.parse(localStorage.getItem('user'));
+        if (this.currToken != null){
+          let options = {
+            headers: new HttpHeaders()
+            .set('Authorization', "bearer " + this.currToken),
+            };
+            var formData = new FormData();
+            formData.append('fileName', 'sample.docx');
+            formData.append('data', blob);
+            return new Promise((resolve, reject) => { this.http
+              this.http.put(`${this.documentDeliveryUrl}/SendApprovedLeaseDoc/${originalDeliveryGuid}`, formData, options).subscribe(
+                sfdt => {
+                  // Returns Syncfusion Document Text
+                  resolve(true); // return 0 to indicate the request went through
+                },
+                error => {
+                  if(error.status == 404){
+                    console.log("status is 404");
+                    resolve(404)
+                  }
+                  else if(error.status == 0){
+                    resolve(true);
+                  }
+                  else{
+                    reject(error);
+                  }
+                }
+            );
+        });
+      }
+    }
+
     async DeliverAddRecordCustom(fd: FormData) {
       let token = JSON.parse(localStorage.getItem('user'));
       let options = {
@@ -62,25 +95,7 @@ export class DocumentDeliveryService{
             }
         )
     });
-      /*;
 
-      this.http.request(req).pipe(
-            map(event => {
-                  switch (event.type) {
-                        case HttpEventType.UploadProgress:
-                              break;
-                        case HttpEventType.Response:
-                              return event;
-                  }
-            }),
-            tap(message => { }),
-            last(),
-            catchError((error: HttpErrorResponse) => {
-                  return of(`${fd.get('LocalFileName').toString()} upload failed.`);
-            })
-      );
-      //fd.delete('LocalFileName');    
-      */
     }
     async DeliverAddRecord(docMessage: IEmailedLeaseDocMessage){
       // Get token from localStorage

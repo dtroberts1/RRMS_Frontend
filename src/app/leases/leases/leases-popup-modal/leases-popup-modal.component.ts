@@ -86,6 +86,9 @@ export class LeasesPopupModal implements OnInit {
     else if (this.data.title == 'Delete Lease Document'){
       this.dialogRef.close(this.selectedLeaseDoc);
     }
+    else if(this.data.title == 'Ready to Send'){
+      this.dialogRef.close(null);
+    }
      //this.dialogRef.close(this.selected); // important: returns the id, not the index!!
   }
   sendBackTenant(selectedProspectId : number){
