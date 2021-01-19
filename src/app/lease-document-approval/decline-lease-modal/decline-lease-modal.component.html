@@ -1,0 +1,18 @@
+<h2>
+    Decline Lease
+</h2>
+<label>Please State Reason</label>
+<br />
+<mat-form-field style="width:400px !important" appearance="standard">
+    <mat-label>Reason for Decline</mat-label>
+    <textarea matInput cols="1000" rows="10" [formControl]="declineReasonInput">
+
+
+    <mat-icon *ngIf="declineReasonInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+    <mat-error *ngIf="declineReasonInput.invalid">{{getErrorMessage(declineReasonInput)}}</mat-error>
+</textarea>
+</mat-form-field>
+<br />
+<button (click)="submitReason()" class="flex-items" style="background-color:blue; color:white" mat-button >
+    Submit
+</button>

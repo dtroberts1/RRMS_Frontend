@@ -89,6 +89,9 @@ export class LeasesPopupModal implements OnInit {
     else if(this.data.title == 'Ready to Send'){
       this.dialogRef.close(null);
     }
+    else if(this.data.title == 'Approval Submitted'){
+      this.dialogRef.close(null);
+    }
      //this.dialogRef.close(this.selected); // important: returns the id, not the index!!
   }
   sendBackTenant(selectedProspectId : number){

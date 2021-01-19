@@ -24,7 +24,7 @@ export class AccountService{
       return new Promise((resolve, reject) => {
         this.http.post<User>(this.regURL, user).subscribe(
           data => {
-            resolve();
+            resolve(true);
           },
           error =>{
             console.log("error on register: " + JSON.stringify(error));
@@ -47,7 +47,7 @@ export class AccountService{
                 localStorage.setItem('user', JSON.stringify(data.access_token));
                 this.homesService.fetchHomes();
                   // If token is valid, login
-                  resolve();
+                  resolve(true);
               },
             error => {
               console.log("Can't go to dashboard. invalid login");

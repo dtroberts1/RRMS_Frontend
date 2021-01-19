@@ -225,7 +225,7 @@ emailHelper(){
         SSN: this.currentProspect.SSN,
         Status: this.currentProspect.Status,
         CompletedBackgroundCheck: null,
-        ProspectId: this.currentProspect.ProspectId,
+        ProspectId: this.currentProspect.Id,
         DocumentId: this.loadedDocumentId,
         Signed: null,
         HomeName: null,

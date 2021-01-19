@@ -127,11 +127,15 @@ export class SendLeaseEmailModalComponent implements OnInit {
     else{
       console.log("sending email..");
       this.documentDeliveryService.DeliverAddRecord({
-        message: this.emailBodyInput.value,
-        subject: this.getSubject(),
-        leaseDocumentId: this.data.docProspectDto.DocumentId,
-        emailAddress: this.getEmail(),
-        localFileData: this.localFileName,
+        Message: this.emailBodyInput.value,
+        Subject: this.getSubject(),
+        LeaseDocumentId: this.data.docProspectDto.DocumentId,
+        EmailAddress: this.getEmail(),
+        LocalFileData: this.localFileName,
+        FName: null,
+        LName: null,
+        CustomFileAttachStm: null,
+        EmailBody: null,
       }).then((result : number) => {
         if (result == 0){
           this.fd = null;

@@ -4,7 +4,7 @@ import {AToken} from '../interfaces/Token';
 import{IEmployer} from '../interfaces/Employer';
 import { IProspect } from '../interfaces/Prospect';
 import {IDocumentProspectDto} from '../interfaces/DocumentProspect';
-import { IEmailedLeaseDocMessage } from '../interfaces/EmailedLeaseDocMessage';
+import { IEmailedLeaseDocMessageDto } from '../interfaces/EmailedLeaseDocMessageDto';
 import { IDocumentDeliveries } from '../interfaces/DocumentDeliveries';
 import { catchError, last, map, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -54,27 +54,44 @@ export class DocumentDeliveryService{
             formData.append('data', blob);
             return new Promise((resolve, reject) => { this.http
               this.http.put(`${this.documentDeliveryUrl}/SendApprovedLeaseDoc/${originalDeliveryGuid}/${landlordSigned}`, formData, options).subscribe(
-                sfdt => {
+                dto => {
+                  console.log("returned dto is " + JSON.stringify(dto))
                   // Returns Syncfusion Document Text
-                  resolve(true); // return 0 to indicate the request went through
+                  resolve(dto); // return 0 to indicate the request went through
                 },
                 error => {
-                  if(error.status == 404){
-                    console.log("status is 404");
-                    resolve(404)
-                  }
-                  else if(error.status == 0){
+                  if (error.status == 0){
                     resolve(true);
                   }
-                  else{
-                    reject(error);
+                  if(error.status == 404){
+                    console.log("status is 404");
+                    resolve(error)
                   }
                 }
             );
         });
       }
     }
-
+    async DeclineWithReason(confCode: number, reasonForDecline: string) {
+      let token = JSON.parse(localStorage.getItem('user'));
+      let options = {
+        headers: new HttpHeaders()
+        .set('Authorization', "bearer " + token),
+        };
+        return new Promise((resolve, reject) => { this.http
+          .put(`${this.documentDeliveryUrl}/DeclineWithReason`, {leaseConfirmationCode:confCode, leaseDeclineReason: reasonForDecline}, options).subscribe(
+            result => {
+                    // Get some logic for response (should just return id back for newly added home)'
+                    console.log("result is " + result);
+                    resolve(result);
+                },
+                error => {
+                    console.log("error is " + JSON.stringify(error));
+                  reject(error);
+                }
+              )
+            });
+    }
     async DeliverAddRecordCustom(fd: FormData) {
       let token = JSON.parse(localStorage.getItem('user'));
       let options = {
@@ -97,7 +114,7 @@ export class DocumentDeliveryService{
     });
 
     }
-    async DeliverAddRecord(docMessage: IEmailedLeaseDocMessage){
+    async DeliverAddRecord(docMessage: IEmailedLeaseDocMessageDto){
       // Get token from localStorage
       this.currToken = JSON.parse(localStorage.getItem('user'));
       if (this.currToken != null){

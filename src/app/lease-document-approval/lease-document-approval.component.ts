@@ -10,6 +10,8 @@ import { TemplateService } from '../services/template.service';
 import { MatDialog } from '@angular/material/dialog';
 import { LeasesPopupModal } from '../leases/leases/leases-popup-modal/leases-popup-modal.component';
 import { DocumentDeliveryService } from '../services/documentDelivery.service';
+import { IEmailedLeaseDocMessageDto } from '../interfaces/EmailedLeaseDocMessageDto';
+import { DeclineLeaseModalComponent } from './decline-lease-modal/decline-lease-modal.component';
 
 @Component({
   selector: 'app-lease-document-approval',
@@ -99,13 +101,34 @@ export class LeaseDocumentApprovalComponent implements OnInit {
     this.dialog.open(LeasesPopupModal, {
       data: {
           title: 'Ready to Send',
-          contentSummary: `Signature has been applied. Click "Send Approval" to send the signed lease to Landlord.`,
+          contentSummary: `Signature has been applied. Click "Submit Approval" to send the signed lease to ${this.sendTo()}.`,
           content: null,
         }
     }).afterClosed().subscribe(() => {
       this.enableSendApprvdBtn = true;
     })
   }
+
+  declineLease(){
+    this.dialog.open(DeclineLeaseModalComponent, {
+      data: {
+          confCode: this.leaseDocConfCode,
+        }
+    }).afterClosed().subscribe(() => {
+      this.enableSendApprvdBtn = true;
+    })
+  }
+
+  sendTo(){
+    if (this.landlordSigned == true)
+    {
+      return "tenant";
+    }
+    else{
+      return "landlord";
+    }
+  }
+
   saveSendApproval(){
     
     this.pdfViewer.signatureCollection.forEach((sig: ISignAnnotation) => {
@@ -117,20 +140,35 @@ export class LeaseDocumentApprovalComponent implements OnInit {
       this.pdfViewer.handWrittenSignatureSettings.strokeColor = "rgb(3,3,4,5)";
 
     })
-    //this.pdfViewer.annotationModule.getValue(colorString, 'rgba');
-    /*
-    if (!colorString.match(/#([a-z0-9]+)/gi) && !colorString.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/)) {
-      colorString = this.pdfViewer.annotationModule.nameToHash(colorString);
-  }
-  */
+
     this.pdfViewer.saveAsBlob()
       .then((blob: Blob) => {
-        console.log("saving blob as " + JSON.stringify(blob));
-
         // Need to now pass this into Backend
         this.documentDeliveryService.sendApprovedLeaseDoc(this.leaseDocConfCode, blob, this.landlordSigned)
-          .then((result) => {
-            console.log("Result from delivery of approval is ");
+          .then((emailLeaseDocMessageDto: IEmailedLeaseDocMessageDto) => {
+            if (emailLeaseDocMessageDto.FName != null){
+              this.dialog.open(LeasesPopupModal, {
+                data: {
+                    title: 'Approval Submitted', // Landlord's approval
+                    contentSummary: `Approval has been submitted. ${emailLeaseDocMessageDto.FName} will be notified at ${emailLeaseDocMessageDto.EmailAddress}`,
+                    content: null,
+                  }
+              }).afterClosed().subscribe(() => {
+                this.router.navigate(['']);
+              })
+            }
+            else{
+              this.dialog.open(LeasesPopupModal, {
+                data: {
+                    title: 'Approval Submitted', // Landlord's approval
+                    contentSummary: `Approval has been submitted.`,
+                    content: null,
+                  }
+              }).afterClosed().subscribe(() => {
+                this.router.navigate(['']);
+
+              })
+            }
           });
     })
   }

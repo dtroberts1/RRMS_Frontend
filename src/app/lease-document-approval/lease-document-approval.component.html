@@ -8,8 +8,8 @@
         <div *ngIf="buttonsCanEnable == true" style="height:10%;">
             <div class="button-container">
                 <button (click)="sign()" class="flex-items" style="background-color:blue; color:white;" mat-button >Sign</button>
-                <button *ngIf="enableSendApprvdBtn == true" (click)="saveSendApproval()" class="flex-items" style="background-color:blue; color:white;" mat-button >Send Approval</button>
-                <button  class="flex-items" style="background-color:blue; color:white;" mat-button >Decline</button>
+                <button *ngIf="enableSendApprvdBtn == true" (click)="saveSendApproval()" class="flex-items" style="background-color:blue; color:white;" mat-button >Submit Approval</button>
+                <button (click)="declineLease()"  class="flex-items" style="background-color:blue; color:white;" mat-button >Decline</button>
             </div>
         </div>
     </div>
