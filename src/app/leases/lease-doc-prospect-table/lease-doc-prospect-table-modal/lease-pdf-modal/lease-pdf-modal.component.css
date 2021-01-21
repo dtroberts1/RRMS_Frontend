@@ -1,0 +1,86 @@
+.home-page-container-show-dashboard{
+    background-color:green;
+    position: absolute;
+    left:0;
+    right:0;
+    top:0%;
+    height:96%;
+    background-image:url('../../../../../assets/ralph-ravi-kayden-2d4lAQAlbDA-unsplash.jpg');
+    background-size:cover;
+    background-repeat:no-repeat;
+  }
+  .home-page-container{
+    background-color:green;
+    position: absolute;
+    left:0;
+    right:0;
+    top:4%;
+    height:100%;
+    background-image:url('../../../../../assets/ralph-ravi-kayden-2d4lAQAlbDA-unsplash.jpg');
+    background-size:cover;
+    background-repeat:no-repeat;
+  }
+  .button-container {
+    display: flex;
+    justify-content: space-around; 
+    margin-top:4px; 
+  }
+    .flex-items {  
+        margin: 10px;  
+    }  
+
+  .lease-approval-confirm-container{
+    background-color: #f6edd5;
+    position: relative; 
+    height:85% !important;
+    opacity: .95;
+    border-radius:15px;
+    background-color: #ece9e3;
+  }
+
+  
+  .toolbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4%;
+    display: flex;
+    align-items: center;
+    background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgba(2,0,36,1) 3%, rgba(135,217,206,1) 28%, rgba(51,92,148,1) 97%);
+    color: white;
+    font-weight: 600;
+  }
+
+  .toolbar img {
+    margin: 0 16px;
+  }
+
+ #createAccountText{
+    padding-left:82%
+  }
+  #loginText{
+    padding-left:10px;
+  }
+  #loginText:hover{
+    background: rgba(0,0,0,.5);
+  }
+  #createAcctMainBtn:hover{
+    background: rgba(0,0,0,.5);
+  }
+
+  .headerText:hover{
+    cursor:pointer;
+  }
+  
+  .loginScreenContainer{
+    background-color: #f6edd5;
+    position:absolute;
+    height:245px;
+    top:20%;
+    width:25%;
+    left:37.5%;
+    opacity: .8;
+    border-radius:15px;
+  }

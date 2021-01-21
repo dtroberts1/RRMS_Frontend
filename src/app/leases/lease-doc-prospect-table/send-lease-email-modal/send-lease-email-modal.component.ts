@@ -31,7 +31,7 @@ export class SendLeaseEmailModalComponent implements OnInit {
   showAttachmentBrowse: boolean = false;
   emailAddressInput : FormControl = new FormControl('', [Validators.required, Validators.email]);
   subjectLineInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9\\s\\!\\-\\*]{2,45}')]);
-  emailBodyInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9_\\s\\.\\!\\$\\,\\-\\%\\*\\(\\)\\?]{2,2000}')]);
+  emailBodyInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9_\\s\\.\\!\\$\\,\\-\\%\\*\\(\\)\\?]{0,2000}')]);
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogData,

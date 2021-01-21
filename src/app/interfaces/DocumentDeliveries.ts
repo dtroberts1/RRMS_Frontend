@@ -5,4 +5,5 @@ export interface IDocumentDeliveries{
     DeliveryDate : Date,
     ToAddress : string,
     LeaseDocumentId : number,
+    DocumentDeclined: boolean,
 }

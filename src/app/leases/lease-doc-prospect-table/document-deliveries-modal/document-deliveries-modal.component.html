@@ -6,14 +6,23 @@
               <!-- Document Name Column -->
               <ng-container matColumnDef="Delivery Date">
                   <th mat-header-cell *matHeaderCellDef>Delivery Date</th>
-                  <td mat-cell *matCellDef="let element"> {{element.DeliveryDate}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.DeliveryDate.toLocaleString('en-US', options)}} </td>
                 </ng-container>
   
               <!-- First Name Column -->
               <ng-container matColumnDef="To Address">
                 <th mat-header-cell *matHeaderCellDef>To Address</th>
                 <td mat-cell *matCellDef="let element"> {{element.ToAddress}} </td>
-              </ng-container>      
+              </ng-container>     
+              
+              <!-- Document Declined Column -->
+              <ng-container matColumnDef="DocumentDeclined">
+                <th mat-header-cell *matHeaderCellDef>Tenant Declined Lease</th>
+                <td mat-cell *matCellDef="let element">
+                  <span *ngIf="element.Declined == true" style="color:red;">{{element.Declined}} </span> 
+                  <span *ngIf="element.Declined == false">{{element.Declined}} </span> 
+                </td>
+              </ng-container>   
     
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row

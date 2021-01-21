@@ -3,12 +3,13 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IDocumentDeliveries } from 'src/app/interfaces/DocumentDeliveries';
-import { IDocumentProspectDto } from 'src/app/interfaces/DocumentProspect';
+import { IDocumentProspectDto, TermType } from 'src/app/interfaces/DocumentProspect';
 import { DocumentDeliveryService } from 'src/app/services/documentDelivery.service';
 import { LeaseDocumentService } from 'src/app/services/leaseDocument.service';
 import { LeasesPopupModal } from '../../leases/leases-popup-modal/leases-popup-modal.component';
 import { DocumentDeliveriesModalComponent } from '../document-deliveries-modal/document-deliveries-modal.component';
 import { SendLeaseEmailModalComponent } from '../send-lease-email-modal/send-lease-email-modal.component';
+import { LeasePdfModalComponent } from './lease-pdf-modal/lease-pdf-modal.component';
 
 interface ModalData {
   content: Iterable<IDocumentProspectDto>,
@@ -27,10 +28,22 @@ interface EmailedLeaseDocMessage{
   styleUrls: ['./lease-doc-prospect-table-modal.component.css']
 })
 export class LeaseDocProspectTableModalComponent implements OnInit {
-  displayedColumns: string[] = ['DocumentName','FName', 'LName', 'TenantSigned', 'LandlordSigned', 'Move-in-Date', 'Term Type', 'Home', 'Room', 'Delivered Date'];
+  displayedColumns: string[] = ['DocumentName','FName', 'LName', 'ReadOnly','TenantSigned', 'LandlordSigned', 'LeaseDeclined', 'Move-in-Date', 'Term Type', 'Home', 'Room', 'Delivered Date'];
   dataSource : Array<IDocumentProspectDto>;
   selection = new SelectionModel<IDocumentProspectDto>(false, []);
-
+  openDocOrPdf : string = "Open Document";
+  dateOptions : {hour: string, minute: string, hour12: boolean} = {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true
+  };
+  termMap = new Map<TermType, string>([
+    [TermType.fixedTerm, "Fixed-Term"],
+    [TermType.monthToMonth, "Monthly", ],
+  ])
+  dateNotTimeOptions : {year: string, month: string, day: string} = {
+  year: 'numeric', month: 'long', day: 'numeric'
+  }
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ModalData,
     public dialogRef: MatDialogRef<LeaseDocProspectTableModalComponent>,
@@ -39,7 +52,7 @@ export class LeaseDocProspectTableModalComponent implements OnInit {
     private leaseDocumentService : LeaseDocumentService,
     ) {
     if (data != null){
-      this.dataSource = Array.from(this.data.content);
+      this.setupTable();
     }
 
   }
@@ -64,20 +77,63 @@ export class LeaseDocProspectTableModalComponent implements OnInit {
                     contentSummary: `${this.selection.selected[0].DocumentName} has been removed`,
                     content: null,
                   }
-            })
-            .afterClosed().subscribe(() => {
-              this.data.content = leaseDocDtos;
-              this.dataSource = Array.from(this.data.content);            
-            })
+              })
+              .afterClosed().subscribe(() => {
+                this.data.content = leaseDocDtos;
+                this.setupTable();
+              })
           })
         })
       });
     }
     else{
+      this.dialog.open(DialogDataRRMSDialog, {
+        data: {
+          inError: true,
+          title: "No Row Selected",
+          contentSummary: "No row has been selected. Please select a row.",
+          errorItems: []
+        }
+      }).afterClosed().subscribe((result) => {
 
+      });
     }
   }
+  getTermTypeStr(termType: TermType){
+    return this.termMap.get(termType);
+  }
 
+  setupTable(){
+    this.dataSource = Array.from(this.data.content);    
+    this.dataSource.forEach((dataItem) => {
+      if (dataItem.MoveInDate != null){
+        dataItem.MoveInDate = new Date(dataItem.MoveInDate + 'Z');
+      }
+      if (dataItem.MoveOutDate != null){
+        dataItem.MoveOutDate = new Date(dataItem.MoveOutDate + 'Z');
+      }
+      if (dataItem.LatestDocDelivery != null){
+        dataItem.LatestDocDelivery = new Date(dataItem.LatestDocDelivery + 'Z');
+      }
+
+    })    
+  }
+  nicelyFormatLatestDocDel(item: IDocumentProspectDto){
+    if (item != null && item.LatestDocDelivery != null)
+    {
+      return item.LatestDocDelivery.toLocaleString();
+    }
+    else
+      return null;
+  }
+  isReadOnly(docPros: IDocumentProspectDto){
+    if (docPros.TenantSigned == true){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
   openDocDeliveries(docPros: IDocumentProspectDto){
     console.log("opening doc deliveries");
       this.documentDeliveryService.GetDocumentDeliveries(docPros.DocumentId).then((documentDeliveries: Iterable<IDocumentDeliveries>) => {
@@ -103,12 +159,31 @@ export class LeaseDocProspectTableModalComponent implements OnInit {
         })
     }
     else{
-      console.log("selected is null. needs a message prompt");
+      this.dialog.open(DialogDataRRMSDialog, {
+        data: {
+          inError: true,
+          title: "No Row Selected",
+          contentSummary: "No row has been selected. Please select a row.",
+          errorItems: []
+        }
+      }).afterClosed().subscribe((result) => {
+
+      });
     }
     
     // Send email (send back EmailedLeaseDocMessage)
-
-
+  }
+  tableClicked(){
+    console.log("Table clicked");
+    if (this.selection != null && this.selection.selected[0] != null)
+    {
+      if(this.selection.selected[0].TenantSigned == true){
+        this.openDocOrPdf = "Open PDF";
+      }
+      else{
+        this.openDocOrPdf = "Open Document";
+      }
+    }
   }
 
   closeBtnClicked(){
@@ -117,13 +192,39 @@ export class LeaseDocProspectTableModalComponent implements OnInit {
   openDocument(){
     if (this.selection != null && this.selection.selected[0] != null)
     {
-      this.dialogRef.close({
-        selectedTemplate: this.selection.selected[0].DocumentName, 
-        prospectId: this.selection.selected[0].ProspectId,
-        selectedDocId: this.selection.selected[0].DocumentId,
-      }); // Return the filename (without ext)
+      if (this.openDocOrPdf == "Open Document"){
+        this.dialogRef.close({
+          selectedTemplate: this.selection.selected[0].DocumentName, 
+          prospectId: this.selection.selected[0].ProspectId,
+          selectedDocId: this.selection.selected[0].DocumentId,
+        });
+      }
+      else if(this.openDocOrPdf == "Open PDF"){
+        // Open PDF Viewer
+        this.dialog.open(LeasePdfModalComponent, {
+          data: {
+            LeaseDocId: this.selection.selected[0].DocumentId, // Need to pass in something here!!!!!!
+          },
+          width: '55%',
+          height: '91%',
+      })
+        .afterClosed().subscribe((res) => {
+          //this.selection = null;
+        }
+        )
+      }
     }
     else{
+      this.dialog.open(DialogDataRRMSDialog, {
+        data: {
+          inError: true,
+          title: "No Row Selected",
+          contentSummary: "No row has been selected. Please select a row.",
+          errorItems: []
+        }
+      }).afterClosed().subscribe((result) => {
+
+      });
     }
   }
 

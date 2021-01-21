@@ -25,12 +25,12 @@
                         <!-- Weight Column -->
             <ng-container matColumnDef="Move-in">
               <th mat-header-cell *matHeaderCellDef>Move-in</th>
-              <td mat-cell *matCellDef="let element"> {{element.MoveInDate}}</td>
+              <td mat-cell *matCellDef="let element"> {{element.MoveInDate.toLocaleString('en-US', dateNotTimeOptions)}}</td>
             </ng-container>     
             <!-- Weight Column -->
             <ng-container matColumnDef="Move-out">
               <th mat-header-cell *matHeaderCellDef>Move-out</th>
-              <td mat-cell *matCellDef="let element"> {{element.MoveOutDate}} </td>
+              <td mat-cell *matCellDef="let element">{{element.MoveOutDate.toLocaleString('en-US', dateNotTimeOptions)}} </td>
             </ng-container>     
             <!-- Symbol Column -->
             <ng-container matColumnDef="EmailAddress">
@@ -48,7 +48,11 @@
                 <td mat-cell *matCellDef="let element">
                   <span *ngIf="element.Status == 1">Approved</span>
                   <span *ngIf="element.Status == 2">Declined</span>
-                  <span *ngIf="element.Status == 3">Pending</span>
+                  <span *ngIf="element.Status == 3">Pending Landlord Decision</span>
+                  <span *ngIf="element.Status == 4 ">Pending Tenant Signature</span>
+                  <span *ngIf="element.Status == 5">Pending Landlord Signature</span>
+                  <span *ngIf="element.Status == 6">In Billing</span>
+
                 </td>
             </ng-container>            
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -16,9 +16,27 @@ export class LeaseDocumentService{
 
     constructor(private http: HttpClient){
     }
-
+    async GetLeaseDocPDFBase64(documentId: number){
+      this.currToken = JSON.parse(localStorage.getItem('user'));
+      if (this.currToken != null){
+        let options = {
+          headers: new HttpHeaders().set('Content-Type', 'application/json')
+          .set('Authorization', "bearer " + this.currToken),
+          };
+        return new Promise((resolve, reject) => { this.http
+            .get<IProspect>(`${this.leaseDocumentsUrl}/GetLeaseDocPDFBase64/${documentId}`, options).subscribe(
+              sfdt => {
+                // Returns Syncfusion Document Text
+                resolve(sfdt);
+              },
+              error => {
+                reject(error);
+              }
+            )
+        });
+      }
+    }
     async getDocumentUsingConfCode(docDeliveryConfCode: number){
-      console.log("in getDocumentUsingConfCode()")
       this.currToken = JSON.parse(localStorage.getItem('user'));
       if (this.currToken != null){
         let options = {

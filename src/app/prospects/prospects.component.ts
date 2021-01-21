@@ -1,11 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {ProspectService} from '../services/prospect.service';
-import {IProspect} from '../interfaces/Prospect';
+import {IProspect, TermType} from '../interfaces/Prospect';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EditProspectComponent } from './edit-prospect/edit-prospect.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DialogDataRRMSDialog } from '../dialog-data/dialog-data.component';
+import { SalaryType } from '../interfaces/Employer';
 
 export interface PeriodicElement {
   name: string;
@@ -25,11 +26,14 @@ export class ProspectsComponent implements OnInit {
   displayedColumns: string[] = ['FName', 'LName', 'MdInit', 'RoomId', 'Move-in', 'Move-out', 'EmailAddress','SSN', 'status'];
   dataSource : Array<IProspect>;
   selection = new SelectionModel<IProspect>(false, []);
-
+  dateNotTimeOptions : {year: string, month: string, day: string} = {
+    year: 'numeric', month: 'long', day: 'numeric'
+    }
   @Input() prospect : IProspect;
 
   latitude: number;
   longitude: number;
+
   zoom:number;
   prospects: Iterable<IProspect>;
   constructor(
@@ -45,6 +49,12 @@ export class ProspectsComponent implements OnInit {
           this.prospectService.getProspects()?.then((prospects: Iterable<IProspect>) => {
             this.prospects = prospects;
             this.dataSource = Array.from(this.prospects);
+            this.dataSource.forEach((dataItem) => {
+              if (dataItem.MoveInDate != null)
+              dataItem.MoveInDate = new Date(dataItem.MoveInDate + 'Z');
+              if (dataItem.MoveOutDate != null)
+                dataItem.MoveOutDate = new Date(dataItem.MoveOutDate + 'Z');
+            });
           }).catch((err) => {
             console.log(err);
           });
@@ -54,6 +64,12 @@ export class ProspectsComponent implements OnInit {
           this.prospects = this.prospectService?.prospects;
           // If prospects are already in, retrieve them
           this.dataSource = Array.from(this.prospects);
+          this.dataSource.forEach((dataItem) => {
+            if (dataItem.MoveInDate != null)
+            dataItem.MoveInDate = new Date(dataItem.MoveInDate + 'Z');
+            if (dataItem.MoveOutDate != null)
+              dataItem.MoveOutDate = new Date(dataItem.MoveOutDate + 'Z');
+          });
         }
       }
   }
@@ -81,6 +97,12 @@ export class ProspectsComponent implements OnInit {
           this.prospectService.removeProspect(this.selection.selected[0].Id);
           this.prospects = Array.from(this.prospects).filter(prevRental => prevRental.Id != this.selection.selected[0].Id);
           this.dataSource = Array.from(this.prospects);
+          this.dataSource.forEach((dataItem) => {
+            if (dataItem.MoveInDate != null)
+            dataItem.MoveInDate = new Date(dataItem.MoveInDate + 'Z');
+            if (dataItem.MoveOutDate != null)
+              dataItem.MoveOutDate = new Date(dataItem.MoveOutDate + 'Z');
+          });
         }
       });
     }
@@ -103,6 +125,12 @@ export class ProspectsComponent implements OnInit {
         {
           this.prospects = updatedProspectList;
           this.dataSource = Array.from(this.prospects);
+          this.dataSource.forEach((dataItem) => {
+            if (dataItem.MoveInDate != null)
+            dataItem.MoveInDate = new Date(dataItem.MoveInDate + 'Z');
+            if (dataItem.MoveOutDate != null)
+              dataItem.MoveOutDate = new Date(dataItem.MoveOutDate + 'Z');
+          });
         }
         else{
           this.prospects = null;

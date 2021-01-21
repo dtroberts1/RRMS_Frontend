@@ -1,0 +1,10 @@
+<!-- Toolbar -->
+
+    <h1 style="text-align: center;color:blue; margin-top:8px; height:5%">Tenant-Approved Lease Agreement
+    </h1>
+    <div style="height:85%">
+        <ejs-pdfviewer *ngIf="docReady == true" #myviewer id="viewer" (addSignature)="addedSignature($event)" enableAnnotation=true (created)="onCreated($event)" IsSignatureEditable="true" [serviceUrl]='service' style="height:100%; width: 100%;"></ejs-pdfviewer>
+    </div>
+    <div class="button-container">
+        <button (click)="close()" class="flex-items" style="background-color:blue; color:white;" mat-button >Close Document</button>
+    </div>

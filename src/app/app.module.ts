@@ -58,6 +58,7 @@ import { LeaseDocumentApprovalComponent } from './lease-document-approval/lease-
 import { AdminGuard } from './admin/admin.guard';
 import { PdfViewerModule  } from '@syncfusion/ej2-angular-pdfviewer';
 import { DeclineLeaseModalComponent } from './lease-document-approval/decline-lease-modal/decline-lease-modal.component';
+import { LeasePdfModalComponent } from './leases/lease-doc-prospect-table/lease-doc-prospect-table-modal/lease-pdf-modal/lease-pdf-modal.component';
 
 
 const appRoutes: Routes = [
@@ -137,6 +138,7 @@ const appRoutes: Routes = [
     RemoveRoomModalComponent,
     LeaseDocumentApprovalComponent,
     DeclineLeaseModalComponent,
+    LeasePdfModalComponent,
     ],
     schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
     imports: [
@@ -178,6 +180,7 @@ const appRoutes: Routes = [
       AddRoomModalComponent,
       DocumentDeliveriesModalComponent,
       DeclineLeaseModalComponent,
+      LeasePdfModalComponent,
     ],
     providers: [HttpClientModule, MatDialogModule],
     bootstrap: [AppComponent],

@@ -33,7 +33,7 @@
     </mat-form-field>
 </div>
 <div style="width:200px" *ngIf="data.title == 'Lease - Save As'" style="float:left;">
-    <mat-form-field appearance="fill">
+    <mat-form-field *ngIf="prospectsExist == true" appearance="fill">
         <mat-label>{{data.contentSummary}}</mat-label>
         <mat-select [(ngModel)]="selected">
         <mat-option *ngFor="let prospect of data.content; let i = index" [value]="prospect.Id">
@@ -41,11 +41,26 @@
         </mat-option>
         </mat-select>
     </mat-form-field>
+    <mat-form-field *ngIf="data.title == 'Lease - Save As' && prospectsExist == false" style="color:red;">
+        <p>No Available Prospects Exist.
+        </p>
+        <p>Please create a prospect, for whom you can bind a lease document.
+        </p>
+    </mat-form-field>
 </div>
+
 <div *ngIf="data.title == 'Saved' || data.title == 'Deleted' || data.title == 'Unsaved Changes'">
     <mat-label style="text-align: center;">{{data.contentSummary}}</mat-label>
 </div>
-<div style="width:200px;" *ngIf="data.contentSummary == 'Enter Filename' || data.title == 'Lease - Save As'">
+<div style="width:200px;" *ngIf="data.title == 'Lease - Save As' && prospectsExist == true">
+    <mat-form-field appearance="fill">
+        <mat-label>Enter Filename</mat-label>
+        <input matInput placeholder="lease_agmt_for_dana" [formControl]="fileName">
+        <mat-icon *ngIf="fileName.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+        <mat-error *ngIf="fileName.invalid">{{getFNameErrorMessage()}}</mat-error>
+    </mat-form-field>
+</div>
+<div style="width:200px;" *ngIf="data.contentSummary == 'Enter Filename'">
     <mat-form-field appearance="fill">
         <mat-label>Enter Filename</mat-label>
         <input matInput placeholder="lease_agmt_for_dana" [formControl]="fileName">
@@ -57,7 +72,8 @@
     <br />
     <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="linkRoomToProspect()">Link Room to Prospect</button>
     <button  *ngIf="data.contentSummary == 'Chose State for RLA'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Select</button>
-    <button  *ngIf="data.title == 'Lease - Save As'" class="lowerViewRoomButtons" (click)="sendBackTenant(selected)" mat-button>Save As</button>
+    <button  *ngIf="data.title == 'Lease - Save As' && prospectsExist == true" class="lowerViewRoomButtons" (click)="sendBackTenant(selected)" mat-button>Save As</button>
+    <button  *ngIf="data.title == 'Lease - Save As' && prospectsExist == false" class="lowerViewRoomButtons" (click)="sendBackTenant(selected)" mat-button>Ok</button>
     <button  *ngIf="data.title == 'Load Template'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Load</button>
     <button  *ngIf="data.title == 'Delete Template'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Delete</button>
     <button  *ngIf="data.title == 'Delete Lease Document'" class="lowerViewRoomButtons" (click)="openTemplate()" mat-button>Delete</button>
@@ -66,6 +82,6 @@
     <button  *ngIf="data.title == 'Unsaved Changes'" class="lowerViewRoomButtons" (click)="openTemplate('yes')" mat-button>Yes</button>
     <button  *ngIf="data.title == 'Unsaved Changes'" class="lowerViewRoomButtons" (click)="openTemplate('no')" mat-button>No</button>
     <button  *ngIf="data.title == 'Unsaved Changes'" class="lowerViewRoomButtons" (click)="openTemplate('cancel')" mat-button>Cancel</button>
-    <button *ngIf="data.title != 'Unsaved Changes'" class="lowerViewRoomButtons" (click)="closeNoSelection()" mat-button>Cancel</button>
+    <button *ngIf="(data.title != 'Unsaved Changes' && data.title != 'Lease - Save As') || (data.title == 'Lease - Save As' && prospectsExist == true)" class="lowerViewRoomButtons" (click)="closeNoSelection()" mat-button>Cancel</button>
 </div>
   

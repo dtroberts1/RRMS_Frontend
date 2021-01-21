@@ -289,7 +289,7 @@ emailHelper(){
             data: {
                 content: docProspectDtos,
             }
-    })
+        })
         .afterClosed().subscribe((retFromTable: {selectedTemplate: string, prospectId: number, selectedDocId: number}) => {
             if (retFromTable != null && retFromTable.selectedTemplate != "" && retFromTable.prospectId != null){
                 // First get prospect using ID (so you can later resave)
@@ -359,7 +359,6 @@ saveAs(selectedItem: string){
     return new Promise((resolve, reject) => {
         let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
         this.prospectService.getAvailableProspects().then((prospects :Iterable<IProspect>)=>{
-            console.log("prospects in saveAs is " + JSON.stringify(prospects));
             this.dialog.open(LeasesPopupModal, {
                 data: {
                     title: "Lease - Save As",

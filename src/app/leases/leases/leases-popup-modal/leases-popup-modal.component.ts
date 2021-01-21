@@ -34,7 +34,7 @@ export class LeasesPopupModal implements OnInit {
   fieldsModified: boolean = false;
   currentRoomIndex: number = 0;
   roomCount: number = 0;
-
+  prospectsExist: boolean = false;
   dimension1 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
   dimension2 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
   monthlyRateInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]{1,5}')]);
@@ -51,7 +51,17 @@ export class LeasesPopupModal implements OnInit {
   public dialog: MatDialog, 
   ) {
     if (data != null){
+      let tmpProsArray = [];
      console.log("in popup, data is "+ JSON.stringify(data)); 
+     if (data.content != null){
+      tmpProsArray = Array.from(data.content);
+     }
+     if (tmpProsArray != null && tmpProsArray.length > 0){
+      this.prospectsExist = true;
+     }
+     else{
+       this.prospectsExist = false;
+     }
     }
   }
   closeNoSelection(){
