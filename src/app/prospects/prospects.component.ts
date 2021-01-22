@@ -116,20 +116,19 @@ export class ProspectsComponent implements OnInit {
           prospectIndex : this.dataSource.indexOf(this.selection.selected[0]),
           uiEditMode: isEditMode,
         },
-        width:'730px',
-        height: '600px'
+        /*width:'730px',
+        height: '600px'*/
       }).afterClosed().subscribe((updatedProspectList: Iterable<IProspect>) => {
         // The EditProspectComponent shouldn't return back anything.
-        console.log("updated list: " + JSON.stringify(updatedProspectList))
         if ((<any[]>updatedProspectList).length > 0)      
         {
           this.prospects = updatedProspectList;
           this.dataSource = Array.from(this.prospects);
           this.dataSource.forEach((dataItem) => {
             if (dataItem.MoveInDate != null)
-            dataItem.MoveInDate = new Date(dataItem.MoveInDate + 'Z');
+            dataItem.MoveInDate = new Date(dataItem.MoveInDate.toISOString());
             if (dataItem.MoveOutDate != null)
-              dataItem.MoveOutDate = new Date(dataItem.MoveOutDate + 'Z');
+              dataItem.MoveOutDate = new Date(dataItem.MoveOutDate.toISOString());
           });
         }
         else{

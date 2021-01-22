@@ -1,13 +1,24 @@
-<div style="float:left; width:25%; height:100%">
-  <h1 style="white-space: nowrap;" mat-dialog-title>
+<h4 mat-dialog-title style="width:100%; height:2%">
+  <mat-toolbar role="toolbar" class="task-header">
+      <span> Prospect Details</span>
+      <span class="fill-space"></span>
+      <span class="fx-spacer"></span>
+      <button mat-icon-button (click)="closeProspectDialog()">
+          <mat-icon mat-list-icon>close</mat-icon>
+      </button>
+  </mat-toolbar>
+</h4>
+<div mat-dialog-content style="height:98%">
+<div style="float:left; width:25%; height:100%;">
+  <h1 style="white-space: nowrap; font-family:sans-serif; font-size: large; color:#476c79" mat-dialog-title>
     Prospect: {{fNameInput.value}}{{" "}}{{mdInitInput.value != "" ? mdInitInput.value : ""}}
       {{mdInitInput.value != "" ? " " : ""}}{{lNameInput.value}}
   </h1>
-  <table>
+  <table style="font-family:sans-serif; font-size: large; color:#476c79">
     <tr>
       <td>
         <mat-slide-toggle
-          style="color:blue;"
+          style="font-family:sans-serif; font-size: 15px; color:#476c79;"
           class="example-margin"
           [(ngModel)]="uiEditMode">
           Edit Mode
@@ -16,7 +27,7 @@
     </tr>
     <tr>
       <td width="90%">
-        <h3 style="white-space: nowrap;"><label>First Name:&nbsp;&nbsp;</label>
+        <h3 style="white-space: nowrap;"><label class="labelClass">First Name:&nbsp;&nbsp;</label>
           <span *ngIf="editFName == false">{{prospect.FName}}</span>
           <mat-form-field *ngIf="editFName == true">
             <input matInput size="25" (blur)="updateInput('fname')" style="white-space: nowrap;" maxlength="25" required placeholder="Mark" 
@@ -32,7 +43,7 @@
     </tr>
     <tr>
       <td width="90%">
-        <h3 style="white-space: nowrap;"><label>Last Name:&nbsp;&nbsp;</label>
+        <h3 style="white-space: nowrap;"><label class="labelClass">Last Name:&nbsp;&nbsp;</label>
           <span *ngIf="editLName == false">{{prospect.LName}}</span>
           <mat-form-field *ngIf="editLName == true">
             <input matInput size="25" (blur)="updateInput('lname')" style="white-space: nowrap;" maxlength="25" required placeholder="Richards" 
@@ -48,7 +59,7 @@
     </tr>
     <tr>
       <td width="90%">
-        <h3 style="white-space: nowrap;"><label>Middle Initial:&nbsp;&nbsp;</label>
+        <h3 style="white-space: nowrap;"><label class="labelClass">Middle Initial:&nbsp;&nbsp;</label>
           <span *ngIf="editMdInit == false">{{prospect.MdInit}}</span>
           <mat-form-field *ngIf="editMdInit == true">
             <input matInput size="1" (blur)="updateInput('mdinit')" style="white-space: nowrap;" maxlength="1" placeholder="T" 
@@ -64,7 +75,7 @@
     </tr>
     <tr>
       <td width="90%">
-        <h3 style="white-space: nowrap;"><label>Email Address:&nbsp;&nbsp;</label>
+        <h3 style="white-space: nowrap;"><label class="labelClass">Email Address:&nbsp;&nbsp;</label>
           <span *ngIf="editEmail == false">{{prospect.EmailAddress}}</span>
           <mat-form-field *ngIf="editEmail == true">
             <input matInput size="30" (blur)="updateInput('email')" style="white-space: nowrap;" maxlength="30" required placeholder="jrich@yahoo.com" 
@@ -80,7 +91,7 @@
     </tr>
     <tr>
       <td width="90%">
-        <h3 style="white-space: nowrap;"><label>Phone Number:&nbsp;&nbsp;</label>
+        <h3 style="white-space: nowrap;"><label class="labelClass">Phone Number:&nbsp;&nbsp;</label>
           <span *ngIf="editPhoneNumber == false">{{prospect.PhoneNumber}}</span>
           <mat-form-field *ngIf="editPhoneNumber == true">
             <input matInput size="30" (blur)="updateInput('phone')" style="white-space: nowrap;" maxlength="30" required placeholder="541-555-5555" 
@@ -96,7 +107,7 @@
     </tr> 
     <tr>
       <td>
-        <h3 *ngIf="prospect != null"><label>Employers</label>&nbsp;&nbsp;&nbsp;
+        <h3 *ngIf="prospect != null"><label class="labelClass">Employers</label>&nbsp;&nbsp;&nbsp;
           <a *ngIf="hasEmployers() == true && uiEditMode == true"  class="editLinks" (click)="openEmployerModifyModal(false)">Modify</a>&nbsp;
           <a *ngIf="uiEditMode == true" class="editLinks" (click)="openEmployerModifyModal(true)">Add</a>
           <ul>
@@ -111,7 +122,7 @@
     </tr>
     <tr>
       <td>
-        <h3 *ngIf="prospect != null"><label>Previous Rentals</label>&nbsp;&nbsp;
+        <h3 *ngIf="prospect != null"><label class="labelClass">Previous Rentals</label>&nbsp;&nbsp;
           <a *ngIf="hasPrevRentals() == true && uiEditMode == true" class="editLinks" (click)="openPrevRentModifyModal(false)">Modify</a>&nbsp;
           <a *ngIf="uiEditMode == true" class="editLinks" (click)="openPrevRentModifyModal(true)">Add</a>
           <ul>
@@ -126,7 +137,7 @@
     </tr>
     <tr>
       <td width="90%">
-        <h3 style="white-space: nowrap;"><label>SSN:&nbsp;&nbsp;</label>
+        <h3 style="white-space: nowrap;"><label class="labelClass">SSN:&nbsp;&nbsp;</label>
           <span *ngIf="editSSN == false">{{prospect.SSN}}</span>
           <mat-form-field *ngIf="editSSN == true">
             <input matInput size="30" (blur)="updateInput('ssn')" style="white-space: nowrap;" maxlength="30" required placeholder="222-22-2222" 
@@ -147,9 +158,9 @@
       <tr width="90%">
         <td>
           <div>
-            <h3 style="white-space: nowrap;"><label>Term&nbsp;&nbsp;</label>
+            <h3 style="white-space: nowrap;"><label class="labelClass">Term&nbsp;&nbsp;</label>
               <mat-radio-group name="termList"  fxLayout="column" [(ngModel)]="termType" (change)="fieldsModified = true">
-                <mat-radio-button *ngFor="let termType of termList" [value]="termType.name" name="termList" >{{ termType.name}}</mat-radio-button>
+                <mat-radio-button style="font-family:sans-serif; font-size: 15px; color:#476c79;" *ngFor="let termType of termList" [value]="termType.name" name="termList" >{{ termType.name}}</mat-radio-button>
               </mat-radio-group>
             </h3>
           </div>
@@ -159,12 +170,12 @@
       </tr>
       <tr width="90%">
         <td>
-          <h3><label>Room</label>&nbsp;&nbsp;&nbsp;
+          <h3><label class="labelClass">Room</label>&nbsp;&nbsp;&nbsp;
               <a *ngIf="uiEditMode == true" class="editLinks" (click)="openLinkRoomModal()">Modify</a>
           <ul>
             <li style="list-style:none;">     
-              <mat-label style="color:blue;" *ngIf="selectedRoomName != 'No Room Selected'">{{selectedRoomName}}</mat-label>
-              <mat-label style="color:red;" *ngIf="selectedRoomName == 'No Room Selected'"><h3>No Room Selected</h3></mat-label>
+              <mat-label style="font-family:sans-serif; font-size: 15px; color:#476c79;" *ngIf="selectedRoomName != 'No Room Selected'">{{selectedRoomName}}</mat-label>
+              <mat-label style="font-family:sans-serif; font-size: 15px; color:red;" *ngIf="selectedRoomName == 'No Room Selected'"><h3>No Room Selected</h3></mat-label>
             </li>
           </ul>
           </h3>
@@ -172,31 +183,15 @@
       </tr>
       <tr>
         <td width="90%">
-          <h3 style="white-space: nowrap;"><label>Move-in Date:&nbsp;&nbsp;</label>
-            <span *ngIf="editMoveinDate == false">{{prospect.MoveInDate}}</span>
-            <mat-form-field *ngIf="editMoveinDate == true">
-              <input matInput size="30" (blur)="updateInput('moveindate')" style="white-space: nowrap;" maxlength="30" required placeholder="1/1/20" 
-              [formControl]="moveInDateInput">
-              <mat-icon *ngIf="moveInDateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-              <mat-error *ngIf="moveInDateInput.invalid">{{getInputErrorMessage(moveInDateInput)}}</mat-error>
-            </mat-form-field>
-          </h3>
+          <app-date-picker [headerName]="'Move-in Date'" [(date)]="moveInDateInput"></app-date-picker>
         </td>
         <td width="10%">
-          <h3 *ngIf="editMoveinDate == false && uiEditMode == true" class="editLinks" (click)="changeEditMode('moveindate')">Modify</h3>
+          <h3 *ngIf="editMoveinDate == false && uiEditMode == true" style="font-family:sans-serif; font-size: 15px; color:#476c79;" class="editLinks" (click)="changeEditMode('moveindate')">Modify</h3>
         </td>
       </tr>
       <tr>
         <td width="90%">
-          <h3 style="white-space: nowrap;"><label>Move-out Date:&nbsp;&nbsp;</label>
-            <span *ngIf="editMoveOutDate == false">{{prospect.MoveOutDate}}</span>
-            <mat-form-field *ngIf="editMoveOutDate == true">
-              <input matInput size="30" (blur)="updateInput('moveoutdate')" style="white-space: nowrap;" maxlength="30" required placeholder="1/1/22" 
-              [formControl]="moveOutDateInput">
-              <mat-icon *ngIf="moveOutDateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-              <mat-error *ngIf="moveOutDateInput.invalid">{{getInputErrorMessage(moveOutDateInput)}}</mat-error>
-            </mat-form-field>
-          </h3>
+          <app-date-picker [headerName]="'Move-out Date'" [(date)]="moveOutDateInput"></app-date-picker>
         </td>
         <td width="10%">
           <h3 *ngIf="editMoveOutDate == false && uiEditMode == true" class="editLinks" (click)="changeEditMode('moveoutdate')">Modify</h3>
@@ -227,4 +222,4 @@
       <button class="lowerViewRoomButtons" mat-button (click)="closeProspectDialog()">Close</button>
     </span>
     </div>
-  
+  </div>

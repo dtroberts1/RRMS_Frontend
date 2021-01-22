@@ -93,12 +93,12 @@ statusList:Iterable<IStatus> = [
     [TermType.monthToMonth, 'Month-to-Month'],
     [TermType.fixedTerm, 'Fixed-Term']
   ]);
+
   isMaster : boolean;
   hasCloset : boolean;
   hasCeilingFan : boolean;
   hasPrivateBath : boolean;
   selectedRoomName : string = 'No Room Selected';
- 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, 
   @Inject(MAT_DIALOG_DATA) public rooms: Iterable<IRoom>,
   public dialogRef: MatDialogRef<EditProspectComponent>,
@@ -123,6 +123,29 @@ statusList:Iterable<IStatus> = [
     });
     }
     this.prospectCount = (<any[]>data.prospects)?.length;
+    
+    this.moveInDateInput.valueChanges.subscribe((val : Date) => {
+      if (val != null)
+      {
+        //console.log("this.moveInDateInput is valid. value is " + JSON.stringify((val.getUTCDate())))
+        this.prospect.MoveInDate = new Date(val.toISOString());
+        this.fieldsModified = true;
+      }
+      else{
+        return;
+      } 
+    });
+    this.moveOutDateInput.valueChanges.subscribe((val : Date) => {
+      if (val != null)
+      {
+        //console.log("this.moveInDateInput is valid. value is " + JSON.stringify((val.getUTCDate())))
+        this.prospect.MoveOutDate = new Date(val.toISOString());
+        this.fieldsModified = true;
+      }
+      else{
+        return;
+      } 
+    });
   }
 
   setOrigSettings(prospect : IProspect)
@@ -357,17 +380,6 @@ statusList:Iterable<IStatus> = [
         } 
       } 
       break; 
-      case 'moveindate': { 
-        if (this.moveInDateInput.valid == true)
-        {
-          this.prospect.MoveInDate = this.moveInDateInput.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
-        } 
-      } 
-      break; 
       case 'moveoutdate': { 
         if (this.moveOutDateInput.valid == true)
         {
@@ -409,8 +421,8 @@ statusList:Iterable<IStatus> = [
     this.mdInitInput.setValue(this.prospect.MdInit);
     this.emailInput.setValue(this.prospect.EmailAddress);
     this.phoneNumberInput.setValue(this.prospect.PhoneNumber);
-    this.moveInDateInput.setValue(this.prospect.MoveInDate);
-    this.moveOutDateInput.setValue(this.prospect.MoveOutDate);
+    this.moveInDateInput.setValue(new Date(this.prospect.MoveInDate.toISOString()));
+    this.moveOutDateInput.setValue(new Date(this.prospect.MoveOutDate.toISOString()));
     this.ssnInput.setValue(this.prospect.SSN);
     this.selectedStatus = this.prospect.Status;
     this.roomsService.getRoom(this.prospect.RoomId).then((room : IRoom) => {
@@ -530,6 +542,7 @@ statusList:Iterable<IStatus> = [
      }
      return new Promise((resolve, reject) => {
        this.prospectService.updateProspect(this.prospect).then(() => {
+         console.log("after update, prospect is " + JSON.stringify(this.prospect))
         this.prospects[this.currentProspectIndex] = this.prospect;
 
          this.dialog.open(DialogDataRRMSDialog, {

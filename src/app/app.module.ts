@@ -59,6 +59,8 @@ import { AdminGuard } from './admin/admin.guard';
 import { PdfViewerModule  } from '@syncfusion/ej2-angular-pdfviewer';
 import { DeclineLeaseModalComponent } from './lease-document-approval/decline-lease-modal/decline-lease-modal.component';
 import { LeasePdfModalComponent } from './leases/lease-doc-prospect-table/lease-doc-prospect-table-modal/lease-pdf-modal/lease-pdf-modal.component';
+import { DatePickerComponent, ExampleHeader } from './utils/date-picker/date-picker.component';
+import { MatNativeDateModule } from '@angular/material/core';
 
 
 const appRoutes: Routes = [
@@ -139,6 +141,8 @@ const appRoutes: Routes = [
     LeaseDocumentApprovalComponent,
     DeclineLeaseModalComponent,
     LeasePdfModalComponent,
+    DatePickerComponent,
+    ExampleHeader,
     ],
     schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
     imports: [
@@ -153,6 +157,7 @@ const appRoutes: Routes = [
       DocumentEditorContainerModule,
       FormsModule,
       MaterialModule,
+      MatNativeDateModule,
       HttpClientModule,
       RouterModule.forRoot(
         appRoutes,
@@ -181,6 +186,8 @@ const appRoutes: Routes = [
       DocumentDeliveriesModalComponent,
       DeclineLeaseModalComponent,
       LeasePdfModalComponent,
+      DatePickerComponent,
+      ExampleHeader,
     ],
     providers: [HttpClientModule, MatDialogModule],
     bootstrap: [AppComponent],
