@@ -36,7 +36,12 @@ table {
 }
   .flex-items {  
       margin: 10px;  
+      background-color:#476c79; 
+      color:white;
   }  
+  .flex-items:hover{
+    background-color: #90A6AE;
+  }
 
 button.link {
     background: transparent;

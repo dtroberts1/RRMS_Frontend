@@ -1,6 +1,6 @@
 <h4 mat-dialog-title style="width:100%; height:2%">
   <mat-toolbar role="toolbar" class="task-header">
-      <span> Prospect Details</span>
+      <span id="mainHeader"> Prospect Details</span>
       <span class="fill-space"></span>
       <span class="fx-spacer"></span>
       <mat-slide-toggle
@@ -10,7 +10,7 @@
       Edit Mode
     </mat-slide-toggle>
       <button mat-icon-button (click)="closeProspectDialog()">
-          <mat-icon mat-list-icon>close</mat-icon>
+          <mat-icon id="closeBtn" mat-list-icon>close</mat-icon>
       </button>
   </mat-toolbar>
 </h4>
@@ -210,7 +210,7 @@
                 (click)="openEmployerModifyModal(true)"/>
                 <ul>
                   <li style="list-style:square" *ngFor="let emp of prospect.Employers">
-                    {{emp.CompanyName}}
+                    <img style="width:25px; height:auto; vertical-align: middle;" src="https://logo.clearbit.com/{{emp.CompanyName}}.com?size=200" onerror="this.style.display='none'">{{emp.CompanyName}}
                   </li>
                 </ul>
               </h3>

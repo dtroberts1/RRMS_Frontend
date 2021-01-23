@@ -487,6 +487,7 @@ statusList:Iterable<IStatus> = [
 
     }
     else if(next == false){ // If navigating to "previous"
+    this.dateObserverablesEnabled = false;
       this.currentProspectIndex--;
       if (this.currentProspectIndex < 0){
         this.currentProspectIndex = (<any[]>this.data.prospects)?.length - 1;
