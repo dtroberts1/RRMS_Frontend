@@ -36,12 +36,18 @@
         <img *ngIf="canDispNextAndPrev() == true" class="editIconStyle" [src]="backButtonImgSrc"
         (mouseover)="backButtonImgSrc = '../../../assets/left_arrow_prospect_yellow.svg'"
         (mouseout)="backButtonImgSrc = '../../../assets/left_arrow_prospect.svg'"
-        (click)="goToNextOrPrevRm(false)"/>
+        (click)="goToNextOrPrevRm(false)"
+        matTooltipClass="tooltip"
+        [matTooltip]="'Go to Previous Prospect'"
+        />
         <!--<button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevRm(false)">Previous</button> -->
         <img style="transform:scaleX(-1); margin-left:8px" *ngIf="canDispNextAndPrev() == true" class="editIconStyle" [src]="nextButtonImgSrc"
         (mouseover)="nextButtonImgSrc = '../../../assets/left_arrow_prospect_yellow.svg'"
         (mouseout)="nextButtonImgSrc = '../../../assets/left_arrow_prospect.svg'"
-        (click)="goToNextOrPrevRm(true)"/>
+        (click)="goToNextOrPrevRm(true)"
+        matTooltipClass="tooltip"
+        [matTooltip]="'Go to Next Prospect'"
+        />
         <br />
         <!--<button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevRm(true)">Next</button>-->
         <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="saveBtnClickedUpdate()">Save</button>
@@ -49,12 +55,18 @@
       <img class="editIconStyle" [src]="delProsImageSrc" 
       (mouseover)="delProsImageSrc = '../../../assets/remove_prospect_icon_yellow.svg'"
       (mouseout)="delProsImageSrc = '../../../assets/remove_prospect_icon.svg'"
-        (click)="deleteBtnClicked()"/>
+        (click)="deleteBtnClicked()"
+        matTooltipClass="tooltip"
+        [matTooltip]="'Delete Prospect'"
+        />
         <br />
         <img style="margin-top:8px;" class="editIconStyle" [src]="closeIconSrc" 
         (mouseover)="closeIconSrc = '../../../assets/close_door_yellow.svg'"
         (mouseout)="closeIconSrc = '../../../assets/close_door.svg'"
-        (click)="closeProspectDialog()"/>
+        (click)="closeProspectDialog()"
+        matTooltipClass="tooltip"
+        [matTooltip]="'Close'"
+        />
       </span>
 </div>
 <div *ngIf="prospect != null" style="position:relative;float:left; max-width:35%; height:100%">
@@ -209,7 +221,10 @@
                 (mouseout)="addImageSrcEmployer = '../../../assets/plus_sign.svg'" 
                 (click)="openEmployerModifyModal(true)"/>
                 <ul>
-                  <li style="list-style:square" *ngFor="let emp of prospect.Employers">
+                  <li style="list-style:square" *ngFor="let emp of prospect.Employers"
+                  matTooltipClass="tooltip"
+                  [matTooltip]="getEmployerTooltip(emp)"
+                  >
                     <img style="width:25px; height:auto; vertical-align: middle;" src="https://logo.clearbit.com/{{emp.CompanyName}}.com?size=200" onerror="this.style.display='none'">{{emp.CompanyName}}
                   </li>
                 </ul>
@@ -230,7 +245,10 @@
                 (mouseout)="addImageSrcPrevRent = '../../../assets/plus_sign.svg'" 
                 (click)="openPrevRentModifyModal(true)"/>
                 <ul>
-                  <li style="list-style:square; white-space: nowrap;" *ngFor="let prevRental of prospect.PreviousRentals">
+                  <li style="list-style:square; white-space: nowrap;" *ngFor="let prevRental of prospect.PreviousRentals"
+                  matTooltipClass="tooltip"
+                  [matTooltip]="getPrevRentalTooltip(prevRental)"
+                  >
                     {{prevRental.AddressStreet1}}<!--{{", "}}{{prevRental.AddressCity}}{{", "}}{{prevRental.AddressState}}-->
                   </li>
                 </ul>

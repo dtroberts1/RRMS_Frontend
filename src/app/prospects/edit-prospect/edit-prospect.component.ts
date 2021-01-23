@@ -34,6 +34,7 @@ interface IStatus{
   name: string,
   statusType: ProspectStatus,
 }
+
 @Component({
   selector: 'app-edit-prospect',
   templateUrl: './edit-prospect.component.html',
@@ -55,7 +56,9 @@ export class EditProspectComponent {
   backButtonImgSrc : string = '../../../assets/left_arrow_prospect.svg'
   nextButtonImgSrc : string = '../../../assets/left_arrow_prospect.svg'
   closeIconSrc : string = '../../../assets/close_door.svg'
-
+  dateNotTimeOptions : {year: string, month: string, day: string} = {
+    year: 'numeric', month: 'long', day: 'numeric'
+    }
   selectedStatus : ProspectStatus;
   homeImagePath : string;
   room : IRoom;
@@ -493,6 +496,20 @@ statusList:Iterable<IStatus> = [
         this.currentProspectIndex = (<any[]>this.data.prospects)?.length - 1;
       }
     }
+  }
+
+  getPrevRentalTooltip(prevRental: IPreviousRental){
+    return this.prospect.FName + (prevRental.Current == true ? ' lives at ' : ' lived at ') + prevRental.AddressStreet1 + ', ' + 
+    prevRental.AddressCity + ', ' + prevRental.AddressState + (prevRental.Current == true ?' since ' : ' from ') +
+    new Date(prevRental.StartDate).toLocaleString('en-US', this.dateNotTimeOptions) + (prevRental.Current == true ? 
+      ' and still resides here.' : ' to ' + new Date(prevRental.EndDate).toLocaleString('en-US', this.dateNotTimeOptions));
+  }
+
+  getEmployerTooltip(employer: IEmployer){
+    return this.prospect.FName + (employer.Current == true ? ' works at ' : ' worked at ') + employer.CompanyName + ", located at " + employer.AddressStreet1 + ', ' + 
+    employer.AddressCity + ', ' + employer.AddressState + (employer.Current == true ?', since ' : ', from ') +
+    new Date(employer.StartDate).toLocaleString('en-US', this.dateNotTimeOptions) + (employer.Current == true ? 
+      ' and still works here.' : ' to ' + new Date(employer.EndDate).toLocaleString('en-US', this.dateNotTimeOptions));
   }
 
   setModified(event){
