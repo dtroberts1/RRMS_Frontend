@@ -1,4 +1,4 @@
-<h4 mat-dialog-title style="width:100%; height:2%">
+<h4 mat-dialog-title style="width:100%; height:10%">
   <mat-toolbar role="toolbar" class="task-header">
       <span id="mainHeader"> Prospect Details</span>
       <span class="fill-space"></span>
@@ -14,68 +14,66 @@
       </button>
   </mat-toolbar>
 </h4>
-<div mat-dialog-content style="height:98%">
-<div style="position:relative;float:left; width:20%; height:100%;">
-  <h3 style="white-space: nowrap; font-family:sans-serif; font-size: large; color:#476c79" mat-dialog-title>
-    Prospect <br/>&nbsp;&nbsp;&nbsp; <span style="font-size:15px"> {{fNameInput.value}}{{" "}}{{mdInitInput.value != "" ? mdInitInput.value : ""}}
+<br />
+<div mat-dialog-content style="height:90%; overflow-y: hidden;">
+<div *ngIf="prospect != null"  style="float:left; width:20%; height:100%;">
+  <h3 style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-family:sans-serif; font-size: large; color:#476c79" mat-dialog-title>
+    Prospect&nbsp;&nbsp;&nbsp;<img *ngIf="canDispNextAndPrev() == true" class="nonEditIconStyle" [src]="backButtonImgSrc"
+    (mouseover)="backButtonImgSrc = '../../../assets/left_arrow_prospect_yellow.svg'"
+    (mouseout)="backButtonImgSrc = '../../../assets/left_arrow_prospect.svg'"
+    (click)="goToNextOrPrevRm(false)"
+    matTooltipClass="tooltip"
+    [matTooltip]="'Go to Previous Prospect'"
+    />
+    <!--<button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevRm(false)">Previous</button> -->
+    <img style="transform:scaleX(-1); margin-left:8px" *ngIf="canDispNextAndPrev() == true" class="nonEditIconStyle" [src]="nextButtonImgSrc"
+    (mouseover)="nextButtonImgSrc = '../../../assets/left_arrow_prospect_yellow.svg'"
+    (mouseout)="nextButtonImgSrc = '../../../assets/left_arrow_prospect.svg'"
+    (click)="goToNextOrPrevRm(true)"
+    matTooltipClass="tooltip"
+    [matTooltip]="'Go to Next Prospect'"
+    />
+     <br/>&nbsp;&nbsp;&nbsp; <span style="font-size:15px"> {{fNameInput.value}}{{" "}}{{mdInitInput.value != "" ? mdInitInput.value : ""}}
       {{mdInitInput.value != "" ? " " : ""}}{{lNameInput.value}}
       </span>
   </h3>
-  <h3 style="white-space: nowrap; font-family:sans-serif; font-size: large; color:#476c79" mat-dialog-title>
-    <img *ngIf="uiEditMode == true" class="editIconStyle" [src]="editImageSrcRoom"
-          (mouseover)="editImageSrcRoom = '../../../assets/edit_icon_yellow.svg'"
-          (mouseout)="editImageSrcRoom = '../../../assets/edit_icon.svg'" 
-    (click)="openLinkRoomModal()"/>
-    Room <br/>&nbsp;&nbsp;&nbsp; 
+  <h3 style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-family:sans-serif; font-size: large; color:#476c79" mat-dialog-title>
+    Room    <img [ngStyle]="{'visibility': uiEditMode == true ? 'visible' : 'hidden'}"  class="editIconStyle" [src]="editImageSrcRoom"
+    (mouseover)="editImageSrcRoom = '../../../assets/edit_icon_yellow.svg'"
+    (mouseout)="editImageSrcRoom = '../../../assets/edit_icon.svg'" 
+(click)="openLinkRoomModal()"/>
+ <br/>&nbsp;&nbsp;&nbsp; 
     <span style="font-family:sans-serif; font-size: 15px; color:#476c79;" *ngIf="selectedRoomName != 'No Room Selected'">{{selectedRoomName}}</span>
     <span style="font-family:sans-serif; font-size: 15px; color:red;" *ngIf="selectedRoomName == 'No Room Selected'"><h3>No Room Selected</h3></span>
   </h3>
       <span style="margin-left:5%;">
         <br />
         
-        <img *ngIf="canDispNextAndPrev() == true" class="editIconStyle" [src]="backButtonImgSrc"
-        (mouseover)="backButtonImgSrc = '../../../assets/left_arrow_prospect_yellow.svg'"
-        (mouseout)="backButtonImgSrc = '../../../assets/left_arrow_prospect.svg'"
-        (click)="goToNextOrPrevRm(false)"
-        matTooltipClass="tooltip"
-        [matTooltip]="'Go to Previous Prospect'"
-        />
-        <!--<button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevRm(false)">Previous</button> -->
-        <img style="transform:scaleX(-1); margin-left:8px" *ngIf="canDispNextAndPrev() == true" class="editIconStyle" [src]="nextButtonImgSrc"
-        (mouseover)="nextButtonImgSrc = '../../../assets/left_arrow_prospect_yellow.svg'"
-        (mouseout)="nextButtonImgSrc = '../../../assets/left_arrow_prospect.svg'"
-        (click)="goToNextOrPrevRm(true)"
-        matTooltipClass="tooltip"
-        [matTooltip]="'Go to Next Prospect'"
-        />
-        <br />
         <!--<button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevRm(true)">Next</button>-->
-        <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="saveBtnClickedUpdate()">Save</button>
-      <br />
-      <img class="editIconStyle" [src]="delProsImageSrc" 
-      (mouseover)="delProsImageSrc = '../../../assets/remove_prospect_icon_yellow.svg'"
-      (mouseout)="delProsImageSrc = '../../../assets/remove_prospect_icon.svg'"
-        (click)="deleteBtnClicked()"
-        matTooltipClass="tooltip"
-        [matTooltip]="'Delete Prospect'"
-        />
-        <br />
-        <img style="margin-top:8px;" class="editIconStyle" [src]="closeIconSrc" 
+        <button style="margin-bottom: 8px;" id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="saveBtnClickedUpdate()">Save</button>
+      <br *ngIf="fieldsModified == true" />
+        <img class="nonEditIconStyle" [src]="closeIconSrc" 
         (mouseover)="closeIconSrc = '../../../assets/close_door_yellow.svg'"
         (mouseout)="closeIconSrc = '../../../assets/close_door.svg'"
         (click)="closeProspectDialog()"
         matTooltipClass="tooltip"
         [matTooltip]="'Close'"
         />
+        <img style="margin-left:8px;" class="nonEditIconStyle" [src]="delProsImageSrc" 
+        (mouseover)="delProsImageSrc = '../../../assets/remove_prospect_icon_yellow.svg'"
+        (mouseout)="delProsImageSrc = '../../../assets/remove_prospect_icon.svg'"
+          (click)="deleteBtnClicked()"
+          matTooltipClass="tooltip"
+          [matTooltip]="'Delete Prospect'"
+          />
       </span>
 </div>
-<div *ngIf="prospect != null" style="position:relative;float:left; max-width:35%; height:100%">
-  <table style="font-family:sans-serif; font-size: large; color:#476c79">
-    <fieldset style="width:fit-content">
-      <legend>Personal Info</legend>
-    <tr>
-      <td width="90%">
-        <h3 style="white-space: nowrap;"><img *ngIf="editFName == false && uiEditMode == true" class="editIconStyle" [src]="editImageSrcFName"
+<div *ngIf="prospect != null" style="display: inline-block;width:35%; height:100%;">
+  <table style="font-size: large; color:#476c79; border-width:1px; width:100%;">
+    <fieldset style="text-overflow: clip; overflow: hidden;" >
+      <legend>Personal Info</legend>    <tr>
+      <td width="100%">
+        <h3 style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis;"><img [ngStyle]="{'visibility': editFName == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcFName"
           (mouseover)="editImageSrcFName = '../../../assets/edit_icon_yellow.svg'"
           (mouseout)="editImageSrcFName = '../../../assets/edit_icon.svg'" 
           (click)="changeEditMode('fname')"/><label class="labelClass">First Name:&nbsp;&nbsp;</label>
@@ -90,8 +88,8 @@
       </td>
     </tr>
     <tr>
-      <td width="90%">
-        <h3 style="white-space: nowrap;"><img *ngIf="editLName == false  && uiEditMode == true" class="editIconStyle" [src]="editImageSrcLName"
+      <td width="100%">
+        <h3 style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis;"><img [ngStyle]="{'visibility': editLName == false  && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcLName"
           (mouseover)="editImageSrcLName = '../../../assets/edit_icon_yellow.svg'"
           (mouseout)="editImageSrcLName = '../../../assets/edit_icon.svg'" 
           (click)="changeEditMode('lname')"/><label class="labelClass">Last Name:&nbsp;&nbsp;</label>
@@ -106,8 +104,8 @@
       </td>
     </tr>
     <tr>
-      <td width="90%">
-        <h3 style="white-space: nowrap;"><img *ngIf="editMdInit == false  && uiEditMode == true" class="editIconStyle" [src]="editImageSrcMdInit"
+      <td width="100%">
+        <h3 style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis;"><img [ngStyle]="{'visibility': editMdInit == false  && uiEditMode == true ? 'visible' : 'hidden'}"  class="editIconStyle" [src]="editImageSrcMdInit"
           (mouseover)="editImageSrcMdInit = '../../../assets/edit_icon_yellow.svg'"
           (mouseout)="editImageSrcMdInit = '../../../assets/edit_icon.svg'" 
           (click)="changeEditMode('mdinit')"/><label class="labelClass">Middle Initial:&nbsp;&nbsp;</label>
@@ -121,15 +119,15 @@
         </h3>
       </td>
     </tr>
-    <tr>
-      <td width="90%">
-        <h3 style="white-space: nowrap;"><img *ngIf="editEmail == false  && uiEditMode == true" class="editIconStyle" [src]="editImageSrcEmail"
+    <tr style="text-overflow: clip;">
+      <td width="100%" style="text-overflow: clip; overflow: hidden;">
+        <h3 style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis;"><img [ngStyle]="{'visibility': editEmail == false  && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcEmail"
           (mouseover)="editImageSrcEmail = '../../../assets/edit_icon_yellow.svg'"
           (mouseout)="editImageSrcEmail = '../../../assets/edit_icon.svg'" 
           (click)="changeEditMode('email')"/><label class="labelClass">Email Address:&nbsp;&nbsp;</label>
           <span *ngIf="editEmail == false">{{prospect.EmailAddress}}</span>
           <mat-form-field *ngIf="editEmail == true">
-            <input matInput size="30" (blur)="updateInput('email')" style="white-space: nowrap;" maxlength="30" required placeholder="jrich@yahoo.com" 
+            <input matInput size="25" (blur)="updateInput('email')" style="white-space: nowrap;" maxlength="25" required placeholder="jrich@yahoo.com" 
             [formControl]="emailInput">
             <mat-icon *ngIf="emailInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
             <mat-error *ngIf="emailInput.invalid">{{getInputErrorMessage(emailInput)}}</mat-error>
@@ -138,8 +136,8 @@
       </td>
     </tr>
     <tr>
-      <td width="90%">
-        <h3 style="white-space: nowrap;"><img *ngIf="editPhoneNumber == false && uiEditMode == true" class="editIconStyle" [src]="editImageSrcPhone"
+      <td width="100%">
+        <h3 style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis;"><img [ngStyle]="{'visibility': editPhoneNumber == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcPhone"
           (mouseover)="editImageSrcPhone = '../../../assets/edit_icon_yellow.svg'"
           (mouseout)="editImageSrcPhone = '../../../assets/edit_icon.svg'" 
           (click)="changeEditMode('phone')"/><label class="labelClass">Phone Number:&nbsp;&nbsp;</label>
@@ -154,8 +152,8 @@
       </td>
     </tr> 
     <tr>
-      <td width="90%">
-        <h3 style="white-space: nowrap;"><img *ngIf="editSSN == false && uiEditMode == true" class="editIconStyle" [src]="editImageSrcSSN"
+      <td width="100%">
+        <h3 style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis;"><img [ngStyle]="{'visibility': editSSN == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcSSN"
           (mouseover)="editImageSrcSSN = '../../../assets/edit_icon_yellow.svg'"
           (mouseout)="editImageSrcSSN = '../../../assets/edit_icon.svg'" 
           (click)="changeEditMode('ssn')"/><label class="labelClass">SSN:&nbsp;&nbsp;</label>
@@ -169,17 +167,17 @@
         </h3>
       </td>
     </tr>
-    </fieldset>
-  </table>
+  </fieldset>
+</table>
 </div>
-  <div *ngIf="prospect != null" style="position:relative;float:left; width:23%; height:100%">
+  <div *ngIf="prospect != null" style="position:relative;display: inline-block; width:25%; height:100%">
     <table style="font-family:sans-serif; font-size: small; color:#476c79">
-      <fieldset style="width:fit-content">
+      <fieldset >
         <legend style="font-size:large;">Lease Info</legend>
-      <tr width="90%">
+      <tr width="100%">
         <td>
           <div>
-            <h3 style="white-space: nowrap;"><label class="labelClass">Term&nbsp;&nbsp;</label>
+            <h3 style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis;"><label class="labelClass">Term&nbsp;&nbsp;</label>
               <mat-radio-group style="display:flex; flex-direction: column;" name="termList"  fxLayout="column" [(ngModel)]="termType" (change)="fieldsModified = true">
                 <mat-radio-button style="font-family:sans-serif; font-size: 15px; color:#476c79;" *ngFor="let termType of termList" [value]="termType.name" name="termList" >{{ termType.name}}</mat-radio-button>
               </mat-radio-group>
@@ -191,7 +189,7 @@
       </tr>
       <tr>
           <app-date-picker [headerName]="'Move-in Date'" [(date)]="moveInDateInput"></app-date-picker>
-          <app-date-picker [headerName]="'Move-out Date'" [(date)]="moveOutDateInput"></app-date-picker>
+          <app-date-picker *ngIf="termType == 'Fixed-Term'" [headerName]="'Move-out Date'" [(date)]="moveOutDateInput"></app-date-picker>
           <mat-form-field appearance="fill">
             <mat-label>Status</mat-label>
             <mat-select [(value)]="selectedStatus" (selectionChange)="setModified($event)">
@@ -204,9 +202,9 @@
       </fieldset>
     </table>
     </div>
-    <div *ngIf="prospect != null" style="position:relative;float:left; max-width:23%; height:100%;">
+    <div *ngIf="prospect != null" style="position:relative;display: inline-block; width:20%; height:100%;">
       <table style="font-family:sans-serif; font-size: large; color:#476c79">
-        <fieldset style="width:fit-content">
+        <fieldset>
           <legend>Background Info</legend>
         <tbody>
           <tr>
@@ -216,12 +214,12 @@
           (mouseover)="editImageSrcEmployers = '../../../assets/edit_icon_yellow.svg'"
           (mouseout)="editImageSrcEmployers = '../../../assets/edit_icon.svg'" 
                 (click)="openEmployerModifyModal(false)"/>
-                <img style="margin-left: 8px" *ngIf="uiEditMode == true" class="editIconStyle" [src]="addImageSrcEmployer"
+                <img style="margin-left: 8px" [ngStyle]="{'visibility': uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="addImageSrcEmployer"
                 (mouseover)="addImageSrcEmployer = '../../../assets/plus_sign_yellow.svg'"
                 (mouseout)="addImageSrcEmployer = '../../../assets/plus_sign.svg'" 
                 (click)="openEmployerModifyModal(true)"/>
                 <ul>
-                  <li style="list-style:square" *ngFor="let emp of prospect.Employers"
+                  <li style="list-style:square; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;" *ngFor="let emp of prospect.Employers"
                   matTooltipClass="tooltip"
                   [matTooltip]="getEmployerTooltip(emp)"
                   >
@@ -236,16 +234,16 @@
           <tr>
             <td>
               <h3 *ngIf="prospect != null"><label class="labelClass">Previous Rentals</label>&nbsp;&nbsp;
-                <img *ngIf="hasPrevRentals() == true && uiEditMode == true" class="editIconStyle" [src]="editImageSrcPrevRent"
+                <img [ngStyle]="{'visibility': hasPrevRentals() == true && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcPrevRent"
           (mouseover)="editImageSrcPrevRent = '../../../assets/edit_icon_yellow.svg'"
           (mouseout)="editImageSrcPrevRent = '../../../assets/edit_icon.svg'" 
                 (click)="openPrevRentModifyModal(false)"/>
-                <img style="margin-left: 8px" *ngIf="uiEditMode == true" class="editIconStyle" [src]="addImageSrcPrevRent"
+                <img style="margin-left: 8px" [ngStyle]="{'visibility': uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="addImageSrcPrevRent"
                 (mouseover)="addImageSrcPrevRent = '../../../assets/plus_sign_yellow.svg'"
                 (mouseout)="addImageSrcPrevRent = '../../../assets/plus_sign.svg'" 
                 (click)="openPrevRentModifyModal(true)"/>
                 <ul>
-                  <li style="list-style:square; white-space: nowrap;" *ngFor="let prevRental of prospect.PreviousRentals"
+                  <li style="list-style:square; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;" *ngFor="let prevRental of prospect.PreviousRentals"
                   matTooltipClass="tooltip"
                   [matTooltip]="getPrevRentalTooltip(prevRental)"
                   >

@@ -30,7 +30,7 @@
             <!-- Weight Column -->
             <ng-container matColumnDef="Move-out">
               <th mat-header-cell *matHeaderCellDef>Move-out</th>
-              <td mat-cell *matCellDef="let element">{{element.MoveOutDate.toLocaleString('en-US', dateNotTimeOptions)}} </td>
+              <td mat-cell *matCellDef="let element">{{getMoveoutDate(element)}} </td>
             </ng-container>     
             <!-- Symbol Column -->
             <ng-container matColumnDef="EmailAddress">

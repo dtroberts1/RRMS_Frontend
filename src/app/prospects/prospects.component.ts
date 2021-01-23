@@ -3,10 +3,11 @@ import {ProspectService} from '../services/prospect.service';
 import {IProspect, TermType} from '../interfaces/Prospect';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EditProspectComponent } from './edit-prospect/edit-prospect.component';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DialogDataRRMSDialog } from '../dialog-data/dialog-data.component';
 import { SalaryType } from '../interfaces/Employer';
+import { BlockScrollStrategy, NoopScrollStrategy } from '@angular/cdk/overlay';
 
 export interface PeriodicElement {
   name: string;
@@ -107,18 +108,29 @@ export class ProspectsComponent implements OnInit {
       });
     }
   }
+  getMoveoutDate(pros : IProspect){
+    if (pros.TermType == TermType.fixedTerm){
+      return pros.MoveOutDate.toLocaleString('en-US', this.dateNotTimeOptions)
+    }
+    else{
+      return "Month-to-Month"
+    }
+  }
+
   modifyProspect(isEditMode: boolean){
     if (this.selection != null && this.selection.selected[0] != null)
     {
-      this.dialog.open(EditProspectComponent, {
-        data: {
-          prospects: this.prospects,
-          prospectIndex : this.dataSource.indexOf(this.selection.selected[0]),
-          uiEditMode: isEditMode,
-        },
-        /*width:'730px',
-        height: '600px'*/
-      }).afterClosed().subscribe((updatedProspectList: Iterable<IProspect>) => {
+      let matDialogConfig = new MatDialogConfig();
+      matDialogConfig.data = {
+        prospects: this.prospects,
+        prospectIndex : this.dataSource.indexOf(this.selection.selected[0]),
+        uiEditMode: isEditMode,
+      };
+      matDialogConfig.width = '250%';
+      matDialogConfig.height = '500px';
+      //matDialogConfig.scrollStrategy = new BlockScrollStrategy();
+      this.dialog.open(EditProspectComponent, matDialogConfig)
+        .afterClosed().subscribe((updatedProspectList: Iterable<IProspect>) => {
         // The EditProspectComponent shouldn't return back anything.
         if ((<any[]>updatedProspectList).length > 0)      
         {

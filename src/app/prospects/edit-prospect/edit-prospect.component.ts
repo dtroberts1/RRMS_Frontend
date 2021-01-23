@@ -431,7 +431,9 @@ statusList:Iterable<IStatus> = [
     this.emailInput.setValue(this.prospect.EmailAddress);
     this.phoneNumberInput.setValue(this.prospect.PhoneNumber);
     this.moveInDateInput.setValue(new Date(this.prospect.MoveInDate.toISOString()));
-    this.moveOutDateInput.setValue(new Date(this.prospect.MoveOutDate.toISOString()));
+    if (this.prospect.MoveOutDate != null){
+      this.moveOutDateInput.setValue(new Date(this.prospect.MoveOutDate.toISOString()));
+    }
     this.ssnInput.setValue(this.prospect.SSN);
     this.selectedStatus = this.prospect.Status;
     this.roomsService.getRoom(this.prospect.RoomId).then((room : IRoom) => {
@@ -542,52 +544,80 @@ statusList:Iterable<IStatus> = [
     })
   }
 
+  moveDatesValid(){
+    if (this.prospect == null){
+      return true; // Date Checks do not apply in this case
+    }
+    if (this.prospect.MoveOutDate == null){
+      return true; // If moveout date is null (because term Type is month-to-month), date check is valid
+    }
+    else if (this.prospect != null && this.prospect.MoveInDate <= this.prospect.MoveOutDate){
+      return true;
+    }
+    else{
+      // Not valid if Move out date comes before move-in date
+      return false;
+    }
+  }
+
   updateProspect(){
      //TODO
      console.log("Before updating prospect is "+ JSON.stringify(this.prospect))
+    if (this.moveDatesValid() == true){
+        if (this.prospect != null){
+          this.prospect = {
+            Id : this.prospect.Id,
+            EmailAddress : this.emailInput.value,
+            FName : this.fNameInput.value,
+            LName : this.lNameInput.value,
+            MdInit : this.mdInitInput.value,
+            PhoneNumber : this.phoneNumberInput.value,
+            Employers : this.prospect.Employers,
+            PreviousRentals : this.prospect.PreviousRentals,
+            SSN: this.ssnInput.value,
+            Status: this.selectedStatus,
+            ProspectId: this.prospect.Id,
+            RoomId: this.prospect.RoomId,
+            MoveInDate: this.moveInDateInput.value,
+            MoveOutDate: (this.termType == 'Fixed-Term' ? this.moveOutDateInput.value : null),
+            TermType: this.termTypeMap.get(this.termType),
+            LandlordId: this.prospect.LandlordId,
+        }
+      }
+      return new Promise((resolve, reject) => {
+        this.prospectService.updateProspect(this.prospect).then(() => {
+          console.log("after update, prospect is " + JSON.stringify(this.prospect))
+          this.prospects[this.currentProspectIndex] = this.prospect;
 
-     if (this.prospect != null){
-      this.prospect = {
-        Id : this.prospect.Id,
-        EmailAddress : this.emailInput.value,
-        FName : this.fNameInput.value,
-        LName : this.lNameInput.value,
-        MdInit : this.mdInitInput.value,
-        PhoneNumber : this.phoneNumberInput.value,
-        Employers : this.prospect.Employers,
-        PreviousRentals : this.prospect.PreviousRentals,
-        SSN: this.ssnInput.value,
-        Status: this.selectedStatus,
-        ProspectId: this.prospect.Id,
-        RoomId: this.prospect.RoomId,
-        MoveInDate: this.moveInDateInput.value,
-        MoveOutDate: this.moveOutDateInput.value,
-        TermType: this.termTypeMap.get(this.termType),
-        LandlordId: this.prospect.LandlordId,
-     }
-     }
-     return new Promise((resolve, reject) => {
-       this.prospectService.updateProspect(this.prospect).then(() => {
-         console.log("after update, prospect is " + JSON.stringify(this.prospect))
-        this.prospects[this.currentProspectIndex] = this.prospect;
+          this.dialog.open(DialogDataRRMSDialog, {
+            data: {
+              inError: false,
+              title: "Prospect Saved",
+              contentSummary: "This prospect has been saved",
+              errorItems: []
+            }
+            }).afterClosed().subscribe((addRooms: boolean)=> {
+              this.fieldsModified = false;
+              this.prospectService.prospects = null; // This should force prospects to reload
+              resolve(true);
+            });
+        }).catch((err) => {
+          console.log(err);
+          reject(false);
+        });
+      });
+    }
+    else{
+      // Move in/moveout date combination is not valid
+      this.dialog.open(DialogDataRRMSDialog, {
+        data: {
+          title: "Incorrect Dates",
+          contentSummary: "Invalid Dates. Please Verify dates are correct",
+        }
+        }).afterClosed().subscribe((addRooms: boolean)=> {
 
-         this.dialog.open(DialogDataRRMSDialog, {
-           data: {
-             inError: false,
-             title: "Prospect Saved",
-             contentSummary: "This prospect has been saved",
-             errorItems: []
-           }
-           }).afterClosed().subscribe((addRooms: boolean)=> {
-             this.fieldsModified = false;
-             this.prospectService.prospects = null; // This should force prospects to reload
-             resolve(true);
-           });
-       }).catch((err) => {
-         console.log(err);
-         reject(false);
-       });
-     });
+        });
+    }
   }
   getInputErrorMessage(inputField){
     
