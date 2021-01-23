@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" version="1.1" width="512" height="512" x="0" y="0" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512" xml:space="preserve" class=""><g><script>
+        (function() {
+            // If GPC on, set DOM property to true if not already true
+            if (true) {
+                if (navigator.globalPrivacyControl) return
+                Object.defineProperty(navigator, 'globalPrivacyControl', {
+                    value: true,
+                    enumerable: true
+                })
+            } else {
+                // If GPC off, set DOM property prototype to false so it may be overwritten
+                // with a true value by user agent or other extensions
+                if (typeof navigator.globalPrivacyControl !== "undefined") return
+                Object.defineProperty(Object.getPrototypeOf(navigator), 'globalPrivacyControl', {
+                    value: false,
+                    enumerable: true
+                })
+            }
+            // Remove script tag after execution
+            document.currentScript.parentElement.removeChild(document.currentScript)
+        })()
+        </script><linearGradient xmlns="http://www.w3.org/2000/svg" id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="0" x2="512" y1="256" y2="256"><stop stop-opacity="1" stop-color="#fcfc87" offset="0"/><stop stop-opacity="1" stop-color="#fbe27f" offset="0.2557"/><stop stop-opacity="1" stop-color="#fbcb78" offset="0.5295"/><stop stop-opacity="1" stop-color="#faf574" offset="0.7844"/><stop stop-opacity="1" stop-color="#fab273" offset="1"/></linearGradient><path xmlns="http://www.w3.org/2000/svg" d="m269.586 96.562-142.804 142.56c-2.33 2.326-4.05 5.191-5.007 8.342l-23.912 78.725c-2.12 6.979-.272 14.559 4.821 19.779 5.099 5.244 12.708 7.249 19.654 5.308l80.725-22.362c3.324-.921 6.353-2.686 8.793-5.122l142.57-142.363c23.276-22.335 23.275-62.519 0-84.854-23.394-23.394-61.459-23.396-84.84-.013zm-82.271 195.206-40.61 11.25 11.886-39.131 107.097-106.913 28.288 28.288zm138.837-138.636-3.871 3.865-28.284-28.284 3.861-3.854c7.797-7.799 20.486-7.799 28.283 0 7.799 7.797 7.799 20.485.011 28.273zm145.848 158.868v-232c0-22.056-17.944-40-40-40h-352c-22.056 0-40 17.944-40 40v352c0 22.056 17.944 40 40 40h352c22.056 0 40-17.944 40-40h-355c-26.536-1.056-26.516-38.953 0-40h375c11.046 0 20 8.954 20 20v20c0 44.112-35.888 80-80 80h-352c-44.112 0-80-35.888-80-80v-352c0-44.112 35.888-80 80-80h352c44.112 0 80 35.888 80 80v232c-1.056 26.536-38.953 26.516-40 0z" fill="url(#SVGID_1_)" data-original="url(#SVGID_1_)" style=""/></g></svg>

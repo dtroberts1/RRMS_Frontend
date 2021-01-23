@@ -79,4 +79,18 @@
     font-family:sans-serif !important; 
     font-size: 15px !important; 
     color:#476c79 !important;
+    margin-left:8px;
+    text-align: center;
   }
+
+  .editIconStyle {
+    width: 20px;
+    height: auto;
+    vertical-align: middle;
+}
+.editIconStyle:hover{
+  cursor: pointer;
+}
+fieldset {
+  border: 1px ridge rgb(221, 209, 209);
+}

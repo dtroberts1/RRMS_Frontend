@@ -188,6 +188,8 @@ const appRoutes: Routes = [
       LeasePdfModalComponent,
       DatePickerComponent,
       ExampleHeader,
+      ModifyEmployerModalComponent,
+      ModifyPrevRentalComponent,
     ],
     providers: [HttpClientModule, MatDialogModule],
     bootstrap: [AppComponent],

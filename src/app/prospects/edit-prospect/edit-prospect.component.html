@@ -3,31 +3,70 @@
       <span> Prospect Details</span>
       <span class="fill-space"></span>
       <span class="fx-spacer"></span>
+      <mat-slide-toggle
+      style="font-family:sans-serif; font-size: 15px; color:#476c79;"
+      class="example-margin"
+      [(ngModel)]="uiEditMode">
+      Edit Mode
+    </mat-slide-toggle>
       <button mat-icon-button (click)="closeProspectDialog()">
           <mat-icon mat-list-icon>close</mat-icon>
       </button>
   </mat-toolbar>
 </h4>
 <div mat-dialog-content style="height:98%">
-<div style="float:left; width:25%; height:100%;">
-  <h1 style="white-space: nowrap; font-family:sans-serif; font-size: large; color:#476c79" mat-dialog-title>
-    Prospect: {{fNameInput.value}}{{" "}}{{mdInitInput.value != "" ? mdInitInput.value : ""}}
+<div style="position:relative;float:left; width:20%; height:100%;">
+  <h3 style="white-space: nowrap; font-family:sans-serif; font-size: large; color:#476c79" mat-dialog-title>
+    Prospect <br/>&nbsp;&nbsp;&nbsp; <span style="font-size:15px"> {{fNameInput.value}}{{" "}}{{mdInitInput.value != "" ? mdInitInput.value : ""}}
       {{mdInitInput.value != "" ? " " : ""}}{{lNameInput.value}}
-  </h1>
+      </span>
+  </h3>
+  <h3 style="white-space: nowrap; font-family:sans-serif; font-size: large; color:#476c79" mat-dialog-title>
+    <img *ngIf="uiEditMode == true" class="editIconStyle" [src]="editImageSrcRoom"
+          (mouseover)="editImageSrcRoom = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImageSrcRoom = '../../../assets/edit_icon.svg'" 
+    (click)="openLinkRoomModal()"/>
+    Room <br/>&nbsp;&nbsp;&nbsp; 
+    <span style="font-family:sans-serif; font-size: 15px; color:#476c79;" *ngIf="selectedRoomName != 'No Room Selected'">{{selectedRoomName}}</span>
+    <span style="font-family:sans-serif; font-size: 15px; color:red;" *ngIf="selectedRoomName == 'No Room Selected'"><h3>No Room Selected</h3></span>
+  </h3>
+      <span style="margin-left:5%;">
+        <br />
+        
+        <img *ngIf="canDispNextAndPrev() == true" class="editIconStyle" [src]="backButtonImgSrc"
+        (mouseover)="backButtonImgSrc = '../../../assets/left_arrow_prospect_yellow.svg'"
+        (mouseout)="backButtonImgSrc = '../../../assets/left_arrow_prospect.svg'"
+        (click)="goToNextOrPrevRm(false)"/>
+        <!--<button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevRm(false)">Previous</button> -->
+        <img style="transform:scaleX(-1); margin-left:8px" *ngIf="canDispNextAndPrev() == true" class="editIconStyle" [src]="nextButtonImgSrc"
+        (mouseover)="nextButtonImgSrc = '../../../assets/left_arrow_prospect_yellow.svg'"
+        (mouseout)="nextButtonImgSrc = '../../../assets/left_arrow_prospect.svg'"
+        (click)="goToNextOrPrevRm(true)"/>
+        <br />
+        <!--<button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevRm(true)">Next</button>-->
+        <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="saveBtnClickedUpdate()">Save</button>
+      <br />
+      <img class="editIconStyle" [src]="delProsImageSrc" 
+      (mouseover)="delProsImageSrc = '../../../assets/remove_prospect_icon_yellow.svg'"
+      (mouseout)="delProsImageSrc = '../../../assets/remove_prospect_icon.svg'"
+        (click)="deleteBtnClicked()"/>
+        <br />
+        <img style="margin-top:8px;" class="editIconStyle" [src]="closeIconSrc" 
+        (mouseover)="closeIconSrc = '../../../assets/close_door_yellow.svg'"
+        (mouseout)="closeIconSrc = '../../../assets/close_door.svg'"
+        (click)="closeProspectDialog()"/>
+      </span>
+</div>
+<div *ngIf="prospect != null" style="position:relative;float:left; max-width:35%; height:100%">
   <table style="font-family:sans-serif; font-size: large; color:#476c79">
-    <tr>
-      <td>
-        <mat-slide-toggle
-          style="font-family:sans-serif; font-size: 15px; color:#476c79;"
-          class="example-margin"
-          [(ngModel)]="uiEditMode">
-          Edit Mode
-        </mat-slide-toggle>
-      </td>
-    </tr>
+    <fieldset style="width:fit-content">
+      <legend>Personal Info</legend>
     <tr>
       <td width="90%">
-        <h3 style="white-space: nowrap;"><label class="labelClass">First Name:&nbsp;&nbsp;</label>
+        <h3 style="white-space: nowrap;"><img *ngIf="editFName == false && uiEditMode == true" class="editIconStyle" [src]="editImageSrcFName"
+          (mouseover)="editImageSrcFName = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImageSrcFName = '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('fname')"/><label class="labelClass">First Name:&nbsp;&nbsp;</label>
           <span *ngIf="editFName == false">{{prospect.FName}}</span>
           <mat-form-field *ngIf="editFName == true">
             <input matInput size="25" (blur)="updateInput('fname')" style="white-space: nowrap;" maxlength="25" required placeholder="Mark" 
@@ -37,13 +76,13 @@
           </mat-form-field>
         </h3>
       </td>
-      <td width="10%">
-        <h3 *ngIf="editFName == false && uiEditMode == true" class="editLinks" (click)="changeEditMode('fname')">Modify</h3>
-      </td>
     </tr>
     <tr>
       <td width="90%">
-        <h3 style="white-space: nowrap;"><label class="labelClass">Last Name:&nbsp;&nbsp;</label>
+        <h3 style="white-space: nowrap;"><img *ngIf="editLName == false  && uiEditMode == true" class="editIconStyle" [src]="editImageSrcLName"
+          (mouseover)="editImageSrcLName = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImageSrcLName = '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('lname')"/><label class="labelClass">Last Name:&nbsp;&nbsp;</label>
           <span *ngIf="editLName == false">{{prospect.LName}}</span>
           <mat-form-field *ngIf="editLName == true">
             <input matInput size="25" (blur)="updateInput('lname')" style="white-space: nowrap;" maxlength="25" required placeholder="Richards" 
@@ -53,13 +92,13 @@
           </mat-form-field>
         </h3>
       </td>
-      <td width="10%">
-        <h3 *ngIf="editLName == false  && uiEditMode == true" class="editLinks" (click)="changeEditMode('lname')">Modify</h3>
-      </td>
     </tr>
     <tr>
       <td width="90%">
-        <h3 style="white-space: nowrap;"><label class="labelClass">Middle Initial:&nbsp;&nbsp;</label>
+        <h3 style="white-space: nowrap;"><img *ngIf="editMdInit == false  && uiEditMode == true" class="editIconStyle" [src]="editImageSrcMdInit"
+          (mouseover)="editImageSrcMdInit = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImageSrcMdInit = '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('mdinit')"/><label class="labelClass">Middle Initial:&nbsp;&nbsp;</label>
           <span *ngIf="editMdInit == false">{{prospect.MdInit}}</span>
           <mat-form-field *ngIf="editMdInit == true">
             <input matInput size="1" (blur)="updateInput('mdinit')" style="white-space: nowrap;" maxlength="1" placeholder="T" 
@@ -69,13 +108,13 @@
           </mat-form-field>
         </h3>
       </td>
-      <td width="10%">
-        <h3 *ngIf="editMdInit == false  && uiEditMode == true" class="editLinks" (click)="changeEditMode('mdinit')">Modify</h3>
-      </td>
     </tr>
     <tr>
       <td width="90%">
-        <h3 style="white-space: nowrap;"><label class="labelClass">Email Address:&nbsp;&nbsp;</label>
+        <h3 style="white-space: nowrap;"><img *ngIf="editEmail == false  && uiEditMode == true" class="editIconStyle" [src]="editImageSrcEmail"
+          (mouseover)="editImageSrcEmail = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImageSrcEmail = '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('email')"/><label class="labelClass">Email Address:&nbsp;&nbsp;</label>
           <span *ngIf="editEmail == false">{{prospect.EmailAddress}}</span>
           <mat-form-field *ngIf="editEmail == true">
             <input matInput size="30" (blur)="updateInput('email')" style="white-space: nowrap;" maxlength="30" required placeholder="jrich@yahoo.com" 
@@ -85,13 +124,13 @@
           </mat-form-field>
         </h3>
       </td>
-      <td width="10%">
-        <h3 *ngIf="editEmail == false  && uiEditMode == true" class="editLinks" (click)="changeEditMode('email')">Modify</h3>
-      </td>
     </tr>
     <tr>
       <td width="90%">
-        <h3 style="white-space: nowrap;"><label class="labelClass">Phone Number:&nbsp;&nbsp;</label>
+        <h3 style="white-space: nowrap;"><img *ngIf="editPhoneNumber == false && uiEditMode == true" class="editIconStyle" [src]="editImageSrcPhone"
+          (mouseover)="editImageSrcPhone = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImageSrcPhone = '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('phone')"/><label class="labelClass">Phone Number:&nbsp;&nbsp;</label>
           <span *ngIf="editPhoneNumber == false">{{prospect.PhoneNumber}}</span>
           <mat-form-field *ngIf="editPhoneNumber == true">
             <input matInput size="30" (blur)="updateInput('phone')" style="white-space: nowrap;" maxlength="30" required placeholder="541-555-5555" 
@@ -101,43 +140,13 @@
           </mat-form-field>
         </h3>
       </td>
-      <td width="10%">
-        <h3 *ngIf="editPhoneNumber == false && uiEditMode == true" class="editLinks" (click)="changeEditMode('phone')">Modify</h3>
-      </td>
     </tr> 
     <tr>
-      <td>
-        <h3 *ngIf="prospect != null"><label class="labelClass">Employers</label>&nbsp;&nbsp;&nbsp;
-          <a *ngIf="hasEmployers() == true && uiEditMode == true"  class="editLinks" (click)="openEmployerModifyModal(false)">Modify</a>&nbsp;
-          <a *ngIf="uiEditMode == true" class="editLinks" (click)="openEmployerModifyModal(true)">Add</a>
-          <ul>
-            <li style="list-style:none" *ngFor="let emp of prospect.Employers">
-              {{emp.CompanyName}}
-            </li>
-          </ul>
-        </h3>
-      </td>
-      <td>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <h3 *ngIf="prospect != null"><label class="labelClass">Previous Rentals</label>&nbsp;&nbsp;
-          <a *ngIf="hasPrevRentals() == true && uiEditMode == true" class="editLinks" (click)="openPrevRentModifyModal(false)">Modify</a>&nbsp;
-          <a *ngIf="uiEditMode == true" class="editLinks" (click)="openPrevRentModifyModal(true)">Add</a>
-          <ul>
-            <li style="list-style:none; white-space: nowrap;" *ngFor="let prevRental of prospect.PreviousRentals">
-              {{prevRental.AddressStreet1}}{{", "}}{{prevRental.AddressCity}}{{", "}}{{prevRental.AddressState}}
-            </li>
-          </ul>
-        </h3>
-      </td>
-      <td>
-      </td>
-    </tr>
-    <tr>
       <td width="90%">
-        <h3 style="white-space: nowrap;"><label class="labelClass">SSN:&nbsp;&nbsp;</label>
+        <h3 style="white-space: nowrap;"><img *ngIf="editSSN == false && uiEditMode == true" class="editIconStyle" [src]="editImageSrcSSN"
+          (mouseover)="editImageSrcSSN = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImageSrcSSN = '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('ssn')"/><label class="labelClass">SSN:&nbsp;&nbsp;</label>
           <span *ngIf="editSSN == false">{{prospect.SSN}}</span>
           <mat-form-field *ngIf="editSSN == true">
             <input matInput size="30" (blur)="updateInput('ssn')" style="white-space: nowrap;" maxlength="30" required placeholder="222-22-2222" 
@@ -147,19 +156,19 @@
           </mat-form-field>
         </h3>
       </td>
-      <td width="10%">
-        <h3 *ngIf="editSSN == false && uiEditMode == true" class="editLinks" (click)="changeEditMode('ssn')">Modify</h3>
-      </td>
     </tr>
+    </fieldset>
   </table>
 </div>
-  <div *ngIf="prospect != null" style="float:right; width:50%; height:100%">
-    <table>
+  <div *ngIf="prospect != null" style="position:relative;float:left; width:23%; height:100%">
+    <table style="font-family:sans-serif; font-size: small; color:#476c79">
+      <fieldset style="width:fit-content">
+        <legend style="font-size:large;">Lease Info</legend>
       <tr width="90%">
         <td>
           <div>
             <h3 style="white-space: nowrap;"><label class="labelClass">Term&nbsp;&nbsp;</label>
-              <mat-radio-group name="termList"  fxLayout="column" [(ngModel)]="termType" (change)="fieldsModified = true">
+              <mat-radio-group style="display:flex; flex-direction: column;" name="termList"  fxLayout="column" [(ngModel)]="termType" (change)="fieldsModified = true">
                 <mat-radio-button style="font-family:sans-serif; font-size: 15px; color:#476c79;" *ngFor="let termType of termList" [value]="termType.name" name="termList" >{{ termType.name}}</mat-radio-button>
               </mat-radio-group>
             </h3>
@@ -168,37 +177,9 @@
         <td>
         </td>
       </tr>
-      <tr width="90%">
-        <td>
-          <h3><label class="labelClass">Room</label>&nbsp;&nbsp;&nbsp;
-              <a *ngIf="uiEditMode == true" class="editLinks" (click)="openLinkRoomModal()">Modify</a>
-          <ul>
-            <li style="list-style:none;">     
-              <mat-label style="font-family:sans-serif; font-size: 15px; color:#476c79;" *ngIf="selectedRoomName != 'No Room Selected'">{{selectedRoomName}}</mat-label>
-              <mat-label style="font-family:sans-serif; font-size: 15px; color:red;" *ngIf="selectedRoomName == 'No Room Selected'"><h3>No Room Selected</h3></mat-label>
-            </li>
-          </ul>
-          </h3>
-        </td>
-      </tr>
       <tr>
-        <td width="90%">
           <app-date-picker [headerName]="'Move-in Date'" [(date)]="moveInDateInput"></app-date-picker>
-        </td>
-        <td width="10%">
-          <h3 *ngIf="editMoveinDate == false && uiEditMode == true" style="font-family:sans-serif; font-size: 15px; color:#476c79;" class="editLinks" (click)="changeEditMode('moveindate')">Modify</h3>
-        </td>
-      </tr>
-      <tr>
-        <td width="90%">
           <app-date-picker [headerName]="'Move-out Date'" [(date)]="moveOutDateInput"></app-date-picker>
-        </td>
-        <td width="10%">
-          <h3 *ngIf="editMoveOutDate == false && uiEditMode == true" class="editLinks" (click)="changeEditMode('moveoutdate')">Modify</h3>
-        </td>
-      </tr>
-      <tr>
-        <td width="90%">
           <mat-form-field appearance="fill">
             <mat-label>Status</mat-label>
             <mat-select [(value)]="selectedStatus" (selectionChange)="setModified($event)">
@@ -207,19 +188,59 @@
             </mat-option>
             </mat-select>
         </mat-form-field>
-        </td>
-        <td width="10%">
-
-        </td>
       </tr>
+      </fieldset>
     </table>
-    <span style="margin-left:5%;">
-      <br />
-      <button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevRm(false)">Previous</button>
-      <button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevRm(true)">Next</button>
-      <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="saveBtnClickedUpdate()">Save</button>
-      <button class="lowerViewRoomButtons" id="deleteBtn" mat-button (click)="deleteBtnClicked()">Delete</button>
-      <button class="lowerViewRoomButtons" mat-button (click)="closeProspectDialog()">Close</button>
-    </span>
+    </div>
+    <div *ngIf="prospect != null" style="position:relative;float:left; max-width:23%; height:100%;">
+      <table style="font-family:sans-serif; font-size: large; color:#476c79">
+        <fieldset style="width:fit-content">
+          <legend>Background Info</legend>
+        <tbody>
+          <tr>
+            <td>
+              <h3 *ngIf="prospect != null"><label class="labelClass">Employers</label>&nbsp;&nbsp;&nbsp;
+                <img *ngIf="hasEmployers() == true && uiEditMode == true" class="editIconStyle" [src]="editImageSrcEmployers"
+          (mouseover)="editImageSrcEmployers = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImageSrcEmployers = '../../../assets/edit_icon.svg'" 
+                (click)="openEmployerModifyModal(false)"/>
+                <img style="margin-left: 8px" *ngIf="uiEditMode == true" class="editIconStyle" [src]="addImageSrcEmployer"
+                (mouseover)="addImageSrcEmployer = '../../../assets/plus_sign_yellow.svg'"
+                (mouseout)="addImageSrcEmployer = '../../../assets/plus_sign.svg'" 
+                (click)="openEmployerModifyModal(true)"/>
+                <ul>
+                  <li style="list-style:square" *ngFor="let emp of prospect.Employers">
+                    {{emp.CompanyName}}
+                  </li>
+                </ul>
+              </h3>
+            </td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <h3 *ngIf="prospect != null"><label class="labelClass">Previous Rentals</label>&nbsp;&nbsp;
+                <img *ngIf="hasPrevRentals() == true && uiEditMode == true" class="editIconStyle" [src]="editImageSrcPrevRent"
+          (mouseover)="editImageSrcPrevRent = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImageSrcPrevRent = '../../../assets/edit_icon.svg'" 
+                (click)="openPrevRentModifyModal(false)"/>
+                <img style="margin-left: 8px" *ngIf="uiEditMode == true" class="editIconStyle" [src]="addImageSrcPrevRent"
+                (mouseover)="addImageSrcPrevRent = '../../../assets/plus_sign_yellow.svg'"
+                (mouseout)="addImageSrcPrevRent = '../../../assets/plus_sign.svg'" 
+                (click)="openPrevRentModifyModal(true)"/>
+                <ul>
+                  <li style="list-style:square; white-space: nowrap;" *ngFor="let prevRental of prospect.PreviousRentals">
+                    {{prevRental.AddressStreet1}}<!--{{", "}}{{prevRental.AddressCity}}{{", "}}{{prevRental.AddressState}}-->
+                  </li>
+                </ul>
+              </h3>
+            </td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </fieldset>
+    </table>
     </div>
   </div>

@@ -40,6 +40,22 @@ interface IStatus{
   styleUrls: ['./edit-prospect.component.css']
 })
 export class EditProspectComponent {
+  editImageSrcFName : string = '../../../assets/edit_icon.svg'
+  editImageSrcLName : string = '../../../assets/edit_icon.svg'
+  editImageSrcMdInit : string = '../../../assets/edit_icon.svg'
+  editImageSrcEmail : string = '../../../assets/edit_icon.svg'
+  editImageSrcPhone : string = '../../../assets/edit_icon.svg'
+  editImageSrcSSN : string = '../../../assets/edit_icon.svg'
+  editImageSrcRoom : string = '../../../assets/edit_icon.svg'
+  editImageSrcEmployers : string = '../../../assets/edit_icon.svg'
+  editImageSrcPrevRent : string = '../../../assets/edit_icon.svg'
+  addImageSrcEmployer : string = '../../../assets/plus_sign.svg'
+  addImageSrcPrevRent : string = '../../../assets/plus_sign.svg'
+  delProsImageSrc : string = '../../../assets/remove_prospect_icon.svg'
+  backButtonImgSrc : string = '../../../assets/left_arrow_prospect.svg'
+  nextButtonImgSrc : string = '../../../assets/left_arrow_prospect.svg'
+  closeIconSrc : string = '../../../assets/close_door.svg'
+
   selectedStatus : ProspectStatus;
   homeImagePath : string;
   room : IRoom;
@@ -93,7 +109,7 @@ statusList:Iterable<IStatus> = [
     [TermType.monthToMonth, 'Month-to-Month'],
     [TermType.fixedTerm, 'Fixed-Term']
   ]);
-
+  dateObserverablesEnabled: boolean = true;
   isMaster : boolean;
   hasCloset : boolean;
   hasCeilingFan : boolean;
@@ -121,30 +137,39 @@ statusList:Iterable<IStatus> = [
         else
           this.selectedRoomName = "";
     });
+      this.dateObserverablesEnabled = true;
     }
     this.prospectCount = (<any[]>data.prospects)?.length;
-    
+    this.enableDateObservables();
+  }
+
+  enableDateObservables(){
+
     this.moveInDateInput.valueChanges.subscribe((val : Date) => {
-      if (val != null)
-      {
-        //console.log("this.moveInDateInput is valid. value is " + JSON.stringify((val.getUTCDate())))
-        this.prospect.MoveInDate = new Date(val.toISOString());
-        this.fieldsModified = true;
+      if (this.dateObserverablesEnabled == true){
+        if (val != null)
+        {
+         console.log("in valueChanges()");
+          this.prospect.MoveInDate = new Date(val.toISOString());
+          this.fieldsModified = true;
+        }
+        else{
+          return;
+        } 
       }
-      else{
-        return;
-      } 
     });
     this.moveOutDateInput.valueChanges.subscribe((val : Date) => {
-      if (val != null)
-      {
-        //console.log("this.moveInDateInput is valid. value is " + JSON.stringify((val.getUTCDate())))
-        this.prospect.MoveOutDate = new Date(val.toISOString());
-        this.fieldsModified = true;
-      }
-      else{
-        return;
-      } 
+      if (this.dateObserverablesEnabled == true){
+        if (val != null)
+        {
+          //console.log("this.moveInDateInput is valid. value is " + JSON.stringify((val.getUTCDate())))
+          this.prospect.MoveOutDate = new Date(val.toISOString());
+          this.fieldsModified = true;
+        }
+        else{
+          return;
+        } 
+    }
     });
   }
 
@@ -303,14 +328,6 @@ statusList:Iterable<IStatus> = [
       case 'phone': { 
         this.editPhoneNumber = !this.editPhoneNumber;
       } 
-      break; 
-      case 'moveindate': { 
-        this.editMoveinDate = !this.editMoveinDate;
-      } 
-      break; 
-      case 'moveoutdate': { 
-        this.editMoveOutDate = !this.editMoveOutDate;
-      }
       break;  
       case 'ssn': { 
         this.editSSN = !this.editSSN;
@@ -373,17 +390,6 @@ statusList:Iterable<IStatus> = [
         if (this.phoneNumberInput.valid == true)
         {
           this.prospect.PhoneNumber = this.phoneNumberInput.value;
-        }
-        else{
-          this.changeEditMode(editStr);
-          return;
-        } 
-      } 
-      break; 
-      case 'moveoutdate': { 
-        if (this.moveOutDateInput.valid == true)
-        {
-          this.prospect.MoveOutDate = this.moveOutDateInput.value;
         }
         else{
           this.changeEditMode(editStr);
@@ -476,7 +482,9 @@ statusList:Iterable<IStatus> = [
   updateCurrentProspectIndex(next: boolean)
   {
     if (next == true){
+      this.dateObserverablesEnabled = false;
       this.currentProspectIndex = (this.currentProspectIndex + 1) % (<any[]>this.data.prospects)?.length;
+
     }
     else if(next == false){ // If navigating to "previous"
       this.currentProspectIndex--;
