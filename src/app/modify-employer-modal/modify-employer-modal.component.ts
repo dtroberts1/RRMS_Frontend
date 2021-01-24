@@ -25,6 +25,21 @@ export enum TermType {
   styleUrls: ['./modify-employer-modal.component.css']
 })
 export class ModifyEmployerModalComponent implements OnInit{
+  editImageSrcMFName : string = '../../../assets/edit_icon.svg';
+  editImageSrcMLName : string = '../../../assets/edit_icon.svg';
+  editImageSrcMEmail : string = '../../../assets/edit_icon.svg';
+  editImageSrcMPhone : string = '../../../assets/edit_icon.svg';
+  editImageSrcCmpySt1 : string = '../../../assets/edit_icon.svg';
+  editImageSrcCmpySt2 : string = '../../../assets/edit_icon.svg';
+  editImageSrcCmpyCty : string = '../../../assets/edit_icon.svg';
+  editImageSrcCmpySt : string = '../../../assets/edit_icon.svg';
+  editImageSrcCmpyZip : string = '../../../assets/edit_icon.svg';
+  editCompanyNameIcon : string = '../../../assets/edit_icon.svg';
+  editImageSrcJobTtl : string = '../../../assets/edit_icon.svg';
+  closeIconSrc : string = '../../../assets/close_door.svg'
+  deleteEmpSrcIcon : string = '../../../assets/delete_employer_icon.svg'
+  backButtonImgSrc : string = '../../../assets/left_arrow_prospect.svg'
+  nextButtonImgSrc : string = '../../../assets/left_arrow_prospect.svg'
   addMode: boolean;
   currItem:string;
   salItem: string;
@@ -38,6 +53,7 @@ export class ModifyEmployerModalComponent implements OnInit{
   editPhone: boolean = false;
   editAddressStreet1: boolean = false;
   editAddressStreet2: boolean = false;
+  dateObserverablesEnabled: boolean = false;
   editCity: boolean = false;
   editState: boolean = false;
   editZipcode: boolean = false;
@@ -47,10 +63,12 @@ export class ModifyEmployerModalComponent implements OnInit{
   fieldsModified: boolean = false;
   currentEmployerIndex: number;
   employerCount: number = 0;
-  employer: IEmployer;
+  employer: IEmployer = null;
   employers: Iterable<IEmployer>;
   selectedRoomId : number;
   cmpyNameInput : FormControl = new FormControl('', [Validators.required, Validators.pattern(/^[.@&]?[a-zA-Z0-9 ]+[ !.@&()]?[ a-zA-Z0-9!()]+/)]);
+  cmpyLogoSrc : string = null;
+
   fNameInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,25}')]);
   lNameInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,25}')]);
   emailInput : FormControl = new FormControl('', [Validators.required, Validators.email]);
@@ -97,7 +115,54 @@ currentMap = new Map<string, boolean>([
   public dialog: MatDialog,
   private employerService: EmployerService, 
   ) {
+    this.cmpyNameInput.valueChanges.subscribe((val : string) => {
+      if (val != null){
+        this.cmpyLogoSrc = 'https://logo.clearbit.com/' + this.cmpyNameInput.value + '.com?size=200';
+      }
+      else{
+        this.cmpyLogoSrc = 'https://logo.clearbit.com/' + this.employer.CompanyName + '.com?size=200';
+      }
+      console.log("updating this.cmpyLogoSrc to " + this.cmpyLogoSrc)
+      this.cmpyLogoSrc = 'https://logo.clearbit.com/' + this.employer.CompanyName + '.com?size=200';
 
+    });
+  }
+
+  getCmpyNameSrc(){
+    let retVal = null;
+    if (this.employer != null)
+    retVal = this.employer.CompanyName.replace(/\s/g, "");
+    console.log("retVAl is " +retVal);
+    return retVal;
+  }
+  enableDateObservables(){
+
+    this.startDateInput.valueChanges.subscribe((val : Date) => {
+      if (this.dateObserverablesEnabled == true){
+        if (val != null)
+        {
+         console.log("in valueChanges()");
+         this.employer.StartDate = new Date(val.toISOString());
+         this.fieldsModified = true;
+        }
+        else{
+          return;
+        } 
+      }
+    });
+    this.endDateInput.valueChanges.subscribe((val : Date) => {
+      if (this.dateObserverablesEnabled == true){
+        if (val != null)
+        {
+         console.log("in valueChanges()");
+         this.fieldsModified = true;
+         this.employer.EndDate = new Date(val.toISOString());
+        }
+        else{
+          return;
+        } 
+      }
+    });
   }
   ngOnInit(): void {
     if (this.data.addMode == true)
@@ -113,6 +178,8 @@ currentMap = new Map<string, boolean>([
             this.employerCount = (<any[]>this.data.employers).length;
         }
       }
+      this.dateObserverablesEnabled = true;
+      this.enableDateObservables();
   }
   setOrigSettings(employer : IEmployer)
   {
@@ -168,14 +235,6 @@ currentMap = new Map<string, boolean>([
       break;  
       case 'jobtitle': { 
         this.editJobTitle = !this.editJobTitle;
-      }
-      break; 
-      case 'start': { 
-        this.editStartDate = !this.editStartDate;
-      }
-      break; 
-      case 'end': { 
-        this.editEndDate = !this.editEndDate;
       }
       break; 
       default: { 
@@ -310,29 +369,7 @@ currentMap = new Map<string, boolean>([
             return;
           } 
         } 
-        break; 
-        case 'start': { 
-          if (this.startDateInput.valid == true)
-          {
-            this.employer.StartDate = this.startDateInput.value;
-          }
-          else{
-            this.changeEditMode(editStr);
-            return;
-          } 
-        } 
-        break; 
-        case 'end': { 
-          if (this.endDateInput.valid == true)
-          {
-            this.employer.EndDate = this.endDateInput.value;
-          }
-          else{
-            this.changeEditMode(editStr);
-            return;
-          } 
-        } 
-        break; 
+      break;
       }
       this.changeEditMode(editStr);
       this.fieldsModified = true;
@@ -343,6 +380,7 @@ currentMap = new Map<string, boolean>([
     if (this.data.employers != null)
       this.employer = this.data.employers[this.currentEmployerIndex];
 
+    console.log("in getSettings(), this.employer.StartDate is " + JSON.stringify(this.employer.StartDate))
     if (this.employer != null)
     {
       this.cmpyNameInput.setValue(this.employer.CompanyName);
@@ -377,6 +415,8 @@ currentMap = new Map<string, boolean>([
   }
 
   goToNextOrPrevEmp(next: boolean){
+    this.dateObserverablesEnabled = false;
+
     if (this.fieldsModified == true){
       this.dialog.open(DialogDataRRMSDialog, {
         data: {
@@ -392,6 +432,7 @@ currentMap = new Map<string, boolean>([
                 this.fieldsModified = false;
                 this.updatecurrentEmployerIndex(next);
                 this.getSettings();
+                this.dateObserverablesEnabled = true;
               }
             });
           }
@@ -400,12 +441,14 @@ currentMap = new Map<string, boolean>([
             //this.fillInputsWithOriginalSettings();
             this.updatecurrentEmployerIndex(next);
             this.getSettings();
+            this.dateObserverablesEnabled = true;
           }
         });
     }
     else{
       this.updatecurrentEmployerIndex(next);
       this.getSettings();
+      this.dateObserverablesEnabled = true;
     }
   }
   updatecurrentEmployerIndex(next: boolean)
@@ -502,6 +545,8 @@ currentMap = new Map<string, boolean>([
   }
 
   updateEmp(){
+    console.log("Before updating employer is "+ JSON.stringify(this.employer))
+
     //TODO
     this.employer = {
       CompanyName: this.employer.CompanyName,

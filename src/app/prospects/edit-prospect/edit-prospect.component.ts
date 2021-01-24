@@ -218,8 +218,8 @@ statusList:Iterable<IStatus> = [
             addMode: true,
             prospectId: this.prospect.Id,
           },
-          width:'60%',
-          height: '55%'
+          width: '250%',
+          height: '550px',
         }).afterClosed().subscribe((returnedEmployer : IEmployer) => {
           // Push the newly added employer to the list
           if (returnedEmployer != null)
@@ -236,8 +236,8 @@ statusList:Iterable<IStatus> = [
             employerIndex : 0,
             addMode: false,
           },
-          width:'60%',
-          height: '55%'
+          width: '250%',
+          height: '550px',
         }).afterClosed().subscribe((returnedEmployerList : Iterable<IEmployer>) => {
           if (returnedEmployerList != null)
             this.prospect.Employers = returnedEmployerList;
@@ -263,6 +263,15 @@ statusList:Iterable<IStatus> = [
       return false;
     }
   }
+
+  getCmpyNameSrc(emp : IEmployer){
+    let retVal = null;
+    if (emp != null)
+    retVal = emp.CompanyName.replace(/\s/g, "");
+    console.log("retVAl is " +retVal);
+    return retVal;
+  }
+
   hasPrevRentals(){
     if ((<any[]>this.prospect.PreviousRentals)?.length > 0)
       return true;
@@ -468,6 +477,7 @@ statusList:Iterable<IStatus> = [
                 this.fieldsModified = false;
                 this.updateCurrentProspectIndex(next);
                 this.getSettings();
+                this.dateObserverablesEnabled = true;
               }
             });
           }
@@ -476,12 +486,14 @@ statusList:Iterable<IStatus> = [
             this.fillInputsWithOriginalSettings();
             this.updateCurrentProspectIndex(next);
             this.getSettings();
+            this.dateObserverablesEnabled = true;
           }
         });
     }
     else{
       this.updateCurrentProspectIndex(next);
       this.getSettings();
+      this.dateObserverablesEnabled = true;
     }
   }
   updateCurrentProspectIndex(next: boolean)

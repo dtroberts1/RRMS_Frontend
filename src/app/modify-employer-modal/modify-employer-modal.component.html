@@ -1,141 +1,128 @@
-    <h1 style="text-align: center;" mat-dialog-title>Employer Information</h1>
-    <div style="float:left; width:50%;" >
-      <table>
+<h4 mat-dialog-title style="width:100%; height:10%">
+  <mat-toolbar role="toolbar" class="task-header">
+      <span id="mainHeader"> Employer Information</span>
+      <span class="fill-space"></span>
+      <span class="fx-spacer"></span>
+
+      <button mat-icon-button (click)="closeModifyEmpDialog()">
+          <mat-icon id="closeBtn" mat-list-icon>close</mat-icon>
+      </button>
+  </mat-toolbar>
+</h4>
+<br />
+<div mat-dialog-content style="height:90%; overflow-y: hidden">
+    <div style="float:left; width:18%; height:100%" >
+      <h3 style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-family:sans-serif; font-size: large; color:#476c79">
+        <label>Company Name&nbsp;&nbsp;        
+          <img [ngStyle]="{'visibility': addMode == false && editCmpyName == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editCompanyNameIcon"
+          (mouseover)="editCompanyNameIcon = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editCompanyNameIcon = '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('cmpyname')"/>
+          <br />&nbsp;&nbsp;</label>
+          <img *ngIf="employer.CompanyName != null" style="width:25px; height:auto; vertical-align: middle;" src="https://logo.clearbit.com/{{getCmpyNameSrc()}}.com?size=200" onerror="this.style.display='none'">
+        <span style="margin-left:8px;" *ngIf="addMode == false && editCmpyName == false && employer != null">{{employer.CompanyName}}</span>
+        <mat-form-field *ngIf="addMode == true || editCmpyName == true">
+          <input matInput id="modifyEmployerModal_cmpyname" size="25" (blur)="updateInput('cmpyname')" style="white-space: nowrap;" maxlength="25" placeholder="Vans Towing" 
+          [formControl]="cmpyNameInput"
+          >
+          <mat-icon *ngIf="cmpyNameInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+        </mat-form-field>
+      </h3>
+      <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79"><label>Job Title&nbsp;&nbsp;
+        <img [ngStyle]="{'visibility': addMode == false && editJobTitle == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcJobTtl"
+        (mouseover)="editImageSrcJobTtl = '../../../assets/edit_icon_yellow.svg'"
+        (mouseout)="editImageSrcJobTtl = '../../../assets/edit_icon.svg'" 
+        (click)="changeEditMode('jobtitle')"/>
+        <br />&nbsp;&nbsp;</label>
+        <span *ngIf="addMode == false && editJobTitle == false && employer != null">{{employer.ProspectJobTitle}}</span>
+        <mat-form-field *ngIf="addMode == true || editJobTitle == true">
+          <input matInput size="25" (blur)="updateInput('jobtitle')" style="white-space: nowrap;" maxlength="25" required placeholder="Customer Service Rep" 
+          [formControl]="jobTitleInput">
+          <mat-icon *ngIf="jobTitleInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+        </mat-form-field>
+      </h3>
+      <img *ngIf="canDispNextAndPrev() == true" class="nonEditIconStyle" [src]="backButtonImgSrc"
+    (mouseover)="backButtonImgSrc = '../../../assets/left_arrow_prospect_yellow.svg'"
+    (mouseout)="backButtonImgSrc = '../../../assets/left_arrow_prospect.svg'"
+    (click)="goToNextOrPrevEmp(false)"
+    matTooltipClass="tooltip"
+    [matTooltip]="'Go to Previous Employer'"
+    />
+    <img style="transform:scaleX(-1); margin-left:8px" *ngIf="canDispNextAndPrev() == true" class="nonEditIconStyle" [src]="nextButtonImgSrc"
+    (mouseover)="nextButtonImgSrc = '../../../assets/left_arrow_prospect_yellow.svg'"
+    (mouseout)="nextButtonImgSrc = '../../../assets/left_arrow_prospect.svg'"
+    (click)="goToNextOrPrevEmp(true)"
+    matTooltipClass="tooltip"
+    [matTooltip]="'Go to Next Employer'"
+    />
+    <br />
+      <button id="modifyEmpModalSaveEmp" *ngIf="fieldsModified == true && addMode == false" mat-button (click)="saveBtnClickedUpdate()">Save</button>
+      <button class="lowerViewRoomButtons" *ngIf="addMode == true" mat-button (click)="createBtnClickedUpdate()">Create</button>
+      <img style="margin-left:8px;" class="nonEditIconStyle" [src]="closeIconSrc" 
+      (mouseover)="closeIconSrc = '../../../assets/close_door_yellow.svg'"
+      (mouseout)="closeIconSrc = '../../../assets/close_door.svg'"
+      (click)="closeModifyEmpDialog()"
+      matTooltipClass="tooltip"
+      [matTooltip]="'Close'"
+      />
+      <img style="margin-left:8px;" *ngIf="addMode == false" class="nonEditIconStyle" [src]="deleteEmpSrcIcon" 
+      (mouseover)="deleteEmpSrcIcon = '../../../assets/delete_employer_icon_yellow.svg'"
+      (mouseout)="deleteEmpSrcIcon = '../../../assets/delete_employer_icon.svg'"
+      (click)="deleteBtnClicked()"
+      matTooltipClass="tooltip"
+      [matTooltip]="'Delete Employer'"
+      />
+
+    </div>
+    <div style="display: inline-block; width:25%; height:100%; vertical-align: top;" >
+      <table style="font-family:sans-serif; width:90%; height:100%; font-size: small; color:#476c79">
+        <fieldset style="text-overflow: clip; overflow: hidden; width: 100%;"  >
+          <legend style="font-size:large;">Employment Info</legend>
         <tr>
-          <td width="90%">
-            <h3 style="white-space: nowrap;"><label>Company Name:&nbsp;&nbsp;</label>
-              <span *ngIf="addMode == false && editCmpyName == false && employer != null">{{employer.CompanyName}}</span>
-              <mat-form-field *ngIf="addMode == true || editCmpyName == true">
-                <input matInput id="modifyEmployerModal_cmpyname" size="25" (blur)="updateInput('cmpyname')" style="white-space: nowrap;" maxlength="25" placeholder="Vans Towing" 
-                [formControl]="cmpyNameInput"
-                >
-                <mat-icon *ngIf="cmpyNameInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-              </mat-form-field>
-            </h3>
-          </td>
-          <td width="10%">
-            <h3 id="modifyEmployerModal_cmpyeditbtn" *ngIf="addMode == false && editCmpyName == false" class="editLinks" (click)="changeEditMode('cmpyname')">Modify</h3>
+          <td>
           </td>
         </tr>
         <tr>
-            <td width="90%">
-              <h3 style="white-space: nowrap;"><label>Start Date:&nbsp;&nbsp;</label>
-                <span *ngIf="addMode == false && editStartDate == false && employer != null">{{employer.StartDate}}</span>
-                <mat-form-field *ngIf="addMode == true || editStartDate == true">
-                  <input matInput size="25" (blur)="updateInput('start')" style="white-space: nowrap;" maxlength="25" required placeholder="1/1/18" 
-                  [formControl]="startDateInput">
-                  <mat-icon *ngIf="startDateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-                  <mat-error *ngIf="startDateInput.invalid">{{getInputErrorMessage(startDateInput)}}</mat-error>
-                </mat-form-field>
-              </h3>
-            </td>
-            <td width="10%">
-              <h3 *ngIf="addMode == false && editStartDate == false" class="editLinks" (click)="changeEditMode('start')">Modify</h3>
+          <td>
+            <app-date-picker [headerName]="'Start Date'" [(date)]="startDateInput"></app-date-picker>
+              <br />
+              <app-date-picker [headerName]="'End Date'" [(date)]="endDateInput"></app-date-picker>
+
             </td>
           </tr>
           <tr>
-            <td width="90%">
-              <h3 style="white-space: nowrap;"><label>End Date:&nbsp;&nbsp;</label>
-                <span *ngIf="addMode == false && editEndDate == false && employer != null">{{employer.EndDate}}</span>
-                <mat-form-field *ngIf="addMode == true || editEndDate == true">
-                  <input matInput size="25" (blur)="updateInput('end')" style="white-space: nowrap;" maxlength="25" required placeholder="1/1/20" 
-                  [formControl]="endDateInput">
-                  <mat-icon *ngIf="endDateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-                  <mat-error *ngIf="endDateInput.invalid">{{getInputErrorMessage(endDateInput)}}</mat-error>
-                </mat-form-field>
+            <td>
+              <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79"><label>Current Employer?&nbsp;&nbsp;</label>
               </h3>
-            </td>
-            <td width="10%">
-              <h3 *ngIf="addMode == false && editEndDate == false" class="editLinks" (click)="changeEditMode('end')">Modify</h3>
+              <mat-radio-group name="opList"  fxLayout="row" [(ngModel)]="currItem" (change)="fieldsModified = true">
+                <mat-radio-button *ngFor="let op of currentList" [value]="op.name" name="opList" >{{ op.name}}</mat-radio-button>
+              </mat-radio-group>
             </td>
           </tr>
           <tr>
-          <td width="90%">
-            <h3 style="white-space: nowrap;"><label>Company Street Address (1):&nbsp;&nbsp;</label>
-              <span *ngIf="addMode == false && editAddressStreet1 == false && employer != null">{{employer.AddressStreet1}}</span>
-              <mat-form-field *ngIf="addMode == true || editAddressStreet1 == true">
-                <input matInput size="25" (blur)="updateInput('stadd1')" style="white-space: nowrap;" maxlength="25" required placeholder="111 Dunn Ave" 
-                [formControl]="addressStreet1Input">
-                <mat-icon *ngIf="addressStreet1Input.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-                <mat-error *ngIf="addressStreet1Input.invalid">{{getInputErrorMessage(addressStreet1Input)}}</mat-error>
-              </mat-form-field>
-            </h3>
-          </td>
-          <td width="10%">
-            <h3 *ngIf="addMode == false && editAddressStreet1 == false" class="editLinks" (click)="changeEditMode('stadd1')">Modify</h3>
-          </td>
-        </tr>
-        <tr>
-          <td width="90%">
-            <h3 style="white-space: nowrap;"><label>Company Street Address (2):&nbsp;&nbsp;</label>
-              <span *ngIf="addMode == false && editAddressStreet2 == false && employer != null">{{employer.AddressStreet2}}</span>
-              <mat-form-field *ngIf="addMode == true || editAddressStreet2 == true">
-                <input matInput size="25" (blur)="updateInput('stadd2')" style="white-space: nowrap;" maxlength="25" required placeholder="Suite #150" 
-                [formControl]="addressStreet2Input">
-                <mat-icon *ngIf="addressStreet2Input.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-                <mat-error *ngIf="addressStreet2Input.invalid">{{getInputErrorMessage(addressStreet2Input)}}</mat-error>
-              </mat-form-field>
-            </h3>
-          </td>
-          <td width="10%">
-            <h3 *ngIf="addMode == false && editAddressStreet2 == false" class="editLinks" (click)="changeEditMode('stadd2')">Modify</h3>
-          </td>
-        </tr>
-        <tr>
-          <td width="90%">
-            <h3 style="white-space: nowrap;"><label>Company City:&nbsp;&nbsp;</label>
-              <span *ngIf="addMode == false && editCity == false && employer != null">{{employer.AddressCity}}</span>
-              <mat-form-field *ngIf="addMode == true || editCity == true">
-                <input matInput size="25" (blur)="updateInput('city')" style="white-space: nowrap;" maxlength="25" required placeholder="San Diego" 
-                [formControl]="cityInput">
-                <mat-icon *ngIf="cityInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-                <mat-error *ngIf="cityInput.invalid">{{getInputErrorMessage(cityInput)}}</mat-error>
-              </mat-form-field>
-            </h3>
-          </td>
-          <td width="10%">
-            <h3 *ngIf="addMode == false && editCity == false" class="editLinks" (click)="changeEditMode('city')">Modify</h3>
-          </td>
-        </tr>
-        <tr>
-          <td width="90%">
-            <h3 style="white-space: nowrap;"><label>Company State:&nbsp;&nbsp;</label>
-              <span *ngIf="addMode == false && editState == false && employer != null">{{employer.AddressState}}</span>
-              <mat-form-field *ngIf="addMode == true || editState == true">
-                <input matInput size="25" (blur)="updateInput('state')" style="white-space: nowrap;" maxlength="25" required placeholder="CA" 
-                [formControl]="stateInput">
-                <mat-icon *ngIf="stateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-                <mat-error *ngIf="stateInput.invalid">{{getInputErrorMessage(stateInput)}}</mat-error>
-              </mat-form-field>
-            </h3>
-          </td>
-          <td width="10%">
-            <h3 *ngIf="addMode == false && editState == false" class="editLinks" (click)="changeEditMode('state')">Modify</h3>
-          </td>
-        </tr>
-        <tr>
-          <td width="90%">
-            <h3 style="white-space: nowrap;"><label>Company Zipcode:&nbsp;&nbsp;</label>
-              <span *ngIf="addMode == false && editZipcode == false && employer != null">{{employer.AddressZipCode}}</span>
-              <mat-form-field *ngIf="addMode == true || editZipcode == true">
-                <input matInput size="25" (blur)="updateInput('zipcode')" style="white-space: nowrap;" maxlength="25" required placeholder="22434" 
-                [formControl]="zipcodeInput">
-                <mat-icon *ngIf="zipcodeInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-                <mat-error *ngIf="zipcodeInput.invalid">{{getInputErrorMessage(zipcodeInput)}}</mat-error>
-              </mat-form-field>
-            </h3>
-          </td>
-          <td width="10%">
-            <h3 *ngIf="addMode == false && editZipcode == false" class="editLinks" (click)="changeEditMode('zipcode')">Modify</h3>
-          </td>
-        </tr>
+            <td>
+              <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79"><label>Salary Type&nbsp;&nbsp;</label>
+              </h3>
+              <mat-radio-group name="salList"  fxLayout="column" [(ngModel)]="salItem" (change)="fieldsModified = true">
+                <mat-radio-button *ngFor="let sal of salList" [value]="sal.name" name="salList" >{{ sal.name}}</mat-radio-button>
+              </mat-radio-group>
+            </td>
+          </tr>
+        </fieldset>
       </table>
     </div>
-    <div style="float:right; width:50%;" >
-      <table>
+    <div style="display: inline-block; width:25%; height:100%; vertical-align: top;" >
+      <table style="font-family:sans-serif; width:90%; height:100%; font-size: small; color:#476c79">
+        <fieldset style="text-overflow: clip; overflow: hidden; width: 100%;"  >
+          <legend style="font-size:large;">Manager Info</legend>
         <tr>
-          <td width="90%">
-            <h3 style="white-space: nowrap;"><label>Manager's First Name:&nbsp;&nbsp;</label>
+          <td>
+            <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79">
+              <img [ngStyle]="{'visibility': addMode == false && editFName == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcMFName"
+              (mouseover)="editImageSrcMFName = '../../../assets/edit_icon_yellow.svg'"
+              (mouseout)="editImageSrcMFName = '../../../assets/edit_icon.svg'" 
+              (click)="changeEditMode('fname')"/>
+              <label style="margin-left: 8px">First Name<br />&nbsp;&nbsp;</label>
               <span *ngIf="addMode == false && editFName == false && employer != null">{{employer.MgrFName}}</span>
               <mat-form-field *ngIf="addMode == true || editFName == true">
                 <input matInput size="25" (blur)="updateInput('fname')" style="white-space: nowrap;" maxlength="25" required placeholder="Sabrina" 
@@ -144,13 +131,15 @@
               </mat-form-field>
             </h3>
           </td>
-          <td width="10%">
-            <h3 *ngIf="addMode == false && editFName == false" class="editLinks" (click)="changeEditMode('fname')">Modify</h3>
-          </td>
         </tr>
         <tr>
-          <td width="90%">
-            <h3 style="white-space: nowrap;"><label>Manager's Last Name:&nbsp;&nbsp;</label>
+          <td>
+            <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79">
+            <img [ngStyle]="{'visibility': addMode == false && editLName == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcMLName"
+            (mouseover)="editImageSrcMLName = '../../../assets/edit_icon_yellow.svg'"
+            (mouseout)="editImageSrcMLName = '../../../assets/edit_icon.svg'" 
+            (click)="changeEditMode('lname')"/>
+            <label style="margin-left: 8px">Last Name<br />&nbsp;&nbsp;</label>
               <span *ngIf="addMode == false && editLName == false && employer != null">{{employer.MgrLName}}</span>
               <mat-form-field *ngIf="addMode == true || editLName == true">
                 <input matInput size="25" (blur)="updateInput('lname')" style="white-space: nowrap;" maxlength="25" required placeholder="James" 
@@ -160,13 +149,15 @@
               </mat-form-field>
             </h3>
           </td>
-          <td width="10%">
-            <h3 *ngIf="addMode == false && editLName == false" class="editLinks" (click)="changeEditMode('lname')">Modify</h3>
-          </td>
         </tr>
         <tr>
-          <td width="90%">
-            <h3 style="white-space: nowrap;"><label>Maneger's Email Address:&nbsp;&nbsp;</label>
+          <td>
+            <h3 style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis;">
+              <img [ngStyle]="{'visibility': addMode == false && editEmail == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcMEmail"
+              (mouseover)="editImageSrcMEmail = '../../../assets/edit_icon_yellow.svg'"
+              (mouseout)="editImageSrcMEmail = '../../../assets/edit_icon.svg'" 
+              (click)="changeEditMode('email')"/>
+              <label style="margin-left: 8px">Email Address<br />&nbsp;&nbsp;</label>
               <span *ngIf="addMode == false && editEmail == false && employer != null">{{employer.MgrEmailAddress}}</span>
               <mat-form-field *ngIf="addMode == true || editEmail == true">
                 <input matInput size="25" (blur)="updateInput('email')" style="white-space: nowrap;" maxlength="25" required placeholder="sjames@aol.com" 
@@ -176,13 +167,15 @@
               </mat-form-field>
             </h3>
           </td>
-          <td width="10%">
-            <h3 *ngIf="addMode == false && editEmail == false" class="editLinks" (click)="changeEditMode('email')">Modify</h3>
-          </td>
         </tr>
         <tr>
-          <td width="90%">
-            <h3 style="white-space: nowrap;"><label>Manager's Phone Number:&nbsp;&nbsp;</label>
+          <td>
+            <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79">
+              <img [ngStyle]="{'visibility': addMode == false && editPhone == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcMPhone"
+              (mouseover)="editImageSrcMPhone = '../../../assets/edit_icon_yellow.svg'"
+              (mouseout)="editImageSrcMPhone = '../../../assets/edit_icon.svg'" 
+              (click)="changeEditMode('phone')"/>
+              <label style="margin-left: 8px">Phone Number<br />&nbsp;&nbsp;</label>
               <span *ngIf="addMode == false && editPhone == false && employer != null">{{employer.MgrPhoneNumber}}</span>
               <mat-form-field *ngIf="addMode == true || editPhone == true">
                 <input matInput size="25" (blur)="updateInput('phone')" style="white-space: nowrap;" maxlength="25" required placeholder="111-222-3333" 
@@ -192,57 +185,108 @@
               </mat-form-field>
             </h3>
           </td>
-          <td width="10%">
-            <h3 *ngIf="addMode == false && editPhone == false" class="editLinks" (click)="changeEditMode('phone')">Modify</h3>
-          </td>
         </tr>
-        <tr>
-          <td width="90%">
-            <h3 style="white-space: nowrap;"><label>Job Title:&nbsp;&nbsp;</label>
-              <span *ngIf="addMode == false && editJobTitle == false && employer != null">{{employer.ProspectJobTitle}}</span>
-              <mat-form-field *ngIf="addMode == true || editJobTitle == true">
-                <input matInput size="25" (blur)="updateInput('jobtitle')" style="white-space: nowrap;" maxlength="25" required placeholder="Customer Service Rep" 
-                [formControl]="jobTitleInput">
-                <mat-icon *ngIf="jobTitleInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-              </mat-form-field>
-            </h3>
-          </td>
-          <td width="10%">
-            <h3 *ngIf="addMode == false && editJobTitle == false" class="editLinks" (click)="changeEditMode('jobtitle')">Modify</h3>
-          </td>
-        </tr>
-        <tr>
-          <td width="90%">
-            <h3 style="white-space: nowrap;"><label>Current Employer?&nbsp;&nbsp;</label>
-              <mat-radio-group name="opList"  fxLayout="column" [(ngModel)]="currItem" (change)="fieldsModified = true">
-                <mat-radio-button *ngFor="let op of currentList" [value]="op.name" name="opList" >{{ op.name}}</mat-radio-button>
-              </mat-radio-group>
-            </h3>
-          </td>
-          <td width="10%">
-          </td>
-        </tr>
-        <tr>
-          <td width="90%">
-            <h3 style="white-space: nowrap;"><label>Salary Type&nbsp;&nbsp;</label>
-              <mat-radio-group name="salList"  fxLayout="column" [(ngModel)]="salItem" (change)="fieldsModified = true">
-                <mat-radio-button *ngFor="let sal of salList" [value]="sal.name" name="salList" >{{ sal.name}}</mat-radio-button>
-              </mat-radio-group>
-            </h3>
-          </td>
-          <td width="10%">
-          </td>
-        </tr>
+        </fieldset>
       </table>
       <span style="margin-left:5%;">
         <br />
       </span>
-      <button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevEmp(false)">Previous</button>
-      <button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevEmp(true)">Next</button>
-      <button id="modifyEmpModalSaveEmp" *ngIf="fieldsModified == true && addMode == false" mat-button (click)="saveBtnClickedUpdate()">Save</button>
-      <button class="lowerViewRoomButtons" *ngIf="addMode == true" mat-button (click)="createBtnClickedUpdate()">Create</button>
-      <button *ngIf="addMode == false" class="lowerViewRoomButtons" id="deleteBtn" mat-button (click)="deleteBtnClicked()">Delete</button>
-      <button id="myjwlefgcreatebtn" name="myjwlefgcreatebtn" class="lowerViewRoomButtons" mat-button (click)="closeModifyEmpDialog()">Close</button>
-
     </div>
-  
+    <div style="display: inline-block; width:25%; height:100%; vertical-align: top;" >
+      <table style="font-family:sans-serif; width:90%; height:100%; font-size: small; color:#476c79">
+        <fieldset style="text-overflow: clip; overflow: hidden; width: 100%;"  >
+          <legend style="font-size:large;">Company Location Info</legend>
+          <tr>
+            <td>
+              <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79">
+                <img [ngStyle]="{'visibility': addMode == false && editAddressStreet1 == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcCmpySt1"
+                (mouseover)="editImageSrcCmpySt1 = '../../../assets/edit_icon_yellow.svg'"
+                (mouseout)="editImageSrcCmpySt1 = '../../../assets/edit_icon.svg'" 
+                (click)="changeEditMode('stadd1')"/>
+                <label style="margin-left: 8px">Street Address (1)<br />&nbsp;&nbsp;</label>
+                <span *ngIf="addMode == false && editAddressStreet1 == false && employer != null">{{employer.AddressStreet1}}</span>
+                <mat-form-field *ngIf="addMode == true || editAddressStreet1 == true">
+                  <input matInput size="25" (blur)="updateInput('stadd1')" style="white-space: nowrap;" maxlength="25" required placeholder="111 Dunn Ave" 
+                  [formControl]="addressStreet1Input">
+                  <mat-icon *ngIf="addressStreet1Input.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+                  <mat-error *ngIf="addressStreet1Input.invalid">{{getInputErrorMessage(addressStreet1Input)}}</mat-error>
+                </mat-form-field>
+              </h3>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79">
+                <img [ngStyle]="{'visibility': addMode == false && editAddressStreet2 == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcCmpySt2"
+                (mouseover)="editImageSrcCmpySt2 = '../../../assets/edit_icon_yellow.svg'"
+                (mouseout)="editImageSrcCmpySt2 = '../../../assets/edit_icon.svg'" 
+                (click)="changeEditMode('stadd2')"/>
+                <label style="margin-left: 8px">Street Address (2)<br />&nbsp;&nbsp;</label>
+                <span *ngIf="addMode == false && editAddressStreet2 == false && employer != null">{{employer.AddressStreet2}}</span>
+                <mat-form-field *ngIf="addMode == true || editAddressStreet2 == true">
+                  <input matInput size="25" (blur)="updateInput('stadd2')" style="white-space: nowrap;" maxlength="25" required placeholder="Suite #150" 
+                  [formControl]="addressStreet2Input">
+                  <mat-icon *ngIf="addressStreet2Input.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+                  <mat-error *ngIf="addressStreet2Input.invalid">{{getInputErrorMessage(addressStreet2Input)}}</mat-error>
+                </mat-form-field>
+              </h3>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79">
+                <img [ngStyle]="{'visibility': addMode == false && editCity == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcCmpyCty"
+                (mouseover)="editImageSrcCmpyCty = '../../../assets/edit_icon_yellow.svg'"
+                (mouseout)="editImageSrcCmpyCty = '../../../assets/edit_icon.svg'" 
+                (click)="changeEditMode('city')"/>
+                <label style="margin-left: 8px">City<br />&nbsp;&nbsp;</label>
+                <span *ngIf="addMode == false && editCity == false && employer != null">{{employer.AddressCity}}</span>
+                <mat-form-field *ngIf="addMode == true || editCity == true">
+                  <input matInput size="25" (blur)="updateInput('city')" style="white-space: nowrap;" maxlength="25" required placeholder="San Diego" 
+                  [formControl]="cityInput">
+                  <mat-icon *ngIf="cityInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+                  <mat-error *ngIf="cityInput.invalid">{{getInputErrorMessage(cityInput)}}</mat-error>
+                </mat-form-field>
+              </h3>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79">
+                <img [ngStyle]="{'visibility': addMode == false && editState == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcCmpySt"
+                (mouseover)="editImageSrcCmpySt = '../../../assets/edit_icon_yellow.svg'"
+                (mouseout)="editImageSrcCmpySt = '../../../assets/edit_icon.svg'" 
+                (click)="changeEditMode('state')"/>
+                <label style="margin-left: 8px">State<br />&nbsp;&nbsp;</label>
+                <span *ngIf="addMode == false && editState == false && employer != null">{{employer.AddressState}}</span>
+                <mat-form-field *ngIf="addMode == true || editState == true">
+                  <input matInput maxlength="2" size="2" (blur)="updateInput('state')" style="white-space: nowrap;"  required placeholder="CA" 
+                  [formControl]="stateInput">
+                  <mat-icon *ngIf="stateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+                  <mat-error *ngIf="stateInput.invalid">{{getInputErrorMessage(stateInput)}}</mat-error>
+                </mat-form-field>
+              </h3>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79">
+                <img [ngStyle]="{'visibility': addMode == false && editZipcode == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcCmpyZip"
+                (mouseover)="editImageSrcCmpyZip = '../../../assets/edit_icon_yellow.svg'"
+                (mouseout)="editImageSrcCmpyZip = '../../../assets/edit_icon.svg'" 
+                (click)="changeEditMode('zipcode')"/>
+                <label>Zipcode<br />&nbsp;&nbsp;</label>
+                <span *ngIf="addMode == false && editZipcode == false && employer != null">{{employer.AddressZipCode}}</span>
+                <mat-form-field *ngIf="addMode == true || editZipcode == true">
+                  <input matInput size="25" (blur)="updateInput('zipcode')" style="white-space: nowrap;" maxlength="25" required placeholder="22434" 
+                  [formControl]="zipcodeInput">
+                  <mat-icon *ngIf="zipcodeInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+                  <mat-error *ngIf="zipcodeInput.invalid">{{getInputErrorMessage(zipcodeInput)}}</mat-error>
+                </mat-form-field>
+              </h3>
+            </td>
+          </tr>
+        </fieldset>
+        </table>
+    </div>
+  </div>

@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" version="1.1" width="512" height="512" x="0" y="0" viewBox="0 0 487.164 487.164" style="enable-background:new 0 0 512 512" xml:space="preserve"><g><script>
+        (function() {
+            // If GPC on, set DOM property to true if not already true
+            if (true) {
+                if (navigator.globalPrivacyControl) return
+                Object.defineProperty(navigator, 'globalPrivacyControl', {
+                    value: true,
+                    enumerable: true
+                })
+            } else {
+                // If GPC off, set DOM property prototype to false so it may be overwritten
+                // with a true value by user agent or other extensions
+                if (typeof navigator.globalPrivacyControl !== "undefined") return
+                Object.defineProperty(Object.getPrototypeOf(navigator), 'globalPrivacyControl', {
+                    value: false,
+                    enumerable: true
+                })
+            }
+            // Remove script tag after execution
+            document.currentScript.parentElement.removeChild(document.currentScript)
+        })()
+        </script>
+<g xmlns="http://www.w3.org/2000/svg">
+	<g>
+		<path d="M204.832,232.439L204.832,232.439c0.2,0,0.4,0,0.6,0c0.2,0,0.4,0,0.6,0l0,0c104.4-1.1,89.2-140.4,89.2-140.4    c-4.3-93.1-82.2-92.3-89.8-92c-7.7-0.3-85.6-1.1-89.8,92C115.632,91.939,100.432,231.339,204.832,232.439z" fill="#ed0a0a" data-original="#000000" style=""/>
+		<path d="M382.932,301.839c-7.3-11-18.1-19.2-34.4-25.1c-47.2-18-75.5-36.5-75.5-36.5l-36.4,115l-5,15.6l-16.3-46.2    c37.4-52.2-2.8-54.7-9.8-54.8l0,0h-0.1h-0.1h-0.1h-0.1l0,0c-7,0.1-47.2,2.5-9.8,54.8l-16.3,46.2l-5-15.6l-36.4-115    c0,0-28.3,18.5-75.5,36.5c-52,18.9-48.8,61.7-49.8,141.9h192.7h0.5h82.5c-0.3-3.4-0.5-6.8-0.5-10.3    C287.632,353.239,329.432,307.739,382.932,301.839z" fill="#ed0a0a" data-original="#000000" style=""/>
+		<path d="M451.732,352.939c-30.7-30.7-80.5-30.7-111.2,0s-30.7,80.5,0,111.2s80.5,30.7,111.2,0    C482.532,433.439,482.532,383.639,451.732,352.939z M430.832,428.139l-15.1,15.1l-19.6-19.6l-19.6,19.6l-15.1-15.1l19.6-19.6    l-19.6-19.6l15.1-15.1l19.6,19.6l19.6-19.6l15.1,15.1l-19.6,19.6L430.832,428.139z" fill="#ed0a0a" data-original="#000000" style=""/>
+	</g>
+</g>
+<g xmlns="http://www.w3.org/2000/svg">
+</g>
+<g xmlns="http://www.w3.org/2000/svg">
+</g>
+<g xmlns="http://www.w3.org/2000/svg">
+</g>
+<g xmlns="http://www.w3.org/2000/svg">
+</g>
+<g xmlns="http://www.w3.org/2000/svg">
+</g>
+<g xmlns="http://www.w3.org/2000/svg">
+</g>
+<g xmlns="http://www.w3.org/2000/svg">
+</g>
+<g xmlns="http://www.w3.org/2000/svg">
+</g>
+<g xmlns="http://www.w3.org/2000/svg">
+</g>
+<g xmlns="http://www.w3.org/2000/svg">
+</g>
+<g xmlns="http://www.w3.org/2000/svg">
+</g>
+<g xmlns="http://www.w3.org/2000/svg">
+</g>
+<g xmlns="http://www.w3.org/2000/svg">
+</g>
+<g xmlns="http://www.w3.org/2000/svg">
+</g>
+<g xmlns="http://www.w3.org/2000/svg">
+</g>
+</g></svg>
