@@ -13,6 +13,7 @@ import {RoomsService} from '../../services/room.service';
 import { LinkRoomModalComponent } from 'src/app/homes/room/link-room-modal/link-room-modal.component';
 import { ModifyEmployerModalComponent } from 'src/app/modify-employer-modal/modify-employer-modal.component';
 import { ModifyPrevRentalComponent } from 'src/app/modify-prev-rental/modify-prev-rental.component';
+import { EmployerService } from 'src/app/services/employer.service';
 
 export enum TermType {
   monthToMonth = 1,
@@ -90,8 +91,8 @@ export class EditProspectComponent {
   mdInitInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{1}')]);
   emailInput : FormControl = new FormControl('', [Validators.required, Validators.email]);
   phoneNumberInput = new FormControl('', [Validators.required, Validators.pattern(/((\(\d{3}\) ?)|(\d{3}-))?\d{3}-\d{4}/)]);
-  moveInDateInput = new FormControl('', [Validators.required, Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|\[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
-  moveOutDateInput = new FormControl('', [Validators.required, Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|\[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
+  moveInDateInput = new FormControl('', [Validators.required]);//, Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|\[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
+  moveOutDateInput = new FormControl('', [Validators.required]);//, Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|\[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
   ssnInput = new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{3}\-?[0-9]{2}\-?[0-9]{4}$/)]);
   termTypeStr: string[] = ['Month-to-Month', 'Fixed-Term'];
   termType : string;
@@ -125,6 +126,7 @@ statusList:Iterable<IStatus> = [
   public dialog: MatDialog, 
   private homesService: HomesService,
   private prospectService: ProspectService,
+  private employerService: EmployerService,
   ) {
     
     this.prospects = data.prospects;
@@ -144,6 +146,10 @@ statusList:Iterable<IStatus> = [
     }
     this.prospectCount = (<any[]>data.prospects)?.length;
     this.enableDateObservables();
+    this.dialogRef.disableClose = true;
+    this.dialogRef.backdropClick().subscribe(() => {
+      this.closeProspectDialog();
+    })
   }
 
   enableDateObservables(){
@@ -182,7 +188,30 @@ statusList:Iterable<IStatus> = [
   }
   
   closeProspectDialog(){
-    this.dialogRef.close(this.prospects);
+      if (this.fieldsModified == true){
+        this.dialog.open(DialogDataRRMSDialog, {
+          data: {
+            inError: false,
+            title: "Unsaved Changes",
+            contentSummary: "Warning. There are unsaved Changes. Would you still like to proceed, or save?",
+            errorItems: []
+          }
+          }).afterClosed().subscribe((choosesSave: boolean)=> {
+            if (choosesSave == true){
+              console.log("chooses save");
+              this.updateProspect().then((saveSuccess: boolean) => {
+                this.dialogRef.close(this.prospects);
+              });
+            }
+            else{
+              console.log("does not choose save");
+              this.dialogRef.close(null);
+            }
+          });
+        }
+        else{
+          this.dialogRef.close(null);
+        }
   }  
   openLinkRoomModal(){
     this.homesService.getHomes().then((homes) => {
@@ -230,6 +259,7 @@ statusList:Iterable<IStatus> = [
           });
       }
       else if(add == false){
+        let prosId = this.prospect.Id;
         this.dialog.open(ModifyEmployerModalComponent, {
           data: {
             employers : this.prospect.Employers,
@@ -239,12 +269,11 @@ statusList:Iterable<IStatus> = [
           width: '250%',
           height: '550px',
         }).afterClosed().subscribe((returnedEmployerList : Iterable<IEmployer>) => {
-          if (returnedEmployerList != null)
-            this.prospect.Employers = returnedEmployerList;
-          },
-          err =>{
-            console.log(err);
+          this.employerService.getProspectEmployers(prosId).then((employers: Iterable<IEmployer>) => {
+            console.log("returned employers is " + JSON.stringify(employers))
+            this.prospect.Employers = employers; // Get prospect with updated employers
           });
+        });
       }
     }
   }
@@ -268,7 +297,6 @@ statusList:Iterable<IStatus> = [
     let retVal = null;
     if (emp != null)
     retVal = emp.CompanyName.replace(/\s/g, "");
-    console.log("retVAl is " +retVal);
     return retVal;
   }
 
@@ -434,24 +462,26 @@ statusList:Iterable<IStatus> = [
 
   getSettings(){
     this.prospect = this.data.prospects[this.currentProspectIndex];
-    this.fNameInput.setValue(this.prospect.FName);
-    this.lNameInput.setValue(this.prospect.LName);
-    this.mdInitInput.setValue(this.prospect.MdInit);
-    this.emailInput.setValue(this.prospect.EmailAddress);
-    this.phoneNumberInput.setValue(this.prospect.PhoneNumber);
-    this.moveInDateInput.setValue(new Date(this.prospect.MoveInDate.toISOString()));
-    if (this.prospect.MoveOutDate != null){
-      this.moveOutDateInput.setValue(new Date(this.prospect.MoveOutDate.toISOString()));
+    if (this.prospect != null){
+      this.fNameInput.setValue(this.prospect.FName);
+      this.lNameInput.setValue(this.prospect.LName);
+      this.mdInitInput.setValue(this.prospect.MdInit);
+      this.emailInput.setValue(this.prospect.EmailAddress);
+      this.phoneNumberInput.setValue(this.prospect.PhoneNumber);
+      this.moveInDateInput.setValue(new Date(this.prospect.MoveInDate.toISOString()));
+      if (this.prospect.MoveOutDate != null){
+        this.moveOutDateInput.setValue(new Date(this.prospect.MoveOutDate.toISOString()));
+      }
+      this.ssnInput.setValue(this.prospect.SSN);
+      this.selectedStatus = this.prospect.Status;
+      this.roomsService.getRoom(this.prospect.RoomId).then((room : IRoom) => {
+        if (room != null)
+          this.selectedRoomName = room.RoomName;
+        else
+          this.selectedRoomName = "";
+      })
+      this.setTermType();
     }
-    this.ssnInput.setValue(this.prospect.SSN);
-    this.selectedStatus = this.prospect.Status;
-    this.roomsService.getRoom(this.prospect.RoomId).then((room : IRoom) => {
-      if (room != null)
-        this.selectedRoomName = room.RoomName;
-      else
-        this.selectedRoomName = "";
-    })
-    this.setTermType();
   }
 
   setTermType(){

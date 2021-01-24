@@ -16,6 +16,8 @@ export interface IEmployer{
     Current: boolean,
     SalaryType: SalaryType,
     ProspectId: number,
+    HourlyRate: number,
+    SalaryAmt: number,
 }
 
 export enum SalaryType {

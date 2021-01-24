@@ -36,12 +36,15 @@ export class ModifyEmployerModalComponent implements OnInit{
   editImageSrcCmpyZip : string = '../../../assets/edit_icon.svg';
   editCompanyNameIcon : string = '../../../assets/edit_icon.svg';
   editImageSrcJobTtl : string = '../../../assets/edit_icon.svg';
+  editHrRateIcon : string = '../../../assets/edit_icon.svg';
+  editSalAmtIcon : string = '../../../assets/edit_icon.svg';
   closeIconSrc : string = '../../../assets/close_door.svg'
   deleteEmpSrcIcon : string = '../../../assets/delete_employer_icon.svg'
   backButtonImgSrc : string = '../../../assets/left_arrow_prospect.svg'
   nextButtonImgSrc : string = '../../../assets/left_arrow_prospect.svg'
+  saveApplied: boolean = false;
   addMode: boolean;
-  currItem:string;
+  currEmp:string;
   salItem: string;
   homeImagePath : string;
   origSettings : IEmployer;
@@ -60,6 +63,8 @@ export class ModifyEmployerModalComponent implements OnInit{
   editJobTitle: boolean = false;
   editStartDate: boolean = false;
   editEndDate: boolean = false;
+  editHrRate: boolean = false;
+  editSalAmt: boolean = false;
   fieldsModified: boolean = false;
   currentEmployerIndex: number;
   employerCount: number = 0;
@@ -69,6 +74,8 @@ export class ModifyEmployerModalComponent implements OnInit{
   cmpyNameInput : FormControl = new FormControl('', [Validators.required, Validators.pattern(/^[.@&]?[a-zA-Z0-9 ]+[ !.@&()]?[ a-zA-Z0-9!()]+/)]);
   cmpyLogoSrc : string = null;
 
+  hrRateInput : FormControl = new FormControl('', [Validators.pattern(/^([0-9]){1,4}(\.){0,1}([0-9]){0,2}$/)]);
+  salaryAmtInput : FormControl = new FormControl('', [Validators.pattern(/^([0-9]){1,9}$/)]);
   fNameInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,25}')]);
   lNameInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,25}')]);
   emailInput : FormControl = new FormControl('', [Validators.required, Validators.email]);
@@ -80,8 +87,8 @@ export class ModifyEmployerModalComponent implements OnInit{
   stateInput  = new FormControl('',[Validators.required, Validators.pattern('^((A[LKZR])|(C[AOT])|(D[EC])|(FL)|(GA)|(HI)|(I[DLNA])|(K[SY])|(LA)|(M[EDAINSOT])|(N[EVHJMYCD])|(O[HKR])|(PA)|(RI)|(S[CD])|(T[NX])|(UT)|(V[TA])|(W[AVIY]))$')]);
   zipcodeInput = new FormControl('',  [Validators.required, Validators.pattern('^[0-9]{5}(?:-[0-9]{4})?$')]);
   jobTitleInput = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,30}')]);
-  startDateInput = new FormControl('', [Validators.required, Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|\[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
-  endDateInput = new FormControl('', [Validators.required, Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|\[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
+  startDateInput = new FormControl('', [Validators.required]); //Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|\[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
+  endDateInput = new FormControl('', [Validators.required]); //Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|\[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
   termTypeStr: string[] = ['Month-to-Month', 'Fixed-Term'];
   termType : TermType = TermType.monthToMonth;
   currentList:Iterable<ICurrentEmp> = [
@@ -126,13 +133,16 @@ currentMap = new Map<string, boolean>([
       this.cmpyLogoSrc = 'https://logo.clearbit.com/' + this.employer.CompanyName + '.com?size=200';
 
     });
+    this.dialogRef.disableClose = true;
+    this.dialogRef.backdropClick().subscribe(() => {
+      this.closeModifyEmpDialog();
+    })
   }
 
   getCmpyNameSrc(){
     let retVal = null;
     if (this.employer != null)
     retVal = this.employer.CompanyName.replace(/\s/g, "");
-    console.log("retVAl is " +retVal);
     return retVal;
   }
   enableDateObservables(){
@@ -185,7 +195,21 @@ currentMap = new Map<string, boolean>([
   {
    this.origSettings = Object.assign({}, employer);
   }
+  moveDatesValid(){
+    let tmpStart = new Date(new Date(this.startDateInput.value).toISOString());
+    let tmpEnd = new Date(new Date(this.endDateInput.value).toISOString());
 
+    //this.endDateInput.setValue(new Date(this.endDateInput.value.toUTCString()));
+
+    console.log("in moveDatesValid:  start date: " + (tmpStart) + ", end date: " + (tmpStart));
+    if ((tmpStart) <= (tmpEnd)){
+      return true;
+    }
+    else{
+      // Not valid if Move out date comes before move-in date
+      return false;
+    }
+  }
   canDispNextAndPrev(){
     if (this.employerCount > 1)
       return true;
@@ -235,6 +259,14 @@ currentMap = new Map<string, boolean>([
       break;  
       case 'jobtitle': { 
         this.editJobTitle = !this.editJobTitle;
+      }
+      break; 
+      case 'hrRate': { 
+        this.editHrRate = !this.editHrRate;
+      }
+      break; 
+      case 'salAmt': { 
+        this.editSalAmt = !this.editSalAmt;
       }
       break; 
       default: { 
@@ -370,6 +402,25 @@ currentMap = new Map<string, boolean>([
           } 
         } 
       break;
+        case 'hrRate':{
+          if (this.hrRateInput.valid == true){
+            this.employer.HourlyRate = this.hrRateInput.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+          }
+        }
+        break;
+        case 'salAmt':{
+          if (this.salaryAmtInput.valid == true){
+            this.employer.SalaryAmt = this.salaryAmtInput.value;
+          }
+          else{
+            this.changeEditMode(editStr);
+          }
+        }
+        break;
+        
       }
       this.changeEditMode(editStr);
       this.fieldsModified = true;
@@ -395,7 +446,23 @@ currentMap = new Map<string, boolean>([
       this.zipcodeInput.setValue(this.employer.AddressZipCode);
       this.jobTitleInput.setValue(this.employer.ProspectJobTitle);
       this.startDateInput.setValue(this.employer.StartDate);
-      this.endDateInput.setValue(this.employer.EndDate);
+      if (this.employer.HourlyRate == null){
+        console.log("rate is null");
+        this.hrRateInput.setValue(0.00);
+      }
+      else{
+        this.hrRateInput.setValue(this.employer.HourlyRate);
+      }
+      if (this.employer.SalaryAmt == null){
+        console.log("rate is null");
+        this.salaryAmtInput.setValue(0);
+      }
+      else{
+        this.salaryAmtInput.setValue(this.employer.SalaryAmt);
+      }
+      if (this.employer.EndDate != null){
+        this.endDateInput.setValue(this.employer.EndDate);
+      }
       this.setCurrentEmp(); // Radio button for if employer is current
       this.setSalType(); // Radio button for salary item for employer
     }
@@ -403,9 +470,9 @@ currentMap = new Map<string, boolean>([
 
   setCurrentEmp(){
     if (this.employer.Current == true)
-      this.currItem = this.currentList[1].name;
+      this.currEmp = this.currentList[1].name;
     else if (this.employer.Current == false)
-      this.currItem = this.currentList[0].name;
+      this.currEmp = this.currentList[0].name;
   }
   setSalType(){
     if (this.employer.SalaryType == SalaryType.annual)
@@ -465,11 +532,36 @@ currentMap = new Map<string, boolean>([
   }
 
   closeModifyEmpDialog(){
-    // If "Yes", the map will return true, otherwise, false. 
-    if (this.addMode == false)
-      this.dialogRef.close(this.employers);
-    else if(this.addMode == true)
-      this.dialogRef.close(null);
+    if (this.fieldsModified == true){
+      this.dialog.open(DialogDataRRMSDialog, {
+        data: {
+          inError: false,
+          title: "Unsaved Changes",
+          contentSummary: "Warning. There are unsaved Changes. Would you still like to proceed, or save?",
+          errorItems: []
+        }
+        }).afterClosed().subscribe((choosesSave: boolean)=> {
+          if (choosesSave == true){
+            this.updateEmp().then((saveSuccess: boolean) => {
+              this.dialogRef.close(this.employers);
+            });
+          }
+          else{
+            console.log("in final else and addmode is " + this.addMode);
+              this.dialogRef.close(null);
+          }
+        });
+      }
+      else{
+        // Current issue: If I close the window and have already saved.. the parent will reset to original
+        if (this.saveApplied == true)
+        {
+          this.dialogRef.close(this.employers);  
+        }
+        else{
+          this.dialogRef.close(null);  
+        }
+      }
   }
   fillInputsWithOriginalSettings(){
     this.employer.CompanyName = this.origSettings.CompanyName;
@@ -488,12 +580,7 @@ currentMap = new Map<string, boolean>([
     this.employer.Current = this.origSettings.Current;
   }
   saveBtnClickedUpdate(){
-    this.updateEmp().then(() => {
-        // Do nothing
-    })
-    .catch((err) => {
-      console.log(err);
-    })
+    this.updateEmp();
   }
   createBtnClickedUpdate(){
     this.createEmp().then(() => {
@@ -505,6 +592,7 @@ currentMap = new Map<string, boolean>([
   })
   }
   createEmp(){
+    console.log("in createEmp()")
     this.employer = {
       CompanyName: this.cmpyNameInput.value,
       Id: -1,
@@ -520,9 +608,11 @@ currentMap = new Map<string, boolean>([
       ProspectJobTitle: this.jobTitleInput.value,
       StartDate: this.startDateInput.value,
       EndDate: this.endDateInput.value,
-      Current: this.currentMap.get(this.currItem),
+      Current: this.currentMap.get(this.currEmp),
       SalaryType: this.salMap.get(this.salItem),
       ProspectId: this.data.prospectId,
+      HourlyRate: this.hrRateInput.value,
+      SalaryAmt : this.salaryAmtInput.value,
     }
     return new Promise((resolve, reject) => {
       this.employerService.saveEmployer(this.employer).then(() => {
@@ -547,6 +637,13 @@ currentMap = new Map<string, boolean>([
   updateEmp(){
     console.log("Before updating employer is "+ JSON.stringify(this.employer))
 
+    if (this.moveDatesValid() == true){
+      if (this.salMap.get(this.salItem) == SalaryType.annual){
+        this.hrRateInput.setValue(0);
+      }
+      else if(this.salMap.get(this.salItem) == SalaryType.hourly){
+        this.salaryAmtInput.setValue(0);
+      }
     //TODO
     this.employer = {
       CompanyName: this.employer.CompanyName,
@@ -563,13 +660,16 @@ currentMap = new Map<string, boolean>([
       ProspectJobTitle: this.jobTitleInput.value,
       StartDate: this.startDateInput.value,
       EndDate: this.endDateInput.value,
-      Current: this.currentMap.get(this.currItem),
+      Current: this.currentMap.get(this.currEmp),
       SalaryType: this.salMap.get(this.salItem),
       ProspectId: this.employer.ProspectId,
+      HourlyRate: this.hrRateInput.value,
+      SalaryAmt: this.salaryAmtInput.value,
     }
     this.employers[this.currentEmployerIndex] = this.employer;
     return new Promise((resolve, reject) => {
       this.employerService.updateEmployer(this.employer).then(() => {
+        this.saveApplied = true;
         this.dialog.open(DialogDataRRMSDialog, {
           data: {
             inError: false,
@@ -587,6 +687,18 @@ currentMap = new Map<string, boolean>([
       });
     });
   }
+  else{
+    // Move in/moveout date combination is not valid
+    this.dialog.open(DialogDataRRMSDialog, {
+      data: {
+        title: "Incorrect Dates",
+        contentSummary: "Invalid Dates. Please Verify dates are correct. Start Date should come before End Date",
+      }
+      }).afterClosed().subscribe((addRooms: boolean)=> {
+        return Promise.resolve(true);
+      });
+  }
+  }
   getInputErrorMessage(inputField : AbstractControl){
     if (inputField.dirty == true){
       if (inputField.hasError('required')) {
@@ -595,6 +707,31 @@ currentMap = new Map<string, boolean>([
       if (inputField.hasError(inputField.value)){
           return "Not a valid entry"; 
       }
+    }
+  }
+
+  addZeroes(num) {
+    const dec = num.split('.')[1]
+    const len = dec && dec.length > 2 ? dec.length : 2
+    return Number(num).toFixed(len)
+  }
+
+  getAnnualSalDisplay(){
+    if (this.employer.SalaryAmt != null){
+      return "$" + this.employer.SalaryAmt + "k per year";
+    }
+    else{
+      return "$0k per Year";
+    }
+  }
+
+  getHrRateDisplay(){
+    if (this.employer.HourlyRate != null)
+    {
+      return '$' + this.addZeroes(this.employer.HourlyRate.toString()) + " per hour";
+    }
+    else{
+      return "$0.00 per hour";
     }
   }
 

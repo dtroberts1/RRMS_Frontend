@@ -107,6 +107,18 @@ export class ProspectsComponent implements OnInit {
         }
       });
     }
+    else{
+      this.dialog.open(DialogDataRRMSDialog, {
+        data: {
+          inError: true,
+          title: "No Row Selected",
+          contentSummary: "No row has been selected. Please select a row.",
+          errorItems: []
+        }
+      }).afterClosed().subscribe((result) => {
+
+      });
+    }
   }
   getMoveoutDate(pros : IProspect){
     if (pros.TermType == TermType.fixedTerm){
@@ -131,25 +143,29 @@ export class ProspectsComponent implements OnInit {
       //matDialogConfig.scrollStrategy = new BlockScrollStrategy();
       this.dialog.open(EditProspectComponent, matDialogConfig)
         .afterClosed().subscribe((updatedProspectList: Iterable<IProspect>) => {
-        // The EditProspectComponent shouldn't return back anything.
-        if ((<any[]>updatedProspectList).length > 0)      
-        {
-          this.prospects = updatedProspectList;
-          this.dataSource = Array.from(this.prospects);
-          this.dataSource.forEach((dataItem) => {
-            if (dataItem.MoveInDate != null)
-            dataItem.MoveInDate = new Date(dataItem.MoveInDate.toISOString());
-            if (dataItem.MoveOutDate != null)
-              dataItem.MoveOutDate = new Date(dataItem.MoveOutDate.toISOString());
-          });
-        }
-        else{
-          this.prospects = null;
-          this.dataSource = [];
-        }
+          this.prospectService.getProspects().then((prospects: Iterable<IProspect>)=>{
+            this.prospects = prospects;
+            this.dataSource = Array.from(this.prospects);
+            this.dataSource.forEach((dataItem) => {
+              if (dataItem.MoveInDate != null)
+              dataItem.MoveInDate = new Date(new Date(dataItem.MoveInDate).toISOString());
+              if (dataItem.MoveOutDate != null)
+              dataItem.MoveOutDate = new Date(new Date(dataItem.MoveOutDate).toISOString());
+          })
       });
+    });
     }
     else{
+      this.dialog.open(DialogDataRRMSDialog, {
+        data: {
+          inError: true,
+          title: "No Row Selected",
+          contentSummary: "No row has been selected. Please select a row.",
+          errorItems: []
+        }
+      }).afterClosed().subscribe((result) => {
+
+      });
     }
   }
 

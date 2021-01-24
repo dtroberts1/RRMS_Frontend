@@ -21,6 +21,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSelectModule} from '@angular/material/select';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
+import  {MatCurrencyFormatModule} from 'mat-currency-format';
+
 
 
 const MaterialComponents = [
@@ -45,6 +47,7 @@ const MaterialComponents = [
   MatSelectModule,
   MatSlideToggleModule,
   MatDatepickerModule,
+  MatCurrencyFormatModule,
 ];
 
 

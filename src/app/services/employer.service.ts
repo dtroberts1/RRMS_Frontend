@@ -50,6 +50,26 @@ export class EmployerService{
           });
         });
       }
+      getProspectEmployers(prospectId: number): Promise<Iterable<IEmployer>>{
+        this.currToken = JSON.parse(localStorage.getItem('user'));
+        if (this.currToken != null){
+          let options = {
+            headers: new HttpHeaders().set('Content-Type', 'application/json')
+            .set('Authorization', "bearer " + this.currToken),
+            };
+          return new Promise((resolve, reject) => { this.http
+              .get<Iterable<IEmployer>>(`${this.employersUrl}/GetProspectEmployers/${prospectId}`, options).subscribe(
+                res => {
+                  // Returns Syncfusion Document Text
+                  resolve(res);
+                },
+                error => {
+                  reject(error);
+                }
+              )
+          });
+        }
+      }
 
    fetchEmployers(){
     this.currToken = JSON.parse(localStorage.getItem('user'));
