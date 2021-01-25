@@ -3,12 +3,17 @@
     margin-right:auto; 
     margin-top:12px; 
     display: block; 
-    background-color:blue; 
+    background-color:#476c79; 
     color:white;
 }
 #table-container{
     max-height:300px;
     overflow-y:auto;
+  }
+  #mainHeader{
+    background: linear-gradient(90deg, rgba(2,0,36,1) 3%, rgba(135,217,206,1) 28%, rgba(51,92,148,1) 97%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
   button.link {
     background: transparent;
@@ -43,6 +48,6 @@ button.link:hover {
     background: #f7cf1b/* #999;*/
   }
   th{
-    color: cadetblue;
+    color: #476c79;
     width: 100px !important;
   }

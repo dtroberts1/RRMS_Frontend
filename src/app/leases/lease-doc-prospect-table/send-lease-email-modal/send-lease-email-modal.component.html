@@ -1,5 +1,5 @@
 <div>
-    <h1 style="color:cadetblue">Future Tenant: {{data.docProspectDto.FName}}&nbsp;{{data.docProspectDto.LName}}</h1>
+    <h1 id="mainHeader">Future Tenant: {{data.docProspectDto.FName}}&nbsp;{{data.docProspectDto.LName}}</h1>
     <br />
     <!-- Email Address-->
     <mat-form-field appearance="fill">
@@ -57,9 +57,9 @@
         <mat-error *ngIf="emailBodyInput.invalid">{{getErrorMessage(emailBodyInput)}}</mat-error>
     </mat-form-field>
     <br />
-    <button (click)="sendEmail()" class="flex-items" style="background-color:blue; color:white" mat-button >Send</button> <!-- or resend-->
-    <button (click)="cancel()" class="flex-items" style="background-color:blue; color:white" mat-button >Cancel</button> <!-- or resend-->
-    <button mat-button (click)="clearText()" class="flex-items" style="float:right;background-color:blue; color:white;">
+    <button (click)="sendEmail()" class="flex-items" style="background-color:#476c79; color:white" mat-button >Send</button> <!-- or resend-->
+    <button (click)="cancel()" class="flex-items" style="background-color:#476c79; color:white" mat-button >Cancel</button> <!-- or resend-->
+    <button mat-button (click)="clearText()" class="flex-items" style="float:right;background-color:#476c79; color:white;">
         Clear Text
       </button>
 </div>

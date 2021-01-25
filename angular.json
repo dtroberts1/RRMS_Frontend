@@ -20,7 +20,7 @@
             "tsConfig": "tsconfig.app.json",
             "aot": true,
             "assets": [
-              "src/home_icon.ico",
+              "src/better_omega.svg",
               "src/assets"
             ],
             "styles": [

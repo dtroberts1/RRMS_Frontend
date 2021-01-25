@@ -66,24 +66,26 @@ export class LeaseDocProspectTableModalComponent implements OnInit {
           errorItems: []
         }
       }).afterClosed().subscribe((deleteLease: boolean)=> {
-        this.leaseDocumentService.removeLeaseDocument(this.selection.selected[0].DocumentId)
-        .then((result) => {
-          // Update UI List
-          this.leaseDocumentService.getDocumentProspectDtos()
-            .then((leaseDocDtos: Iterable<IDocumentProspectDto>) =>{
-              this.dialog.open(LeasesPopupModal, {
-                data: {
-                    title: "Deleted",
-                    contentSummary: `${this.selection.selected[0].DocumentName} has been removed`,
-                    content: null,
-                  }
+        if (deleteLease == true){
+          this.leaseDocumentService.removeLeaseDocument(this.selection.selected[0].DocumentId)
+            .then((result) => {
+              // Update UI List
+              this.leaseDocumentService.getDocumentProspectDtos()
+                .then((leaseDocDtos: Iterable<IDocumentProspectDto>) =>{
+                  this.dialog.open(LeasesPopupModal, {
+                    data: {
+                        title: "Deleted",
+                        contentSummary: `${this.selection.selected[0].DocumentName} has been removed`,
+                        content: null,
+                      }
+                  })
+                  .afterClosed().subscribe(() => {
+                    this.data.content = leaseDocDtos;
+                    this.setupTable();
+                  })
               })
-              .afterClosed().subscribe(() => {
-                this.data.content = leaseDocDtos;
-                this.setupTable();
-              })
-          })
-        })
+            })
+          }
       });
     }
     else{

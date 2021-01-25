@@ -151,6 +151,7 @@ export class ProspectsComponent implements OnInit {
               dataItem.MoveInDate = new Date(new Date(dataItem.MoveInDate).toISOString());
               if (dataItem.MoveOutDate != null)
               dataItem.MoveOutDate = new Date(new Date(dataItem.MoveOutDate).toISOString());
+              this.selection.selected[0] = null;
           })
       });
     });

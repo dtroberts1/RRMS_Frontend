@@ -1,5 +1,5 @@
 <div>
-  <h1 style="text-align: center; color:blue;">Lease Documents</h1>
+  <h1 id="mainHeader" style="text-align: center">Lease Documents</h1>
     <div id="table-container">
         <table (click)="tableClicked()" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
@@ -91,9 +91,9 @@
           </table>
     </div>
     <div class="button-container">
-      <button (click)="sendEmail()" class="flex-items" style="background-color:blue; color:white" mat-button >Create Email</button> <!-- or resend-->
-      <button (click)="openDocument()" class="flex-items" style="background-color:blue; color:white;" mat-button >{{openDocOrPdf}}</button>
-      <button (click)="deleteDocument()" class="flex-items" style="background-color:blue; color:white;" mat-button >Delete</button>
-      <button (click)="closeBtnClicked()" class="flex-items" style="background-color:blue; color:white;" mat-button >Close</button><!-- or Open Editor--> 
+      <button (click)="sendEmail()" class="flex-items" style="background-color:#476c79; color:white" mat-button >Create Email</button> <!-- or resend-->
+      <button (click)="openDocument()" class="flex-items" style="background-color:#476c79; color:white;" mat-button >{{openDocOrPdf}}</button>
+      <button (click)="deleteDocument()" class="flex-items" style="background-color:#476c79; color:white;" mat-button >Delete</button>
+      <button (click)="closeBtnClicked()" class="flex-items" style="background-color:#476c79; color:white;" mat-button >Close</button><!-- or Open Editor--> 
     </div>
 </div>
