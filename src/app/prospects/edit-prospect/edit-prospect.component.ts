@@ -313,8 +313,8 @@ statusList:Iterable<IStatus> = [
           addMode: true,
           prospectId: this.prospect.Id,
         },
-        width:'60%',
-        height: '55%'
+        width: '60%',
+        height: '550px',
       }).afterClosed().subscribe((returnedPrevRental : IPreviousRental) => {
         // Push the newly added employer to the list
         if (returnedPrevRental != null)
@@ -331,8 +331,8 @@ statusList:Iterable<IStatus> = [
           prevRentals : this.prospect.PreviousRentals,
           prevRentalIndex : 0,
         },
-        width:'60%',
-        height: '55%'
+        width: '60%',
+        height: '550px',
       }).afterClosed().subscribe((returnedPrevRentalList : Iterable<IPreviousRental>) => {
         if (returnedPrevRentalList != null)
           this.prospect.PreviousRentals = returnedPrevRentalList;

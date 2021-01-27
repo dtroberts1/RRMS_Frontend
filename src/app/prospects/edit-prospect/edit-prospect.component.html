@@ -73,7 +73,7 @@
     <fieldset style="text-overflow: clip; overflow: hidden;" >
       <legend>Personal Info</legend>    <tr>
       <td width="100%">
-        <h3><img [ngStyle]="{'visibility': editFName == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcFName"
+        <h3 style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis;"><img [ngStyle]="{'visibility': editFName == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcFName"
           (mouseover)="editImageSrcFName = '../../../assets/edit_icon_yellow.svg'"
           (mouseout)="editImageSrcFName = '../../../assets/edit_icon.svg'" 
           (click)="changeEditMode('fname')"/><label class="labelClass">First Name:&nbsp;&nbsp;</label>
@@ -111,7 +111,7 @@
           (click)="changeEditMode('mdinit')"/><label class="labelClass">Middle Initial:&nbsp;&nbsp;</label>
           <span *ngIf="editMdInit == false">{{prospect.MdInit}}</span>
           <mat-form-field *ngIf="editMdInit == true">
-            <input matInput size="1" (blur)="updateInput('mdinit')" style="white-space: nowrap;" maxlength="1" placeholder="T" 
+            <input matInput size="1" (blur)="updateInput('mdinit')" style="white-space: nowrap;" maxlength="1" placeholder="T"
             [formControl]="mdInitInput">
             <mat-icon *ngIf="mdInitInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
             <mat-error *ngIf="mdInitInput.invalid">{{getInputErrorMessage(mdInitInput)}}</mat-error>

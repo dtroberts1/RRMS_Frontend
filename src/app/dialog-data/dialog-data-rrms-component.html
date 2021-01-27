@@ -17,6 +17,7 @@
   <button mat-button *ngIf="title=='No Room Selected'" (click)="closeDialog(false)">Ok</button>
   <button mat-button *ngIf="title=='Room Created'" (click)="closeDialog(false)">Ok</button>
   <button mat-button *ngIf="title=='Room Saved'" (click)="closeDialog(false)">Ok</button>
+  <button mat-button *ngIf="title=='Previous Rental Saved'" (click)="closeDialog(false)">Ok</button>
   <button mat-button *ngIf="title=='Lease Document Sent'" (click)="closeDialog(false)">Ok</button>
   <button mat-button *ngIf="title=='Employer Saved'" (click)="closeDialog(false)">Ok</button>
   <button mat-button *ngIf="title=='Room Deleted' || title == 'Home Deleted'" (click)="closeDialog(false)">Ok</button>
@@ -30,6 +31,6 @@
 
   <button mat-button *ngIf="title=='Prospect Saved' && contentSummary != 'This prospect has been added.' && contentSummary != 'This prospect has been saved'"
   (click)="closeDialog(false)">No</button>
-  <button mat-button *ngIf="title !='Incorrect Dates' && title !='No Row Selected' && title !='Decline Submitted' && title != 'Invalid File Type' && title != 'Home Deleted' && title !='Room Deleted' && title != 'Prospect Saved' && title != 'Employer Saved' && title != 'Prospect Saved' && title != 'Room Created' && title != 'Room Saved' && title != 'Unsaved Changes' && title != 'Delete - Are you sure?' && title != 'Are you sure you would like to delete this previous rental?'&& title != 'Are you sure you would like to delete this previous Employer?'" 
+  <button mat-button *ngIf="title != 'Previous Rental Saved' && title !='Incorrect Dates' && title !='No Row Selected' && title !='Decline Submitted' && title != 'Invalid File Type' && title != 'Home Deleted' && title !='Room Deleted' && title != 'Prospect Saved' && title != 'Employer Saved' && title != 'Prospect Saved' && title != 'Room Created' && title != 'Room Saved' && title != 'Unsaved Changes' && title != 'Delete - Are you sure?' && title != 'Are you sure you would like to delete this previous rental?'&& title != 'Are you sure you would like to delete this previous Employer?'" 
   (click)="closeDialog(false)">Close</button>
 </div>

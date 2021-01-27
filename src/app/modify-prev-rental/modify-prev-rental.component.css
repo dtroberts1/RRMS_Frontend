@@ -4,13 +4,35 @@
     margin: 15px 0;
   }
   h1, h3>label{
-    color:blue
+    color:#476c79;
   }
   
   .example-radio-button {
     margin: 5px;
   }
-  
+  #mainHeader{
+    background: linear-gradient(90deg, rgba(2,0,36,1) 3%, rgba(135,217,206,1) 28%, rgba(51,92,148,1) 97%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .editIconStyle {
+    width: 20px;
+    height: auto;
+    vertical-align: middle;
+}
+  .fill-space {
+    flex:
+     1 1 auto;
+  }
+  .nonEditIconStyle {
+    width: 20px;
+    height: auto;
+    vertical-align: middle;
+  }
+  .nonEditIconStyle:hover{
+    cursor: pointer;
+    }
+    
   .browseImage{
   }
   
@@ -34,7 +56,7 @@
     color:lightblue;
   }
   .lowerViewRoomButtons{
-    color:blue;
+    color:#476c79;
   }
   .lowerViewRoomButtons:hover{
     background-color:green;

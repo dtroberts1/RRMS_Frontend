@@ -24,6 +24,16 @@ export enum TermType {
   styleUrls: ['./modify-prev-rental.component.css']
 })
 export class ModifyPrevRentalComponent implements OnInit{
+  fNameIcon : string = '../../../assets/edit_icon.svg';
+  lNameIcon : string = '../../../assets/edit_icon.svg';
+  emailIcon : string = '../../../assets/edit_icon.svg';
+  phoneIcon : string = '../../../assets/edit_icon.svg';
+  add1Icon : string = '../../../assets/edit_icon.svg';
+  add2Icon: string = '../../../assets/edit_icon.svg';
+  addCityIcon: string = '../../../assets/edit_icon.svg';
+  addStateIcon: string = '../../../assets/edit_icon.svg';
+  prevRentalIcon: string = '../../../assets/edit_icon.svg';
+  closeIconSrc: string = '../../../assets/close_door.svg'
   addMode: boolean;
   currItem:string;
   salItem: string;
@@ -61,6 +71,8 @@ export class ModifyPrevRentalComponent implements OnInit{
   endDateInput = new FormControl('', [Validators.required, Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|\[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
   termTypeStr: string[] = ['Month-to-Month', 'Fixed-Term'];
   termType : TermType = TermType.monthToMonth;
+  dateObserverablesEnabled: boolean = false;
+
   currentList:Iterable<ICurrentEmp> = [
     { "name": "No", current: false},
     { "name": "Yes", current: true}
@@ -97,12 +109,43 @@ ngOnInit(): void {
         this.prevRentalCount = (<any[]>this.data.prevRentals).length;
     }
   }
+  this.dateObserverablesEnabled = true;
+  this.enableDateObservables();
+
   }
   setOrigSettings(prevRental : IPreviousRental)
   {
    this.origSettings = Object.assign({}, prevRental);
   }
+  enableDateObservables(){
 
+    this.startDateInput.valueChanges.subscribe((val : Date) => {
+      if (this.dateObserverablesEnabled == true){
+        if (val != null)
+        {
+         console.log("in valueChanges()");
+         this.prevRental.StartDate = new Date(val.toISOString());
+         this.fieldsModified = true;
+        }
+        else{
+          return;
+        } 
+      }
+    });
+    this.endDateInput.valueChanges.subscribe((val : Date) => {
+      if (this.dateObserverablesEnabled == true){
+        if (val != null)
+        {
+         console.log("in valueChanges()");
+         this.fieldsModified = true;
+         this.prevRental.EndDate = new Date(val.toISOString());
+        }
+        else{
+          return;
+        } 
+      }
+    });
+  }
   canDispNextAndPrev(){
     if (this.prevRentalCount > 1)
       return true;
@@ -322,6 +365,8 @@ ngOnInit(): void {
   }
 
   goToNextOrPrevEmp(next: boolean){
+    this.dateObserverablesEnabled = false;
+
     if (this.fieldsModified == true){
       this.dialog.open(DialogDataRRMSDialog, {
         data: {
@@ -337,6 +382,7 @@ ngOnInit(): void {
                 this.fieldsModified = false;
                 this.updatecurrentprevRentalIndex(next);
                 this.getSettings();
+                this.dateObserverablesEnabled = true;
               }
             });
           }
@@ -345,12 +391,14 @@ ngOnInit(): void {
             //this.fillInputsWithOriginalSettings();
             this.updatecurrentprevRentalIndex(next);
             this.getSettings();
+            this.dateObserverablesEnabled = true;
           }
         });
     }
     else{
       this.updatecurrentprevRentalIndex(next);
       this.getSettings();
+      this.dateObserverablesEnabled = true;
     }
   }
   updatecurrentprevRentalIndex(next: boolean)
@@ -426,7 +474,7 @@ ngOnInit(): void {
           data: {
             inError: false,
             title: "prevRental Saved",
-            contentSummary: "This prevRental has been Saved",
+            contentSummary: "This Previous Rental has been Saved",
             errorItems: []
           }
           }).afterClosed().subscribe((addPrevRental: boolean)=> {
@@ -466,8 +514,8 @@ ngOnInit(): void {
         this.dialog.open(DialogDataRRMSDialog, {
           data: {
             inError: false,
-            title: "prevRental Saved",
-            contentSummary: "This prevRental has been Saved",
+            title: "Previous Rental Saved",
+            contentSummary: "This Previous Rental has been Saved",
             errorItems: []
           }
           }).afterClosed().subscribe((addRooms: boolean)=> {
