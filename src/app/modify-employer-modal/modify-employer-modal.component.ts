@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit, Type } from '@angular/core';
 import { AbstractControl, FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IHome } from 'src/app/interfaces/Homes';
 import { IProspect } from 'src/app/interfaces/Prospect';
@@ -46,6 +47,7 @@ export class ModifyEmployerModalComponent implements OnInit{
   addMode: boolean;
   currEmp:string;
   salItem: string;
+  modalRef: MDBModalRef;
   homeImagePath : string;
   origSettings : IEmployer;
   editCmpyName: boolean = false;
@@ -121,6 +123,8 @@ currentMap = new Map<string, boolean>([
   public dialogRef: MatDialogRef<ModifyEmployerModalComponent>,
   public dialog: MatDialog,
   private employerService: EmployerService, 
+  private modalService: MDBModalService,
+
   ) {
     this.cmpyNameInput.valueChanges.subscribe((val : string) => {
       if (val != null){
@@ -485,14 +489,24 @@ currentMap = new Map<string, boolean>([
     this.dateObserverablesEnabled = false;
 
     if (this.fieldsModified == true){
-      this.dialog.open(DialogDataRRMSDialog, {
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
           inError: false,
           title: "Unsaved Changes",
           contentSummary: "Warning. There are unsaved Changes. Would you still like to proceed, or save?",
           errorItems: []
         }
-        }).afterClosed().subscribe((choosesSave: boolean)=> {
+        });
+        this.modalRef.content.action.subscribe((choosesSave: boolean)=> {
+          this.modalRef.hide();
           if (choosesSave == true){
             this.updateEmp().then((saveSuccess: boolean) => {
               if (saveSuccess == true){
@@ -510,6 +524,10 @@ currentMap = new Map<string, boolean>([
             this.getSettings();
             this.dateObserverablesEnabled = true;
           }
+        },
+        error =>{
+          console.log(error);
+          this.modalRef.hide();
         });
     }
     else{
@@ -533,14 +551,24 @@ currentMap = new Map<string, boolean>([
 
   closeModifyEmpDialog(){
     if (this.fieldsModified == true){
-      this.dialog.open(DialogDataRRMSDialog, {
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
           inError: false,
           title: "Unsaved Changes",
           contentSummary: "Warning. There are unsaved Changes. Would you still like to proceed, or save?",
           errorItems: []
         }
-        }).afterClosed().subscribe((choosesSave: boolean)=> {
+        });
+        this.modalRef.content.action.subscribe((choosesSave: boolean)=> {
+          this.modalRef.hide();
           if (choosesSave == true){
             this.updateEmp().then((saveSuccess: boolean) => {
               this.dialogRef.close(this.employers);
@@ -550,6 +578,10 @@ currentMap = new Map<string, boolean>([
             console.log("in final else and addmode is " + this.addMode);
               this.dialogRef.close(null);
           }
+        },
+        error => {
+          console.log(error);
+          this.modalRef.hide();
         });
       }
       else{
@@ -616,16 +648,30 @@ currentMap = new Map<string, boolean>([
     }
     return new Promise((resolve, reject) => {
       this.employerService.saveEmployer(this.employer).then(() => {
-        this.dialog.open(DialogDataRRMSDialog, {
+        this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+          backdrop: true,
+          keyboard: true,
+          focus: true,
+          show: false,
+          ignoreBackdropClick: false,
+          class: '',
+          containerClass: '',
+          animated: true,
           data: {
             inError: false,
             title: "Employer Saved",
             contentSummary: "This Employer has been Saved",
             errorItems: []
           }
-          }).afterClosed().subscribe((addEmployer: boolean)=> {
+          });
+          this.modalRef.content.action.subscribe(()=> {
+            this.modalRef.hide();
             this.fieldsModified = false;
             resolve(true);
+          },
+          error => {
+            console.log(error);
+            this.modalRef.hide();
           });
       }).catch((err) => {
         console.log(err);
@@ -670,16 +716,30 @@ currentMap = new Map<string, boolean>([
     return new Promise((resolve, reject) => {
       this.employerService.updateEmployer(this.employer).then(() => {
         this.saveApplied = true;
-        this.dialog.open(DialogDataRRMSDialog, {
+        this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+          backdrop: true,
+          keyboard: true,
+          focus: true,
+          show: false,
+          ignoreBackdropClick: false,
+          class: '',
+          containerClass: '',
+          animated: true,
           data: {
             inError: false,
             title: "Employer Saved",
             contentSummary: "This Employer has been Saved",
             errorItems: []
           }
-          }).afterClosed().subscribe((addRooms: boolean)=> {
+          });
+          this.modalRef.content.action.subscribe(()=> {
+            this.modalRef.hide();
             this.fieldsModified = false;
             resolve(true);
+          },
+          error =>{
+            console.log(error);
+            this.modalRef.hide();
           });
       }).catch((err) => {
         console.log(err);
@@ -689,13 +749,27 @@ currentMap = new Map<string, boolean>([
   }
   else{
     // Move in/moveout date combination is not valid
-    this.dialog.open(DialogDataRRMSDialog, {
+    this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+      backdrop: true,
+      keyboard: true,
+      focus: true,
+      show: false,
+      ignoreBackdropClick: false,
+      class: '',
+      containerClass: '',
+      animated: true,
       data: {
         title: "Incorrect Dates",
         contentSummary: "Invalid Dates. Please Verify dates are correct. Start Date should come before End Date",
       }
-      }).afterClosed().subscribe((addRooms: boolean)=> {
+      });
+      this.modalRef.content.action.subscribe(()=> {
+        this.modalRef.hide();
         return Promise.resolve(true);
+      },
+      error => {
+        console.log(error);
+        this.modalRef.hide();
       });
   }
   }
@@ -736,19 +810,33 @@ currentMap = new Map<string, boolean>([
   }
 
   deleteBtnClicked(){
-    this.dialog.open(DialogDataRRMSDialog, {
+    this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+      backdrop: true,
+      keyboard: true,
+      focus: true,
+      show: false,
+      ignoreBackdropClick: false,
+      class: '',
+      containerClass: '',
+      animated: true,
       data: {
         inError: false,
         title: "Delete - Are you sure?",
         contentSummary: "Are you sure you would like to delete this Employer?",
         errorItems: []
       }
-    }).afterClosed().subscribe((deleteEmp: boolean)=> {
+    });
+    this.modalRef.content.action.subscribe((deleteEmp: boolean)=> {
+      this.modalRef.hide();
       if (deleteEmp == true ){       
         this.employerService.removeEmployer(this.employer.Id);
         this.employers = Array.from(this.employers).filter(emp => emp.Id != this.employer.Id);
         this.dialogRef.close(this.employers); // this needs to return a null
       }
+    },
+    error => {
+      console.log(error);
+      this.modalRef.hide();
     });
 
   }

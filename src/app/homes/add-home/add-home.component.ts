@@ -6,6 +6,7 @@ import {MatDialog} from '@angular/material/dialog';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import {AddRoomComponent} from '../add-room/add-room.component';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 
 @Component({
   selector: 'app-add-home',
@@ -22,12 +23,14 @@ export class AddHomeComponent implements OnInit {
   addressState = new FormControl('', [Validators.required, Validators.pattern('^((A[LKZR])|(C[AOT])|(D[EC])|(FL)|(GA)|(HI)|(I[DLNA])|(K[SY])|(LA)|(M[EDAINSOT])|(N[EVHJMYCD])|(O[HKR])|(PA)|(RI)|(S[CD])|(T[NX])|(UT)|(V[TA])|(W[AVIY]))$')]);
   addressZipCode = new FormControl('', [Validators.required, Validators.pattern('^[0-9]{5}(?:-[0-9]{4})?$')]);
   home: IHome; // Used only for navigating to homes/addroom
-
+  modalRef: MDBModalRef;
   constructor(
     private homesService: HomesService, 
     public dialog: MatDialog, 
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private modalService: MDBModalService,
+    ) {
   }
 
   ngOnInit(): void {
@@ -74,22 +77,43 @@ export class AddHomeComponent implements OnInit {
       }
       if (invalidElements.length > 0)
       {
-        this.dialog.open(DialogDataRRMSDialog, {
+        this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+          backdrop: true,
+          keyboard: true,
+          focus: true,
+          show: false,
+          ignoreBackdropClick: false,
+          class: '',
+          containerClass: '',
+          animated: true,
           data: {
             inError: true,
             title: "Invalid Items",
             contentSummary: "The following items are invalid",
             errorItems: invalidElements
           }
-        }).afterClosed().subscribe(result => {
+        })
+        this.modalRef.content.action.subscribe(result => {
           if (invalidElements.length > 0){
+            this.modalRef.hide();
             resolve(false);
           }
           else{
+            this.modalRef.hide();
             resolve(true);
           }
+        },
+        error => {
+          console.log(error);
+          if (this.modalRef != null){
+            this.modalRef.hide();
+          }
+          reject();
         });
       }else{
+        if (this.modalRef != null){
+          this.modalRef.hide();
+        }
         resolve(true);
       }
     });
@@ -114,33 +138,61 @@ export class AddHomeComponent implements OnInit {
           }
           )?.then((home:IHome) => {
             this.home = home;
-            this.dialog.open(DialogDataRRMSDialog, {
+            this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+              backdrop: true,
+              keyboard: true,
+              focus: true,
+              show: false,
+              ignoreBackdropClick: false,
+              class: '',
+              containerClass: '',
+              animated: true,
               data: {
                 inError: false,
                 title: "Saved",
                 contentSummary: "This home has been Saved! Would you like to proceed to add a rental room for this home?",
                 errorItems: []
               }
-            }).afterClosed().subscribe((addRooms: boolean)=> {
+            })
+            this.modalRef.content.action.subscribe((addRooms: boolean)=> {
               if (addRooms == true ){
+                this.modalRef.hide();
                 this.router.navigate(['./dashboard/', { outlets: { view: ['homes','addroom', this.home.Id, this.home.Nickname, (<any[]>this.home.Rooms).length] } }]);
               }
               else if(addRooms == false){
+                this.modalRef.hide();
                 this.router.navigate(['./dashboard/']);
               }
+            },
+            error => {
+              console.log(error);
+              this.modalRef.hide();
             });
-
           }).catch((err) => {
-            this.dialog.open(DialogDataRRMSDialog, {
+            this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+              backdrop: true,
+              keyboard: true,
+              focus: true,
+              show: false,
+              ignoreBackdropClick: false,
+              class: '',
+              containerClass: '',
+              animated: true,
               data: {
                 inError: true,
                 title: "Unable to process",
                 contentSummary: "We're sorry. We are unable to process. Our engineers have been notified and are working on the issue to get this resolved asap",
                 errorItems: []
               }
+            })
+            this.modalRef.content.action.subscribe(()=> {
+            },
+            error => {
+              console.log(error);
+              this.modalRef.hide();
             });
-          });
-        }
+        });
+      }
         else{
         }
     });

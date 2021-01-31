@@ -8,6 +8,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { DialogDataRRMSDialog } from '../dialog-data/dialog-data.component';
 import { SalaryType } from '../interfaces/Employer';
 import { BlockScrollStrategy, NoopScrollStrategy } from '@angular/cdk/overlay';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 
 export interface PeriodicElement {
   name: string;
@@ -22,8 +23,7 @@ export interface PeriodicElement {
   styleUrls: ['./prospects.component.css']
 })
 export class ProspectsComponent implements OnInit {
-  //@Input() myHome: IHome;
-  //myHome: IHome;
+  modalRef: MDBModalRef;
   displayedColumns: string[] = ['FName', 'LName', 'MdInit', 'RoomId', 'Move-in', 'Move-out', 'EmailAddress','SSN', 'status'];
   dataSource : Array<IProspect>;
   selection = new SelectionModel<IProspect>(false, []);
@@ -41,6 +41,8 @@ export class ProspectsComponent implements OnInit {
     private prospectService: ProspectService,
     public dialog: MatDialog, 
     private router: Router,
+    private modalService: MDBModalService,
+
     ) { 
       if (this.prospectService != null)
       {
@@ -86,14 +88,24 @@ export class ProspectsComponent implements OnInit {
   removeProspect(){
     if (this.selection != null && this.selection.selected[0] != null)
     {
-      this.dialog.open(DialogDataRRMSDialog, {
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
           inError: false,
           title: "Delete - Are you sure?",
           contentSummary: "Are you sure you would like to delete this prospect?",
           errorItems: []
         }
-      }).afterClosed().subscribe((deleteProspect: boolean)=> {
+      });
+      this.modalRef.content.action.subscribe((deleteProspect: boolean)=> {
+        this.modalRef.hide();
         if (deleteProspect == true ){
           this.prospectService.removeProspect(this.selection.selected[0].Id);
           this.prospects = Array.from(this.prospects).filter(prevRental => prevRental.Id != this.selection.selected[0].Id);
@@ -105,18 +117,35 @@ export class ProspectsComponent implements OnInit {
               dataItem.MoveOutDate = new Date(dataItem.MoveOutDate + 'Z');
           });
         }
-      });
+      }),
+      error => {
+        console.log(error);
+        this.modalRef.hide();
+      };
     }
     else{
-      this.dialog.open(DialogDataRRMSDialog, {
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
           inError: true,
           title: "No Row Selected",
           contentSummary: "No row has been selected. Please select a row.",
           errorItems: []
         }
-      }).afterClosed().subscribe((result) => {
-
+      });
+      this.modalRef.content.action.subscribe(() => {
+        this.modalRef.hide();
+      },
+      error =>{
+        console.log(error);
+        this.modalRef.hide();
       });
     }
   }
@@ -141,8 +170,22 @@ export class ProspectsComponent implements OnInit {
       matDialogConfig.width = '250%';
       matDialogConfig.height = '500px';
       //matDialogConfig.scrollStrategy = new BlockScrollStrategy();
-      this.dialog.open(EditProspectComponent, matDialogConfig)
-        .afterClosed().subscribe((updatedProspectList: Iterable<IProspect>) => {
+      this.modalRef = this.modalService.show(EditProspectComponent, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
+        data: {
+          prospects: this.prospects,
+          currentProspectIndex : this.dataSource.indexOf(this.selection.selected[0]),
+          uiEditMode: isEditMode,
+        }});
+        this.modalRef.content.action.subscribe(() => {
+          this.modalRef.hide();
           this.prospectService.getProspects().then((prospects: Iterable<IProspect>)=>{
             this.prospects = prospects;
             this.dataSource = Array.from(this.prospects);
@@ -154,18 +197,35 @@ export class ProspectsComponent implements OnInit {
               this.selection.selected[0] = null;
           })
       });
+    },
+    error => {
+      console.log(error);
+      this.modalRef.hide();
     });
     }
     else{
-      this.dialog.open(DialogDataRRMSDialog, {
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
           inError: true,
           title: "No Row Selected",
           contentSummary: "No row has been selected. Please select a row.",
           errorItems: []
         }
-      }).afterClosed().subscribe((result) => {
-
+      });
+      this.modalRef.content.action.subscribe(() => {
+        this.modalRef.hide();
+      },
+      error => {
+        console.log(error);
+        this.modalRef.hide();
       });
     }
   }

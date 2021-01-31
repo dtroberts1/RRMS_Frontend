@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 import { catchError, last, map, tap } from 'rxjs/operators';
 import { DialogDataRRMSDialog } from '../dialog-data/dialog-data.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 
 @Component({
   selector: 'app-material-file-upload',
@@ -22,6 +23,8 @@ import { MatDialog } from '@angular/material/dialog';
       ]
 })
 export class MaterialFileUploadComponent implements OnInit {
+      modalRef: MDBModalRef;
+
   /** Link text */
       @Input() text = 'Upload';
       /** Name used in form which will be sent in HTTP request. */
@@ -37,6 +40,8 @@ export class MaterialFileUploadComponent implements OnInit {
 
       constructor(private _http: HttpClient,
         public dialog: MatDialog, 
+        private modalService: MDBModalService,
+
         ) { }
 
       ngOnInit() {
@@ -71,7 +76,15 @@ export class MaterialFileUploadComponent implements OnInit {
             let fileExt : string = file.data.name.split('.').pop().toLowerCase();
             if (fileExt != 'pdf' && fileExt != 'doc' && fileExt != 'docx'){
                 // Prompt invalid file type
-                this.dialog.open(DialogDataRRMSDialog, {
+                this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+                  backdrop: true,
+                  keyboard: true,
+                  focus: true,
+                  show: false,
+                  ignoreBackdropClick: false,
+                  class: '',
+                  containerClass: '',
+                  animated: true,
                     data: {
                       inError: true,
                       title: "Invalid File Type",
@@ -79,6 +92,14 @@ export class MaterialFileUploadComponent implements OnInit {
                       errorItems: []
                     }
                   });
+                  this.modalRef.content.action.subscribe(()=> {
+                        this.modalRef.hide();
+                      },
+                      error =>{
+                        console.log(error);
+                        this.modalRef.hide();
+                      });
+
                   this.removeFileFromArray(file);
                   file = null;
                 return;

@@ -1,22 +1,27 @@
-<h4 mat-dialog-title style="width:100%; height:10%">
-  <mat-toolbar role="toolbar" class="task-header">
+<div class ="modal fade in" style="display: block;" aria-hidden="false"> <!--z-index defaults to 1050-->
+  <div class="modal-dialog modal-xl  modal-dialog-centered" >
+    <!--Content-->
+    <div class="modal-content">
+    <button type="button" class="close pull-right" aria-label="Close" >
+      <span aria-hidden="true" (click)="closeProspectDialog()">×</span>
+    </button>
+    <!--
+          <button mat-icon-button (click)="closeModifyEmpDialog()">
+              <mat-icon id="closeBtn" mat-list-icon>close</mat-icon>
+          </button>
+        -->
+    <div class="modal-header">
       <span id="mainHeader"> Prospect Details</span>
       <span class="fill-space"></span>
-      <span class="fx-spacer"></span>
       <mat-slide-toggle
       style="font-family:sans-serif; font-size: 15px; color:#476c79;"
       class="example-margin"
       [(ngModel)]="uiEditMode">
       Edit Mode
     </mat-slide-toggle>
-      <button mat-icon-button (click)="closeProspectDialog()">
-          <mat-icon id="closeBtn" mat-list-icon>close</mat-icon>
-      </button>
-  </mat-toolbar>
-</h4>
-<br />
-<div mat-dialog-content style="height:90%; overflow-y: hidden;">
-<div *ngIf="prospect != null"  style="float:left; width:20%; height:100%;">
+  </div>
+  <div class="modal-body">
+<div *ngIf="prospect != null"  style="height:100%;text-overflow: clip; overflow: hidden;">
   <h3 style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-family:sans-serif; font-size: large; color:#476c79" mat-dialog-title>
     Prospect&nbsp;&nbsp;&nbsp;<img *ngIf="canDispNextAndPrev() == true" class="nonEditIconStyle" [src]="backButtonImgSrc"
     (mouseover)="backButtonImgSrc = '../../../assets/left_arrow_prospect_yellow.svg'"
@@ -68,7 +73,7 @@
           />
       </span>
 </div>
-<div *ngIf="prospect != null" style="display: inline-block;width:34%; height:100%;">
+<div *ngIf="prospect != null" style="height:100%;">
   <table style="font-size: large; width:100%; color:#476c79; border-width:1px; width:100%;">
     <fieldset style="text-overflow: clip; overflow: hidden;" >
       <legend>Personal Info</legend>    <tr>
@@ -170,14 +175,14 @@
   </fieldset>
 </table>
 </div>
-  <div *ngIf="prospect != null" style="position:relative;display: inline-block; width:25%; height:100%">
-    <table style="font-family:sans-serif; font-size: small; color:#476c79">
+  <div *ngIf="prospect != null" style="height:100%;">
+    <table style="font-family:sans-serif; font-size: large; color:#476c79;">
       <fieldset >
-        <legend style="font-size:large;">Lease Info</legend>
+        <legend>Lease Info</legend>
       <tr width="100%">
         <td>
           <div>
-            <h3 style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis;"><label class="labelClass">Term&nbsp;&nbsp;</label>
+            <h3 style="display:inline; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;"><label class="labelClass">Term&nbsp;&nbsp;</label>
               <mat-radio-group style="display:flex; flex-direction: column;" name="termList"  fxLayout="column" [(ngModel)]="termType" (change)="fieldsModified = true">
                 <mat-radio-button style="font-family:sans-serif; font-size: 15px; color:#476c79;" *ngFor="let termType of termList" [value]="termType.name" name="termList" >{{ termType.name}}</mat-radio-button>
               </mat-radio-group>
@@ -190,11 +195,11 @@
       <tr>
           <app-date-picker [headerName]="'Move-in Date'" [(date)]="moveInDateInput"></app-date-picker>
           <app-date-picker *ngIf="termType == 'Fixed-Term'" [headerName]="'Move-out Date'" [(date)]="moveOutDateInput"></app-date-picker>
-          <mat-form-field appearance="fill">
-            <mat-label>Status</mat-label>
-            <mat-select [(value)]="selectedStatus" (selectionChange)="setModified($event)">
-            <mat-option *ngFor="let stat of statusList" [value]="stat.statusType">
-                {{stat.name}}
+          <mat-form-field style="color:red;" appearance="fill">
+            <mat-label class="labelClass">Status</mat-label>
+            <mat-select  class="labelClass" style="color:red !important;" [(value)]="selectedStatus" (selectionChange)="setModified($event)">
+            <mat-option class="labelClass" style="color:red !important;"  *ngFor="let stat of statusList" [value]="stat.statusType">
+                <span class="labelClass" style="color:red !important;" >{{stat.name}}</span>
             </mat-option>
             </mat-select>
         </mat-form-field>
@@ -202,13 +207,9 @@
       </fieldset>
     </table>
     </div>
-    <div *ngIf="prospect != null" style="position:relative;display: inline-block; width:21%; height:100%;">
-      <table style="font-family:sans-serif; width:100%; font-size: large; color:#476c79">
+    <div  *ngIf="prospect != null" style="font-size: large; color:#476c79; height:100% !important;">
         <fieldset>
           <legend>Background Info</legend>
-        <tbody>
-          <tr>
-            <td>
               <h3 *ngIf="prospect != null"><label class="labelClass">Employers</label>&nbsp;&nbsp;&nbsp;
                 <img [ngStyle]="{'visibility': hasEmployers() == true && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcEmployers"
           (mouseover)="editImageSrcEmployers = '../../../assets/edit_icon_yellow.svg'"
@@ -227,12 +228,6 @@
                   </li>
                 </ul>
               </h3>
-            </td>
-            <td>
-            </td>
-          </tr>
-          <tr>
-            <td>
               <h3 style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis;" *ngIf="prospect != null"><label class="labelClass">Previous Rentals</label>&nbsp;&nbsp;
                 <img [ngStyle]="{'visibility': hasPrevRentals() == true && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcPrevRent"
           (mouseover)="editImageSrcPrevRent = '../../../assets/edit_icon_yellow.svg'"
@@ -247,16 +242,14 @@
                   matTooltipClass="tooltip"
                   [matTooltip]="getPrevRentalTooltip(prevRental)"
                   >
-                    {{prevRental.AddressStreet1}}<!--{{", "}}{{prevRental.AddressCity}}{{", "}}{{prevRental.AddressState}}-->
+                    {{prevRental.AddressStreet1}}
                   </li>
                 </ul>
               </h3>
-            </td>
-            <td>
-            </td>
-          </tr>
-        </tbody>
       </fieldset>
-    </table>
     </div>
   </div>
+  </div>
+  </div>
+  </div>
+  

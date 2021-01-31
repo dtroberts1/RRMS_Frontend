@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import {IEmployer, SalaryType} from '../../interfaces/Employer';
 
@@ -10,6 +11,7 @@ import {IEmployer, SalaryType} from '../../interfaces/Employer';
   styleUrls: ['./add-employer.component.css']
 })
 export class AddEmployerComponent {
+  modalRef: MDBModalRef;
   CmpyName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,45}')]);
   MgrFName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,30}')]);
   MgrLName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,30}')]);
@@ -39,6 +41,7 @@ export class AddEmployerComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, 
   public dialogRef: MatDialogRef<AddEmployerComponent>,
   public dialog: MatDialog, 
+  private modalService: MDBModalService,
 
   ) {
   }
@@ -96,16 +99,29 @@ export class AddEmployerComponent {
       if (invalidElements.length > 0)
       {
 
-        this.dialog.open(DialogDataRRMSDialog, {
+        this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+          backdrop: true,
+          keyboard: true,
+          focus: true,
+          show: false,
+          ignoreBackdropClick: false,
+          class: '',
+          containerClass: '',
+          animated: true,
           data: {
             inError: true,
             title: "Invalid Items",
             contentSummary: "The following items are invalid",
             errorItems: invalidElements
           }
-        }).afterClosed().subscribe(result => {
+        });
+        this.modalRef.content.action.subscribe(() => {
+          this.modalRef.hide();
           resolve(false);
-
+        },
+        error =>{
+          console.log(error);
+          this.modalRef.hide();
         });
       }else{
         resolve(true);

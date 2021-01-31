@@ -16,6 +16,7 @@ import { BeforeOpenEventArgs } from '@syncfusion/ej2-popups';
 import { SendLeaseEmailModalComponent } from '../lease-doc-prospect-table/send-lease-email-modal/send-lease-email-modal.component';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { stringify } from '@angular/compiler/src/util';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 
 @Component({
     selector: 'app-leases',
@@ -25,6 +26,7 @@ import { stringify } from '@angular/compiler/src/util';
 })
 
 export class LeasesComponent {
+    modalRef: MDBModalRef;
     loadedFileName : string = null;
     loadedDocumentId: number = null;
     savedNote : string = null;
@@ -108,6 +110,7 @@ export class LeasesComponent {
         public dialog: MatDialog, 
         private prospectService: ProspectService,
         private leaseDocumentService: LeaseDocumentService,
+        private modalService: MDBModalService,
         ){
         
     }
@@ -477,14 +480,24 @@ async leasesBtnItemSelected(args: MenuEventArgs){
                 .afterClosed().subscribe((leaseDocDto: IDocumentProspectDto) => {
                     console.log("Back in leases, selected result is " + JSON.stringify(leaseDocDto));
                     if (leaseDocDto != null){
-                        this.dialog.open(DialogDataRRMSDialog, {
+                        this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+                            backdrop: true,
+                            keyboard: true,
+                            focus: true,
+                            show: false,
+                            ignoreBackdropClick: false,
+                            class: '',
+                            containerClass: '',
+                            animated: true,
                             data: {
                               inError: false,
                               title: "Delete - Are you sure?",
                               contentSummary: `Are you sure you would like to delete this template "${leaseDocDto.DocumentName}"?`,
                               errorItems: []
                             }
-                          }).afterClosed().subscribe((deleteLease: boolean)=> {
+                          });
+                          this.modalRef.content.action.subscribe((deleteLease: boolean)=> {
+                            this.modalRef.hide();
                               if (deleteLease == true){
                                 this.leaseDocumentService.removeLeaseDocument(leaseDocDto.DocumentId).then(()=>{
                                     this.dialog.open(LeasesPopupModal, {
@@ -499,6 +512,10 @@ async leasesBtnItemSelected(args: MenuEventArgs){
                                     })
                                 })
                               }
+                            },
+                            error => {
+                                console.log(error);
+                                this.modalRef.hide();
                             });
                         }
                     });

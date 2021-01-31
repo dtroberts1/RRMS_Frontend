@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import {IEmployer, SalaryType} from '../../interfaces/Employer';
 
@@ -27,10 +28,12 @@ export class AddPrevRentalComponent {
   salaryType: string[] = ['Annual', 'Hourly'];
   salType : SalaryType = SalaryType.annual;
   currentEmp : boolean = false;
+  modalRef: MDBModalRef;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, 
   public dialogRef: MatDialogRef<AddPrevRentalComponent>,
   public dialog: MatDialog, 
+  private modalService: MDBModalService,
 
   ) {
   }
@@ -84,16 +87,29 @@ export class AddPrevRentalComponent {
       
       if (invalidElements.length > 0)
       {
-        this.dialog.open(DialogDataRRMSDialog, {
+        this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+          backdrop: true,
+          keyboard: true,
+          focus: true,
+          show: false,
+          ignoreBackdropClick: false,
+          class: '',
+          containerClass: '',
+          animated: true,
           data: {
             inError: true,
             title: "Invalid Items",
             contentSummary: "The following items are invalid",
             errorItems: invalidElements
           }
-        }).afterClosed().subscribe(result => {
+        });
+        this.modalRef.content.action.subscribe(() => {
+          this.modalRef.hide();
           resolve(false);
-
+        },
+        error => {
+          console.log(error);
+          this.modalRef.hide();
         });
       }else{
         resolve(true);

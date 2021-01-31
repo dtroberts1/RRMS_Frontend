@@ -1,21 +1,25 @@
 .home-page-container-show-dashboard{
-    background-color:green;
-    position: absolute;
-    left:0;
-    right:0;
-    top:0%;
-    height:96%;
-    background-image:url('../assets/ralph-ravi-kayden-2d4lAQAlbDA-unsplash.jpg');
-    background-size:cover;
-    background-repeat:no-repeat;
-  }
+  background-color:green;
+  border-width:1px;
+  border-style:solid;
+  position: absolute;
+  left:0;
+  right:0;
+  top:0%;
+  height:100%;
+  width:100%;
+  background-image:url('../assets/ralph-ravi-kayden-2d4lAQAlbDA-unsplash.jpg');
+  background-size:cover;
+  background-repeat:no-repeat;
+}
   .home-page-container{
     background-color:green;
     position: absolute;
+    width:100%;
     left:0;
     right:0;
     top:4%;
-    height:100%;
+    height:96%;
     background-image:url('../assets/ralph-ravi-kayden-2d4lAQAlbDA-unsplash.jpg');
     background-size:cover;
     background-repeat:no-repeat;
@@ -39,9 +43,7 @@
     margin: 0 16px;
   }
 
- #createAccountText{
-    padding-left:82%
-  }
+
   #loginText{
     padding-left:10px;
   }
@@ -54,6 +56,10 @@
   }
   .headerText:hover{
     cursor:pointer;
+  }
+  .fill-space {
+    flex:
+     1 1 auto;
   }
   
   .loginScreenContainer{

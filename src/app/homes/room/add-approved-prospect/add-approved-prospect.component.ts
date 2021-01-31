@@ -8,6 +8,7 @@ import {IRoom} from '../../../interfaces/Rooms';
 import {ProspectService} from '../../../services/prospect.service';
 import { IProspect } from 'src/app/interfaces/Prospect';
 import { Router } from '@angular/router';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 
 interface AvailableRoomsAndProspects{
   availRooms: Iterable<IRoom>,
@@ -34,12 +35,16 @@ export class AddApprovedProspectComponentModal implements OnInit {
   selectedRoom: number;
   selectedProspect: number;//IProspect;
   fieldsModified: boolean;
+  modalRef: MDBModalRef;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public fromParent: AvailableRoomsAndProspects,
   public dialogRef: MatDialogRef<AddApprovedProspectComponentModal>,
   private prospectService: ProspectService,
   public dialog: MatDialog, 
   private router: Router,
+  private modalService: MDBModalService,
+
   ) {
 
   }
@@ -81,14 +86,24 @@ export class AddApprovedProspectComponentModal implements OnInit {
     .then(() => {
       // Prompt user that the Prospect has been Linked to the Room and that the workflow is pending
       // Lease Documentation Generation and Signature by Prospect
-      this.dialog.open(DialogDataRRMSDialog, {
-          data: {
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
+        data: {
             inError: false,
             title: "Prospect Saved",
             contentSummary: "This prospect has been saved! Would you like to proceed to add a lease for this prospect?",
             errorItems: []
           }
-          }).afterClosed().subscribe((addRooms: boolean)=> {
+          });
+          this.modalRef.content.action.subscribe((addRooms: boolean)=> {
+            this.modalRef.hide();
             if (addRooms == true ){
               this.router.navigate(['./dashboard/', { outlets: { view: ['leases'] } }]);
 
@@ -97,15 +112,34 @@ export class AddApprovedProspectComponentModal implements OnInit {
             else{
               this.dialogRef.close();
             }
+          },
+          error => {
+            console.log(error);
+            this.modalRef.hide();
           });
-    }).catch((err) => {
-            this.dialog.open(DialogDataRRMSDialog, {
+          }).catch((err) => {
+            this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+              backdrop: true,
+              keyboard: true,
+              focus: true,
+              show: false,
+              ignoreBackdropClick: false,
+              class: '',
+              containerClass: '',
+              animated: true,
               data: {
                 inError: true,
                 title: "Unable to process",
                 contentSummary: "We're sorry. We are unable to process. Our engineers have been notified and are working on the issue to get this resolved asap",
                 errorItems: []
               }
+            });
+            this.modalRef.content.action.subscribe(()=> {
+              this.modalRef.hide();
+            },
+            error => {
+              console.log(error);
+              this.modalRef.hide();
             });
           });
   }

@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
@@ -14,6 +14,8 @@ import { LinkRoomModalComponent } from 'src/app/homes/room/link-room-modal/link-
 import { ModifyEmployerModalComponent } from 'src/app/modify-employer-modal/modify-employer-modal.component';
 import { ModifyPrevRentalComponent } from 'src/app/modify-prev-rental/modify-prev-rental.component';
 import { EmployerService } from 'src/app/services/employer.service';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
+import { Subject } from 'rxjs';
 
 export enum TermType {
   monthToMonth = 1,
@@ -39,9 +41,13 @@ interface IStatus{
 @Component({
   selector: 'app-edit-prospect',
   templateUrl: './edit-prospect.component.html',
-  styleUrls: ['./edit-prospect.component.css']
+  providers: [    { provide: MAT_DIALOG_DATA, useValue: {} },
+    { provide: MatDialogRef, useValue: {} }],
+  styleUrls: ['./edit-prospect.component.scss']
 })
-export class EditProspectComponent {
+export class EditProspectComponent implements OnInit{
+  action: Subject<any> = new Subject();
+
   editImageSrcFName : string = '../../../assets/edit_icon.svg'
   editImageSrcLName : string = '../../../assets/edit_icon.svg'
   editImageSrcMdInit : string = '../../../assets/edit_icon.svg'
@@ -113,6 +119,8 @@ statusList:Iterable<IStatus> = [
     [TermType.monthToMonth, 'Month-to-Month'],
     [TermType.fixedTerm, 'Fixed-Term']
   ]);
+  modalRef: MDBModalRef;
+
   dateObserverablesEnabled: boolean = true;
   isMaster : boolean;
   hasCloset : boolean;
@@ -122,36 +130,50 @@ statusList:Iterable<IStatus> = [
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, 
   @Inject(MAT_DIALOG_DATA) public rooms: Iterable<IRoom>,
   public dialogRef: MatDialogRef<EditProspectComponent>,
+  private modifyRentalDialog: ModifyPrevRentalComponent,
   private roomsService: RoomsService,
   public dialog: MatDialog, 
   private homesService: HomesService,
   private prospectService: ProspectService,
   private employerService: EmployerService,
+  private modalService: MDBModalService
+
   ) {
     
-    this.prospects = data.prospects;
-    this.currentProspectIndex = data.prospectIndex;
-    this.uiEditMode = data.uiEditMode;
-    if (this.prospects != null)
-    {
-      this.setOrigSettings(this.data.prospects[this.currentProspectIndex]);
-      this.getSettings();
-      this.roomsService.getRoom(this.prospect.RoomId).then((room : IRoom) => {
-        if (room != null)
-          this.selectedRoomName = room.RoomName;
-        else
-          this.selectedRoomName = "";
-    });
-      this.dateObserverablesEnabled = true;
-    }
-    this.prospectCount = (<any[]>data.prospects)?.length;
-    this.enableDateObservables();
-    this.dialogRef.disableClose = true;
+    // TODO
+    /*
     this.dialogRef.backdropClick().subscribe(() => {
       this.closeProspectDialog();
     })
+    */
   }
+ngOnInit(){
+  if (this.prospects != null)
+  {
+    this.setOrigSettings(this.prospects[this.currentProspectIndex]);
+    this.getSettings();
+    this.roomsService.getRoom(this.prospect.RoomId).then((room : IRoom) => {
+      if (room != null)
+        this.selectedRoomName = room.RoomName;
+      else
+        this.selectedRoomName = "";
+  });
+    this.dateObserverablesEnabled = true;
+  }
+  else{
+    console.log("prospects is null********************************")
+  }
+  this.prospectCount = (<any[]>this.prospects)?.length;
+  this.enableDateObservables();
+  this.dialogRef.disableClose = true;
 
+  console.log("in init() of edit prospects. params are "+ 
+  "prospects: " + JSON.stringify(this.prospects) + "\n" +
+  "prospectIndex: " + JSON.stringify(this.currentProspectIndex) + "\n" +
+  "uiEditMode: " + JSON.stringify(this.uiEditMode) + "\n"
+
+  );
+}
   enableDateObservables(){
 
     this.moveInDateInput.valueChanges.subscribe((val : Date) => {
@@ -189,28 +211,42 @@ statusList:Iterable<IStatus> = [
   
   closeProspectDialog(){
       if (this.fieldsModified == true){
-        this.dialog.open(DialogDataRRMSDialog, {
+        this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+          backdrop: true,
+          keyboard: true,
+          focus: true,
+          show: false,
+          ignoreBackdropClick: false,
+          class: '',
+          containerClass: '',
+          animated: true,
           data: {
             inError: false,
             title: "Unsaved Changes",
             contentSummary: "Warning. There are unsaved Changes. Would you still like to proceed, or save?",
             errorItems: []
           }
-          }).afterClosed().subscribe((choosesSave: boolean)=> {
+          });
+          this.modalRef.content.action.subscribe((choosesSave: boolean)=> {
+            this.modalRef.hide();
             if (choosesSave == true){
               console.log("chooses save");
               this.updateProspect().then((saveSuccess: boolean) => {
-                this.dialogRef.close(this.prospects);
+                this.action.next(this.prospects);
               });
             }
             else{
               console.log("does not choose save");
-              this.dialogRef.close(null);
+              this.action.next(null);
             }
+          },
+          error => {
+            console.log(error);
+            this.modalRef.hide();
           });
         }
         else{
-          this.dialogRef.close(null);
+          this.action.next(null);
         }
   }  
   openLinkRoomModal(){
@@ -308,38 +344,57 @@ statusList:Iterable<IStatus> = [
   }
   openPrevRentModifyModal(add: boolean){
     if (add == true){
-      this.dialog.open(ModifyPrevRentalComponent, {
-        data: {
-          addMode: true,
-          prospectId: this.prospect.Id,
-        },
-        width: '60%',
-        height: '550px',
-      }).afterClosed().subscribe((returnedPrevRental : IPreviousRental) => {
-        // Push the newly added employer to the list
-        if (returnedPrevRental != null)
-          (<IPreviousRental[]>(this.prospect.PreviousRentals)).push(returnedPrevRental);
-        },
-        err =>{
-          console.log(err);
-        });
+        this.modalRef = this.modalService.show(ModifyPrevRentalComponent, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
+            data: {
+              addMode: true,
+              prospectId: this.prospect.Id,
+            },
+        })
+        this.modalRef.content.action.subscribe((returnedPrevRental : IPreviousRental) => {
+          // Push the newly added employer to the list
+          if (returnedPrevRental != null)
+            (<IPreviousRental[]>(this.prospect.PreviousRentals)).push(returnedPrevRental);
+            this.modalRef.hide();
+          },
+          err =>{
+            console.log(err);
+            this.modalRef.hide();
+          });
     }
     else if(add == false){
-      this.dialog.open(ModifyPrevRentalComponent, {
+      console.log("attempting to open dialog");
+      this.modalRef = this.modalService.show(ModifyPrevRentalComponent, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
           addMode: false,
           prevRentals : this.prospect.PreviousRentals,
-          prevRentalIndex : 0,
+          currentprevRentalIndex : 0,
         },
-        width: '60%',
-        height: '550px',
-      }).afterClosed().subscribe((returnedPrevRentalList : Iterable<IPreviousRental>) => {
-        if (returnedPrevRentalList != null)
-          this.prospect.PreviousRentals = returnedPrevRentalList;
-        },
-        err =>{
-          console.log(err);
-        });
+    })
+    this.modalRef.content.action.subscribe((returnedPrevRentalList : Iterable<IPreviousRental>) => {
+      if (returnedPrevRentalList != null)
+        this.prospect.PreviousRentals = returnedPrevRentalList;
+        this.modalRef.hide();
+      },
+      err =>{
+        console.log(err);
+        this.modalRef.hide();
+      });
     }
   }
   canDispNextAndPrev(){
@@ -461,7 +516,8 @@ statusList:Iterable<IStatus> = [
   }
 
   getSettings(){
-    this.prospect = this.data.prospects[this.currentProspectIndex];
+    this.prospect = this.prospects[this.currentProspectIndex];
+    console.log("in getSettings, prospect is " + JSON.stringify(this.prospect))
     if (this.prospect != null){
       this.fNameInput.setValue(this.prospect.FName);
       this.lNameInput.setValue(this.prospect.LName);
@@ -493,14 +549,24 @@ statusList:Iterable<IStatus> = [
 
   goToNextOrPrevRm(next: boolean){
     if (this.fieldsModified == true){
-      this.dialog.open(DialogDataRRMSDialog, {
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
           inError: false,
           title: "Unsaved Changes",
           contentSummary: "Warning. There are unsaved Changes. Would you still like to proceed, or save?",
           errorItems: []
         }
-        }).afterClosed().subscribe((choosesSave: boolean)=> {
+        });
+        this.modalRef.content.action.subscribe((choosesSave: boolean)=> {
+          this.modalRef.hide();
           if (choosesSave == true){
             this.updateProspect().then((saveSuccess: boolean) => {
               if (saveSuccess == true){
@@ -518,6 +584,10 @@ statusList:Iterable<IStatus> = [
             this.getSettings();
             this.dateObserverablesEnabled = true;
           }
+        }, 
+        error =>{
+          console.log(error);
+          this.modalRef.hide();
         });
     }
     else{
@@ -530,14 +600,14 @@ statusList:Iterable<IStatus> = [
   {
     if (next == true){
       this.dateObserverablesEnabled = false;
-      this.currentProspectIndex = (this.currentProspectIndex + 1) % (<any[]>this.data.prospects)?.length;
+      this.currentProspectIndex = (this.currentProspectIndex + 1) % (<any[]>this.prospects)?.length;
 
     }
     else if(next == false){ // If navigating to "previous"
     this.dateObserverablesEnabled = false;
       this.currentProspectIndex--;
       if (this.currentProspectIndex < 0){
-        this.currentProspectIndex = (<any[]>this.data.prospects)?.length - 1;
+        this.currentProspectIndex = (<any[]>this.prospects)?.length - 1;
       }
     }
   }
@@ -562,7 +632,7 @@ statusList:Iterable<IStatus> = [
   }
 
   closeViewRoomDialog(){
-    this.dialogRef.close(null); // this needs to return a null
+    this.action.next(null);
   }
   fillInputsWithOriginalSettings(){
     this.prospect.FName = this.origSettings.FName;
@@ -630,18 +700,31 @@ statusList:Iterable<IStatus> = [
         this.prospectService.updateProspect(this.prospect).then(() => {
           console.log("after update, prospect is " + JSON.stringify(this.prospect))
           this.prospects[this.currentProspectIndex] = this.prospect;
-
-          this.dialog.open(DialogDataRRMSDialog, {
+          this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
             data: {
               inError: false,
               title: "Prospect Saved",
               contentSummary: "This prospect has been saved",
               errorItems: []
             }
-            }).afterClosed().subscribe((addRooms: boolean)=> {
+            });
+            this.modalRef.content.action.subscribe(()=> {
+              this.modalRef.hide();
               this.fieldsModified = false;
               this.prospectService.prospects = null; // This should force prospects to reload
               resolve(true);
+            },
+            error => {
+              console.log(error);
+              this.modalRef.hide();
             });
         }).catch((err) => {
           console.log(err);
@@ -651,13 +734,26 @@ statusList:Iterable<IStatus> = [
     }
     else{
       // Move in/moveout date combination is not valid
-      this.dialog.open(DialogDataRRMSDialog, {
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
           title: "Incorrect Dates",
           contentSummary: "Invalid Dates. Please Verify dates are correct",
         }
-        }).afterClosed().subscribe((addRooms: boolean)=> {
-
+        });
+        this.modalRef.content.action.subscribe(()=> {
+          this.modalRef.hide();
+        },
+        error =>{
+          console.log(error);
+          this.modalRef.hide();
         });
     }
   }
@@ -672,19 +768,33 @@ statusList:Iterable<IStatus> = [
   }
 
   deleteBtnClicked(){
-    this.dialog.open(DialogDataRRMSDialog, {
+    this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+      backdrop: true,
+      keyboard: true,
+      focus: true,
+      show: false,
+      ignoreBackdropClick: false,
+      class: '',
+      containerClass: '',
+      animated: true,
       data: {
         inError: false,
         title: "Delete - Are you sure?",
         contentSummary: "Are you sure you would like to delete this prospect?",
         errorItems: []
       }
-    }).afterClosed().subscribe((deleteProspect: boolean)=> {
+    });
+    this.modalRef.content.action.subscribe((deleteProspect: boolean)=> {
+      this.modalRef.hide();
       if (deleteProspect == true ){
         this.prospectService.removeProspect(this.prospect.Id);
         this.prospects = Array.from(this.prospects).filter(prevRental => prevRental.Id != this.prospect.Id);
-        this.dialogRef.close(this.prospects); // this needs to return a null
+        this.action.next(this.prospects);
       }
+    },
+    error =>{
+      console.log(error);
+      this.modalRef.hide();
     });
 
   }

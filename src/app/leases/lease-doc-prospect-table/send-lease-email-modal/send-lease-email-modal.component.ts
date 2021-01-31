@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpEventType, HttpHeaders, HttpRequest 
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 import { of } from 'rxjs';
 import { catchError, last, map, tap } from 'rxjs/operators';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
@@ -22,7 +23,7 @@ export class SendLeaseEmailModalComponent implements OnInit {
   attachmentOptions: Iterable<string>;
   localFileName: string;
   fd: FormData = null;
-
+  modalRef: MDBModalRef;
   selectedEmailOption: string = null;
   selectedSubjectOption: string = null;
   selectedAttachmentOption: string = null;
@@ -39,6 +40,7 @@ export class SendLeaseEmailModalComponent implements OnInit {
     public dialogRef: MatDialogRef<SendLeaseEmailModalComponent>,
     public dialog: MatDialog, 
     private documentDeliveryService: DocumentDeliveryService,
+    private modalService: MDBModalService,
   ) { }
 
   ngOnInit(): void {
@@ -102,25 +104,54 @@ export class SendLeaseEmailModalComponent implements OnInit {
       this.documentDeliveryService.DeliverAddRecordCustom(this.fd)
       .then(() => {
         this.fd = null;
-        this.dialog.open(DialogDataRRMSDialog, {
+        this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+          backdrop: true,
+          keyboard: true,
+          focus: true,
+          show: false,
+          ignoreBackdropClick: false,
+          class: '',
+          containerClass: '',
+          animated: true,
           data: {
             inError: false,
             title: "Lease Document Sent",
             contentSummary: "Lease Email has been sent to " + this.getEmail(),
             errorItems: []
           }
-          }).afterClosed().subscribe(() => {
+          });
+          this.modalRef.content.action.subscribe(() => {
+            this.modalRef.hide();
             this.dialogRef.close(true);
+          },
+          error =>{
+            console.log(error);
+            this.modalRef.hide();
           })
       })
       .catch((err) => {
-        this.dialog.open(DialogDataRRMSDialog, {
+        this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+          backdrop: true,
+          keyboard: true,
+          focus: true,
+          show: false,
+          ignoreBackdropClick: false,
+          class: '',
+          containerClass: '',
+          animated: true,
           data: {
             inError: true,
             title: "Unable to process",
             contentSummary: "We're sorry. We are unable to process. Our engineers have been notified and are working on the issue to get this resolved asap",
             errorItems: []
           }
+        });
+        this.modalRef.content.action.subscribe(()=> {
+          this.modalRef.hide();
+        },
+        error => {
+          console.log(error);
+          this.modalRef.hide();
         });
       })
     }
@@ -139,30 +170,67 @@ export class SendLeaseEmailModalComponent implements OnInit {
       }).then((result : number) => {
         if (result == 0){
           this.fd = null;
-          this.dialog.open(DialogDataRRMSDialog, {
+          this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
             data: {
               inError: false,
               title: "Lease Document Sent",
               contentSummary: "Lease Email has been sent to " + this.getEmail(),
               errorItems: []
             }
-            }).afterClosed().subscribe(() => {
+            });
+            this.modalRef.content.action.subscribe(() => {
+              this.modalRef.hide();
               this.dialogRef.close(true);
+            },
+            error => {
+              console.log(error);
+              this.modalRef.hide();
             })
           }
           else{
-              this.dialog.open(DialogDataRRMSDialog, {
-                data: {
+            this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+              backdrop: true,
+              keyboard: true,
+              focus: true,
+              show: false,
+              ignoreBackdropClick: false,
+              class: '',
+              containerClass: '',
+              animated: true,
+              data: {
                   inError: true,
                   title: "Unable to process",
                   contentSummary: "We're sorry. We are unable to process. Our engineers have been notified and are working on the issue to get this resolved asap",
                   errorItems: []
                 }
               });
+              this.modalRef.content.action.subscribe(()=> {
+                this.modalRef.hide();
+              },
+              error =>{
+                console.log(error);
+                this.modalRef.hide();
+              });
           }
         })
         .catch((err) => {
-          this.dialog.open(DialogDataRRMSDialog, {
+          this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
             data: {
               inError: true,
               title: "Unable to process",
@@ -170,7 +238,14 @@ export class SendLeaseEmailModalComponent implements OnInit {
               errorItems: []
             }
           });
-        })
+          this.modalRef.content.action.subscribe(()=> {
+            this.modalRef.hide();
+          },
+          error =>{
+            console.log(error);
+            this.modalRef.hide();
+          });
+        });
     }
   }
   cancel(){

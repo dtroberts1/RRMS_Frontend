@@ -16,9 +16,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-tooltip.tooltip{
     font-size:14px !important;
 }
-/*@import '../../node_modules/@syncfusion/ej2/material.css';*/
 
-.cdk-global-scrollblock {
-    position: static;
-    overflow: hidden !important;
+/* Modified this to allow the date picker to work in modify prev rental view*/
+.cdk-overlay-container{
+    z-index:2000 !important;
 }
+/*.tooltip { pointer-events:initial; }*/
+
+
+.mat-form-field-type-mat-select .mat-form-field-label, .mat-select-value {
+    color: #476c79;
+  }

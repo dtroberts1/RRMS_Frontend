@@ -1,17 +1,17 @@
-<mat-toolbar >
-    <mat-toolbar-row class="midTopToolbar">
-      <button id="sidebarToggler" type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" color="accent">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-      </button>
-        <!-- This fills the remaining space of the current row -->
-      <span class="fill-space"></span>
-      <span (click)="logout()" id="logoutBtn" style="color:white;">
-        Logout
-      </span>
-    </mat-toolbar-row>
-</mat-toolbar>
-<mat-sidenav-container class="container">
-    <mat-sidenav class="sidenav" #drawer mode="side" opened role="navigation">
+
+<mat-toolbar class="midTopToolbar" style="opacity: 90%; height:4%;">
+  <button id="sidebarToggler" type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" color="accent">
+    <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+  </button>
+    <!-- This fills the remaining space of the current row -->
+  <span class="fill-space"></span>
+  <span (click)="logout()" id="logoutBtn" style="color:white;">
+    Logout
+  </span>
+</mat-toolbar>  
+<mat-sidenav-container style="opacity: 90%;" >
+  
+  <mat-sidenav class="sidenav" #drawer mode="side" opened role="navigation" style="height:100%;">
       <mat-nav-list>
         <mat-accordion>
           <mat-expansion-panel hideToggle>

@@ -61,6 +61,8 @@ import { DeclineLeaseModalComponent } from './lease-document-approval/decline-le
 import { LeasePdfModalComponent } from './leases/lease-doc-prospect-table/lease-doc-prospect-table-modal/lease-pdf-modal/lease-pdf-modal.component';
 import { DatePickerComponent, ExampleHeader } from './utils/date-picker/date-picker.component';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
+//import { ModalModule } from 'ng-uikit-pro-standard';
 
 
 const appRoutes: Routes = [
@@ -159,6 +161,7 @@ const appRoutes: Routes = [
       MaterialModule,
       MatNativeDateModule,
       HttpClientModule,
+      MDBBootstrapModule.forRoot(),
       RouterModule.forRoot(
         appRoutes,
         { useHash: true, relativeLinkResolution: 'legacy' }

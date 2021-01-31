@@ -1,10 +1,11 @@
-<!-- Toolbar -->
-<div *ngIf="showDashboard == false" class="toolbar">
+<mat-toolbar role="toolbar" class="toolbar" style="height:4%">
   <img
     width="40"
     src="../assets/better_omega.svg"
   />
   <span id="welcomeText">Welcome</span>
+  <span class="fill-space"></span>
+
   <span class=headerText id=createAccountText
   (click)='toggleCreateAcctScreen()'
 > 
@@ -17,7 +18,7 @@
   >
     {{showDashboard ? "Logout" : "Login"}}
   </span>
-</div>
+</mat-toolbar>
 
 
 <div [ngClass]="{'home-page-container':showDashboard == false, 'home-page-container-show-dashboard' : showDashboard == true}" class="home-page-container">

@@ -1,36 +1,57 @@
-<h1 mat-dialog-title id="mainHeader">{{title}}</h1>
+<div class ="modal fade in" style="display: block;" aria-hidden="false">
+  <div class="modal-dialog modal-dialog-centered" >
+    <!--Content-->
+    <div class="modal-content">
+  <div class="modal-header" style="display: inline;">
+    <button type="button" class="close pull-right" aria-label="Close" >
+      <span aria-hidden="true" (click)="closeDialog(false)">×</span>
+    </button>
+    <h2 mat-dialog-title style="width:100%; height:10%;display: inline;">
+          <span id="mainHeader" style="background: linear-gradient(90deg, rgba(2,0,36,1) 3%, rgba(135,217,206,1) 28%, rgba(51,92,148,1) 97%) !important;
+          -webkit-background-clip: text !important;
+          -webkit-text-fill-color: transparent !important;"
+          > {{title}}</span>
+    </h2>
+    
+  </div>
+  <div class="modal-body">
+
 <div mat-dialog-content>
-  {{contentSummary}}
+  <span style="font-weight: bold; font-size: 14px;">{{contentSummary}}</span><br /><br />
   <ul *ngFor="let item of errorItems">
     <li style="color:red">
       {{item}}
     </li>
   </ul>
   <br />
-  <br />
-  
-  <button mat-button *ngIf="title=='Delete - Are you sure?'" (click)="closeDialog(true)">Yes</button>
-  <button mat-button *ngIf="title=='Saved'" (click)="closeDialog(true)">Yes</button>
-  <button mat-button *ngIf="title=='No Row Selected'" (click)="closeDialog(false)">Ok</button>
-  <button mat-button *ngIf="title=='Incorrect Dates'" (click)="closeDialog(false)">Ok</button>
-  <button mat-button *ngIf="title=='Invalid File Type'" (click)="closeDialog(false)">Ok</button>
-  <button mat-button *ngIf="title=='No Room Selected'" (click)="closeDialog(false)">Ok</button>
-  <button mat-button *ngIf="title=='Room Created'" (click)="closeDialog(false)">Ok</button>
-  <button mat-button *ngIf="title=='Room Saved'" (click)="closeDialog(false)">Ok</button>
-  <button mat-button *ngIf="title=='Previous Rental Saved'" (click)="closeDialog(false)">Ok</button>
-  <button mat-button *ngIf="title=='Lease Document Sent'" (click)="closeDialog(false)">Ok</button>
-  <button mat-button *ngIf="title=='Employer Saved'" (click)="closeDialog(false)">Ok</button>
-  <button mat-button *ngIf="title=='Room Deleted' || title == 'Home Deleted'" (click)="closeDialog(false)">Ok</button>
-  <button mat-button *ngIf="title=='Decline Submitted'" (click)="closeDialog(false)">Ok</button>
-  <button mat-button *ngIf="title=='Prospect Saved' && contentSummary != 'This prospect has been added.' && contentSummary != 'This prospect has been saved'" (click)="closeDialog(true)">Yes</button>
-  <button mat-button *ngIf="title=='Prospect Saved' && contentSummary == 'This prospect has been added.' || contentSummary == 'This prospect has been saved'" (click)="closeDialog(true)">Ok</button>
+  <div class="button-container">
+  <button mat-button class="flex-items" *ngIf="title=='Delete - Are you sure?'" (click)="closeDialog(true)">Yes</button>
+  <button mat-button class="flex-items" *ngIf="title=='Saved'" (click)="closeDialog(true)">Yes</button>
+  <button mat-button class="flex-items" *ngIf="title=='No Row Selected'" (click)="closeDialog(false)">Ok</button>
+  <button mat-button class="flex-items" *ngIf="title=='Incorrect Dates'" (click)="closeDialog(false)">Ok</button>
+  <button mat-button class="flex-items" *ngIf="title=='Invalid File Type'" (click)="closeDialog(false)">Ok</button>
+  <button mat-button class="flex-items" *ngIf="title=='No Room Selected'" (click)="closeDialog(false)">Ok</button>
+  <button mat-button class="flex-items" *ngIf="title=='Room Created'" (click)="closeDialog(false)">Ok</button>
+  <button mat-button class="flex-items" *ngIf="title=='Room Saved'" (click)="closeDialog(false)">Ok</button>
+  <button mat-button class="flex-items" *ngIf="title=='Previous Rental Saved'" (click)="closeDialog(false)">Ok</button>
+  <button mat-button class="flex-items" *ngIf="title=='Lease Document Sent'" (click)="closeDialog(false)">Ok</button>
+  <button mat-button class="flex-items" *ngIf="title=='Employer Saved'" (click)="closeDialog(false)">Ok</button>
+  <button mat-button class="flex-items" *ngIf="title=='Room Deleted' || title == 'Home Deleted'" (click)="closeDialog(false)">Ok</button>
+  <button mat-button class="flex-items" *ngIf="title=='Decline Submitted'" (click)="closeDialog(false)">Ok</button>
+  <button mat-button class="flex-items" *ngIf="title=='Prospect Saved' && contentSummary != 'This prospect has been added.' && contentSummary != 'This prospect has been saved'" (click)="closeDialog(true)">Yes</button>
+  <button mat-button class="flex-items" *ngIf="title=='Prospect Saved' && contentSummary == 'This prospect has been added.' || contentSummary == 'This prospect has been saved'" (click)="closeDialog(true)">Ok</button>
 
-  <button mat-button *ngIf="title=='Unsaved Changes'" (click)="closedWithSaved(false)">Continue</button>
-  <button mat-button *ngIf="title=='Unsaved Changes'" (click)="closedWithSaved(true)">Save</button>
-  <button mat-button *ngIf="title=='Delete - Are you sure?'" (click)="closeDialog(false)">No</button>
+  <button mat-button class="flex-items" *ngIf="title=='Unsaved Changes'" (click)="closedWithSaved(false)">Continue</button>
+  <button mat-button class="flex-items" *ngIf="title=='Unsaved Changes'" (click)="closedWithSaved(true)">Save</button>
+  <button mat-button class="flex-items" *ngIf="title=='Delete - Are you sure?'" (click)="closeDialog(false)">No</button>
 
-  <button mat-button *ngIf="title=='Prospect Saved' && contentSummary != 'This prospect has been added.' && contentSummary != 'This prospect has been saved'"
+  <button mat-button class="flex-items" *ngIf="title=='Prospect Saved' && contentSummary != 'This prospect has been added.' && contentSummary != 'This prospect has been saved'"
   (click)="closeDialog(false)">No</button>
-  <button mat-button *ngIf="title != 'Previous Rental Saved' && title !='Incorrect Dates' && title !='No Row Selected' && title !='Decline Submitted' && title != 'Invalid File Type' && title != 'Home Deleted' && title !='Room Deleted' && title != 'Prospect Saved' && title != 'Employer Saved' && title != 'Prospect Saved' && title != 'Room Created' && title != 'Room Saved' && title != 'Unsaved Changes' && title != 'Delete - Are you sure?' && title != 'Are you sure you would like to delete this previous rental?'&& title != 'Are you sure you would like to delete this previous Employer?'" 
+  <button mat-button class="flex-items" *ngIf="title != 'Previous Rental Saved' && title !='Incorrect Dates' && title !='No Row Selected' && title !='Decline Submitted' && title != 'Invalid File Type' && title != 'Home Deleted' && title !='Room Deleted' && title != 'Prospect Saved' && title != 'Employer Saved' && title != 'Prospect Saved' && title != 'Room Created' && title != 'Room Saved' && title != 'Unsaved Changes' && title != 'Delete - Are you sure?' && title != 'Are you sure you would like to delete this previous rental?'&& title != 'Are you sure you would like to delete this previous Employer?'" 
   (click)="closeDialog(false)">Close</button>
+  </div>
+</div>
+</div>
+</div>
+</div>
 </div>

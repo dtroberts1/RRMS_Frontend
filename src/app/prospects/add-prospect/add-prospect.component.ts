@@ -14,6 +14,7 @@ import {HomesService} from '../../services/homes.service';
 import {RoomsService} from '../../services/room.service';
 import { IHome } from 'src/app/interfaces/Homes';
 import { IRoom } from 'src/app/interfaces/Rooms';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 
 export enum TermType {
   monthToMonth = 1,
@@ -52,6 +53,7 @@ export class AddProspectComponent implements OnInit {
   nickname : string;
   checked : boolean = false;
   nbrRooms : number;
+  modalRef: MDBModalRef;
   termTypeMap = new Map<string, TermType>([
     ['Month-to-Month', TermType.monthToMonth],
     ['Fixed-Term', TermType.fixedTerm]
@@ -62,6 +64,8 @@ export class AddProspectComponent implements OnInit {
     private prospectService: ProspectService,
     private homesService: HomesService,
     private roomsService: RoomsService,
+    private modalService: MDBModalService,
+
     ) { 
     }
 
@@ -95,17 +99,29 @@ export class AddProspectComponent implements OnInit {
       }
       if (invalidElements.length > 0)
       {
-
-        this.dialog.open(DialogDataRRMSDialog, {
+        this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+          backdrop: true,
+          keyboard: true,
+          focus: true,
+          show: false,
+          ignoreBackdropClick: false,
+          class: '',
+          containerClass: '',
+          animated: true,
           data: {
             inError: true,
             title: "Invalid Items",
             contentSummary: "The following items are invalid",
             errorItems: invalidElements
           }
-        }).afterClosed().subscribe(result => {
+        });
+        this.modalRef.content.action.subscribe(() => {
+          this.modalRef.hide();
           resolve(false);
-
+        },
+        error =>{
+          console.log(error);
+          this.modalRef.hide();
         });
       }else{
         resolve(true);
@@ -137,16 +153,30 @@ export class AddProspectComponent implements OnInit {
         
         this.prospectService.saveProspect(pros).then(() => {
           (<any[]>this.prospectService.prospects).push(pros);
-          this.dialog.open(DialogDataRRMSDialog, {
+          this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
             data: {
               inError: false,
               title: "Prospect Saved",
               contentSummary: "This prospect has been added.",
               errorItems: []
             }
-            }).afterClosed().subscribe(() => {
+            });
+            this.modalRef.content.action.subscribe(() => {
+              this.modalRef.hide();
               this.prospectService.prospects = null; // Clear cached prospects
               this.router.navigate(['./dashboard/', { outlets: { view: ['prospects'] } }]);
+            },
+            error => {
+              console.log(error);
+              this.modalRef.hide();
             });
         }).catch((err) => {
           console.log(err);

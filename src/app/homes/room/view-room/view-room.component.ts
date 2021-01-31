@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { AbstractControl, FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IHome } from 'src/app/interfaces/Homes';
 import { IProspect } from 'src/app/interfaces/Prospect';
@@ -36,12 +37,15 @@ export class ViewRoomComponent {
   hasCloset : boolean;
   hasCeilingFan : boolean;
   hasPrivateBath : boolean;
- 
+  modalRef: MDBModalRef;
+
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, 
   @Inject(MAT_DIALOG_DATA) public rooms: Iterable<IRoom>,
   public dialogRef: MatDialogRef<ViewRoomComponent>,
   private roomsService: RoomsService,
   public dialog: MatDialog, 
+  private modalService: MDBModalService,
+
   ) {
     
     this.home = data.home;
@@ -196,20 +200,30 @@ export class ViewRoomComponent {
 
   goToNextOrPrevRm(next: boolean){
     if (this.fieldsModified == true){
-      this.dialog.open(DialogDataRRMSDialog, {
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
           inError: false,
           title: "Unsaved Changes",
           contentSummary: "Warning. There are unsaved Changes. Would you still like to proceed, or save?",
           errorItems: []
         }
-        }).afterClosed().subscribe((choosesSave: boolean)=> {
+        });
+        this.modalRef.content.action.subscribe((choosesSave: boolean)=> {
           if (choosesSave == true){
             this.updateRoom().then((saveSuccess: boolean) => {
               if (saveSuccess == true){
                 this.fieldsModified = false;
                 this.updateCurrentRoomIndex(next);
                 this.getSettings();
+                this.modalRef.hide();
               }
             });
           }
@@ -217,7 +231,12 @@ export class ViewRoomComponent {
             this.fieldsModified = false;
             this.updateCurrentRoomIndex(next);
             this.getSettings();
+            this.modalRef.hide();
           }
+        },
+        error => {
+          console.log(error);
+          this.modalRef.hide();
         });
     }
     else{
@@ -276,16 +295,30 @@ export class ViewRoomComponent {
         };
         return new Promise((resolve, reject) => {
         this.roomsService.updateRoom(this.room).then(() => {
-          this.dialog.open(DialogDataRRMSDialog, {
+          this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
             data: {
               inError: false,
               title: "Room Saved",
               contentSummary: "This Room has been Saved",
               errorItems: []
             }
-            }).afterClosed().subscribe((addRooms: boolean)=> {
+            });
+            this.modalRef.content.action.subscribe((addRooms: boolean)=> {
               this.fieldsModified = false;
+              this.modalRef.hide();
               resolve(true);
+            },
+            error => {
+              console.log(error);
+              this.modalRef.hide();
             });
         }).catch((err) => {
           console.log(err);
@@ -307,33 +340,57 @@ export class ViewRoomComponent {
 
 
   deleteBtnClicked(){
-    this.dialog.open(DialogDataRRMSDialog, {
+    this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+      backdrop: true,
+      keyboard: true,
+      focus: true,
+      show: false,
+      ignoreBackdropClick: false,
+      class: '',
+      containerClass: '',
+      animated: true,
       data: {
         inError: false,
         title: "Delete - Are you sure?",
         contentSummary: "Are you sure you would like to delete this room?",
         errorItems: []
       }
-    }).afterClosed().subscribe((deleteRoom: boolean)=> {
+    });
+    this.modalRef.content.action.subscribe((deleteRoom: boolean)=> {
+      this.modalRef.hide();
+
       if (deleteRoom == true ){
         console.log("removing room");
         // Should first check if prospects are assigned to this room, so they can be deleted if necessary
-        
         this.roomsService.getProspectsAssignedToRoom(this.room.Id).then((prospects: Iterable<IProspect>) => {
           console.log("prospects from query call is " + JSON.stringify(prospects))
           if (prospects == null || (<any[]>prospects).length == 0){
             // If there are no prospects assigned, it's safe to remove the room
             this.roomsService.removeRoom(this.room.Id).then(() => {
-              this.dialog.open(DialogDataRRMSDialog, {
+              this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+                backdrop: true,
+                keyboard: true,
+                focus: true,
+                show: false,
+                ignoreBackdropClick: false,
+                class: '',
+                containerClass: '',
+                animated: true,
                 data: {
                   inError: true,
                   title: "Room Deleted",
                   contentSummary: `Room ${this.room.RoomName} has been Removed`,
                   errorItems: []
                 }
-              }).afterClosed().subscribe(result => {
+              });
+              this.modalRef.content.action.subscribe(() => {
                 this.home.Rooms = this.rooms;
+                this.modalRef.hide();
                 this.dialogRef.close(this.home); // this needs to return a null
+              },
+              error => {
+                console.log(error);
+                this.modalRef.hide();
               });
           })
             .catch((err) =>{
@@ -346,7 +403,15 @@ export class ViewRoomComponent {
               stringItems.push(item.FName + " " + item.LName);
             })
             console.log("Before opening error dialog, stringItems is " + JSON.stringify(stringItems))
-            this.dialog.open(DialogDataRRMSDialog, {
+            this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+              backdrop: true,
+              keyboard: true,
+              focus: true,
+              show: false,
+              ignoreBackdropClick: false,
+              class: '',
+              containerClass: '',
+              animated: true,
               data: {
                 inError: true,
                 title: "Unable To Delete",
@@ -354,16 +419,20 @@ export class ViewRoomComponent {
                 errorItems: stringItems,
               }
             });
+            this.modalRef.content.action.subscribe(()=> {
+              this.modalRef.hide();
+            },
+            error => {
+              console.log(error);
+              this.modalRef.hide();
+            });
           }
         })
-        /*
-        this.roomsService.removeRoom(this.room.Id);
-        this.rooms = Array.from(this.home.Rooms).filter(rm => rm.Id != this.room.Id);
-        this.home.Rooms = this.rooms;
-        this.dialogRef.close(this.home); // this needs to return a null
-        */
       }
+    },
+    error => {
+      console.log(error);
+      this.modalRef.hide();
     });
-
   }
 }

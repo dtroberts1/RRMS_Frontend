@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IRoom } from 'src/app/interfaces/Rooms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 
 @Component({
   selector: 'app-home',
@@ -18,11 +19,14 @@ export class HomeComponent implements OnInit {
   zoom:number;
   paramsId = -1;
   individualView: boolean = false; // If true, it will be displayed by itself in the UI view,
-                           // not as a list item of "Homes"
+  modalRef: MDBModalRef;
+  // not as a list item of "Homes"
   constructor(private route: ActivatedRoute, 
     private homesService: HomesService,
     public dialog: MatDialog, 
     private router: Router,
+    private modalService: MDBModalService,
+
     ) { 
     this.homesService = homesService;
   }
@@ -35,13 +39,28 @@ export class HomeComponent implements OnInit {
       (<any[]>this.myHome.Rooms).forEach((room: IRoom) => {
         roomNameStr.push(room.RoomName);
       })
-      this.dialog.open(DialogDataRRMSDialog, {
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
           inError: true,
           title: "Unable To Delete",
           contentSummary: `The following rooms are linked to this house and will need to first be removed:`,
           errorItems: roomNameStr,
         }
+      })
+      this.modalRef.content.action.subscribe(()=> {
+        this.modalRef.hide();
+      },
+      error => {
+      console.log(error);
+      this.modalRef.hide();
       });
     }
     else{
@@ -49,15 +68,29 @@ export class HomeComponent implements OnInit {
       // Call Service to remove the home
       this.homesService.removeHome(this.myHome.Id)
         .then(() => {
-          this.dialog.open(DialogDataRRMSDialog, {
+          this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
             data: {
               inError: true,
               title: "Home Deleted",
               contentSummary: `Home ${this.myHome.Nickname} has been Removed`,
               errorItems: []
             }
-          }).afterClosed().subscribe(result => {
+          });
+          this.modalRef.content.action.subscribe(result => {
+            this.modalRef.hide();
             this.router.navigate(['./dashboard']);
+          },
+          error => {
+            console.log(error);
+            this.modalRef.hide();
           });
         })
         .catch(() =>{

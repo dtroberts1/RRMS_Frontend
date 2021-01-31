@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import {RoomsService} from '../../services/room.service';
 
@@ -19,6 +20,7 @@ export class AddRoomComponent implements OnInit {
   hasCloset : boolean = false;
   hasCeilingFan : boolean = false;
   hasPrivateBath : boolean = false;
+  modalRef: MDBModalRef;
 
   homeID : number;
   nickname : string;
@@ -27,7 +29,8 @@ export class AddRoomComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private roomsService: RoomsService, 
-    public dialog: MatDialog,   
+    public dialog: MatDialog,  
+    private modalService: MDBModalService, 
     ) { }
 
   ngOnInit(): void {
@@ -47,6 +50,7 @@ export class AddRoomComponent implements OnInit {
   }
 
   saveRoom(){ // Creates room
+    console.log("creating room");
     this.roomsService.createRoom({
       RoomName: this.nickname,
       Dimensions: `${this.dimension1.value} x ${this.dimension2.value}`,
@@ -58,15 +62,30 @@ export class AddRoomComponent implements OnInit {
       HomeId: this.homeID,
       Id: -1,
     }).then(() => {
-      this.dialog.open(DialogDataRRMSDialog, {
+      console.log("room created");
+
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,        
         data: {
           inError: true,
           title: "Room Created",
           contentSummary: "New Room has been created",
           errorItems: []
         }
-      }).afterClosed().subscribe(result => {
-
+      })
+      this.modalRef.content.action.subscribe(result => {
+        this.modalRef.hide();
+      },
+      error => {
+        console.log(error);
+        this.modalRef.hide();
       }),
       err=> console.log(err);
     }).catch((err) =>{

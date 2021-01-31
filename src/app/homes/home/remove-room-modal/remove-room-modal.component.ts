@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IHome } from 'src/app/interfaces/Homes';
 import { IProspect } from 'src/app/interfaces/Prospect';
@@ -30,6 +31,7 @@ export class RemoveRoomModalComponent implements OnInit {
   fieldsModified: boolean = false;
   currentRoomIndex: number = 0;
   roomCount: number = 0;
+  modalRef: MDBModalRef;
 
   dimension1 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
   dimension2 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
@@ -45,6 +47,8 @@ export class RemoveRoomModalComponent implements OnInit {
   public dialogRef: MatDialogRef<RemoveRoomModalComponent>,
   public dialog: MatDialog, 
   private roomService: RoomsService,
+  private modalService: MDBModalService,
+
   ) {
   }
   closeNoSelection(){
@@ -74,29 +78,53 @@ export class RemoveRoomModalComponent implements OnInit {
   removeRoom(){
     console.log("removing room");
     // Should first check if prospects are assigned to this room, so they can be deleted if necessary
-        this.dialog.open(DialogDataRRMSDialog, {
+    this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+      backdrop: true,
+      keyboard: true,
+      focus: true,
+      show: false,
+      ignoreBackdropClick: false,
+      class: '',
+      containerClass: '',
+      animated: true,
       data: {
         inError: false,
         title: "Delete - Are you sure?",
         contentSummary: "Are you sure you would like to delete this room?",
         errorItems: []
       }
-    }).afterClosed().subscribe((deleteRoom: boolean)=> {
+    });
+    this.modalRef.content.action.subscribe((deleteRoom: boolean)=> {
+      this.modalRef.hide();
       if (deleteRoom == true ){
         this.roomService.getProspectsAssignedToRoom(this.selectedRoom.Id).then((prospects: Iterable<IProspect>) => {
         console.log("prospects from query call is " + JSON.stringify(prospects))
         if (prospects == null || (<any[]>prospects).length == 0){
           // If there are no prospects assigned, it's safe to remove the room
           this.roomService.removeRoom(this.selectedRoom.Id).then(() => {
-            this.dialog.open(DialogDataRRMSDialog, {
+            this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+              backdrop: true,
+              keyboard: true,
+              focus: true,
+              show: false,
+              ignoreBackdropClick: false,
+              class: '',
+              containerClass: '',
+              animated: true,
               data: {
                 inError: true,
                 title: "Room Deleted",
                 contentSummary: `Room ${this.selectedRoom.RoomName} has been Removed`,
                 errorItems: []
               }
-            }).afterClosed().subscribe(result => {
+            });
+            this.modalRef.content.action.subscribe(() => {
+              this.modalRef.hide();
               this.dialogRef.close(true);
+            },
+            error => {
+              console.log(error);
+              this.modalRef.hide();
             });
                     })
           .catch((err) =>{
@@ -109,7 +137,15 @@ export class RemoveRoomModalComponent implements OnInit {
             stringItems.push(item.FName + " " + item.LName);
           })
           console.log("Before opening error dialog, stringItems is " + JSON.stringify(stringItems))
-          this.dialog.open(DialogDataRRMSDialog, {
+          this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
             data: {
               inError: true,
               title: "Unable To Delete",
@@ -117,9 +153,20 @@ export class RemoveRoomModalComponent implements OnInit {
               errorItems: stringItems,
             }
           });
+          this.modalRef.content.action.subscribe(()=> {
+            this.modalRef.hide();
+          },
+          error => {
+            console.log(error);
+            this.modalRef.hide();
+          });
         }
       })
     }
+  },
+  error => {
+    console.log(error);
+    this.modalRef.hide();
   });
 }
   updateRoom(){

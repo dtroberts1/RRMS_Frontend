@@ -1,22 +1,30 @@
-<h4 mat-dialog-title style="width:100%; height:10%">
-  <mat-toolbar role="toolbar" class="task-header">
-      <span id="mainHeader"> Previous Rental Information</span>
-      <span class="fill-space"></span>
-      <span class="fx-spacer"></span>
+  <div class ="modal fade in" style="display: block;" aria-hidden="false"> <!--z-index defaults to 1050-->
+  <div class="modal-dialog modal-lg modal-dialog-centered" >
+    <!--Content-->
+    <div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close pull-right" aria-label="Close" >
+      <span aria-hidden="true" (click)="closeModifyEmpDialog()">×</span>
+    </button>
+          <span id="mainHeader"> Previous Rental Information</span>
+    <!--
+          <button mat-icon-button (click)="closeModifyEmpDialog()">
+              <mat-icon id="closeBtn" mat-list-icon>close</mat-icon>
+          </button>
+        -->
+    
+  </div>
+  <div class="modal-body" style="max-height:450px; overflow-y: auto;">
 
-      <button mat-icon-button (click)="closeModifyEmpDialog()">
-          <mat-icon id="closeBtn" mat-list-icon>close</mat-icon>
-      </button>
-  </mat-toolbar>
-</h4>
-<br />
-<div mat-dialog-content style="height:90%; width:100%; overflow-y: hidden">
-  <div style="float:left; width:33%; height:100%" >
-      <table style="font-family:sans-serif; width:90%; height:100%; font-size: small; color:#476c79">
-        <fieldset style="text-overflow: clip; overflow: hidden; width: 100%;"  >
-          <legend style="font-size:large;">Rental Info</legend>
+    <table style="font-family:sans-serif; width:66%; height:50%; font-size: small; color:#476c79; margin:auto">
+      <div class="custom-field" >
+        <h1> 
+          <span> 
+            Rental Info
+          </span> 
+      </h1> 
           <tr>
-            <td width="100%">
+            <td>
             <app-date-picker [headerName]="'Start Date'" [(date)]="startDateInput"></app-date-picker>
             <br />
             <app-date-picker [headerName]="'End Date'" [(date)]="endDateInput"></app-date-picker>
@@ -34,24 +42,31 @@
             matTooltipClass="tooltip"
             [matTooltip]="'Close'"
             />
-            <button class="lowerViewRoomButtons" id="deleteBtn" mat-button (click)="deleteBtnClicked()">Delete</button>
-
+            <img style="margin-left:8px;" class="nonEditIconStyle" [src]="deleteIconSrc" 
+            (mouseover)="deleteIconSrc = '../../../assets/remove_home_yellow.svg'"
+            (mouseout)="deleteIconSrc = '../../../assets/remove_home.svg'"
+            (click)="deleteBtnClicked()"
+            matTooltipClass="tooltip"
+            [matTooltip]="'Delete Previous Rental'"
+            />
         </tr>
-        </fieldset>
+        </div>
       </table>
-    </div>
-  <div style="display: inline-block; width:33%; height:100%" >
-      <table style="font-family:sans-serif; width:90%; height:100%; font-size: small; color:#476c79">
-        <fieldset style="text-overflow: clip; overflow: hidden; width: 100%;"  >
-          <legend style="font-size:large;">Landlord Info</legend>
+      <table style="width:66%; height:50%;font-family:sans-serif; font-size: small; color:#476c79; margin:auto">
+        <div class="custom-field" >
+          <h1> 
+            <span> 
+                Landlord Info
+            </span> 
+        </h1> 
       <tr>
-        <td width="100%">
+        <td width="50%">
           <h3 style="white-space: nowrap;">
             <img [ngStyle]="{'visibility': editFName == false && addMode == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="fNameIcon"
             (mouseover)="fNameIcon = '../../../assets/edit_icon_yellow.svg'"
             (mouseout)="fNameIcon = '../../../assets/edit_icon.svg'" 
             (click)="changeEditMode('fname')"/>
-            <label style="margin-left:8px;">First Name:&nbsp;&nbsp;</label><br/>&nbsp;&nbsp;
+            <label style="margin-left:8px;">First Name&nbsp;&nbsp;</label><br/>&nbsp;&nbsp;
             <span *ngIf="addMode == false && editFName == false">{{prevRental.PrevLandlordFName}}</span>
             <mat-form-field *ngIf="addMode == true || editFName == true" style="font-size:small">
               <input matInput size="25" (blur)="updateInput('fname')" style="white-space: nowrap;" maxlength="25" required placeholder="Blake" 
@@ -61,33 +76,31 @@
             </mat-form-field>
           </h3>
         </td>
-      </tr>
-      <tr>
-          <td width="100%">
-            <h3 style="white-space: nowrap;">
-              <img [ngStyle]="{'visibility': editLName == false && addMode == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="lNameIcon"
-              (mouseover)="lNameIcon = '../../../assets/edit_icon_yellow.svg'"
-              (mouseout)="lNameIcon = '../../../assets/edit_icon.svg'" 
-              (click)="changeEditMode('lname')"/>
-              <label style="margin-left: 8px;">Last Name:&nbsp;&nbsp;</label><br/>&nbsp;&nbsp;
-              <span *ngIf="addMode == false && editLName == false">{{prevRental.PrevLandlordLName}}</span>
-              <mat-form-field *ngIf="addMode == true || editLName == true" style="font-size:small">
-                <input matInput size="25" (blur)="updateInput('lname')" style="white-space: nowrap;" maxlength="25" required placeholder="Patterson" 
-                [formControl]="lNameInput">
-                <mat-icon *ngIf="lNameInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-                <mat-error *ngIf="lNameInput.invalid">{{getInputErrorMessage(lNameInput)}}</mat-error>
-              </mat-form-field>
-            </h3>
-          </td>
+        <td width="50%">
+          <h3 style="white-space: nowrap;">
+            <img [ngStyle]="{'visibility': editLName == false && addMode == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="lNameIcon"
+            (mouseover)="lNameIcon = '../../../assets/edit_icon_yellow.svg'"
+            (mouseout)="lNameIcon = '../../../assets/edit_icon.svg'" 
+            (click)="changeEditMode('lname')"/>
+            <label style="margin-left: 8px;">Last Name&nbsp;&nbsp;</label><br/>&nbsp;&nbsp;
+            <span *ngIf="addMode == false && editLName == false">{{prevRental.PrevLandlordLName}}</span>
+            <mat-form-field *ngIf="addMode == true || editLName == true" style="font-size:small">
+              <input matInput size="25" (blur)="updateInput('lname')" style="white-space: nowrap;" maxlength="25" required placeholder="Patterson" 
+              [formControl]="lNameInput">
+              <mat-icon *ngIf="lNameInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+              <mat-error *ngIf="lNameInput.invalid">{{getInputErrorMessage(lNameInput)}}</mat-error>
+            </mat-form-field>
+          </h3>
+        </td>
       </tr>
         <tr>
-          <td width="100%">
+          <td width="45%">
             <h3 style="white-space: nowrap;">
               <img [ngStyle]="{'visibility': editEmail == false && addMode == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="emailIcon"
               (mouseover)="emailIcon = '../../../assets/edit_icon_yellow.svg'"
               (mouseout)="emailIcon = '../../../assets/edit_icon.svg'" 
               (click)="changeEditMode('email')"/>
-              <label style="margin-left: 8px;">Email Address:&nbsp;&nbsp;</label><br/>&nbsp;&nbsp;
+              <label style="margin-left: 8px;">Email Address&nbsp;&nbsp;</label><br/>&nbsp;&nbsp;
               <span *ngIf="addMode == false && editEmail == false">{{prevRental.PrevLandlordEmailAddress}}</span>
               <mat-form-field *ngIf="addMode == true || editEmail == true" style="font-size:small">
                 <input matInput size="25" (blur)="updateInput('email')" style="white-space: nowrap;" maxlength="25" required placeholder="bp@email.com" 
@@ -97,15 +110,13 @@
               </mat-form-field>
             </h3>
           </td>
-        </tr>
-        <tr>
-            <td width="100%">
+          <td width="55%">
               <h3 style="white-space: nowrap;">
                 <img [ngStyle]="{'visibility': editPhone == false && addMode == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="phoneIcon"
                 (mouseover)="phoneIcon = '../../../assets/edit_icon_yellow.svg'"
                 (mouseout)="phoneIcon = '../../../assets/edit_icon.svg'" 
                 (click)="changeEditMode('phone')"/>
-                <label style="margin-left: 8px;">Phone Number:&nbsp;&nbsp;</label><br/>&nbsp;&nbsp;
+                <label style="margin-left: 8px;">Phone Number&nbsp;&nbsp;</label><br/>&nbsp;&nbsp;
                 <span *ngIf="addMode == false && editPhone == false">{{prevRental.PrevLandlordPhoneNumber}}</span>
                 <mat-form-field *ngIf="addMode == true || editPhone == true" style="font-size:small">
                   <input matInput size="30" (blur)="updateInput('phone')" style="white-space: nowrap;" maxlength="30" required placeholder="111-222-3333" 
@@ -115,22 +126,24 @@
                 </mat-form-field>
               </h3>
             </td>
-          </tr> 
-          </fieldset>
+        </tr>
+          </div>
       </table>
-    </div>
-    <div style="display: inline-block; width:33%; height:100%" >
-      <table style="font-family:sans-serif; width:90%; height:100%; font-size: small; color:#476c79">
-        <fieldset style="text-overflow: clip; overflow: hidden; width: 100%;"  >
-          <legend style="font-size:large;">Location Info</legend>
+      <table style="font-family:sans-serif; width:66%; height:50%; font-size: small; color:#476c79;  margin:auto">
+        <div class="custom-field" >
+          <h1> 
+            <span> 
+                Location Info
+            </span> 
+        </h1> 
           <tr>
-            <td width="100%">
+            <td width="30%">
               <h3 style="white-space: nowrap;">
                 <img [ngStyle]="{'visibility': editAddressStreet1 == false && addMode == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="add1Icon"
                 (mouseover)="add1Icon = '../../../assets/edit_icon_yellow.svg'"
                 (mouseout)="add1Icon = '../../../assets/edit_icon.svg'" 
                 (click)="changeEditMode('stadd1')"/>
-                <label style="margin-left:8px;"> Address (1):</label><br/>&nbsp;&nbsp;
+                <label style="margin-left:8px;">Street Address (1)</label><br/>&nbsp;&nbsp;
               <span *ngIf="addMode == false && editAddressStreet1 == false">{{prevRental.AddressStreet1}}</span>
                 <mat-form-field *ngIf="addMode == true || editAddressStreet1 == true" style="font-size:small">
                   <input matInput size="25" (blur)="updateInput('stadd1')"maxlength="25" required placeholder="113 Michigan Ave" 
@@ -140,15 +153,13 @@
                 </mat-form-field>
               </h3>
             </td>
-          </tr>
-          <tr>
-            <td width="100%">
+            <td colspan="2">
               <h3 style="white-space: nowrap;">
                 <img [ngStyle]="{'visibility': editAddressStreet2 == false && addMode == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="add2Icon"
                 (mouseover)="add2Icon = '../../../assets/edit_icon_yellow.svg'"
                 (mouseout)="add2Icon = '../../../assets/edit_icon.svg'" 
                 (click)="changeEditMode('stadd2')"/>
-                <label style="margin-left:8px;">Street Address (2):&nbsp;&nbsp;</label><br/>&nbsp;&nbsp;
+                <label style="margin-left:8px;">Street Address (2)&nbsp;&nbsp;</label><br/>&nbsp;&nbsp;
                 <span *ngIf="addMode == false && editAddressStreet2 == false">{{prevRental.AddressStreet2}}</span>
                 <mat-form-field *ngIf="addMode == true || editAddressStreet2 == true" style="font-size:small">
                   <input matInput size="25" (blur)="updateInput('stadd2')" style="white-space: nowrap;" maxlength="25" required placeholder="Suite #221" 
@@ -160,13 +171,13 @@
             </td>
           </tr>
           <tr>
-            <td width="100%">
+            <td width="30%">
               <h3 style="white-space: nowrap;">
                 <img [ngStyle]="{'visibility': editCity == false && addMode == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="addCityIcon"
                 (mouseover)="addCityIcon = '../../../assets/edit_icon_yellow.svg'"
                 (mouseout)="addCityIcon = '../../../assets/edit_icon.svg'" 
                 (click)="changeEditMode('city')"/>
-                <label style="margin-left:8px;">City:&nbsp;&nbsp;</label><br/>&nbsp;&nbsp;
+                <label style="margin-left:8px;">City&nbsp;&nbsp;</label><br/>&nbsp;&nbsp;
                 <span *ngIf="addMode == false && editCity == false">{{prevRental.AddressCity}}</span>
                 <mat-form-field *ngIf="addMode == true || editCity == true" style="font-size:small">
                   <input matInput size="25" (blur)="updateInput('city')" style="white-space: nowrap;" maxlength="25" required placeholder="Austin" 
@@ -176,33 +187,29 @@
                 </mat-form-field>
               </h3>
             </td>
-          </tr>
-          <tr>
-            <td width="100%">
-              <h3 style="white-space: nowrap;">
+            <td width="10% !important">
+              <h3 style="white-space: nowrap;" >
                 <img [ngStyle]="{'visibility': editState == false && addMode == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="addStateIcon"
                 (mouseover)="addStateIcon = '../../../assets/edit_icon_yellow.svg'"
                 (mouseout)="addStateIcon = '../../../assets/edit_icon.svg'" 
                 (click)="changeEditMode('state')"/>
-                <label style="margin-left:8px;">State:&nbsp;&nbsp;</label><br/>&nbsp;&nbsp;
+                <label style="margin-left:8px;">State&nbsp;&nbsp;</label><br/>&nbsp;&nbsp;
                 <span *ngIf="addMode == false && editState == false">{{prevRental.AddressState}}</span>
                 <mat-form-field *ngIf="addMode == true || editState == true" style="font-size:small">
-                  <input matInput size="25" (blur)="updateInput('state')" style="white-space: nowrap;" maxlength="25" required placeholder="TX" 
+                  <input matInput size="2" (blur)="updateInput('state')" style="white-space: nowrap;" maxlength="10" required placeholder="TX" 
                   [formControl]="stateInput">
                   <mat-icon *ngIf="stateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
                   <mat-error *ngIf="stateInput.invalid">{{getInputErrorMessage(stateInput)}}</mat-error>
                 </mat-form-field>
               </h3>
             </td>
-          </tr>
-          <tr>
-            <td width="100%">
+            <td width="15% !important">
               <h3 style="white-space: nowrap;">
                 <img [ngStyle]="{'visibility': editZipcode == false && addMode == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="prevRentalIcon"
                 (mouseover)="prevRentalIcon = '../../../assets/edit_icon_yellow.svg'"
                 (mouseout)="prevRentalIcon = '../../../assets/edit_icon.svg'" 
                 (click)="changeEditMode('zipcode')"/>
-                <label style="margin-left:8px;">Zipcode:&nbsp;&nbsp;</label><br/>&nbsp;&nbsp;
+                <label style="margin-left:8px;">Zipcode&nbsp;&nbsp;</label><br/>&nbsp;&nbsp;
                 <span *ngIf="addMode == false && editZipcode == false">{{prevRental.AddressZipCode}}</span>
                 <mat-form-field *ngIf="addMode == true || editZipcode == true" style="font-size:small">
                   <input matInput size="25" (blur)="updateInput('zipcode')" style="white-space: nowrap;" maxlength="25" required placeholder="73301" 
@@ -213,8 +220,12 @@
               </h3>
             </td>
           </tr>
-          <tr>
-        </fieldset>
+        </div>
       </table>
-    </div>
-    </div>
+  </div>
+    <span class="modal-footer">
+          <button (click)="closeModifyEmpDialog()" class="flex-items" style="font-size:14px;" mat-button >Close</button>
+    </span>
+  </div>
+</div>
+</div>

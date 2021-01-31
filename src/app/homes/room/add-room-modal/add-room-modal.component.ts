@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IHome } from 'src/app/interfaces/Homes';
 import {IEmployer, SalaryType} from '../../../interfaces/Employer';
@@ -34,12 +35,15 @@ export class AddRoomModalComponent {
   hasCloset : boolean = false;
   hasCeilingFan : boolean = false;
   hasPrivateBath : boolean = false;
- 
+  modalRef: MDBModalRef;
+
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, 
   @Inject(MAT_DIALOG_DATA) public rooms: Iterable<IRoom>,
   public dialogRef: MatDialogRef<AddRoomModalComponent>,
   private roomsService : RoomsService,
   public dialog: MatDialog,
+  private modalService: MDBModalService,
+
   ) {
     this.home = data.home;
     if (this.home != null){
@@ -69,18 +73,31 @@ export class AddRoomModalComponent {
 
       if (isValid == true){
         this.roomsService.createRoom(this.room).then((room: IRoom) => {
-          this.dialog.open(DialogDataRRMSDialog, {
+          this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
             data: {
               inError: true,
               title: "Room Created",
               contentSummary: "New Room has been created",
               errorItems: []
             }
-          }).afterClosed().subscribe(result => {
+          });
+          this.modalRef.content.action.subscribe(() => {
+            this.modalRef.hide();
             (<any[]>this.home.Rooms).push(room); 
             this.dialogRef.close(this.home);
-          }),
-          err=> console.log(err);
+          },
+          error => {
+            console.log(error);
+            this.modalRef.hide();
+          });
         }).catch((err) =>{
           console.log(err)
         }); 
@@ -202,20 +219,34 @@ export class AddRoomModalComponent {
 
       if (invalidElements.length > 0)
       {
-        this.dialog.open(DialogDataRRMSDialog, {
+        this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+          backdrop: true,
+          keyboard: true,
+          focus: true,
+          show: false,
+          ignoreBackdropClick: false,
+          class: '',
+          containerClass: '',
+          animated: true,
           data: {
             inError: true,
             title: "Invalid Items",
             contentSummary: "The following items are invalid",
             errorItems: invalidElements
           }
-        }).afterClosed().subscribe(result => {
+        });
+        this.modalRef.content.action.subscribe(() => {
+          this.modalRef.hide();
           if (invalidElements.length > 0){
             resolve(false);
           }
           else{
             resolve(true);
           }
+        },
+        error => {
+          console.log(error);
+          this.modalRef.hide();
         });
       }else{
         resolve(true);

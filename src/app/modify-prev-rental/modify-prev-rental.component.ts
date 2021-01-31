@@ -1,8 +1,12 @@
 import { ArrayDataSource } from '@angular/cdk/collections';
-import { Component, Inject, OnInit, Type } from '@angular/core';
+import { ComponentType, Overlay, OverlayConfig } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { Component, Inject, Injectable, Injector, OnInit, TemplateRef, Type } from '@angular/core';
 import { AbstractControl, FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { toArray } from 'rxjs/operators';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
+import { Subject } from 'rxjs';
+import { tap, toArray } from 'rxjs/operators';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IHome } from 'src/app/interfaces/Homes';
 import { IProspect } from 'src/app/interfaces/Prospect';
@@ -20,10 +24,18 @@ export enum TermType {
 }
 @Component({
   selector: 'app-modify-prev-rental',
+  providers:[MatDialog],
   templateUrl: './modify-prev-rental.component.html',
-  styleUrls: ['./modify-prev-rental.component.css']
+  styleUrls: ['./modify-prev-rental.component.scss'],
+
+})
+@Injectable({
+  providedIn: 'root'
 })
 export class ModifyPrevRentalComponent implements OnInit{
+  action: Subject<any> = new Subject();
+  modalRef: MDBModalRef;
+
   fNameIcon : string = '../../../assets/edit_icon.svg';
   lNameIcon : string = '../../../assets/edit_icon.svg';
   emailIcon : string = '../../../assets/edit_icon.svg';
@@ -33,7 +45,9 @@ export class ModifyPrevRentalComponent implements OnInit{
   addCityIcon: string = '../../../assets/edit_icon.svg';
   addStateIcon: string = '../../../assets/edit_icon.svg';
   prevRentalIcon: string = '../../../assets/edit_icon.svg';
-  closeIconSrc: string = '../../../assets/close_door.svg'
+  closeIconSrc: string = '../../../assets/close_door.svg';
+  deleteIconSrc: string = '../../../assets/remove_home.svg';
+  prospectId: number;
   addMode: boolean;
   currItem:string;
   salItem: string;
@@ -67,8 +81,8 @@ export class ModifyPrevRentalComponent implements OnInit{
   cityInput = new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z\u0080-\u024F]+(?:. |-| |')*([1-9a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$")]);
   stateInput  = new FormControl('',[Validators.required, Validators.pattern('^((A[LKZR])|(C[AOT])|(D[EC])|(FL)|(GA)|(HI)|(I[DLNA])|(K[SY])|(LA)|(M[EDAINSOT])|(N[EVHJMYCD])|(O[HKR])|(PA)|(RI)|(S[CD])|(T[NX])|(UT)|(V[TA])|(W[AVIY]))$')]);
   zipcodeInput = new FormControl('',  [Validators.required, Validators.pattern('^[0-9]{5}(?:-[0-9]{4})?$')]);
-  startDateInput = new FormControl('', [Validators.required, Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|\[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
-  endDateInput = new FormControl('', [Validators.required, Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|\[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]);
+  startDateInput = new FormControl('', [Validators.required]);
+  endDateInput = new FormControl('', [Validators.required]);
   termTypeStr: string[] = ['Month-to-Month', 'Fixed-Term'];
   termType : TermType = TermType.monthToMonth;
   dateObserverablesEnabled: boolean = false;
@@ -88,31 +102,30 @@ currentMap = new Map<string, boolean>([
   hasPrivateBath : boolean;
   selectedRoomName : string = 'No Room Selected';
  
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, 
-  public dialogRef: MatDialogRef<ModifyPrevRentalComponent>,
+  constructor(
   public dialog: MatDialog,
   private prevRentalService: PreviousRental, 
+  private modalService: MDBModalService
   ) {
-
   }
+
 ngOnInit(): void {
-  if (this.data.addMode == true)
+  console.log("in modal");
+  if (this.addMode == true)
       this.addMode = true;
-  else if (this.data.addMode == false){
+  else if (this.addMode == false){
     this.addMode = false;
-    this.prevRentals = this.data.prevRentals; 
     if (this.prevRentals != null)
     {  
-        this.currentprevRentalIndex = this.data.prevRentalIndex;
-        this.setOrigSettings(this.data.prevRentals[this.currentprevRentalIndex]);
+        this.setOrigSettings(this.prevRentals[this.currentprevRentalIndex]);
         this.getSettings();
-        this.prevRentalCount = (<any[]>this.data.prevRentals).length;
+        this.prevRentalCount = (<any[]>this.prevRentals).length;
     }
   }
   this.dateObserverablesEnabled = true;
   this.enableDateObservables();
-
   }
+
   setOrigSettings(prevRental : IPreviousRental)
   {
    this.origSettings = Object.assign({}, prevRental);
@@ -337,7 +350,7 @@ ngOnInit(): void {
   }
 
   getSettings(){
-    this.prevRental = this.data.prevRentals[this.currentprevRentalIndex];
+    this.prevRental = this.prevRentals[this.currentprevRentalIndex];
 
     this.fNameInput.setValue(this.prevRental.PrevLandlordFName);
     this.lNameInput.setValue(this.prevRental.PrevLandlordLName);
@@ -348,6 +361,7 @@ ngOnInit(): void {
     this.cityInput.setValue(this.prevRental.AddressCity);
     this.stateInput.setValue(this.prevRental.AddressState);
     this.zipcodeInput.setValue(this.prevRental.AddressZipCode);
+    console.log('setting value to ' + this.prevRental.StartDate);
     this.startDateInput.setValue(this.prevRental.StartDate);
     this.endDateInput.setValue(this.prevRental.EndDate);
     this.setCurrentEmp(); // Radio button for if prevRental is current
@@ -368,14 +382,23 @@ ngOnInit(): void {
     this.dateObserverablesEnabled = false;
 
     if (this.fieldsModified == true){
-      this.dialog.open(DialogDataRRMSDialog, {
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
           inError: false,
           title: "Unsaved Changes",
           contentSummary: "Warning. There are unsaved Changes. Would you still like to proceed, or save?",
           errorItems: []
         }
-        }).afterClosed().subscribe((choosesSave: boolean)=> {
+        })
+        this.modalRef.content.action.subscribe((choosesSave: boolean)=> {
           if (choosesSave == true){
             this.updateEmp().then((saveSuccess: boolean) => {
               if (saveSuccess == true){
@@ -393,6 +416,11 @@ ngOnInit(): void {
             this.getSettings();
             this.dateObserverablesEnabled = true;
           }
+          this.modalRef.hide();
+        },
+        error => {
+          console.log(error);
+          this.modalRef.hide();
         });
     }
     else{
@@ -404,19 +432,18 @@ ngOnInit(): void {
   updatecurrentprevRentalIndex(next: boolean)
   {
     if (next == true){
-      this.currentprevRentalIndex = (this.currentprevRentalIndex + 1) % (<any[]>this.data.prevRentals).length;
+      this.currentprevRentalIndex = (this.currentprevRentalIndex + 1) % (<any[]>this.prevRentals).length;
     }
     else if(next == false){ // If navigating to "previous"
       this.currentprevRentalIndex--;
       if (this.currentprevRentalIndex < 0){
-        this.currentprevRentalIndex = (<any[]>this.data.prevRentals).length - 1;
+        this.currentprevRentalIndex = (<any[]>this.prevRentals).length - 1;
       }
     }
   }
 
   closeModifyEmpDialog(){
-    // If "Yes", the map will return true, otherwise, false. 
-    this.dialogRef.close(this.prevRentals);
+    this.action.next(this.prevRentals);
   }
   fillInputsWithOriginalSettings(){
     this.prevRental.PrevLandlordFName = this.origSettings.PrevLandlordFName;
@@ -442,8 +469,8 @@ ngOnInit(): void {
   }
   createBtnClickedUpdate(){
     this.createPrevRental().then(() => {
-      this.dialogRef.close(this.prevRental);
-
+      this.action.next(this.prevRental);
+      
     })
     .catch((err) => {
       console.log(err);
@@ -466,30 +493,45 @@ ngOnInit(): void {
       StartDate: this.startDateInput.value,
       EndDate: this.endDateInput.value,
       Current: this.currentMap.get(this.currItem),
-      ProspectId: this.data.prospectId,
+      ProspectId: this.prospectId,
     }
     return new Promise((resolve, reject) => {
+      console.log("about to save");
+
       this.prevRentalService.savePrevRental(this.prevRental).then(() => {
-        this.dialog.open(DialogDataRRMSDialog, {
+        console.log("saved. opening conf screen");
+        this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+          backdrop: true,
+          keyboard: true,
+          focus: true,
+          show: false,
+          ignoreBackdropClick: false,
+          class: '',
+          containerClass: '',
+          animated: true,
           data: {
             inError: false,
             title: "prevRental Saved",
             contentSummary: "This Previous Rental has been Saved",
             errorItems: []
           }
-          }).afterClosed().subscribe((addPrevRental: boolean)=> {
+          })
+          this.modalRef.content.action.subscribe((addPrevRental: boolean)=> {
             this.fieldsModified = false;
+            console.log("conf screen closed");
+            this.modalRef.hide();
             resolve(true);
+          },
+          error => {
+            console.log(error);
+            this.modalRef.hide();
+            reject(false);
           });
-      }).catch((err) => {
-        console.log(err);
-        reject(false);
-      });
+        });
     });
   }
 
   updateEmp(){
-    //TODO
     console.log("before updating, fname is " + this.fNameInput.value + ", and lastname is " + this.lNameInput.value);
     this.prevRental = {
       Id: this.prevRental.Id,
@@ -511,21 +553,33 @@ ngOnInit(): void {
     this.prevRentals[this.currentprevRentalIndex] = this.prevRental;
     return new Promise((resolve, reject) => {
       this.prevRentalService.updatePrevRental(this.prevRental).then(() => {
-        this.dialog.open(DialogDataRRMSDialog, {
+        console.log("after update..");
+        this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+          backdrop: true,
+          keyboard: true,
+          focus: true,
+          show: false,
+          ignoreBackdropClick: false,
+          class: '',
+          containerClass: '',
+          animated: true,
           data: {
             inError: false,
             title: "Previous Rental Saved",
             contentSummary: "This Previous Rental has been Saved",
             errorItems: []
           }
-          }).afterClosed().subscribe((addRooms: boolean)=> {
-            this.fieldsModified = false;
-            resolve(true);
-          });
-      }).catch((err) => {
-        console.log(err);
-        reject(false);
-      });
+      })
+      this.modalRef.content.action.subscribe((addRooms: boolean)=> {
+        this.fieldsModified = false;
+        this.modalRef.hide();
+        resolve(true);
+        });
+        }).catch((err) => {
+          console.log(err);
+          this.modalRef.hide();
+          reject(false);
+        });
     });
   }
   getInputErrorMessage(inputField : AbstractControl){
@@ -541,20 +595,33 @@ ngOnInit(): void {
 
 
   deleteBtnClicked(){
-    this.dialog.open(DialogDataRRMSDialog, {
+    this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+      backdrop: true,
+      keyboard: true,
+      focus: true,
+      show: false,
+      ignoreBackdropClick: false,
+      class: '',
+      containerClass: '',
+      animated: true,
       data: {
         inError: false,
         title: "Delete - Are you sure?",
         contentSummary: "Are you sure you would like to delete this previous rental?",
         errorItems: []
       }
-    }).afterClosed().subscribe((deleteEmp: boolean)=> {
+    })
+    this.modalRef.content.action.subscribe((deleteEmp: boolean)=> {
       if (deleteEmp == true ){       
         this.prevRentalService.removePrevRental(this.prevRental.Id);
         this.prevRentals = Array.from(this.prevRentals).filter(prevRental => prevRental.Id != this.prevRental.Id);
-        this.dialogRef.close(this.prevRentals); // this needs to return a null
+        this.action.next(this.prevRentals);
       }
+      this.modalRef.hide();
+    },
+    error => {
+      console.log(error);
+      this.modalRef.hide();
     });
-
   }
 }

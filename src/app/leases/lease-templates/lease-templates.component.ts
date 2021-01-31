@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { LeaseTemplatePopupModal } from './lease-template-popup-modal/lease-template-popup-modal.component';
 import { rejects } from 'assert';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 
 @Component({
     selector: 'app-lease-templates',
@@ -17,7 +18,7 @@ import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component'
 })
 
 export class LeaseTemplatesComponent {
-
+    modalRef: MDBModalRef;
     loadedFileName : string = null;
     savedNote : string = null;
     astrisk: string = "";
@@ -128,7 +129,10 @@ export class LeaseTemplatesComponent {
             'Wisconsin',
               'Wyoming',
             ];
-    constructor(private templateService: TemplateService,public dialog: MatDialog, 
+    constructor(
+        private templateService: TemplateService,
+        public dialog: MatDialog, 
+        private modalService: MDBModalService,
         ){
 
     }
@@ -393,14 +397,24 @@ async serverBtnItemSelected(args: MenuEventArgs){
             })
                 .afterClosed().subscribe((selectedTemplate: string) => {
                     if (selectedTemplate != null){
-                        this.dialog.open(DialogDataRRMSDialog, {
+                        this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+                            backdrop: true,
+                            keyboard: true,
+                            focus: true,
+                            show: false,
+                            ignoreBackdropClick: false,
+                            class: '',
+                            containerClass: '',
+                            animated: true,
                             data: {
                               inError: false,
                               title: "Delete - Are you sure?",
                               contentSummary: `Are you sure you would like to delete this template "${selectedTemplate}"?`,
                               errorItems: []
                             }
-                          }).afterClosed().subscribe((deleteTemplate: boolean)=> {
+                          });
+                          this.modalRef.content.action.subscribe((deleteTemplate: boolean)=> {
+                            this.modalRef.hide();
                             if (deleteTemplate == true ){
                                 this.templateService.deleteTemplate(selectedTemplate).then(()=>{
                                     this.dialog.open(LeaseTemplatePopupModal, {
@@ -415,6 +429,10 @@ async serverBtnItemSelected(args: MenuEventArgs){
                                     })
                                 })
                             }
+                        },
+                        error =>{
+                            console.log(error);
+                            this.modalRef.hide();
                         });
                     }
                 });
