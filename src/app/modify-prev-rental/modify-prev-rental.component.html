@@ -33,7 +33,6 @@
         <tr>
             <button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevEmp(false)">Previous</button>
             <button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevEmp(true)">Next</button>
-            <button id="saveViewRoomBtn" *ngIf="fieldsModified == true && addMode == false" mat-button (click)="saveBtnClickedUpdate()">Save</button>
             <button class="lowerViewRoomButtons" *ngIf="addMode == true" mat-button (click)="createBtnClickedUpdate()">Create</button>
             <img style="margin-left:8px;" class="nonEditIconStyle" [src]="closeIconSrc" 
             (mouseover)="closeIconSrc = '../../../assets/close_door_yellow.svg'"
@@ -224,6 +223,7 @@
       </table>
   </div>
     <span class="modal-footer">
+      <button id="saveViewRoomBtn" style="margin-right:8px;" class="flex-items" *ngIf="fieldsModified == true && addMode == false" mat-button (click)="saveBtnClickedUpdate()">Save</button>
           <button (click)="closeModifyEmpDialog()" class="flex-items" style="font-size:14px;" mat-button >Close</button>
     </span>
   </div>

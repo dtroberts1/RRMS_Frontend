@@ -2,16 +2,8 @@
   <div class="modal-dialog modal-xl  modal-dialog-centered" >
     <!--Content-->
     <div class="modal-content">
-    <button type="button" class="close pull-right" aria-label="Close" >
-      <span aria-hidden="true" (click)="closeProspectDialog()">×</span>
-    </button>
-    <!--
-          <button mat-icon-button (click)="closeModifyEmpDialog()">
-              <mat-icon id="closeBtn" mat-list-icon>close</mat-icon>
-          </button>
-        -->
-    <div class="modal-header">
-      <span id="mainHeader"> Prospect Details</span>
+      <div class="modal-header" style="vertical-align: middle;">
+      <span id="mainHeader" class="example-margin"> Prospect Details</span>
       <span class="fill-space"></span>
       <mat-slide-toggle
       style="font-family:sans-serif; font-size: 15px; color:#476c79;"
@@ -19,6 +11,9 @@
       [(ngModel)]="uiEditMode">
       Edit Mode
     </mat-slide-toggle>
+    <button type="button" class="close pull-right" aria-label="Close" >
+      <span aria-hidden="true" (click)="closeProspectDialog()">×</span>
+    </button>
   </div>
   <div class="modal-body">
 <div *ngIf="prospect != null"  style="height:100%;text-overflow: clip; overflow: hidden;">
@@ -27,16 +22,14 @@
     (mouseover)="backButtonImgSrc = '../../../assets/left_arrow_prospect_yellow.svg'"
     (mouseout)="backButtonImgSrc = '../../../assets/left_arrow_prospect.svg'"
     (click)="goToNextOrPrevRm(false)"
-    matTooltipClass="tooltip"
-    [matTooltip]="'Go to Previous Prospect'"
+    [mdbTooltip]="'Go to Previous Prospect'"
     />
     <!--<button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevRm(false)">Previous</button> -->
     <img style="transform:scaleX(-1); margin-left:8px" *ngIf="canDispNextAndPrev() == true" class="nonEditIconStyle" [src]="nextButtonImgSrc"
     (mouseover)="nextButtonImgSrc = '../../../assets/left_arrow_prospect_yellow.svg'"
     (mouseout)="nextButtonImgSrc = '../../../assets/left_arrow_prospect.svg'"
     (click)="goToNextOrPrevRm(true)"
-    matTooltipClass="tooltip"
-    [matTooltip]="'Go to Next Prospect'"
+    [mdbTooltip]="'Go to Next Prospect'"
     />
      <br/>&nbsp;&nbsp;&nbsp; <span style="font-size:15px"> {{fNameInput.value}}{{" "}}{{mdInitInput.value != "" ? mdInitInput.value : ""}}
       {{mdInitInput.value != "" ? " " : ""}}{{lNameInput.value}}
@@ -61,15 +54,13 @@
         (mouseover)="closeIconSrc = '../../../assets/close_door_yellow.svg'"
         (mouseout)="closeIconSrc = '../../../assets/close_door.svg'"
         (click)="closeProspectDialog()"
-        matTooltipClass="tooltip"
-        [matTooltip]="'Close'"
+        [mdbTooltip]="'Close'"
         />
         <img style="margin-left:8px;" class="nonEditIconStyle" [src]="delProsImageSrc" 
         (mouseover)="delProsImageSrc = '../../../assets/remove_prospect_icon_yellow.svg'"
         (mouseout)="delProsImageSrc = '../../../assets/remove_prospect_icon.svg'"
           (click)="deleteBtnClicked()"
-          matTooltipClass="tooltip"
-          [matTooltip]="'Delete Prospect'"
+          [mdbTooltip]="'Delete Prospect'"
           />
       </span>
 </div>
@@ -195,11 +186,11 @@
       <tr>
           <app-date-picker [headerName]="'Move-in Date'" [(date)]="moveInDateInput"></app-date-picker>
           <app-date-picker *ngIf="termType == 'Fixed-Term'" [headerName]="'Move-out Date'" [(date)]="moveOutDateInput"></app-date-picker>
-          <mat-form-field style="color:red;" appearance="fill">
+          <mat-form-field  appearance="fill">
             <mat-label class="labelClass">Status</mat-label>
-            <mat-select  class="labelClass" style="color:red !important;" [(value)]="selectedStatus" (selectionChange)="setModified($event)">
-            <mat-option class="labelClass" style="color:red !important;"  *ngFor="let stat of statusList" [value]="stat.statusType">
-                <span class="labelClass" style="color:red !important;" >{{stat.name}}</span>
+            <mat-select  class="labelClass"  [(value)]="selectedStatus" (selectionChange)="setModified($event)">
+            <mat-option class="labelClass" *ngFor="let stat of statusList" [value]="stat.statusType">
+                <span class="labelClass" >{{stat.name}}</span>
             </mat-option>
             </mat-select>
         </mat-form-field>
@@ -221,8 +212,7 @@
                 (click)="openEmployerModifyModal(true)"/>
                 <ul>
                   <li style="list-style:square; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;" *ngFor="let emp of prospect.Employers"
-                  matTooltipClass="tooltip"
-                  [matTooltip]="getEmployerTooltip(emp)"
+                  [mdbTooltip]="getEmployerTooltip(emp)"
                   >
                     <img style="width:25px; height:auto; vertical-align: middle;" src="https://logo.clearbit.com/{{getCmpyNameSrc(emp)}}.com?size=200" onerror="this.style.display='none'">{{emp.CompanyName}}
                   </li>
@@ -239,8 +229,7 @@
                 (click)="openPrevRentModifyModal(true)"/>
                 <ul>
                   <li style="list-style:square; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;" *ngFor="let prevRental of prospect.PreviousRentals"
-                  matTooltipClass="tooltip"
-                  [matTooltip]="getPrevRentalTooltip(prevRental)"
+                  [mdbTooltip]="getPrevRentalTooltip(prevRental)"
                   >
                     {{prevRental.AddressStreet1}}
                   </li>
@@ -249,6 +238,9 @@
       </fieldset>
     </div>
   </div>
+  <span class="modal-footer">
+    <button (click)="closeProspectDialog()" class="flex-items" style="font-size:14px;" mat-button >Close</button>
+</span>
   </div>
   </div>
   </div>

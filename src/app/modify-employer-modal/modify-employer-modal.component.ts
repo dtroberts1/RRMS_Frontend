@@ -1,7 +1,8 @@
-import { Component, Inject, OnInit, Type } from '@angular/core';
+import { Component, Inject, OnInit, Renderer2, Type, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
+import { MDBModalRef, MDBModalService, ModalDirective } from 'angular-bootstrap-md';
+import { Subject } from 'rxjs';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IHome } from 'src/app/interfaces/Homes';
 import { IProspect } from 'src/app/interfaces/Prospect';
@@ -23,9 +24,13 @@ export enum TermType {
 @Component({
   selector: 'app-modify-employer-modal',
   templateUrl: './modify-employer-modal.component.html',
-  styleUrls: ['./modify-employer-modal.component.css']
+  styleUrls: ['./modify-employer-modal.component.scss']
 })
 export class ModifyEmployerModalComponent implements OnInit{
+  @ViewChild('modempmodal') public modal: ModalDirective;
+  action: Subject<any> = new Subject();
+  modalRef: MDBModalRef;
+  prospectId: number;
   editImageSrcMFName : string = '../../../assets/edit_icon.svg';
   editImageSrcMLName : string = '../../../assets/edit_icon.svg';
   editImageSrcMEmail : string = '../../../assets/edit_icon.svg';
@@ -47,7 +52,6 @@ export class ModifyEmployerModalComponent implements OnInit{
   addMode: boolean;
   currEmp:string;
   salItem: string;
-  modalRef: MDBModalRef;
   homeImagePath : string;
   origSettings : IEmployer;
   editCmpyName: boolean = false;
@@ -68,7 +72,7 @@ export class ModifyEmployerModalComponent implements OnInit{
   editHrRate: boolean = false;
   editSalAmt: boolean = false;
   fieldsModified: boolean = false;
-  currentEmployerIndex: number;
+  currentEmployerIndex: number = 0;
   employerCount: number = 0;
   employer: IEmployer = null;
   employers: Iterable<IEmployer>;
@@ -119,11 +123,11 @@ currentMap = new Map<string, boolean>([
   hasPrivateBath : boolean;
   selectedRoomName : string = 'No Room Selected';
  
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, 
-  public dialogRef: MatDialogRef<ModifyEmployerModalComponent>,
-  public dialog: MatDialog,
+  constructor(/*@Inject(MAT_DIALOG_DATA) public data: any, */
+  /*public dialog: MatDialog,*/
   private employerService: EmployerService, 
   private modalService: MDBModalService,
+  private _renderer: Renderer2,
 
   ) {
     this.cmpyNameInput.valueChanges.subscribe((val : string) => {
@@ -136,13 +140,11 @@ currentMap = new Map<string, boolean>([
       console.log("updating this.cmpyLogoSrc to " + this.cmpyLogoSrc)
       this.cmpyLogoSrc = 'https://logo.clearbit.com/' + this.employer.CompanyName + '.com?size=200';
 
-    });
-    this.dialogRef.disableClose = true;
-    this.dialogRef.backdropClick().subscribe(() => {
-      this.closeModifyEmpDialog();
-    })
+    });    
   }
-
+  onClose(){
+    this.closeModifyEmpDialog();
+  }
   getCmpyNameSrc(){
     let retVal = null;
     if (this.employer != null)
@@ -179,21 +181,17 @@ currentMap = new Map<string, boolean>([
     });
   }
   ngOnInit(): void {
-    if (this.data.addMode == true)
-      this.addMode = true;
-      else if (this.data.addMode == false){
-        this.addMode = false;
-        this.employers = this.data.employers; 
-        if (this.employers != null)
-        {  
-            this.currentEmployerIndex = this.data.employerIndex;
-            this.setOrigSettings(this.data.employers[this.currentEmployerIndex]);
-            this.getSettings();
-            this.employerCount = (<any[]>this.data.employers).length;
-        }
+    if (this.addMode == false){
+      this.addMode = false;
+      if (this.employers != null)
+      {  
+          this.setOrigSettings(this.employers[this.currentEmployerIndex]);
+          this.getSettings();
+          this.employerCount = (<any[]>this.employers).length;
       }
-      this.dateObserverablesEnabled = true;
-      this.enableDateObservables();
+    }
+    this.dateObserverablesEnabled = true;
+    this.enableDateObservables();
   }
   setOrigSettings(employer : IEmployer)
   {
@@ -202,8 +200,6 @@ currentMap = new Map<string, boolean>([
   moveDatesValid(){
     let tmpStart = new Date(new Date(this.startDateInput.value).toISOString());
     let tmpEnd = new Date(new Date(this.endDateInput.value).toISOString());
-
-    //this.endDateInput.setValue(new Date(this.endDateInput.value.toUTCString()));
 
     console.log("in moveDatesValid:  start date: " + (tmpStart) + ", end date: " + (tmpStart));
     if ((tmpStart) <= (tmpEnd)){
@@ -432,43 +428,45 @@ currentMap = new Map<string, boolean>([
   }
 
   getSettings(){
-    if (this.data.employers != null)
-      this.employer = this.data.employers[this.currentEmployerIndex];
+    console.log("currentEmployerIndex is " + this.currentEmployerIndex);
+    console.log("this.employers is " + JSON.stringify(this.employers))
+    if (this.employers != null)
+      this.employer = this.employers[this.currentEmployerIndex];
 
-    console.log("in getSettings(), this.employer.StartDate is " + JSON.stringify(this.employer.StartDate))
-    if (this.employer != null)
-    {
-      this.cmpyNameInput.setValue(this.employer.CompanyName);
-      this.fNameInput.setValue(this.employer.MgrFName);
-      this.lNameInput.setValue(this.employer.MgrLName);
-      this.emailInput.setValue(this.employer.MgrEmailAddress);
-      this.phoneInput.setValue(this.employer.MgrPhoneNumber);
-      this.addressStreet1Input.setValue(this.employer.AddressStreet1);
-      this.addressStreet2Input.setValue(this.employer.AddressStreet2);
-      this.cityInput.setValue(this.employer.AddressCity);
-      this.stateInput.setValue(this.employer.AddressState);
-      this.zipcodeInput.setValue(this.employer.AddressZipCode);
-      this.jobTitleInput.setValue(this.employer.ProspectJobTitle);
-      this.startDateInput.setValue(this.employer.StartDate);
-      if (this.employer.HourlyRate == null){
-        console.log("rate is null");
-        this.hrRateInput.setValue(0.00);
-      }
-      else{
-        this.hrRateInput.setValue(this.employer.HourlyRate);
-      }
-      if (this.employer.SalaryAmt == null){
-        console.log("rate is null");
-        this.salaryAmtInput.setValue(0);
-      }
-      else{
-        this.salaryAmtInput.setValue(this.employer.SalaryAmt);
-      }
-      if (this.employer.EndDate != null){
-        this.endDateInput.setValue(this.employer.EndDate);
-      }
-      this.setCurrentEmp(); // Radio button for if employer is current
-      this.setSalType(); // Radio button for salary item for employer
+      if (this.employer != null)
+      {
+        console.log("in getSettings(), this.employer.StartDate is " + JSON.stringify(this.employer.StartDate))
+        this.cmpyNameInput.setValue(this.employer.CompanyName);
+        this.fNameInput.setValue(this.employer.MgrFName);
+        this.lNameInput.setValue(this.employer.MgrLName);
+        this.emailInput.setValue(this.employer.MgrEmailAddress);
+        this.phoneInput.setValue(this.employer.MgrPhoneNumber);
+        this.addressStreet1Input.setValue(this.employer.AddressStreet1);
+        this.addressStreet2Input.setValue(this.employer.AddressStreet2);
+        this.cityInput.setValue(this.employer.AddressCity);
+        this.stateInput.setValue(this.employer.AddressState);
+        this.zipcodeInput.setValue(this.employer.AddressZipCode);
+        this.jobTitleInput.setValue(this.employer.ProspectJobTitle);
+        this.startDateInput.setValue(this.employer.StartDate);
+        if (this.employer.HourlyRate == null){
+          console.log("rate is null");
+          this.hrRateInput.setValue(0.00);
+        }
+        else{
+          this.hrRateInput.setValue(this.employer.HourlyRate);
+        }
+        if (this.employer.SalaryAmt == null){
+          console.log("rate is null");
+          this.salaryAmtInput.setValue(0);
+        }
+        else{
+          this.salaryAmtInput.setValue(this.employer.SalaryAmt);
+        }
+        if (this.employer.EndDate != null){
+          this.endDateInput.setValue(this.employer.EndDate);
+        }
+        this.setCurrentEmp(); // Radio button for if employer is current
+        this.setSalType(); // Radio button for salary item for employer
     }
   }
 
@@ -539,12 +537,12 @@ currentMap = new Map<string, boolean>([
   updatecurrentEmployerIndex(next: boolean)
   {
     if (next == true){
-      this.currentEmployerIndex = (this.currentEmployerIndex + 1) % (<any[]>this.data.employers).length;
+      this.currentEmployerIndex = (this.currentEmployerIndex + 1) % (<any[]>this.employers).length;
     }
     else if(next == false){ // If navigating to "previous"
       this.currentEmployerIndex--;
       if (this.currentEmployerIndex < 0){
-        this.currentEmployerIndex = (<any[]>this.data.employers).length - 1;
+        this.currentEmployerIndex = (<any[]>this.employers).length - 1;
       }
     }
   }
@@ -571,12 +569,14 @@ currentMap = new Map<string, boolean>([
           this.modalRef.hide();
           if (choosesSave == true){
             this.updateEmp().then((saveSuccess: boolean) => {
-              this.dialogRef.close(this.employers);
+              this.action.next(this.employers);
+
             });
           }
           else{
             console.log("in final else and addmode is " + this.addMode);
-              this.dialogRef.close(null);
+            // TODO
+            this.action.next(null);
           }
         },
         error => {
@@ -588,10 +588,10 @@ currentMap = new Map<string, boolean>([
         // Current issue: If I close the window and have already saved.. the parent will reset to original
         if (this.saveApplied == true)
         {
-          this.dialogRef.close(this.employers);  
+          this.action.next(this.employers);
         }
         else{
-          this.dialogRef.close(null);  
+          this.action.next(null);
         }
       }
   }
@@ -617,7 +617,8 @@ currentMap = new Map<string, boolean>([
   createBtnClickedUpdate(){
     this.createEmp().then(() => {
       // Do nothing
-      this.dialogRef.close(this.employer);
+      this.action.next(this.employers);
+
   })
   .catch((err) => {
     console.log(err);
@@ -642,7 +643,7 @@ currentMap = new Map<string, boolean>([
       EndDate: this.endDateInput.value,
       Current: this.currentMap.get(this.currEmp),
       SalaryType: this.salMap.get(this.salItem),
-      ProspectId: this.data.prospectId,
+      ProspectId: this.prospectId,
       HourlyRate: this.hrRateInput.value,
       SalaryAmt : this.salaryAmtInput.value,
     }
@@ -831,7 +832,7 @@ currentMap = new Map<string, boolean>([
       if (deleteEmp == true ){       
         this.employerService.removeEmployer(this.employer.Id);
         this.employers = Array.from(this.employers).filter(emp => emp.Id != this.employer.Id);
-        this.dialogRef.close(this.employers); // this needs to return a null
+        this.action.next(null);
       }
     },
     error => {

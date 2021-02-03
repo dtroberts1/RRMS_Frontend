@@ -278,37 +278,60 @@ ngOnInit(){
     if (this.prospect != null)
     {
       if (add == true){
-        this.dialog.open(ModifyEmployerModalComponent, {
+        this.modalRef = this.modalService.show(ModifyEmployerModalComponent, {
+          backdrop: true,
+          keyboard: true,
+          focus: true,
+          show: false,
+          ignoreBackdropClick: false,
+          class: '',
+          containerClass: '',
+          animated: true,
           data: {
             addMode: true,
             prospectId: this.prospect.Id,
           },
-          width: '250%',
-          height: '550px',
-        }).afterClosed().subscribe((returnedEmployer : IEmployer) => {
-          // Push the newly added employer to the list
-          if (returnedEmployer != null)
-            (<IEmployer[]>(this.prospect.Employers)).push(returnedEmployer);
+        });
+        this.modalRef.content.action.subscribe((returnedEmployer : IEmployer) => {
+            // Push the newly added employer to the list
+            if (returnedEmployer != null){
+              (<IEmployer[]>(this.prospect.Employers)).push(returnedEmployer);
+            }
+            this.modalRef.hide();
           },
           err =>{
             console.log(err);
+            this.modalRef.hide();
           });
       }
       else if(add == false){
         let prosId = this.prospect.Id;
-        this.dialog.open(ModifyEmployerModalComponent, {
+        
+        this.modalRef = this.modalService.show(ModifyEmployerModalComponent, {
+          backdrop: false,
+          keyboard: true,
+          focus: true,
+          show: false,
+          ignoreBackdropClick: false,
+          class: '',
+          containerClass: '',
+          animated: true,
           data: {
             employers : this.prospect.Employers,
-            employerIndex : 0,
+            currentEmployerIndex : 0,
             addMode: false,
           },
-          width: '250%',
-          height: '550px',
-        }).afterClosed().subscribe((returnedEmployerList : Iterable<IEmployer>) => {
+        });
+        this.modalRef.content.action.subscribe(() => {
+          this.modalRef.hide();
           this.employerService.getProspectEmployers(prosId).then((employers: Iterable<IEmployer>) => {
             console.log("returned employers is " + JSON.stringify(employers))
             this.prospect.Employers = employers; // Get prospect with updated employers
           });
+        },
+        error =>{
+          console.log(error);
+          this.modalRef.hide();
         });
       }
     }
