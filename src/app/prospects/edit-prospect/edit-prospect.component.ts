@@ -16,6 +16,7 @@ import { ModifyPrevRentalComponent } from 'src/app/modify-prev-rental/modify-pre
 import { EmployerService } from 'src/app/services/employer.service';
 import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 import { Subject } from 'rxjs';
+import { PreviousRental } from 'src/app/services/prevrental.service';
 
 export enum TermType {
   monthToMonth = 1,
@@ -136,8 +137,8 @@ statusList:Iterable<IStatus> = [
   private homesService: HomesService,
   private prospectService: ProspectService,
   private employerService: EmployerService,
-  private modalService: MDBModalService
-
+  private modalService: MDBModalService,
+  private previousRentalService: PreviousRental,
   ) {
     
     // TODO
@@ -293,11 +294,10 @@ ngOnInit(){
           },
         });
         this.modalRef.content.action.subscribe((returnedEmployer : IEmployer) => {
-            // Push the newly added employer to the list
-            if (returnedEmployer != null){
-              (<IEmployer[]>(this.prospect.Employers)).push(returnedEmployer);
-            }
             this.modalRef.hide();
+            this.employerService.getProspectEmployers(this.prospect.Id).then((employers: Iterable<IEmployer>) => {
+              this.prospect.Employers = employers;
+            });
           },
           err =>{
             console.log(err);
@@ -382,11 +382,13 @@ ngOnInit(){
             },
         })
         this.modalRef.content.action.subscribe((returnedPrevRental : IPreviousRental) => {
-          // Push the newly added employer to the list
-          if (returnedPrevRental != null)
-            (<IPreviousRental[]>(this.prospect.PreviousRentals)).push(returnedPrevRental);
-            this.modalRef.hide();
+          this.modalRef.hide();
+          this.previousRentalService.getProspectPreviousRentals(this.prospect.Id)
+            .then((prevRentals: Iterable<IPreviousRental>) => {
+              this.prospect.PreviousRentals = prevRentals;
+            });
           },
+          // Push the newly added employer to the list
           err =>{
             console.log(err);
             this.modalRef.hide();
@@ -410,9 +412,11 @@ ngOnInit(){
         },
     })
     this.modalRef.content.action.subscribe((returnedPrevRentalList : Iterable<IPreviousRental>) => {
-      if (returnedPrevRentalList != null)
-        this.prospect.PreviousRentals = returnedPrevRentalList;
-        this.modalRef.hide();
+      this.modalRef.hide();
+      this.previousRentalService.getProspectPreviousRentals(this.prospect.Id)
+        .then((prevRentals: Iterable<IPreviousRental>) => {
+          this.prospect.PreviousRentals = prevRentals;
+        });
       },
       err =>{
         console.log(err);

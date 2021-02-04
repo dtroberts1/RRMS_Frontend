@@ -210,7 +210,7 @@
                 (mouseover)="addImageSrcEmployer = '../../../assets/plus_sign_yellow.svg'"
                 (mouseout)="addImageSrcEmployer = '../../../assets/plus_sign.svg'" 
                 (click)="openEmployerModifyModal(true)"/>
-                <ul>
+                <ul *ngIf="prospect.Employers.length > 0">
                   <li style="list-style:square; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;" *ngFor="let emp of prospect.Employers"
                   [mdbTooltip]="getEmployerTooltip(emp)"
                   >
@@ -227,7 +227,7 @@
                 (mouseover)="addImageSrcPrevRent = '../../../assets/plus_sign_yellow.svg'"
                 (mouseout)="addImageSrcPrevRent = '../../../assets/plus_sign.svg'" 
                 (click)="openPrevRentModifyModal(true)"/>
-                <ul>
+                <ul *ngIf="prospect.PreviousRentals.length > 0">
                   <li style="list-style:square; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;" *ngFor="let prevRental of prospect.PreviousRentals"
                   [mdbTooltip]="getPrevRentalTooltip(prevRental)"
                   >

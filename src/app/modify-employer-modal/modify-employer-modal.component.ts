@@ -435,6 +435,7 @@ currentMap = new Map<string, boolean>([
 
       if (this.employer != null)
       {
+        console.log("in getSettings(), setting jobtitle to " + this.employer.ProspectJobTitle);
         console.log("in getSettings(), this.employer.StartDate is " + JSON.stringify(this.employer.StartDate))
         this.cmpyNameInput.setValue(this.employer.CompanyName);
         this.fNameInput.setValue(this.employer.MgrFName);
@@ -548,7 +549,7 @@ currentMap = new Map<string, boolean>([
   }
 
   closeModifyEmpDialog(){
-    if (this.fieldsModified == true){
+    if (this.fieldsModified == true || this.addMode == true){
       this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
         backdrop: true,
         keyboard: true,
@@ -625,6 +626,7 @@ currentMap = new Map<string, boolean>([
   })
   }
   createEmp(){
+    console.log("job title: " + this.jobTitleInput.value);
     console.log("in createEmp()")
     this.employer = {
       CompanyName: this.cmpyNameInput.value,

@@ -37,6 +37,27 @@ export class PreviousRental{
      }
     }
 
+    getProspectPreviousRentals(prospectId:number): Promise<Iterable<IPreviousRental>>{
+      this.currToken = JSON.parse(localStorage.getItem('user'));
+      if (this.currToken != null){
+          let options = {
+          headers: new HttpHeaders().set('Content-Type', 'application/json')
+          .set('Authorization', "bearer " + this.currToken),
+          };
+          return new Promise((resolve, reject) => {
+          this.http
+              .get<Iterable<IPreviousRental>>(`${this.prevRentalsUrl}/GetProspectPreviousRentals/${prospectId}`, options).subscribe(
+                prevRentals => {
+                      resolve(prevRentals);
+                  },
+                  error => {
+                  console.log(error);
+                  reject(error);
+                  }
+              );
+          });
+          }
+    }
     getPrevRentals(): Promise<Iterable<IPreviousRental>>{
         return new Promise((resolve, reject) => {
     

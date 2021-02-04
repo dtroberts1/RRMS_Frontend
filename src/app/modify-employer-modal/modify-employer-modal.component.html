@@ -77,7 +77,6 @@
     </tr>
     <tr>
       <td>
-        <button class="lowerViewRoomButtons" *ngIf="addMode == true" mat-button (click)="createBtnClickedUpdate()">Create</button>
         <img style="margin-left:8px;" class="nonEditIconStyle" [src]="closeIconSrc" 
         (mouseover)="closeIconSrc = '../../../assets/close_door_yellow.svg'"
         (mouseout)="closeIconSrc = '../../../assets/close_door.svg'"
@@ -348,7 +347,6 @@
             (mouseover)="editImageSrcCmpyZip = '../../../assets/edit_icon_yellow.svg'"
             (mouseout)="editImageSrcCmpyZip = '../../../assets/edit_icon.svg'" 
             (click)="changeEditMode('zipcode')"/>
-            <label>Zipcode</label><br />&nbsp;&nbsp;
             <span  style="margin-left:8px;" *ngIf="addMode == false && editZipcode == false && employer != null">{{employer.AddressZipCode}}</span>
             <span style="font-size:12px;margin-left:8px;">
               <mat-form-field *ngIf="addMode == true || editZipcode == true">
@@ -365,6 +363,7 @@
     </table>
   </div>
   <span class="modal-footer">
+    <button class="lowerViewRoomButtons" style="margin-right:8px;" class="flex-items" *ngIf="addMode == true" mat-button (click)="createBtnClickedUpdate()">Create</button>
     <button id="modifyEmpModalSaveEmp" style="margin-right:8px;" class="flex-items" *ngIf="fieldsModified == true && addMode == false" mat-button (click)="saveBtnClickedUpdate()">Save</button>
     <button (click)="closeModifyEmpDialog()" class="flex-items" style="font-size:14px;" mat-button >Close</button>
 </span>

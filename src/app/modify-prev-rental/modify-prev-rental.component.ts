@@ -47,6 +47,8 @@ export class ModifyPrevRentalComponent implements OnInit{
   prevRentalIcon: string = '../../../assets/edit_icon.svg';
   closeIconSrc: string = '../../../assets/close_door.svg';
   deleteIconSrc: string = '../../../assets/remove_home.svg';
+  nextButtonImgSrc: string = '../../../assets/left_arrow_prospect.svg';
+  backButtonImgSrc: string =  '../../../assets/left_arrow_prospect.svg';
   prospectId: number;
   addMode: boolean;
   currItem:string;
@@ -77,7 +79,7 @@ export class ModifyPrevRentalComponent implements OnInit{
   mdInitInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{1}')]);
   phoneInput = new FormControl('', [Validators.required, Validators.pattern(/((\(\d{3}\) ?)|(\d{3}-))?\d{3}-\d{4}/)]);
   addressStreet1Input = new FormControl('', [Validators.required, Validators.pattern(/\d+(\s+\w+\.?){1,}\s+(?:st(?:\.|reet)?|dr(?:\.|ive)?|pl(?:\.|ace)?|ave(?:\.|nue)?|rd(\.?)|road|lane|drive|way|court|plaza|square|run|parkway|point|pike|square|driveway|trace|park|terrace|blvd)+$/i)]);
-  addressStreet2Input  = new FormControl('', [Validators.pattern(/^(APT|APARTMENT|SUITE|STE|UNIT) *(NUMBER|NO|#)? *([0-9A-Z-]+)(.*)$/i)]);
+  addressStreet2Input  = new FormControl('', [Validators.pattern(/^((APT|APARTMENT|SUITE|STE|UNIT){1} (NUMBER|NO|#)(\s){0,1}([0-9A-Z-]+)){0,1}/i)]);
   cityInput = new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z\u0080-\u024F]+(?:. |-| |')*([1-9a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$")]);
   stateInput  = new FormControl('',[Validators.required, Validators.pattern('^((A[LKZR])|(C[AOT])|(D[EC])|(FL)|(GA)|(HI)|(I[DLNA])|(K[SY])|(LA)|(M[EDAINSOT])|(N[EVHJMYCD])|(O[HKR])|(PA)|(RI)|(S[CD])|(T[NX])|(UT)|(V[TA])|(W[AVIY]))$')]);
   zipcodeInput = new FormControl('',  [Validators.required, Validators.pattern('^[0-9]{5}(?:-[0-9]{4})?$')]);
@@ -164,6 +166,21 @@ ngOnInit(): void {
       return true;
     return false;
   }
+
+  datesValid(){
+    let tmpStart = new Date(this.startDateInput.value);
+    let tmpEnd = new Date(this.endDateInput.value);
+
+    console.log("in moveDatesValid:  start date: " + (tmpStart) + ", end date: " + (tmpStart));
+    if ((tmpStart) <= (tmpEnd)){
+      return true;
+    }
+    else{
+      // Not valid if Move out date comes before move-in date
+      return false;
+    }
+  }
+
   changeEditMode(str:string){
     switch(str) { 
       case 'fname': { 
@@ -258,7 +275,7 @@ ngOnInit(): void {
         case 'phone': { 
           if (this.phoneInput.valid == true)
           {
-            this.prevRental.PrevLandlordPhone = this.phoneInput.value;
+            this.prevRental.PrevLandlordPhoneNumber = this.phoneInput.value;
           }
           else{
             this.changeEditMode(editStr);
@@ -355,7 +372,7 @@ ngOnInit(): void {
     this.fNameInput.setValue(this.prevRental.PrevLandlordFName);
     this.lNameInput.setValue(this.prevRental.PrevLandlordLName);
     this.emailInput.setValue(this.prevRental.PrevLandlordEmailAddress);
-    this.phoneInput.setValue(this.prevRental.PrevLandlordPhone);
+    this.phoneInput.setValue(this.prevRental.PrevLandlordPhoneNumber);
     this.addressStreet1Input.setValue(this.prevRental.AddressStreet1);
     this.addressStreet2Input.setValue(this.prevRental.AddressStreet2);
     this.cityInput.setValue(this.prevRental.AddressCity);
@@ -442,14 +459,54 @@ ngOnInit(): void {
     }
   }
 
-  closeModifyEmpDialog(){
-    this.action.next(this.prevRentals);
+  closePrevRentalDialog(){
+    if (this.fieldsModified == true || this.addMode == true){
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
+        data: {
+          inError: false,
+          title: "Unsaved Changes",
+          contentSummary: "Warning. There are unsaved Changes. Would you still like to proceed, or save?",
+          errorItems: []
+        }
+        });
+        this.modalRef.content.action.subscribe((choosesSave: boolean)=> {
+          this.modalRef.hide();
+          if (choosesSave == true){
+            this.updateEmp().then(() => {
+              this.action.next(null);
+            })
+          }
+          else{
+            console.log("in final else and addmode is " + this.addMode);
+            // TODO
+            this.action.next(null);
+          }
+        },
+        error => {
+          console.log(error);
+          this.modalRef.hide();
+        });
+      }
+      else{
+        // Current issue: If I close the window and have already saved.. the parent will reset to original
+        this.action.next(null);
+
+      }
   }
+
   fillInputsWithOriginalSettings(){
     this.prevRental.PrevLandlordFName = this.origSettings.PrevLandlordFName;
     this.prevRental.PrevLandlordLName = this.origSettings.PrevLandlordLName;
     this.prevRental.PrevLandlordEmailAddress = this.origSettings.PrevLandlordEmailAddress;
-    this.prevRental.PrevLandlordPhone = this.origSettings.PrevLandlordPhone;
+    this.prevRental.PrevLandlordPhoneNumber = this.origSettings.PrevLandlordPhoneNumber;
     this.prevRental.AddressStreet1 = this.origSettings.AddressStreet1;
     this.prevRental.AddressStreet2 = this.origSettings.AddressStreet2;
     this.prevRental.AddressCity = this.origSettings.AddressCity;
@@ -468,13 +525,41 @@ ngOnInit(): void {
     })
   }
   createBtnClickedUpdate(){
-    this.createPrevRental().then(() => {
-      this.action.next(this.prevRental);
-      
-    })
-    .catch((err) => {
-      console.log(err);
-    })
+    if (this.datesValid() == true){
+      if (this.inputsAreValid() == true){  
+        this.createPrevRental().then(() => {
+          this.action.next(this.prevRental);
+          
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+      }
+    }
+    else{
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
+        data: {
+          title: "Incorrect Dates",
+          contentSummary: "Invalid Dates. Please Verify dates are correct. Start Date should come before End Date",
+        }
+        });
+        this.modalRef.content.action.subscribe(()=> {
+          this.modalRef.hide();
+          return Promise.resolve(true);
+        },
+        error => {
+          console.log(error);
+          this.modalRef.hide();
+        });
+      }
   }
   
   createPrevRental(){
@@ -482,7 +567,6 @@ ngOnInit(): void {
       Id: -1,
       PrevLandlordEmailAddress : this.emailInput.value,
       PrevLandlordPhoneNumber : this.phoneInput.value,
-      PrevLandlordPhone: this.phoneInput.value,
       PrevLandlordFName : this.fNameInput.value,
       PrevLandlordLName : this.lNameInput.value,
       AddressStreet1: this.addressStreet1Input.value,
@@ -511,7 +595,7 @@ ngOnInit(): void {
           animated: true,
           data: {
             inError: false,
-            title: "prevRental Saved",
+            title: "Previous Rental Saved",
             contentSummary: "This Previous Rental has been Saved",
             errorItems: []
           }
@@ -531,56 +615,146 @@ ngOnInit(): void {
     });
   }
 
-  updateEmp(){
-    console.log("before updating, fname is " + this.fNameInput.value + ", and lastname is " + this.lNameInput.value);
-    this.prevRental = {
-      Id: this.prevRental.Id,
-      PrevLandlordEmailAddress : this.emailInput.value,
-      PrevLandlordPhoneNumber : this.phoneInput.value,
-      PrevLandlordPhone: this.phoneInput.value,
-      PrevLandlordFName : this.fNameInput.value,
-      PrevLandlordLName : this.lNameInput.value,
-      AddressStreet1: this.addressStreet1Input.value,
-      AddressStreet2: this.addressStreet2Input.value,
-      AddressCity: this.cityInput.value,
-      AddressState: this.stateInput.value,
-      AddressZipCode: this.zipcodeInput.value,
-      StartDate: this.startDateInput.value,
-      EndDate: this.endDateInput.value,
-      Current: this.currentMap.get(this.currItem),
-      ProspectId: this.prevRental.ProspectId,
+  inputsAreValid():boolean {
+    let invalidElements = new Array();
+    if (this.fNameInput.invalid){
+      invalidElements.push("First Name");
     }
-    this.prevRentals[this.currentprevRentalIndex] = this.prevRental;
-    return new Promise((resolve, reject) => {
-      this.prevRentalService.updatePrevRental(this.prevRental).then(() => {
-        console.log("after update..");
-        this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
-          backdrop: true,
-          keyboard: true,
-          focus: true,
-          show: false,
-          ignoreBackdropClick: false,
-          class: '',
-          containerClass: '',
-          animated: true,
-          data: {
-            inError: false,
-            title: "Previous Rental Saved",
-            contentSummary: "This Previous Rental has been Saved",
-            errorItems: []
-          }
-      })
-      this.modalRef.content.action.subscribe((addRooms: boolean)=> {
-        this.fieldsModified = false;
+    if (this.lNameInput.invalid){
+      invalidElements.push("Last Name");
+    }
+    if (this.emailInput.invalid){
+      invalidElements.push("Email");
+    }
+    if (this.phoneInput.invalid){
+      invalidElements.push("Phone Number");
+    }
+    if (this.addressStreet1Input.invalid){
+      invalidElements.push("Address (1)");
+    }
+    if (this.addressStreet2Input.invalid){
+      invalidElements.push("Address (2)");
+    }
+    if (this.cityInput.invalid){
+      invalidElements.push("City");
+    }
+    if (this.stateInput.invalid){
+      invalidElements.push("State");
+    }
+    if (this.zipcodeInput.invalid){
+      invalidElements.push("Zipcode");
+    }
+    if (invalidElements.length > 0)
+    {
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
+        data: {
+          inError: true,
+          title: "Invalid Items",
+          contentSummary: "The following items are invalid",
+          errorItems: invalidElements
+        }
+      });
+      this.modalRef.content.action.subscribe(() => {
         this.modalRef.hide();
-        resolve(true);
+        return false;
+      },
+      error => {
+        console.log(error);
+        this.modalRef.hide();
+      });
+    }else{
+      return true;
+    }
+  }
+
+  updateEmp(){
+    if (this.datesValid() == true){
+      if (this.inputsAreValid() == true){
+        this.prevRental = {
+          Id: this.prevRental.Id,
+          PrevLandlordEmailAddress : this.emailInput.value,
+          PrevLandlordPhoneNumber : this.phoneInput.value,
+          PrevLandlordFName : this.fNameInput.value,
+          PrevLandlordLName : this.lNameInput.value,
+          AddressStreet1: this.addressStreet1Input.value,
+          AddressStreet2: this.addressStreet2Input.value,
+          AddressCity: this.cityInput.value,
+          AddressState: this.stateInput.value,
+          AddressZipCode: this.zipcodeInput.value,
+          StartDate: this.startDateInput.value,
+          EndDate: this.endDateInput.value,
+          Current: this.currentMap.get(this.currItem),
+          ProspectId: this.prevRental.ProspectId,
+        }
+        this.prevRentals[this.currentprevRentalIndex] = this.prevRental;
+        return new Promise((resolve, reject) => {
+          this.prevRentalService.updatePrevRental(this.prevRental).then(() => {
+            console.log("after update..");
+            this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+              backdrop: true,
+              keyboard: true,
+              focus: true,
+              show: false,
+              ignoreBackdropClick: false,
+              class: '',
+              containerClass: '',
+              animated: true,
+              data: {
+                inError: false,
+                title: "Previous Rental Saved",
+                contentSummary: "This Previous Rental has been Saved",
+                errorItems: []
+              }
+          })
+          this.modalRef.content.action.subscribe((addRooms: boolean)=> {
+            this.fieldsModified = false;
+            this.modalRef.hide();
+            this.action.next();
+            resolve(true);
+            });
+            }).catch((err) => {
+              console.log(err);
+              this.modalRef.hide();
+    //          this.action.next();
+    
+              reject(false);
+            });
         });
-        }).catch((err) => {
-          console.log(err);
-          this.modalRef.hide();
-          reject(false);
-        });
-    });
+      }
+    }
+    else{
+          // Move in/moveout date combination is not valid
+    this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+      backdrop: true,
+      keyboard: true,
+      focus: true,
+      show: false,
+      ignoreBackdropClick: false,
+      class: '',
+      containerClass: '',
+      animated: true,
+      data: {
+        title: "Incorrect Dates",
+        contentSummary: "Invalid Dates. Please Verify dates are correct. Start Date should come before End Date",
+      }
+      });
+      this.modalRef.content.action.subscribe(()=> {
+        this.modalRef.hide();
+        return Promise.resolve(true);
+      },
+      error => {
+        console.log(error);
+        this.modalRef.hide();
+      });
+    }
   }
   getInputErrorMessage(inputField : AbstractControl){
     if (inputField.dirty == true){
@@ -612,12 +786,41 @@ ngOnInit(): void {
       }
     })
     this.modalRef.content.action.subscribe((deleteEmp: boolean)=> {
-      if (deleteEmp == true ){       
-        this.prevRentalService.removePrevRental(this.prevRental.Id);
-        this.prevRentals = Array.from(this.prevRentals).filter(prevRental => prevRental.Id != this.prevRental.Id);
-        this.action.next(this.prevRentals);
-      }
       this.modalRef.hide();
+      if (deleteEmp == true ){       
+        this.prevRentalService.removePrevRental(this.prevRental.Id).then(() => {
+          this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
+            data: {
+              inError: true,
+              title: "Previous Rental Deleted",
+              contentSummary: `The Address at ${this.prevRental.AddressStreet1} has been Removed`,
+              errorItems: []
+            }
+          });
+          this.modalRef.content.action.subscribe(() => {
+            this.modalRef.hide();
+            this.action.next();
+          },
+          error => {
+            console.log(error);
+            this.modalRef.hide();
+            this.action.next();
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          this.action.next();
+        })
+        //this.prevRentals = Array.from(this.prevRentals).filter(prevRental => prevRental.Id != this.prevRental.Id);
+      }
     },
     error => {
       console.log(error);

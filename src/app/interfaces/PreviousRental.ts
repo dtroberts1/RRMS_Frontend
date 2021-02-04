@@ -6,7 +6,6 @@ export interface IPreviousRental{
     AddressState: string,
     AddressZipCode: string,
     PrevLandlordFName : string;
-    PrevLandlordPhone: string,
     PrevLandlordLName : string;
     PrevLandlordEmailAddress : string;
     PrevLandlordPhoneNumber : string;
