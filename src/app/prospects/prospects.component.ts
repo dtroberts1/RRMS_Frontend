@@ -151,7 +151,12 @@ export class ProspectsComponent implements OnInit {
   }
   getMoveoutDate(pros : IProspect){
     if (pros.TermType == TermType.fixedTerm){
-      return pros.MoveOutDate.toLocaleString('en-US', this.dateNotTimeOptions)
+      if (pros.MoveOutDate != null){
+        return pros.MoveOutDate.toLocaleString('en-US', this.dateNotTimeOptions)
+      }
+      else{
+        return null;
+      }
     }
     else{
       return "Month-to-Month"

@@ -17,7 +17,7 @@ export class CreateAcctScreenComponent implements OnInit{
     password = new FormControl('', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')]);
     fName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,25}')]);
     lName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,25,}')]);
-    phoneNumber = new FormControl('', [Validators.required, Validators.pattern(/((\(\d{3}\) ?)|(\d{3}-))?\d{3}-\d{4}/)]);
+    phoneNumber = new FormControl('', [Validators.required, Validators.pattern(/^((((\(\d{3}\) ?)|(\d{3}-{1}))\d{3}-{1}\d{4})|(([0-9]){10}))$/)]);
     canCreateAct: boolean = false;
 
     createAccount(canCreateAct : boolean){

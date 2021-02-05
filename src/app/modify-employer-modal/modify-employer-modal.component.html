@@ -38,7 +38,7 @@
     </tr>
     <tr>
       <td width="40%">
-        <h3 style="margin-top: 5px; overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-family:sans-serif; font-size: large; color:#476c79">
+        <h3 style="margin-top: 5px; overflow:hidden; text-overflow: ellipsis">
           <label>Company Name&nbsp;&nbsp;        
             <img [ngStyle]="{'visibility': addMode == false && editCmpyName == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editCompanyNameIcon"
             (mouseover)="editCompanyNameIcon = '../../../assets/edit_icon_yellow.svg'"
@@ -58,7 +58,7 @@
         </h3>
       </td>
       <td width="60%">
-        <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79"><label>Job Title&nbsp;&nbsp;
+        <h3><label>Job Title&nbsp;&nbsp;
           <img [ngStyle]="{'visibility': addMode == false && editJobTitle == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcJobTtl"
           (mouseover)="editImageSrcJobTtl = '../../../assets/edit_icon_yellow.svg'"
           (mouseout)="editImageSrcJobTtl = '../../../assets/edit_icon.svg'" 
@@ -104,7 +104,7 @@
       </h1> 
         <tr>
           <td>
-            <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79"><label>Current Employer?&nbsp;&nbsp;</label>
+            <h3><label>Current Employer?&nbsp;&nbsp;</label>
             </h3>
             <mat-radio-group name="opList"  fxLayout="row" [(ngModel)]="currEmp" (change)="fieldsModified = true">
               <mat-radio-button *ngFor="let op of currentList" [value]="op.name" name="opList" >{{ op.name}}</mat-radio-button>
@@ -120,7 +120,7 @@
           </tr>
           <tr>
             <td>
-              <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79"><label>Salary Type&nbsp;&nbsp;</label>
+              <h3><label>Salary Type&nbsp;&nbsp;</label>
               </h3>
               <mat-radio-group name="salList"  fxLayout="column" [(ngModel)]="salItem" (change)="fieldsModified = true">
                 <mat-radio-button *ngFor="let sal of salList" [value]="sal.name" name="salList" >{{ sal.name}}</mat-radio-button>
@@ -129,7 +129,7 @@
           </tr>
           <tr>
             <td>
-              <h3 *ngIf="salItem == 'Hourly'" style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79"><label>Hourly Rate&nbsp;&nbsp;</label>
+              <h3 *ngIf="salItem == 'Hourly'"><label>Hourly Rate&nbsp;&nbsp;</label>
                 <img [ngStyle]="{'visibility': addMode == false && editHrRate == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editHrRateIcon"
                 (mouseover)="editHrRateIcon = '../../../assets/edit_icon_yellow.svg'"
                 (mouseout)="editHrRateIcon = '../../../assets/edit_icon.svg'" 
@@ -151,7 +151,7 @@
                 </mat-form-field>
                 </span>
               </h3>
-              <h3 *ngIf="salItem == 'Annual'" style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79"><label>Annual Salary&nbsp;&nbsp;</label>
+              <h3 *ngIf="salItem == 'Annual'"><label>Annual Salary&nbsp;&nbsp;</label>
                 <img [ngStyle]="{'visibility': addMode == false && editSalAmt == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editSalAmtIcon"
                 (mouseover)="editSalAmtIcon = '../../../assets/edit_icon_yellow.svg'"
                 (mouseout)="editSalAmtIcon = '../../../assets/edit_icon.svg'" 
@@ -183,7 +183,7 @@
           </h1> 
         <tr>
           <td>
-            <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79">
+            <h3>
               <label>First Name</label><br />&nbsp;&nbsp;
               <img [ngStyle]="{'visibility': addMode == false && editFName == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcMFName"
               (mouseover)="editImageSrcMFName = '../../../assets/edit_icon_yellow.svg'"
@@ -200,7 +200,7 @@
             </h3>
           </td>
           <td>
-            <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79">
+            <h3>
             <label style="margin-left: 8px">Last Name</label><br />&nbsp;&nbsp;
             <img [ngStyle]="{'visibility': addMode == false && editLName == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcMLName"
             (mouseover)="editImageSrcMLName = '../../../assets/edit_icon_yellow.svg'"
@@ -220,7 +220,7 @@
         </tr>
         <tr>
           <td>
-            <h3 style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis;">
+            <h3 style="overflow:hidden;text-overflow: ellipsis;">
               <label style="margin-left: 8px"></label>Email Address<br />&nbsp;&nbsp;
               <img [ngStyle]="{'visibility': addMode == false && editEmail == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcMEmail"
               (mouseover)="editImageSrcMEmail = '../../../assets/edit_icon_yellow.svg'"
@@ -238,7 +238,7 @@
             </h3>
           </td>
           <td>
-              <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79">
+              <h3>
                 <label style="margin-left: 8px">Phone Number</label><br />&nbsp;&nbsp;
                 <img [ngStyle]="{'visibility': addMode == false && editPhone == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcMPhone"
                 (mouseover)="editImageSrcMPhone = '../../../assets/edit_icon_yellow.svg'"
@@ -267,7 +267,7 @@
         </h1> 
       <tr>
         <td>
-          <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79">
+          <h3>
             <label style="margin-left: 8px">Street Address (1)</label><br />&nbsp;&nbsp;
             <img [ngStyle]="{'visibility': addMode == false && editAddressStreet1 == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcCmpySt1"
             (mouseover)="editImageSrcCmpySt1 = '../../../assets/edit_icon_yellow.svg'"
@@ -285,7 +285,7 @@
           </h3>
         </td>
         <td>
-          <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79">
+          <h3>
             <label style="margin-left: 8px">Street Address (2)</label><br />&nbsp;&nbsp;
             <img [ngStyle]="{'visibility': addMode == false && editAddressStreet2 == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcCmpySt2"
             (mouseover)="editImageSrcCmpySt2 = '../../../assets/edit_icon_yellow.svg'"
@@ -294,7 +294,7 @@
             <span style="margin-left: 8px;" *ngIf="addMode == false && editAddressStreet2 == false && employer != null">{{employer.AddressStreet2}}</span>
             <span style="font-size:12px; margin-left: 8px;">
               <mat-form-field *ngIf="addMode == true || editAddressStreet2 == true">
-              <input matInput size="25" (blur)="updateInput('stadd2')" style="white-space: nowrap;" maxlength="25" required placeholder="Suite #150" 
+              <input matInput size="25" (blur)="updateInput('stadd2')" style="white-space: nowrap;" maxlength="25" placeholder="Suite #150" 
               [formControl]="addressStreet2Input">
               <mat-icon *ngIf="addressStreet2Input.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
               <mat-error *ngIf="addressStreet2Input.invalid">{{getInputErrorMessage(addressStreet2Input)}}</mat-error>
@@ -305,7 +305,7 @@
       </tr>
       <tr>
         <td style="width:40%">
-          <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79">
+          <h3>
             <label style="margin-left: 8px">City</label><br />&nbsp;&nbsp;
             <img [ngStyle]="{'visibility': addMode == false && editCity == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcCmpyCty"
             (mouseover)="editImageSrcCmpyCty = '../../../assets/edit_icon_yellow.svg'"
@@ -323,7 +323,7 @@
           </h3>
         </td>
         <td style="width:15%">
-          <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79">
+          <h3>
             <label style="margin-left: 8px">State</label><br />&nbsp;&nbsp;
             <img [ngStyle]="{'visibility': addMode == false && editState == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcCmpySt"
             (mouseover)="editImageSrcCmpySt = '../../../assets/edit_icon_yellow.svg'"
@@ -341,7 +341,7 @@
           </h3>
         </td>
         <td style="width:15%">
-          <h3 style="white-space: nowrap;font-family:sans-serif; font-size: large; color:#476c79">
+          <h3>
             <label style="margin-left:8px;">Zipcode</label><br />&nbsp;&nbsp;
             <img [ngStyle]="{'visibility': addMode == false && editZipcode == false ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcCmpyZip"
             (mouseover)="editImageSrcCmpyZip = '../../../assets/edit_icon_yellow.svg'"

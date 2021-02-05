@@ -41,14 +41,13 @@
     (mouseout)="editImageSrcRoom = '../../../assets/edit_icon.svg'" 
 (click)="openLinkRoomModal()"/>
  <br/>&nbsp;&nbsp;&nbsp; 
-    <span style="font-family:sans-serif; font-size: 15px; color:#476c79;" *ngIf="selectedRoomName != 'No Room Selected'">{{selectedRoomName}}</span>
-    <span style="font-family:sans-serif; font-size: 15px; color:red;" *ngIf="selectedRoomName == 'No Room Selected'"><h3>No Room Selected</h3></span>
+    <span *ngIf="selectedRoomName != 'No Room Selected'">{{selectedRoomName}}</span>
+    <span style="color:red;" *ngIf="selectedRoomName == 'No Room Selected'"><h3>No Room Selected</h3></span>
   </h3>
       <span style="margin-left:5%;">
         <br />
         
         <!--<button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevRm(true)">Next</button>-->
-        <button style="margin-bottom: 8px;" id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="saveBtnClickedUpdate()">Save</button>
       <br *ngIf="fieldsModified == true" />
         <img class="nonEditIconStyle" [src]="closeIconSrc" 
         (mouseover)="closeIconSrc = '../../../assets/close_door_yellow.svg'"
@@ -213,8 +212,10 @@
                 <ul *ngIf="prospect.Employers.length > 0">
                   <li style="list-style:square; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;" *ngFor="let emp of prospect.Employers"
                   [mdbTooltip]="getEmployerTooltip(emp)"
+                  container="body"
                   >
-                    <img style="width:25px; height:auto; vertical-align: middle;" src="https://logo.clearbit.com/{{getCmpyNameSrc(emp)}}.com?size=200" onerror="this.style.display='none'">{{emp.CompanyName}}
+                    <img style="width:25px; height:auto; vertical-align: middle;" src="https://logo.clearbit.com/{{getCmpyNameSrc(emp)}}.com?size=200" onerror="this.style.display='none'">
+                    <span>{{emp.CompanyName}}</span>
                   </li>
                 </ul>
               </h3>
@@ -231,7 +232,7 @@
                   <li style="list-style:square; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;" *ngFor="let prevRental of prospect.PreviousRentals"
                   [mdbTooltip]="getPrevRentalTooltip(prevRental)"
                   >
-                    {{prevRental.AddressStreet1}}
+                    <span>{{prevRental.AddressStreet1}}</span>
                   </li>
                 </ul>
               </h3>
@@ -239,7 +240,8 @@
     </div>
   </div>
   <span class="modal-footer">
-    <button (click)="closeProspectDialog()" class="flex-items" style="font-size:14px;" mat-button >Close</button>
+    <button style="margin-right: 8px;font-size:15px;" id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="saveBtnClickedUpdate()">Save</button>
+    <button (click)="closeProspectDialog()" class="flex-items" style="font-size:15px;" mat-button >Close</button>
 </span>
   </div>
   </div>

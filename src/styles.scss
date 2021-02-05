@@ -21,7 +21,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .cdk-overlay-container{
     z-index:2000 !important;
 }
-/*.tooltip { pointer-events:initial; }*/
+/*This avoid tooltip flickering in mdb tooltip */
+.tooltip { pointer-events: none; }
+
 
 
 .mat-form-field-type-mat-select .mat-form-field-label, .mat-select-value {

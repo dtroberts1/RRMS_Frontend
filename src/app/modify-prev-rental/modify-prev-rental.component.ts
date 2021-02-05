@@ -77,7 +77,7 @@ export class ModifyPrevRentalComponent implements OnInit{
   lNameInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,25}')]);
   emailInput : FormControl = new FormControl('', [Validators.required, Validators.email]);
   mdInitInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{1}')]);
-  phoneInput = new FormControl('', [Validators.required, Validators.pattern(/((\(\d{3}\) ?)|(\d{3}-))?\d{3}-\d{4}/)]);
+  phoneInput = new FormControl('', [Validators.required, Validators.pattern(/^((((\(\d{3}\) ?)|(\d{3}-{1}))\d{3}-{1}\d{4})|(([0-9]){10}))$/)]);
   addressStreet1Input = new FormControl('', [Validators.required, Validators.pattern(/\d+(\s+\w+\.?){1,}\s+(?:st(?:\.|reet)?|dr(?:\.|ive)?|pl(?:\.|ace)?|ave(?:\.|nue)?|rd(\.?)|road|lane|drive|way|court|plaza|square|run|parkway|point|pike|square|driveway|trace|park|terrace|blvd)+$/i)]);
   addressStreet2Input  = new FormControl('', [Validators.pattern(/^((APT|APARTMENT|SUITE|STE|UNIT){1} (NUMBER|NO|#)(\s){0,1}([0-9A-Z-]+)){0,1}/i)]);
   cityInput = new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z\u0080-\u024F]+(?:. |-| |')*([1-9a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$")]);
@@ -172,6 +172,9 @@ ngOnInit(): void {
     let tmpEnd = new Date(this.endDateInput.value);
 
     console.log("in moveDatesValid:  start date: " + (tmpStart) + ", end date: " + (tmpStart));
+    if (this.currentMap.get(this.currItem) == true){
+      return true;
+    }
     if ((tmpStart) <= (tmpEnd)){
       return true;
     }
@@ -548,7 +551,7 @@ ngOnInit(): void {
         animated: true,
         data: {
           title: "Incorrect Dates",
-          contentSummary: "Invalid Dates. Please Verify dates are correct. Start Date should come before End Date",
+          contentSummary: "Invalid Dates. Please Verify dates are correct. Start Date should precede End Date",
         }
         });
         this.modalRef.content.action.subscribe(()=> {
@@ -611,7 +614,33 @@ ngOnInit(): void {
             this.modalRef.hide();
             reject(false);
           });
-        });
+        }).catch((err) => {
+          this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
+            data: {
+              inError: true,
+              title: "Unable to process",
+              contentSummary: "We're sorry. We are unable to process. Our engineers have been notified and are working on the issue to get this resolved asap",
+              errorItems: []
+            }
+          });
+          this.modalRef.content.action.subscribe(()=> {
+            this.modalRef.hide();
+            resolve(false);
+          },
+          error => {
+            console.log(error);
+            this.modalRef.hide();
+            reject(false);
+          });
+        });;
     });
   }
 
@@ -721,39 +750,62 @@ ngOnInit(): void {
             resolve(true);
             });
             }).catch((err) => {
-              console.log(err);
-              this.modalRef.hide();
-    //          this.action.next();
-    
-              reject(false);
+              if (this.modalRef != null){
+                this.modalRef.hide();
+              }
+              this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+                backdrop: true,
+                keyboard: true,
+                focus: true,
+                show: false,
+                ignoreBackdropClick: false,
+                class: '',
+                containerClass: '',
+                animated: true,
+                data: {
+                  inError: true,
+                  title: "Unable to process",
+                  contentSummary: "We're sorry. We are unable to process. Our engineers have been notified and are working on the issue to get this resolved asap",
+                  errorItems: []
+                }
+              });
+              this.modalRef.content.action.subscribe(()=> {
+                this.modalRef.hide();
+                resolve(false);
+              },
+              error => {
+                console.log(error);
+                this.modalRef.hide();
+                reject(false);
+              });
             });
         });
       }
     }
     else{
-          // Move in/moveout date combination is not valid
-    this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
-      backdrop: true,
-      keyboard: true,
-      focus: true,
-      show: false,
-      ignoreBackdropClick: false,
-      class: '',
-      containerClass: '',
-      animated: true,
-      data: {
-        title: "Incorrect Dates",
-        contentSummary: "Invalid Dates. Please Verify dates are correct. Start Date should come before End Date",
-      }
-      });
-      this.modalRef.content.action.subscribe(()=> {
-        this.modalRef.hide();
-        return Promise.resolve(true);
-      },
-      error => {
-        console.log(error);
-        this.modalRef.hide();
-      });
+      // Move in/moveout date combination is not valid
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
+        data: {
+          title: "Incorrect Dates",
+          contentSummary: "Invalid Dates. Please Verify dates are correct. Start Date should precede End Date",
+        }
+        });
+        this.modalRef.content.action.subscribe(()=> {
+          this.modalRef.hide();
+          return Promise.resolve(true);
+        },
+        error => {
+          console.log(error);
+          this.modalRef.hide();
+        });
     }
   }
   getInputErrorMessage(inputField : AbstractControl){
