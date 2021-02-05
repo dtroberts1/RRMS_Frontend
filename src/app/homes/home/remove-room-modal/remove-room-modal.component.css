@@ -34,13 +34,7 @@
   .editLinks:hover{
     color:green;
   }
-  .lowerViewRoomButtons{
-    color:blue;
-  }
-  .lowerViewRoomButtons:hover{
-    background-color:green;
-    color:white;
-  }
+
   #saveViewRoomBtn{
     color:white;
     background-color:Red;
@@ -55,3 +49,17 @@
     color:white;
     background-color:Red;
   }
+  .button-container {
+    /*display: flex;
+    justify-content: space-around;  */
+    margin-top: 10px;
+  }
+    .flex-items {  
+        margin: 6px;  
+        background-color:#476c79; 
+        color:white;
+        float:right;
+    }  
+    .flex-items:hover{
+      background-color: #90A6AE;
+    }

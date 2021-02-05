@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
+import { Subject } from 'rxjs';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IHome } from 'src/app/interfaces/Homes';
 import { IProspect } from 'src/app/interfaces/Prospect';
@@ -17,6 +18,8 @@ import {HomesService} from '../../../services/homes.service';
   styleUrls: ['./remove-room-modal.component.css']
 })
 export class RemoveRoomModalComponent implements OnInit {
+  action: Subject<any> = new Subject();
+
   homeImagePath : string;
   room : IRoom;
   origSettings : IRoom;
@@ -43,16 +46,13 @@ export class RemoveRoomModalComponent implements OnInit {
   selectedRoom: IRoom = null //Id of room
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
-  public dialogRef: MatDialogRef<RemoveRoomModalComponent>,
-  public dialog: MatDialog, 
   private roomService: RoomsService,
   private modalService: MDBModalService,
 
   ) {
   }
   closeNoSelection(){
-    this.dialogRef.close(false);
+    this.action.next(false);
   }
   showProductDetails(){
   }
@@ -66,7 +66,6 @@ export class RemoveRoomModalComponent implements OnInit {
   }
   
   ngOnInit(): void {
-    this.home = this.data.home;
   }
   fieldChanged(home: IHome){
   }
@@ -120,7 +119,7 @@ export class RemoveRoomModalComponent implements OnInit {
             });
             this.modalRef.content.action.subscribe(() => {
               this.modalRef.hide();
-              this.dialogRef.close(true);
+              this.action.next(true);
             },
             error => {
               console.log(error);

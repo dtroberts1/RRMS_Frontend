@@ -14,6 +14,7 @@ import { FormControl } from '@angular/forms';
 import { IProspect } from 'src/app/interfaces/Prospect';
 import { AddApprovedProspectComponentModal } from '../../room/add-approved-prospect/add-approved-prospect.component';
 import { RemoveRoomModalComponent } from '../remove-room-modal/remove-room-modal.component';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 interface AvailableRoomsAndProspects{
   availRooms: Iterable<IRoom>,
   availProspects: Iterable<IProspect>,
@@ -25,6 +26,7 @@ interface AvailableRoomsAndProspects{
 })
 export class HomeDetailsComponent implements OnInit {
   @Input() home : IHome;
+  modalRef: MDBModalRef;
   positionOptions: TooltipPosition[] = ['after', 'before', 'above', 'below', 'left', 'right'];
   position = new FormControl(this.positionOptions[1]);
   availRooms = null;
@@ -37,6 +39,7 @@ export class HomeDetailsComponent implements OnInit {
     private roomsService: RoomsService,
     private homeService: HomesService,
     private prospectService: ProspectService,
+    private modalService: MDBModalService,
     ) { 
     }
   async ngOnChanges(changes: SimpleChanges){
@@ -67,13 +70,21 @@ export class HomeDetailsComponent implements OnInit {
     removeRoomBtnClicked(){
     console.log("opening remove room dialog");
     if (this.home != null){
-      this.dialog.open(RemoveRoomModalComponent, {
+      this.modalRef = this.modalService.show(RemoveRoomModalComponent, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
           home: this.home,
         },
-        width: '270px',
-        height: '300px',
-      }).afterClosed().subscribe((roomRemoved : boolean) => {
+      });
+      this.modalRef.content.action.subscribe((roomRemoved: boolean)=> {
+        this.modalRef.hide();
         if (roomRemoved == true){
           // Get updated list of rooms for the home
           if (this.home != null){
@@ -83,10 +94,11 @@ export class HomeDetailsComponent implements OnInit {
             })
           }
         }
-        else{
-          // If no room was removed, do nothing
-        }
-      })
+      },
+      error=>{
+        console.log(error);
+        this.modalRef.hide();
+      });
     }
   }
     
