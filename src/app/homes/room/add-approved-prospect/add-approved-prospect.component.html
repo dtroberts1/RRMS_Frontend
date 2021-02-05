@@ -1,4 +1,22 @@
-    <h3 style="white-space: nowrap; color:blue; text-align: center;" mat-dialog-title>Link Room</h3>
+<div class ="modal fade in" style="display: block;" aria-hidden="false">
+    <div class="modal-dialog modal-sm modal-dialog-centered" >
+      <!--Content-->
+      <div class="modal-content">
+    <div class="modal-header" style="display: inline;">
+      <button type="button" class="close pull-right" aria-label="Close" >
+        <span aria-hidden="true" (click)="closeNoSelection()">×</span>
+      </button>
+      <h2 mat-dialog-title style="width:100%; height:10%;display: inline;">
+            <span id="mainHeader" style="background: linear-gradient(90deg, rgba(2,0,36,1) 3%, rgba(135,217,206,1) 28%, rgba(51,92,148,1) 97%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;"
+            > Link Room</span>
+      </h2>
+      
+    </div>
+    <div class="modal-body">
+  
+  <div mat-dialog-content>
     <div style="margin: 0 auto;">
         <mat-form-field *ngIf="roomsExist() == true" appearance="fill">
             <mat-label>Select Room</mat-label>
@@ -8,7 +26,8 @@
             </mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-form-field *ngIf="prospectsExist() == true" appearance="fill">
+        <br />
+        <mat-form-field *ngIf="prospectsExist() == true && selectedRoom != null" appearance="fill">
             <mat-label>Select Prospect</mat-label>
             <mat-select [(value)]="selectedProspect" (change)="showProductDetails()">
             <mat-option *ngFor="let pros of availProspects" [value]="pros.Id">
@@ -17,12 +36,15 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <span style="margin-left:5%;">
-        <br />
-        <!--<button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="addAppvdProsToRoom()">Link Approved Prospect to Room</button>-->
-        <button class="lowerViewRoomButtons" 
+    <div class="button-container">
+        <button class="flex-items" (click)="closeNoSelection()" mat-button>Close</button>
+        <button class="flex-items"
         matTooltipClass="tooltip"
         [matTooltip]="'Link Room to (Approved) Propect'"
         (click)="addAppvdProsToRoom()" mat-button>Link</button>
-        <button class="lowerViewRoomButtons" (click)="closeNoSelection()" mat-button>Close</button>
-    </span>  
+    </div>  
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>

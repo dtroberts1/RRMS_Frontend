@@ -9,11 +9,8 @@ import {ProspectService} from '../../../services/prospect.service';
 import { IProspect } from 'src/app/interfaces/Prospect';
 import { Router } from '@angular/router';
 import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
+import { Subject } from 'rxjs';
 
-interface AvailableRoomsAndProspects{
-  availRooms: Iterable<IRoom>,
-  availProspects: Iterable<IProspect>,
-}
 enum ProspectStatus {
   approved = 1,
   declined = 2,
@@ -29,6 +26,7 @@ enum ProspectStatus {
   styleUrls: ['./add-approved-prospect.component.css']
 })
 export class AddApprovedProspectComponentModal implements OnInit {
+  action: Subject<any> = new Subject();
   room : IRoom;
   availRooms : Iterable<IRoom>;
   availProspects: Iterable<IProspect>;
@@ -38,10 +36,7 @@ export class AddApprovedProspectComponentModal implements OnInit {
   modalRef: MDBModalRef;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public fromParent: AvailableRoomsAndProspects,
-  public dialogRef: MatDialogRef<AddApprovedProspectComponentModal>,
   private prospectService: ProspectService,
-  public dialog: MatDialog, 
   private router: Router,
   private modalService: MDBModalService,
 
@@ -50,18 +45,14 @@ export class AddApprovedProspectComponentModal implements OnInit {
   }
   ngOnInit(): void {
     this.fieldsModified == false;
-    this.availRooms = this.fromParent.availRooms;
-    this.availProspects = this.fromParent.availProspects;
   }
   ngOnChanges(){
-    this.availRooms = this.fromParent.availRooms;
-    this.availProspects = this.fromParent.availProspects;
   }
   closeNoSelection(){
-    this.dialogRef.close(null);
+    this.action.next(null);
   }
   returnChoice(){    
-    this.dialogRef.close(null); // important: returns the id, not the index!!
+    this.action.next(null);
   }
   showProductDetails(){
   }
@@ -81,11 +72,95 @@ export class AddApprovedProspectComponentModal implements OnInit {
 
   addAppvdProsToRoom(){
     let myProspect : IProspect = (<IProspect[]>this.availProspects).find(pros => pros.Id == this.selectedProspect);
-    myProspect.Status = ProspectStatus.pendingLeaseSignature;
-    this.prospectService.updateProspect(myProspect)
-    .then(() => {
-      // Prompt user that the Prospect has been Linked to the Room and that the workflow is pending
-      // Lease Documentation Generation and Signature by Prospect
+    if (this.selectedRoom != null){
+      if (myProspect != null){
+        console.log("myProspect: " + JSON.stringify(myProspect))
+        myProspect.Status = ProspectStatus.pendingLeaseSignature;
+    
+        this.prospectService.updateProspect(myProspect)
+        .then(() => {
+          // Prompt user that the Prospect has been Linked to the Room and that the workflow is pending
+          // Lease Documentation Generation and Signature by Prospect
+          this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
+            data: {
+                inError: false,
+                title: "Prospect Saved",
+                contentSummary: "This prospect has been saved! Would you like to proceed to add a lease for this prospect?",
+                errorItems: []
+              }
+              });
+              this.modalRef.content.action.subscribe((addRooms: boolean)=> {
+                this.modalRef.hide();
+                if (addRooms == true ){
+                  this.router.navigate(['./dashboard/', { outlets: { view: ['leases'] } }]);
+                  this.action.next(null);
+                }
+                else{
+                  this.action.next(null);
+                  }
+              },
+              error => {
+                console.log(error);
+                this.modalRef.hide();
+              });
+              }).catch((err) => {
+                this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+                  backdrop: true,
+                  keyboard: true,
+                  focus: true,
+                  show: false,
+                  ignoreBackdropClick: false,
+                  class: '',
+                  containerClass: '',
+                  animated: true,
+                  data: {
+                    inError: true,
+                    title: "Unable to process",
+                    contentSummary: "We're sorry. We are unable to process. Our engineers have been notified and are working on the issue to get this resolved asap",
+                    errorItems: []
+                  }
+                });
+                this.modalRef.content.action.subscribe(()=> {
+                  this.modalRef.hide();
+                },
+                error => {
+                  console.log(error);
+                  this.modalRef.hide();
+                });
+              });
+      }else{
+        this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+          backdrop: true,
+          keyboard: true,
+          focus: true,
+          show: false,
+          ignoreBackdropClick: false,
+          class: '',
+          containerClass: '',
+          animated: true,
+          data: {
+            title: "No Prospect Selected",
+            contentSummary: "Please select a prospect to whom the room will be linked",
+          }
+          });
+          this.modalRef.content.action.subscribe(()=> {
+            this.modalRef.hide();
+            return Promise.resolve(true);
+          },
+          error => {
+            console.log(error);
+            this.modalRef.hide();
+          });
+      }
+    }else{
       this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
         backdrop: true,
         keyboard: true,
@@ -96,51 +171,18 @@ export class AddApprovedProspectComponentModal implements OnInit {
         containerClass: '',
         animated: true,
         data: {
-            inError: false,
-            title: "Prospect Saved",
-            contentSummary: "This prospect has been saved! Would you like to proceed to add a lease for this prospect?",
-            errorItems: []
-          }
-          });
-          this.modalRef.content.action.subscribe((addRooms: boolean)=> {
-            this.modalRef.hide();
-            if (addRooms == true ){
-              this.router.navigate(['./dashboard/', { outlets: { view: ['leases'] } }]);
-
-              this.dialogRef.close();
-            }
-            else{
-              this.dialogRef.close();
-            }
-          },
-          error => {
-            console.log(error);
-            this.modalRef.hide();
-          });
-          }).catch((err) => {
-            this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
-              backdrop: true,
-              keyboard: true,
-              focus: true,
-              show: false,
-              ignoreBackdropClick: false,
-              class: '',
-              containerClass: '',
-              animated: true,
-              data: {
-                inError: true,
-                title: "Unable to process",
-                contentSummary: "We're sorry. We are unable to process. Our engineers have been notified and are working on the issue to get this resolved asap",
-                errorItems: []
-              }
-            });
-            this.modalRef.content.action.subscribe(()=> {
-              this.modalRef.hide();
-            },
-            error => {
-              console.log(error);
-              this.modalRef.hide();
-            });
-          });
+          title: "No Room Selected",
+          contentSummary: "Please select a room",
+        }
+        });
+        this.modalRef.content.action.subscribe(()=> {
+          this.modalRef.hide();
+          return Promise.resolve(true);
+        },
+        error => {
+          console.log(error);
+          this.modalRef.hide();
+        });
+    }
   }
 }

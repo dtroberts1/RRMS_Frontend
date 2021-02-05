@@ -15,6 +15,7 @@ import { IProspect } from 'src/app/interfaces/Prospect';
 import { AddApprovedProspectComponentModal } from '../../room/add-approved-prospect/add-approved-prospect.component';
 import { RemoveRoomModalComponent } from '../remove-room-modal/remove-room-modal.component';
 import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
+import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 interface AvailableRoomsAndProspects{
   availRooms: Iterable<IRoom>,
   availProspects: Iterable<IProspect>,
@@ -123,21 +124,54 @@ export class HomeDetailsComponent implements OnInit {
   async openAddProspectDialog(){
       this.roomsService.getAvailableRooms(this.home.Id).then((rooms : Iterable<IRoom>) => {
         this.availRooms = rooms;
-        this.dialog.open(AddApprovedProspectComponentModal, {
+        this.modalRef = this.modalService.show(AddApprovedProspectComponentModal, {
+          backdrop: true,
+          keyboard: true,
+          focus: true,
+          show: false,
+          ignoreBackdropClick: false,
+          class: '',
+          containerClass: '',
+          animated: true,
           data: {
             availRooms: this.availRooms,
             availProspects: this.availProspects,
-          },
-          width:'270px',
-          height: '300px'
-        }).afterClosed().subscribe(() => {
-    
-        },
-          err =>{
-            console.log(err);
           }
-        );
-      });
+        });
+          this.modalRef.content.action.subscribe(()=> {
+            this.modalRef.hide();
+
+          },
+          error => {
+            console.log(error);
+            this.modalRef.hide();
+          });
+        })
+        .catch((err) => {
+          this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
+            data: {
+              inError: true,
+              title: "Unable to process",
+              contentSummary: "We're sorry. We are unable to process. Our engineers have been notified and are working on the issue to get this resolved asap",
+              errorItems: []
+            }
+          });
+          this.modalRef.content.action.subscribe(()=> {
+            this.modalRef.hide();
+          },
+          error => {
+            console.log(error);
+            this.modalRef.hide();
+          });
+        });
   }
 
   hasRooms(){

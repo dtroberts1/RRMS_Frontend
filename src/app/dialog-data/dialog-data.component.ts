@@ -11,6 +11,8 @@ export interface DialogData {
 @Component({
   selector: 'dialog-data',
   templateUrl: 'dialog-data-rrms-component.html',
+  styleUrls: ['./dialog-data.component.scss'],
+
 })
 export class DialogDataRRMSDialog {
   action: Subject<any> = new Subject();
@@ -18,8 +20,7 @@ export class DialogDataRRMSDialog {
   title: string;
   contentSummary: string;
   errorItems: Array<any>;
-  constructor(/*@Inject(MAT_DIALOG_DATA) public data: DialogData,
-  public dialogRef: MatDialogRef<DialogDataRRMSDialog>,*/
+  constructor(
   ) {
   }
   closedWithSaved(save: boolean){
@@ -35,5 +36,9 @@ export class DialogDataRRMSDialog {
     console.log("contentSummary is " + JSON.stringify(this.contentSummary));
     console.log("errorItems is " + JSON.stringify(this.errorItems));
 
+  }
+  getContentSummary(summary){
+    //return summary.replace(/(\r\n|\n|\r)/gm, "<br>");
+    return summary + '<br>' + "yep";
   }
 }
