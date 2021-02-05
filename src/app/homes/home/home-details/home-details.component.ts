@@ -188,20 +188,28 @@ export class HomeDetailsComponent implements OnInit {
       return `${this.roomCount} Room`;
   }
   addRoom(){
-    this.dialog.open(AddRoomModalComponent, {
+    this.modalRef = this.modalService.show(AddRoomModalComponent, {
+      backdrop: true,
+      keyboard: true,
+      focus: true,
+      show: false,
+      ignoreBackdropClick: false,
+      class: '',
+      containerClass: '',
+      animated: true,
       data: {
         home : this.home,
         rooms : this.home.Rooms,
       },
-      width:'45%',
-      height: '45%'
-    }).afterClosed().subscribe((home : IHome) => {
-        this.home.Rooms = home.Rooms;
-        this.roomCount = (<any[]>this.home.Rooms)?.length;
-
-    },
-    err => {
-      console.log(err);
     });
-  }
+    this.modalRef.content.action.subscribe((home : IHome)=> {
+      this.modalRef.hide();
+      this.home.Rooms = home.Rooms;
+      this.roomCount = (<any[]>this.home.Rooms)?.length;
+    },
+    error => {
+      console.log(error);
+      this.modalRef.hide();
+    });
+}
 }

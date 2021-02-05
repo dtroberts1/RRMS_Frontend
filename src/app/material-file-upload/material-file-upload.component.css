@@ -22,5 +22,8 @@ li {
 }
 
 #uploadImageBtn:hover{
-      color:green;
+      color:yellowgreen;
+}
+#uploadImageBtn{
+      color:#476c79;
 }

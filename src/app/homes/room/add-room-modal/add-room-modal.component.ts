@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
+import { Subject } from 'rxjs';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IHome } from 'src/app/interfaces/Homes';
 import {IEmployer, SalaryType} from '../../../interfaces/Employer';
@@ -11,10 +12,12 @@ import {RoomsService} from '../../../services/room.service';
 @Component({
   selector: 'app-add-room-modal',
   templateUrl: './add-room-modal.component.html',
-  styleUrls: ['./add-room-modal.component.css']
+  styleUrls: ['./add-room-modal.component.scss']
 })
 export class AddRoomModalComponent {
-  homeImagePath : string;
+  action: Subject<any> = new Subject();
+  modalRef: MDBModalRef;
+  homeImagePath : string = '../../../assets/evan-dvorkin-TbMRBpXWPG4-unsplash.jpg'
   room : IRoom;
   home : IHome;
   editRate: boolean = false;
@@ -35,23 +38,18 @@ export class AddRoomModalComponent {
   hasCloset : boolean = false;
   hasCeilingFan : boolean = false;
   hasPrivateBath : boolean = false;
-  modalRef: MDBModalRef;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, 
-  @Inject(MAT_DIALOG_DATA) public rooms: Iterable<IRoom>,
-  public dialogRef: MatDialogRef<AddRoomModalComponent>,
+  constructor(
   private roomsService : RoomsService,
-  public dialog: MatDialog,
   private modalService: MDBModalService,
 
   ) {
-    this.home = data.home;
     if (this.home != null){
       if (this.home.Rooms != null)
       {
-        this.room = data.home.Rooms[0];
+        this.room = this.home.Rooms[0];
       }
-      this.roomCount = (<any[]>data.home.Rooms).length;
+      this.roomCount = (<any[]>this.home.Rooms).length;
     }
   }
   closeEmpDialog(){
@@ -92,7 +90,7 @@ export class AddRoomModalComponent {
           this.modalRef.content.action.subscribe(() => {
             this.modalRef.hide();
             (<any[]>this.home.Rooms).push(room); 
-            this.dialogRef.close(this.home);
+            this.action.next(this.home);
           },
           error => {
             console.log(error);
@@ -187,19 +185,18 @@ export class AddRoomModalComponent {
   }
 
   goToNextRm(){
-    this.currentRoomIndex = (this.currentRoomIndex + 1) % (<any[]>this.data.home.Rooms).length;
-    this.room = this.data.home.Rooms[this.currentRoomIndex];
+    this.currentRoomIndex = (this.currentRoomIndex + 1) % (<any[]>this.home.Rooms).length;
+    this.room = this.home.Rooms[this.currentRoomIndex];
   }
   goToPreviousRm(){
     this.currentRoomIndex--;
     if (this.currentRoomIndex < 0){
-      this.currentRoomIndex = (<any[]>this.data.home.Rooms).length - 1;
+      this.currentRoomIndex = (<any[]>this.home.Rooms).length - 1;
     }
-    this.room = this.data.home.Rooms[this.currentRoomIndex];
+    this.room = this.home.Rooms[this.currentRoomIndex];
   }
   closeViewRoomDialog(){
-    this.dialogRef.close(this.home); // this needs to return a null
-
+    this.action.next(this.home);
   }
   async inputsAreValid():Promise<boolean> {
     return new Promise((resolve, reject) => {
