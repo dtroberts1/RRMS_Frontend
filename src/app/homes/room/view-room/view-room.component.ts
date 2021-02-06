@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { AbstractControl, FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
+import { Subject } from 'rxjs';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IHome } from 'src/app/interfaces/Homes';
 import { IProspect } from 'src/app/interfaces/Prospect';
@@ -12,14 +13,28 @@ import {RoomsService} from '../../../services/room.service';
 @Component({
   selector: 'app-view-room',
   templateUrl: './view-room.component.html',
-  styleUrls: ['./view-room.component.css']
+  styleUrls: ['./view-room.component.scss']
 })
 export class ViewRoomComponent {
-  homeImagePath : string;
+  editImageSrcMRate : string = '../../../assets/edit_icon.svg';
+  editImageRoomName: string = '../../../assets/edit_icon.svg';
+  editImageLength: string = '../../../assets/edit_icon.svg';
+  editImageWidth: string = '../../../assets/edit_icon.svg';
+  editImageIsMaster: string = '../../../assets/edit_icon.svg';
+  editImageHasCloset: string = '../../../assets/edit_icon.svg';
+  editImageHasFan: string = '../../../assets/edit_icon.svg';
+  editImagePrivBathrm: string = '../../../assets/edit_icon.svg';
+  nextButtonImgSrc: string = '../../../assets/left_arrow_prospect.svg';
+  backButtonImgSrc: string =  '../../../assets/left_arrow_prospect.svg';
+  action: Subject<any> = new Subject();
+  modalRef: MDBModalRef;
+  homeImagePath : string = '../../../assets/evan-dvorkin-TbMRBpXWPG4-unsplash.jpg';
   room : IRoom;
+  rooms: Iterable<IRoom> = null;
   origSettings : IRoom;
   home : IHome;
   editRate: boolean = false;
+  editRoomName: boolean = false;
   editDimension1: boolean = false;
   editDimension2: boolean = false;
   editMaster: boolean = false;
@@ -29,7 +44,8 @@ export class ViewRoomComponent {
   fieldsModified: boolean = false;
   currentRoomIndex: number = 0;
   roomCount: number = 0;
-
+  uiEditMode : boolean = true;
+  roomNameInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,60}')]);
   dimension1 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
   dimension2 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
   monthlyRateInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]{1,5}')]);
@@ -37,26 +53,40 @@ export class ViewRoomComponent {
   hasCloset : boolean;
   hasCeilingFan : boolean;
   hasPrivateBath : boolean;
-  modalRef: MDBModalRef;
+  public selectedLength: number;
+  public selectedWidth: number;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, 
-  @Inject(MAT_DIALOG_DATA) public rooms: Iterable<IRoom>,
-  public dialogRef: MatDialogRef<ViewRoomComponent>,
+  lengthList: Iterable<number> = Array.from(Array(1000).keys());
+  widthList: Iterable<number> = Array.from(Array(1000).keys());
+
+  constructor(
   private roomsService: RoomsService,
-  public dialog: MatDialog, 
   private modalService: MDBModalService,
 
   ) {
-    
-    this.home = data.home;
+
+  }
+  lenChanged(event){
+    console.log("length changed to " + this.selectedLength);
+    this.dimension1.setValue(this.selectedLength.toString());
+    this.updateInput('dimension1')
+  }
+  widthChanged(event){
+    console.log("length changed to " + this.selectedWidth);
+    this.dimension2.setValue(this.selectedWidth.toString());
+    this.updateInput('dimension2')
+  }
+  ngOnInit(){
+
     if (this.home != null){
+          
       if (this.home.Rooms != null)
       {
-        this.setOrigSettings(this.data.home.Rooms[this.currentRoomIndex]);
+        this.setOrigSettings(this.home.Rooms[this.currentRoomIndex]);
         this.getSettings();
-        console.log('this.data.home.Rooms = ' + JSON.stringify(this.data.home.Rooms))
+        console.log('this.data.home.Rooms = ' + JSON.stringify(this.home.Rooms))
       }
-      this.roomCount = (<any[]>data.home.Rooms).length;
+      this.roomCount = (<any[]>this.home.Rooms).length;
     }
   }
 
@@ -90,13 +120,19 @@ export class ViewRoomComponent {
     return false;
   }
   changeEditMode(str:string){
+    console.log("in changeEditMode");
     switch(str) { 
+      case 'rmname': { 
+        this.editRoomName = !this.editRoomName;
+         break; 
+      } 
       case 'rate': { 
         this.editRate = !this.editRate;
          break; 
       } 
       case 'dimension1': { 
         this.editDimension1 = !this.editDimension1;
+        console.log("this.editDimension1 is now " + this.editDimension1)
          break; 
       } 
       case 'dimension2': { 
@@ -127,6 +163,18 @@ export class ViewRoomComponent {
   }
   updateInput(editStr : string){
     switch(editStr) { 
+      case 'rmname': {
+        if (this.roomNameInput.valid == true){
+          console.log("input valid is true");
+          this.room.RoomName = this.roomNameInput.value;
+        }
+        else{
+          console.log("input valid is false");
+          this.changeEditMode(editStr);
+          return;
+        }
+      }
+      break;
       case 'rate': { 
         if (this.monthlyRateInput.valid == true)
         {
@@ -182,6 +230,7 @@ export class ViewRoomComponent {
       } 
     }
     this.changeEditMode(editStr);
+    console.log("setting fields modifeid to true");
     this.fieldsModified = true;
   }
   onFileComplete(data: any) {
@@ -189,9 +238,12 @@ export class ViewRoomComponent {
   }
 
   getSettings(){
-    this.room = this.data.home.Rooms[this.currentRoomIndex];
+    this.room = this.home.Rooms[this.currentRoomIndex];
+    this.roomNameInput.setValue(this.room.RoomName);
     this.dimension1.setValue(this.room.Dimensions.split("x")[0].toString().trim());
+    this.selectedLength = this.dimension1.value;
     this.dimension2.setValue(this.room.Dimensions.split("x")[1].toString().trim());
+    this.selectedWidth = this.dimension2.value;
     this.isMaster = this.room.IsMaster;
     this.hasCloset = this.room.HasCloset;
     this.hasCeilingFan = this.room.HasCeilingFan;
@@ -247,20 +299,82 @@ export class ViewRoomComponent {
   updateCurrentRoomIndex(next: boolean)
   {
     if (next == true){
-      this.currentRoomIndex = (this.currentRoomIndex + 1) % (<any[]>this.data.home.Rooms).length;
+      this.currentRoomIndex = (this.currentRoomIndex + 1) % (<any[]>this.home.Rooms).length;
     }
     else if(next == false){ // If navigating to "previous"
       this.currentRoomIndex--;
       if (this.currentRoomIndex < 0){
-        this.currentRoomIndex = (<any[]>this.data.home.Rooms).length - 1;
+        this.currentRoomIndex = (<any[]>this.home.Rooms).length - 1;
       }
     }
   }
 
   closeViewRoomDialog(){
-    this.dialogRef.close(this.home); // this needs to return a null
+    // TODO
+    if (this.fieldsModified == true){
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
+        data: {
+          inError: false,
+          title: "Unsaved Changes",
+          contentSummary: "Warning. There are unsaved Changes. Would you still like to proceed, or save?",
+          errorItems: []
+        }
+        });
+        this.modalRef.content.action.subscribe((choosesSave: boolean)=> {
+          this.modalRef.hide();
+          if (choosesSave == true){
+            this.updateRoom().then(() => {
+              this.action.next(this.home);
+            })
+            .catch((error) => {
+              this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+                backdrop: true,
+                keyboard: true,
+                focus: true,
+                show: false,
+                ignoreBackdropClick: false,
+                class: '',
+                containerClass: '',
+                animated: true,
+                data: {
+                  inError: true,
+                  title: "Unable to process",
+                  contentSummary: "We're sorry. We are unable to process. Our engineers have been notified and are working on the issue to get this resolved asap",
+                  errorItems: []
+                }
+              });
+              this.modalRef.content.action.subscribe(()=> {
+                this.modalRef.hide();
+              },
+              error => {
+                console.log(error);
+                this.modalRef.hide();
+              });
+            });
+          }
+          else{
+            this.action.next(this.home);
+          }
+        },
+        error => {
+          console.log(error);
+          this.modalRef.hide();
+        });
+    }
+    else{
+      this.action.next(this.home);
+    }
   }
   fillInputsWithOriginalSettings(){
+    this.room.RoomName = this.origSettings.RoomName;
     this.room.Dimensions = this.origSettings.Dimensions;
     this.room.MonthlyRate = this.origSettings.MonthlyRate;
     this.room.IsMaster = this.origSettings.IsMaster;
@@ -386,7 +500,7 @@ export class ViewRoomComponent {
               this.modalRef.content.action.subscribe(() => {
                 this.home.Rooms = this.rooms;
                 this.modalRef.hide();
-                this.dialogRef.close(this.home); // this needs to return a null
+                this.action.next(this.home);
               },
               error => {
                 console.log(error);

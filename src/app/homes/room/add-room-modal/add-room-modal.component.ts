@@ -44,6 +44,12 @@ export class AddRoomModalComponent {
   private modalService: MDBModalService,
 
   ) {
+
+  }
+  closeEmpDialog(){
+
+  }  
+  ngOnInit(){
     if (this.home != null){
       if (this.home.Rooms != null)
       {
@@ -52,9 +58,6 @@ export class AddRoomModalComponent {
       this.roomCount = (<any[]>this.home.Rooms).length;
     }
   }
-  closeEmpDialog(){
-
-  }  
   async createRm(){
     this.inputsAreValid().then((isValid: boolean) => {
       this.room = {

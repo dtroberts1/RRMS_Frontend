@@ -1,4 +1,4 @@
-  <div class ="modal fade in" style="display: block;" aria-hidden="false"> <!--z-index defaults to 1050-->
+  <div class ="modal fade in" style="display: block;" aria-hidden="false">
   <div class="modal-dialog modal-lg modal-dialog-centered" >
     <!--Content-->
     <div class="modal-content">
@@ -34,6 +34,12 @@
   <div style="float:right; width:50%; height:100%;">
     <h2 mat-dialog-title>Attributes</h2>
     <div style="max-height: 300px; overflow-y: auto;">
+      <h4><span>Dimensions:</span>&nbsp;&nbsp;
+        <input matInput style="width:2em" size="4"placeholder="10" maxlength="3" [formControl]="dimension1">
+        <span>ft</span>&nbsp;<span>By</span>
+        <input matInput style="width:2em"  size="4"placeholder="10" maxlength="3" [formControl]="dimension2">
+        ft
+    </h4>
       <mat-checkbox class="example-margin" [(ngModel)]="isMaster"><span>Is Master</span></mat-checkbox>
       <br />
       <mat-checkbox class="example-margin" [(ngModel)]="hasCloset"><span>Has Closet</span></mat-checkbox>
@@ -41,12 +47,6 @@
       <mat-checkbox class="example-margin" [(ngModel)]="hasCeilingFan"><span>Ceiling Fan</span></mat-checkbox>
       <br />
       <mat-checkbox  class="example-margin" [(ngModel)]="hasPrivateBath"><span>Private Bath</span></mat-checkbox>
-      <h4><span>Dimensions:</span>&nbsp;&nbsp;
-          <input matInput style="width:2em" size="4"placeholder="10" maxlength="3" [formControl]="dimension1">
-          <span>ft</span>&nbsp;<span>By</span>
-          <input matInput style="width:2em"  size="4"placeholder="10" maxlength="3" [formControl]="dimension2">
-          ft
-      </h4>
       <mat-checkbox class="example-margin"><span>Ceiling Fan</span></mat-checkbox>
       <br />
       <mat-checkbox class="example-margin"><span>Ceiling Fan</span></mat-checkbox>

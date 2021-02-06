@@ -1,5 +1,30 @@
-<div style="float:left; width:25%; height:100%;margin-left:10%">
-  <h1 *ngIf="room != null" mat-dialog-title>{{room.RoomName}}</h1>
+<div *ngIf="room != null" class ="modal fade in" style="display: block;" aria-hidden="false"> <!--z-index defaults to 1050-->
+  <div class="modal-dialog modal-lg modal-dialog-centered" >
+    <!--Content-->
+    <div class="modal-content">
+  <div class="modal-header">
+    <span id="mainHeader">{{room.RoomName}}</span>
+    <span class="pull-right" style="margin-right:40px;">
+      <img style="width: 20px;height: auto;" *ngIf="canDispNextAndPrev() == true"[src]="backButtonImgSrc"
+      (mouseover)="backButtonImgSrc = '../../../assets/left_arrow_prospect_yellow.svg'"
+      (mouseout)="backButtonImgSrc = '../../../assets/left_arrow_prospect.svg'"
+      (click)="goToNextOrPrevRm(false)"
+      matTooltipClass="tooltip"
+      [matTooltip]="'Go to Previous Rental'"
+      />
+      <img style="transform:scaleX(-1); margin-left:8px; width: 20px;height: auto;" *ngIf="canDispNextAndPrev() == true" [src]="nextButtonImgSrc"
+      (mouseover)="nextButtonImgSrc = '../../../assets/left_arrow_prospect_yellow.svg'"
+      (mouseout)="nextButtonImgSrc = '../../../assets/left_arrow_prospect.svg'"
+      (click)="goToNextOrPrevRm(true)"
+      matTooltipClass="tooltip"
+      [matTooltip]="'Go to Next Rental'"/>
+    </span>
+
+    <button (click)="closeViewRoomDialog()" type="button" class="close pull-right" aria-label="Close" >X
+    </button>
+  </div>
+  <div class="modal-body" style="max-height:450px; overflow-y: auto;">
+    <div style="float:left; width:25%; height:100%;margin-left:10%">
   <div class="browseImage">
     <img [(src)]="homeImagePath"/>
     <br />
@@ -7,45 +32,89 @@
         <app-material-file-upload (complete)="onFileComplete($event)"></app-material-file-upload>
   </div>
 </div>
-</div>
-<div *ngIf="room != null" style="float:right; width:50%; height:100%">
-  <h3 class="h3link">View Financial History</h3>
-  <table>
-    <tr>
-      <td width="90%">
-        <h3 style="white-space: nowrap;"><label>Monthly Rate:&nbsp;&nbsp;</label>
-          <span *ngIf="editRate == false">{{'$'}}{{room.MonthlyRate}}</span>
-          <span *ngIf="editRate == true">
-            <input  size="5" (blur)="updateInput('rate')" style="white-space: nowrap;" maxlength="5" required placeholder="550" 
+
+  <div style="height:50px; line-height: 15px; vertical-align: top;">
+      <span class="spanHeader">Room Name</span><img style="margin-left:8px;" [ngStyle]="{'visibility': editRoomName == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageRoomName"
+      (mouseover)="editImageRoomName = '../../../assets/edit_icon_yellow.svg'"
+      (mouseout)="editImageRoomName = '../../../assets/edit_icon.svg'" 
+      (click)="changeEditMode('rmname')"/><br />        &nbsp;&nbsp;
+          <span class="ellipsize-left" style="margin-left:8px;display: inline-block;" [ngStyle]="editRoomName == false ? {'width': '100%', 'visibility': 'visible'} : {'width': '0px', 'visibility': 'hidden'}">{{room.RoomName}}</span>
+          <span>
+            <mat-form-field [ngStyle]="{'visibility': editRoomName == false ? 'hidden' : 'visible'}">
+            <input matInput size="30" (blur)="updateInput('rmname')" maxlength="30" required placeholder="The Window Room" 
+            [formControl]="roomNameInput">
+            <mat-icon *ngIf="roomNameInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
+            <mat-error *ngIf="roomNameInput.invalid">{{getInputErrorMessage(roomNameInput)}}</mat-error>
+          </mat-form-field>
+          </span>
+    </div>
+    <div style="margin-top:18px; height:50px; line-height: 15px; vertical-align: top;">
+      <span class="spanHeader">Monthly Rate</span><img style="margin-left:8px;" [ngStyle]="{'visibility': editRate == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageSrcMRate"
+      (mouseover)="editImageSrcMRate = '../../../assets/edit_icon_yellow.svg'"
+      (mouseout)="editImageSrcMRate = '../../../assets/edit_icon.svg'" 
+      (click)="changeEditMode('rate')"/><br />        &nbsp;&nbsp;
+          <span class="ellipsize-left" style="margin-left:8px;display: inline-block;" [ngStyle]="editRate == false ? {'width': '100%', 'visibility': 'visible'} : {'width': '0px', 'visibility': 'hidden'}">{{'$'}}{{room.MonthlyRate}}</span>
+          <span>
+          <mat-form-field [ngStyle]="{'visibility': editRate == false ? 'hidden' : 'visible'}">
+            <input matInput size="5" (blur)="updateInput('rate')" maxlength="5" required placeholder="455" 
             [formControl]="monthlyRateInput">
             <mat-icon *ngIf="monthlyRateInput.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
             <mat-error *ngIf="monthlyRateInput.invalid">{{getInputErrorMessage(monthlyRateInput)}}</mat-error>
-          </span>
-        </h3>
-      </td>
-      <td width="10%">
-        <h3 *ngIf="editRate == false" class="editLinks" (click)="changeEditMode('rate')">Edit</h3>
-      </td>
-    </tr>
+          </mat-form-field>
+        </span>
+  </div>
+</div>
+<div *ngIf="room != null" style="float:right; width:50%; height:100%">
+  <h2 mat-dialog-title>Attributes</h2>
+  <div style="max-height: 300px; overflow-y: auto;">
+  <table>
     <tr>
-      <td width="90%">
-        <h3 style="white-space: nowrap;"><label>Length:&nbsp;&nbsp;</label>
+      <td width="100%">
+        <h3 style="white-space: nowrap;">
+          <img [ngStyle]="{'visibility': editDimension1 == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageLength"
+          (mouseover)="editImageLength = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImageLength = '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('dimension1')"/>
+          <span style="margin-left:8px;" class="spanHeader">Length:&nbsp;&nbsp;</span>
           <span *ngIf="editDimension1 == false">{{dimension1.value}}&nbsp;{{"ft"}}</span>
           <span *ngIf="editDimension1 == true">
-            <input  size="5" (blur)="updateInput('dimension1')" style="white-space: nowrap;" maxlength="5" required placeholder="550" 
-            [formControl]="dimension1">
-            <mat-icon *ngIf="dimension1.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
-            <mat-error *ngIf="dimension1.invalid">{{getInputErrorMessage(dimension1)}}</mat-error>
+            <mat-form-field appearance="fill">
+              <mat-label>Length</mat-label>
+              <mat-select [(value)]="selectedLength" (selectionChange)="lenChanged($event)">
+              <mat-option *ngFor="let lengthVal of lengthList" [value]="lengthVal">
+                  {{lengthVal}}
+              </mat-option>
+              </mat-select>
+          </mat-form-field>
           </span>
         </h3>
       </td>
-      <td width="10%">
-        <h3 *ngIf="editDimension1 == false" class="editLinks" (click)="changeEditMode('dimension1')">Edit</h3>
-      </td>
     </tr>
     <tr>
-      <td width="90%">
-        <h3 style="white-space: nowrap;"><label>Width:&nbsp;&nbsp;</label>
+      <td width="100%">
+        <h3 style="white-space: nowrap;">    
+          <img [ngStyle]="{'visibility': editDimension2 == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageLength"
+          (mouseover)="editImageLength = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImageLength = '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('dimension2')"/>
+          <span style="margin-left:8px;" class="spanHeader">Width:&nbsp;&nbsp;</span>
+          <span *ngIf="editDimension2 == false">{{dimension2.value}}&nbsp;{{"ft"}}</span>
+          <span *ngIf="editDimension2 == true">
+            <mat-form-field appearance="fill">
+              <mat-label>Length</mat-label>
+              <mat-select [(value)]="selectedWidth" (selectionChange)="widthChanged($event)">
+              <mat-option *ngFor="let widthVal of widthList" [value]="widthVal">
+                  {{widthVal}}
+              </mat-option>
+              </mat-select>
+          </mat-form-field>
+          </span>
+<!--
+          <img [ngStyle]="{'visibility': editDimension2 == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageWidth"
+          (mouseover)="editImageWidth = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImageWidth = '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('dimension2')"/>
+          <span style="margin-left:8px;" class="spanHeader">Width:&nbsp;&nbsp;</span>
           <span *ngIf="editDimension2 == false">{{dimension2.value}}&nbsp;{{"ft"}}</span>
           <span *ngIf="editDimension2 == true">
             <input  size="5" (blur)="updateInput('dimension2')" style="white-space: nowrap;" maxlength="5" required placeholder="550" 
@@ -53,75 +122,200 @@
             <mat-icon *ngIf="dimension2.invalid == false" matSuffix>sentiment_very_satisfied</mat-icon>
             <mat-error *ngIf="dimension2.invalid">{{getInputErrorMessage(dimension2)}}</mat-error>
           </span>
+        -->
         </h3>
-      </td>
-      <td width="10%">
-        <h3 *ngIf="editDimension2 == false" class="editLinks" (click)="changeEditMode('dimension2')">Edit</h3>
       </td>
     </tr>
     <tr>
-      <td>
-        <h3><label>Is Master:</label>&nbsp;&nbsp;
+      <td width="100%">
+        <h3>
+          <img [ngStyle]="{'visibility': editDimension2 == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageIsMaster"
+          (mouseover)="editImageIsMaster = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImageIsMaster= '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('master')"/>
+          <span style="margin-left:8px;" class="spanHeader">Is Master:</span>&nbsp;&nbsp;
           <span *ngIf="editMaster == false">{{room.IsMaster == true ? "Yes" : "No"}}</span>
           <span *ngIf="editMaster == true">
             <mat-checkbox (focusout)="updateInput('master')" [(ngModel)]="isMaster"></mat-checkbox>
           </span>
         </h3>
       </td>
-      <td>
-        <h3 *ngIf="editMaster == false" class="editLinks" (click)="changeEditMode('master')">Edit</h3>
-        <h3 *ngIf="editMaster == true" class="editLinks" (click)="changeEditMode('master')">Update</h3>
-      </td>
     </tr>
     <tr>
-      <td>
-        <h3><label>Has Closet:</label>&nbsp;&nbsp;
+      <td width="100%">
+        <h3>          
+          <img [ngStyle]="{'visibility': editDimension2 == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageHasCloset"
+          (mouseover)="editImageHasCloset = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImageHasCloset= '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('closet')"/>
+          <span style="margin-left:8px;" class="spanHeader">Has Closet:</span>&nbsp;&nbsp;
           <span *ngIf="editCloset == false">{{room.HasCloset == true ? "Yes" : "No"}}</span>
           <span *ngIf="editCloset == true">
             <mat-checkbox (focusout)="updateInput('closet')" [(ngModel)]="hasCloset"></mat-checkbox>
           </span>
         </h3>
       </td>
-      <td>
-        <h3 *ngIf="editCloset == false" class="editLinks" (click)="changeEditMode('closet')">Edit</h3>
-        <h3 *ngIf="editCloset == true" class="editLinks" (click)="changeEditMode('closet')">Update</h3>
-      </td>
     </tr>    
     <tr>
-      <td>
-        <h3><label>Has Ceiling Fan:</label>&nbsp;&nbsp;
+      <td width="100%">
+        <h3>
+          <img [ngStyle]="{'visibility': editDimension2 == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImageHasFan"
+          (mouseover)="editImageHasFan = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImageHasFan= '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('fan')"/>
+          <span style="margin-left:8px;" class="spanHeader">Has Ceiling Fan:</span>&nbsp;&nbsp;
           <span *ngIf="editFan == false">{{room.HasCeilingFan == true ? "Yes" : "No"}}</span>
           <span *ngIf="editFan == true">
             <mat-checkbox (focusout)="updateInput('fan')" [(ngModel)]="hasCeilingFan"></mat-checkbox>
           </span>
         </h3>
       </td>
-      <td>
-        <h3 *ngIf="editFan == false" class="editLinks" (click)="changeEditMode('fan')">Edit</h3>
-        <h3 *ngIf="editFan == true" class="editLinks" (click)="changeEditMode('fan')">Update</h3>
-      </td>
     </tr>
     <tr>
-      <td>
-        <h3><label>Has Private Bathroom:</label>&nbsp;&nbsp;
+      <td width="100%">
+        <h3>
+          <img [ngStyle]="{'visibility': editDimension2 == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImagePrivBathrm"
+          (mouseover)="editImagePrivBathrm = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImagePrivBathrm= '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('bathroom')"/>
+          <span style="margin-left:8px;" class="spanHeader">Has Private Bathroom:</span>&nbsp;&nbsp;
           <span *ngIf="editBathroom == false">{{room.HasPrivateBath == true ? "Yes" : "No"}}</span>
           <span *ngIf="editBathroom == true">
             <mat-checkbox (focusout)="updateInput('bathroom')" [(ngModel)]="hasPrivateBath"></mat-checkbox>
           </span>
         </h3>
       </td>
-      <td>
-        <h3 *ngIf="editBathroom == false" class="editLinks" (click)="changeEditMode('bathroom')">Edit</h3>
-        <h3 *ngIf="editBathroom == true" class="editLinks" (click)="changeEditMode('bathroom')">Update</h3>
+    </tr>
+    <tr>
+      <td width="100%">
+        <h3>
+          <img [ngStyle]="{'visibility': editDimension2 == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImagePrivBathrm"
+          (mouseover)="editImagePrivBathrm = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImagePrivBathrm= '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('bathroom')"/>
+          <span style="margin-left:8px;" class="spanHeader">Has Private Bathroom:</span>&nbsp;&nbsp;
+          <span *ngIf="editBathroom == false">{{room.HasPrivateBath == true ? "Yes" : "No"}}</span>
+          <span *ngIf="editBathroom == true">
+            <mat-checkbox (focusout)="updateInput('bathroom')" [(ngModel)]="hasPrivateBath"></mat-checkbox>
+          </span>
+        </h3>
+      </td>
+    </tr>
+    <tr>
+      <td width="100%">
+        <h3>
+          <img [ngStyle]="{'visibility': editDimension2 == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImagePrivBathrm"
+          (mouseover)="editImagePrivBathrm = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImagePrivBathrm= '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('bathroom')"/>
+          <span style="margin-left:8px;" class="spanHeader">Has Private Bathroom:</span>&nbsp;&nbsp;
+          <span *ngIf="editBathroom == false">{{room.HasPrivateBath == true ? "Yes" : "No"}}</span>
+          <span *ngIf="editBathroom == true">
+            <mat-checkbox (focusout)="updateInput('bathroom')" [(ngModel)]="hasPrivateBath"></mat-checkbox>
+          </span>
+        </h3>
+      </td>
+    </tr>
+    <tr>
+      <td width="100%">
+        <h3>
+          <img [ngStyle]="{'visibility': editDimension2 == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImagePrivBathrm"
+          (mouseover)="editImagePrivBathrm = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImagePrivBathrm= '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('bathroom')"/>
+          <span style="margin-left:8px;" class="spanHeader">Has Private Bathroom:</span>&nbsp;&nbsp;
+          <span *ngIf="editBathroom == false">{{room.HasPrivateBath == true ? "Yes" : "No"}}</span>
+          <span *ngIf="editBathroom == true">
+            <mat-checkbox (focusout)="updateInput('bathroom')" [(ngModel)]="hasPrivateBath"></mat-checkbox>
+          </span>
+        </h3>
+      </td>
+    </tr>
+    <tr>
+      <td width="100%">
+        <h3>
+          <img [ngStyle]="{'visibility': editDimension2 == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImagePrivBathrm"
+          (mouseover)="editImagePrivBathrm = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImagePrivBathrm= '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('bathroom')"/>
+          <span style="margin-left:8px;" class="spanHeader">Has Private Bathroom:</span>&nbsp;&nbsp;
+          <span *ngIf="editBathroom == false">{{room.HasPrivateBath == true ? "Yes" : "No"}}</span>
+          <span *ngIf="editBathroom == true">
+            <mat-checkbox (focusout)="updateInput('bathroom')" [(ngModel)]="hasPrivateBath"></mat-checkbox>
+          </span>
+        </h3>
+      </td>
+    </tr>
+    <tr>
+      <td width="100%">
+        <h3>
+          <img [ngStyle]="{'visibility': editDimension2 == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImagePrivBathrm"
+          (mouseover)="editImagePrivBathrm = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImagePrivBathrm= '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('bathroom')"/>
+          <span style="margin-left:8px;" class="spanHeader">Has Private Bathroom:</span>&nbsp;&nbsp;
+          <span *ngIf="editBathroom == false">{{room.HasPrivateBath == true ? "Yes" : "No"}}</span>
+          <span *ngIf="editBathroom == true">
+            <mat-checkbox (focusout)="updateInput('bathroom')" [(ngModel)]="hasPrivateBath"></mat-checkbox>
+          </span>
+        </h3>
+      </td>
+    </tr>
+    <tr>
+      <td width="100%">
+        <h3>
+          <img [ngStyle]="{'visibility': editDimension2 == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImagePrivBathrm"
+          (mouseover)="editImagePrivBathrm = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImagePrivBathrm= '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('bathroom')"/>
+          <span style="margin-left:8px;" class="spanHeader">Has Private Bathroom:</span>&nbsp;&nbsp;
+          <span *ngIf="editBathroom == false">{{room.HasPrivateBath == true ? "Yes" : "No"}}</span>
+          <span *ngIf="editBathroom == true">
+            <mat-checkbox (focusout)="updateInput('bathroom')" [(ngModel)]="hasPrivateBath"></mat-checkbox>
+          </span>
+        </h3>
+      </td>
+    </tr>
+    <tr>
+      <td width="100%">
+        <h3>
+          <img [ngStyle]="{'visibility': editDimension2 == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImagePrivBathrm"
+          (mouseover)="editImagePrivBathrm = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImagePrivBathrm= '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('bathroom')"/>
+          <span style="margin-left:8px;" class="spanHeader">Has Private Bathroom:</span>&nbsp;&nbsp;
+          <span *ngIf="editBathroom == false">{{room.HasPrivateBath == true ? "Yes" : "No"}}</span>
+          <span *ngIf="editBathroom == true">
+            <mat-checkbox (focusout)="updateInput('bathroom')" [(ngModel)]="hasPrivateBath"></mat-checkbox>
+          </span>
+        </h3>
+      </td>
+    </tr>
+    <tr>
+      <td width="100%">
+        <h3>
+          <img [ngStyle]="{'visibility': editDimension2 == false && uiEditMode == true ? 'visible' : 'hidden'}" class="editIconStyle" [src]="editImagePrivBathrm"
+          (mouseover)="editImagePrivBathrm = '../../../assets/edit_icon_yellow.svg'"
+          (mouseout)="editImagePrivBathrm= '../../../assets/edit_icon.svg'" 
+          (click)="changeEditMode('bathroom')"/>
+          <span style="margin-left:8px;" class="spanHeader">Has Private Bathroom:</span>&nbsp;&nbsp;
+          <span *ngIf="editBathroom == false">{{room.HasPrivateBath == true ? "Yes" : "No"}}</span>
+          <span *ngIf="editBathroom == true">
+            <mat-checkbox (focusout)="updateInput('bathroom')" [(ngModel)]="hasPrivateBath"></mat-checkbox>
+          </span>
+        </h3>
       </td>
     </tr>
   </table>
-  <span style="margin-left:5%;">
-    <br />
-    <button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevRm(false)">Previous</button>
-    <button *ngIf="canDispNextAndPrev() == true" class="lowerViewRoomButtons" mat-button (click)="goToNextOrPrevRm(true)">Next</button>
-    <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="saveBtnClickedUpdate()">Save</button>
-    <button class="lowerViewRoomButtons" id="deleteBtn" mat-button (click)="deleteBtnClicked()">Delete</button>
-    <button class="lowerViewRoomButtons" mat-button (click)="closeViewRoomDialog()">Close</button>
-  </span>
   </div>
+  </div>
+</div>
+<div class="button-container">
+  <button class="flex-items" mat-button (click)="closeViewRoomDialog()">Close</button>
+  <button class="flex-items" id="deleteBtn" mat-button (click)="deleteBtnClicked()">Delete</button>
+  <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="saveBtnClickedUpdate()">Save</button>
+  <button class="flex-items" mat-button>View Financial History</button>
+</div>
+</div>
+</div>
+</div>

@@ -29,3 +29,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-form-field-type-mat-select .mat-form-field-label, .mat-select-value {
     color: #476c79;
   }
+  /*Makes the formfield height slightly reduced. Helps with the ViewRoom modal in the div that's floated left*/
+  .mat-form-field:not(.mat-form-field-has-label) .mat-form-field-infix {
+    border-top-width: 0;
+  }

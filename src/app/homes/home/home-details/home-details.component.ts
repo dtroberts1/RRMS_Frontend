@@ -1,12 +1,12 @@
 import { Component, Inject, Input, OnInit, SimpleChanges } from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogModule} from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IRoom } from 'src/app/interfaces/Rooms';
 import { RoomsService } from 'src/app/services/room.service';
-import {HomesService} from '../../../services/homes.service';
-import {ProspectService} from '../../../services/prospect.service';
+import { HomesService } from '../../../services/homes.service';
+import { ProspectService } from '../../../services/prospect.service';
 
-import {IHome} from '../../../interfaces/Homes';
+import { IHome } from '../../../interfaces/Homes';
 import { AddRoomModalComponent } from '../../room/add-room-modal/add-room-modal.component';
 import { ViewRoomComponent } from '../../room/view-room/view-room.component';
 import { TooltipPosition } from '@angular/material/tooltip';
@@ -16,7 +16,7 @@ import { AddApprovedProspectComponentModal } from '../../room/add-approved-prosp
 import { RemoveRoomModalComponent } from '../remove-room-modal/remove-room-modal.component';
 import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
-interface AvailableRoomsAndProspects{
+interface AvailableRoomsAndProspects {
   availRooms: Iterable<IRoom>,
   availProspects: Iterable<IProspect>,
 }
@@ -26,7 +26,7 @@ interface AvailableRoomsAndProspects{
   styleUrls: ['./home-details.component.css']
 })
 export class HomeDetailsComponent implements OnInit {
-  @Input() home : IHome;
+  @Input() home: IHome;
   modalRef: MDBModalRef;
   positionOptions: TooltipPosition[] = ['after', 'before', 'above', 'below', 'left', 'right'];
   position = new FormControl(this.positionOptions[1]);
@@ -35,42 +35,42 @@ export class HomeDetailsComponent implements OnInit {
   availProspects: Iterable<IProspect>;
   constructor(
     private route: ActivatedRoute,
-    public dialog: MatDialog, 
+    public dialog: MatDialog,
     private router: Router,
     private roomsService: RoomsService,
     private homeService: HomesService,
     private prospectService: ProspectService,
     private modalService: MDBModalService,
-    ) { 
-    }
-  async ngOnChanges(changes: SimpleChanges){
+  ) {
+  }
+  async ngOnChanges(changes: SimpleChanges) {
     this.roomCount = (<any[]>this.home.Rooms)?.length;
-    await this.roomsService.getAvailableRooms(this.home.Id).then((rooms : Iterable<IRoom>) => {
+    await this.roomsService.getAvailableRooms(this.home.Id).then((rooms: Iterable<IRoom>) => {
       this.availRooms = rooms;
     });
   }
 
 
   async ngOnInit() {
-    if (this.home != null){
-        this.roomCount = (<any[]>this.home.Rooms)?.length;
-        if (this.prospectService.availableProspects == null){
-          await this.prospectService.getAvailableProspects().then((availProspects: Iterable<IProspect>) => {
-            this.availProspects = availProspects;
-          })
-        }
-        else{
-          this.availProspects = this.prospectService.availableProspects; 
-        }
+    if (this.home != null) {
+      this.roomCount = (<any[]>this.home.Rooms)?.length;
+      if (this.prospectService.availableProspects == null) {
+        await this.prospectService.getAvailableProspects().then((availProspects: Iterable<IProspect>) => {
+          this.availProspects = availProspects;
+        })
       }
-      else{
-        this.roomCount = 0;
+      else {
+        this.availProspects = this.prospectService.availableProspects;
       }
     }
+    else {
+      this.roomCount = 0;
+    }
+  }
 
-    removeRoomBtnClicked(){
+  removeRoomBtnClicked() {
     console.log("opening remove room dialog");
-    if (this.home != null){
+    if (this.home != null) {
       this.modalRef = this.modalService.show(RemoveRoomModalComponent, {
         backdrop: true,
         keyboard: true,
@@ -84,11 +84,11 @@ export class HomeDetailsComponent implements OnInit {
           home: this.home,
         },
       });
-      this.modalRef.content.action.subscribe((roomRemoved: boolean)=> {
+      this.modalRef.content.action.subscribe((roomRemoved: boolean) => {
         this.modalRef.hide();
-        if (roomRemoved == true){
+        if (roomRemoved == true) {
           // Get updated list of rooms for the home
-          if (this.home != null){
+          if (this.home != null) {
             this.roomsService.getRooms(this.home.Id).then((rooms: Iterable<IRoom>) => {
               this.home.Rooms = rooms;
               this.roomCount = (<any[]>this.home.Rooms)?.length;
@@ -96,33 +96,44 @@ export class HomeDetailsComponent implements OnInit {
           }
         }
       },
-      error=>{
-        console.log(error);
-        this.modalRef.hide();
-      });
+        error => {
+          console.log(error);
+          this.modalRef.hide();
+        });
     }
   }
-    
-  openViewRoomDialog(){
-    if (this.home != null){
-      this.dialog.open(ViewRoomComponent, {
+
+  openViewRoomDialog() {
+    if (this.home != null) {
+      this.modalRef = this.modalService.show(ViewRoomComponent, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
-          home : this.home,
-          rooms : this.home.Rooms,
-        },
-        width:'45%',
-        height: '55%'
-      }).afterClosed().subscribe((home: IHome) => {
+          home: this.home,
+          rooms: this.home.Rooms,
+        }});
+        this.modalRef.content.action.subscribe((home: IHome)=> {
+          this.modalRef.hide();
           this.home.Rooms = home.Rooms;
           this.roomCount = (<any[]>this.home.Rooms)?.length;
-      });
-    }
+        },
+        error => {
+          console.log(error);
+          this.modalRef.hide();
+        });
+      }
   }
-  openViewProspectDialog(){
+    openViewProspectDialog(){
 
-  }
-  async openAddProspectDialog(){
-      this.roomsService.getAvailableRooms(this.home.Id).then((rooms : Iterable<IRoom>) => {
+    }
+    async openAddProspectDialog(){
+      this.roomsService.getAvailableRooms(this.home.Id).then((rooms: Iterable<IRoom>) => {
         this.availRooms = rooms;
         this.modalRef = this.modalService.show(AddApprovedProspectComponentModal, {
           backdrop: true,
@@ -138,15 +149,15 @@ export class HomeDetailsComponent implements OnInit {
             availProspects: this.availProspects,
           }
         });
-          this.modalRef.content.action.subscribe(()=> {
-            this.modalRef.hide();
+        this.modalRef.content.action.subscribe(() => {
+          this.modalRef.hide();
 
-          },
+        },
           error => {
             console.log(error);
             this.modalRef.hide();
           });
-        })
+      })
         .catch((err) => {
           this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
             backdrop: true,
@@ -164,52 +175,52 @@ export class HomeDetailsComponent implements OnInit {
               errorItems: []
             }
           });
-          this.modalRef.content.action.subscribe(()=> {
+          this.modalRef.content.action.subscribe(() => {
             this.modalRef.hide();
           },
-          error => {
-            console.log(error);
-            this.modalRef.hide();
-          });
+            error => {
+              console.log(error);
+              this.modalRef.hide();
+            });
         });
-  }
+    }
 
-  hasRooms(){
-    if (this.roomCount > 0)
-      return true;
-    else
-      return false;
-  }
+    hasRooms(){
+      if (this.roomCount > 0)
+        return true;
+      else
+        return false;
+    }
 
-  dispRoomCount(){
-    if (this.roomCount == 0 || this.roomCount > 1)
-      return `${this.roomCount} Rooms`;
-    else if (this.roomCount == 1)
-      return `${this.roomCount} Room`;
-  }
-  addRoom(){
-    this.modalRef = this.modalService.show(AddRoomModalComponent, {
-      backdrop: true,
-      keyboard: true,
-      focus: true,
-      show: false,
-      ignoreBackdropClick: false,
-      class: '',
-      containerClass: '',
-      animated: true,
-      data: {
-        home : this.home,
-        rooms : this.home.Rooms,
+    dispRoomCount(){
+      if (this.roomCount == 0 || this.roomCount > 1)
+        return `${this.roomCount} Rooms`;
+      else if (this.roomCount == 1)
+        return `${this.roomCount} Room`;
+    }
+    addRoom(){
+      this.modalRef = this.modalService.show(AddRoomModalComponent, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
+        data: {
+          home: this.home,
+          rooms: this.home.Rooms,
+        },
+      });
+      this.modalRef.content.action.subscribe((home: IHome) => {
+        this.modalRef.hide();
+        this.home.Rooms = home.Rooms;
+        this.roomCount = (<any[]>this.home.Rooms)?.length;
       },
-    });
-    this.modalRef.content.action.subscribe((home : IHome)=> {
-      this.modalRef.hide();
-      this.home.Rooms = home.Rooms;
-      this.roomCount = (<any[]>this.home.Rooms)?.length;
-    },
-    error => {
-      console.log(error);
-      this.modalRef.hide();
-    });
-}
-}
+        error => {
+          console.log(error);
+          this.modalRef.hide();
+        });
+    }
+  }
