@@ -1,5 +1,16 @@
-<div style="float:left; width:25%; height:100%;">
-    <h1 mat-dialog-title>Link Room</h1>
+<div class="modal fade in" style="display: block;" aria-hidden="false"> <!--z-index defaults to 1050-->
+    <div class="modal-dialog modal-sm modal-dialog-centered" >
+      <!--Content-->
+      <div class="modal-content">
+    <div class="modal-header text-center">
+      <span id="mainHeader" class="modal-title w-100" style="font-size: 18px;">Link Room</span>
+      <span class="pull-right" style="margin-right:40px;">
+      </span>
+  
+      <button (click)="closeNoSelection()" type="button" class="close pull-right" aria-label="Close" >X
+      </button>
+    </div>
+    <div class="modal-body">
     <div style="float:left;">
         <mat-form-field appearance="fill">
             <mat-label>Select Home</mat-label>
@@ -20,11 +31,12 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <span style="margin-left:5%;">
-        <br />
-        <button id="saveViewRoomBtn" *ngIf="fieldsModified == true" mat-button (click)="linkRoomToProspect()">Link Room to Prospect</button>
-        <button class="lowerViewRoomButtons" (click)="returnChoice()" mat-button>Ok</button>
-        <button class="lowerViewRoomButtons" (click)="closeNoSelection()" mat-button>Close</button>
-    </span>
 </div>
-  
+<div class="button-container">
+    <span class="fill-space"></span>
+    <button class="flex-items" [ngStyle]="selectedRoom != null ? {'visibility': 'visible'} : {'visibility':'hidden'}"  (click)="returnChoice()" mat-button>Link</button>
+    <button class="flex-items" style="right:0;" (click)="closeNoSelection()" mat-button>Close</button>
+</div>
+</div>
+</div>
+</div>

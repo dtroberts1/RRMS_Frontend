@@ -1,5 +1,17 @@
-<div>
-    <h1 id="mainHeader">Future Tenant: {{data.docProspectDto.FName}}&nbsp;{{data.docProspectDto.LName}}</h1>
+<div class ="modal fade in" style="display: block;" aria-hidden="false"> <!--z-index defaults to 1050-->
+    <div class="modal-dialog modal-lg modal-dialog-centered" >
+      <!--Content-->
+      <div class="modal-content">
+    <div class="modal-header">
+      <span id="mainHeader">Email Lease</span>
+      <span class="pull-right" style="margin-right:40px;">
+        </span>
+
+      <button (click)="cancel()" type="button" class="close pull-right" aria-label="Close">X
+      </button>
+    </div>
+    <div class="modal-body">
+    <h1 id="mainHeader">Future Tenant: {{docProspectDto.FName}}&nbsp;{{docProspectDto.LName}}</h1>
     <br />
     <!-- Email Address-->
     <mat-form-field appearance="fill">
@@ -62,4 +74,6 @@
     <button mat-button (click)="clearText()" class="flex-items" style="float:right;background-color:#476c79; color:white;">
         Clear Text
       </button>
+</div>
+</div>
 </div>

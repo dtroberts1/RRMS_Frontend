@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
+import { Subject } from 'rxjs';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IHome } from 'src/app/interfaces/Homes';
 import {IEmployer, SalaryType} from '../../../interfaces/Employer';
@@ -18,6 +20,8 @@ export interface DialogData {
   styleUrls: ['./lease-template-popup-modal.component.css']
 })
 export class LeaseTemplatePopupModal implements OnInit {
+  action: Subject<any> = new Subject();
+  modalRef: MDBModalRef;
   homeImagePath : string;
   room : IRoom;
   fileName : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]{2,25}')]);
@@ -32,7 +36,8 @@ export class LeaseTemplatePopupModal implements OnInit {
   fieldsModified: boolean = false;
   currentRoomIndex: number = 0;
   roomCount: number = 0;
-
+  title: string = null;
+  contentSummary: string = null;
   dimension1 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
   dimension2 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
   monthlyRateInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]{1,5}')]);
@@ -40,50 +45,47 @@ export class LeaseTemplatePopupModal implements OnInit {
   hasCloset : boolean;
   hasCeilingFan : boolean;
   hasPrivateBath : boolean;
- selected: number;
+  selected: number;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
-  public dialogRef: MatDialogRef<LeaseTemplatePopupModal>,
-  public dialog: MatDialog, 
+
   ) {
-    if (data != null){
-      console.log("in popup, contentSummary is " + JSON.stringify(data.contentSummary))
-    }
+
   }
   closeNoSelection(){
-    this.dialogRef.close(null);
+    this.action.next(null);
   }
   openTemplate(param: string){
-    if (this.data.title == 'Save As')
+    if (this.title == 'Save As')
     {
       if(this.fileName != null && this.fileName.value != '')
-        this.dialogRef.close(this.fileName.value);
+        this.action.next(this.fileName.value);
+
       else
-        this.dialogRef.close(null);
+        this.action.next(null);
     }
-    else if(this.data.title == 'Residential Lease Agreement')
+    else if(this.title == 'Residential Lease Agreement')
     {
-        this.dialogRef.close(this.selected);
+      this.action.next(this.selected);
     }
-    else if(this.data.title == 'Saved')
-      this.dialogRef.close(null);
-    else if(this.data.title == 'Load Template'){
-      this.dialogRef.close(this.selected);
+    else if(this.title == 'Saved')
+      this.action.next(null);
+    else if(this.title == 'Load Template'){
+      console.log("load template clicked");
+      this.action.next(this.selected);
     }
-    else if(this.data.title == 'Delete Template'){
-      this.dialogRef.close(this.selected);
+    else if(this.title == 'Delete Template'){
+      this.action.next(this.selected);
     }
-    else if(this.data.title == 'Deleted'){
-      this.dialogRef.close(null);
+    else if(this.title == 'Deleted'){
+      this.action.next(null);
     }
-    else if(this.data.title == 'Unsaved Changes'){
-      this.dialogRef.close(param);
+    else if(this.title == 'Unsaved Changes'){
+      this.action.next(param);
     }
-    else if(this.data.title == 'Insert Merge Tag'){
-      this.dialogRef.close(this.selected);
+    else if(this.title == 'Insert Merge Tag'){
+      this.action.next(this.selected);
     }
-    //this.dialogRef.close(this.selected); // important: returns the id, not the index!!
   }
   showProductDetails(){
   }

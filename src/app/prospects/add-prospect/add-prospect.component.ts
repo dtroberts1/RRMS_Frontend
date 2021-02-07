@@ -31,7 +31,7 @@ enum ProspectStatus {
 @Component({
   selector: 'app-add-prospect',
   templateUrl: './add-prospect.component.html',
-  styleUrls: ['./add-prospect.component.css']
+  styleUrls: ['./add-prospect.component.scss']
 })
 export class AddProspectComponent implements OnInit {
   homes : Iterable<IHome>;
@@ -187,12 +187,21 @@ export class AddProspectComponent implements OnInit {
   openLinkRoomModal(){
     this.homesService.getHomes().then((homes) => {
       this.homes = homes;
-
-      this.dialog.open(LinkRoomModalComponent, {
+      this.modalRef = this.modalService.show(LinkRoomModalComponent, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
           homes : this.homes,
         }
-      }).afterClosed().subscribe((selectedRoomId : number) => {
+      });
+      this.modalRef.content.action.subscribe((selectedRoomId : number) => {
+        this.modalRef.hide();
         if (selectedRoomId)
         {
           this.selectedRoomId = selectedRoomId;
@@ -203,26 +212,58 @@ export class AddProspectComponent implements OnInit {
             console.log(err);
           }); 
         }
+      },
+      error => {
+        console.log(error);
+        this.modalRef.hide();
       });
     }).catch((err) =>{
       console.log(err);
     });
   }
   addPrevRental(){
-    this.dialog.open(AddPrevRentalComponent, {
+    this.modalRef = this.modalService.show(AddPrevRentalComponent, {
+      backdrop: true,
+      keyboard: true,
+      focus: true,
+      show: false,
+      ignoreBackdropClick: false,
+      class: '',
+      containerClass: '',
+      animated: true,
       data: {}
-    }).afterClosed().subscribe((prevRental : IPreviousRental) => {
+    });
+    this.modalRef.content.action.subscribe((prevRental : IPreviousRental) => {
+      this.modalRef.hide();
       if (prevRental)
       this.prevRentals.push(prevRental);
+    },
+    error => {
+      console.log(error);
+      this.modalRef.hide();
     });
   }
 
   addEmployer(){
-    this.dialog.open(AddEmployerComponent, {
+    this.modalRef = this.modalService.show(AddEmployerComponent, {
+      backdrop: true,
+      keyboard: true,
+      focus: true,
+      show: false,
+      ignoreBackdropClick: false,
+      class: '',
+      containerClass: '',
+      animated: true,
       data: {}
-    }).afterClosed().subscribe((emp : IEmployer) => {
+    });
+    this.modalRef.content.action.subscribe((emp : IEmployer) => {
+      this.modalRef.hide(); 
       if (emp)
         this.employers.push(emp);
+    },
+    error => {
+      console.log(error);
+      this.modalRef.hide(); 
     });
   }
 

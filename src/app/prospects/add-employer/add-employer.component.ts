@@ -2,15 +2,17 @@ import { Component, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
+import { Subject } from 'rxjs';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import {IEmployer, SalaryType} from '../../interfaces/Employer';
 
 @Component({
   selector: 'app-add-employer',
   templateUrl: './add-employer.component.html',
-  styleUrls: ['./add-employer.component.css']
+  styleUrls: ['./add-employer.component.scss']
 })
 export class AddEmployerComponent {
+  action: Subject<any> = new Subject();
   modalRef: MDBModalRef;
   CmpyName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,45}')]);
   MgrFName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,30}')]);
@@ -38,16 +40,13 @@ export class AddEmployerComponent {
     ['Yes', true]
   ]);
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, 
-  public dialogRef: MatDialogRef<AddEmployerComponent>,
-  public dialog: MatDialog, 
+  constructor(
   private modalService: MDBModalService,
 
   ) {
   }
   closeEmpDialog(){
-    this.dialogRef.close(null); // this needs to return a null
-
+    this.action.next(null);
   }  
   getInputErrorMessage(inputField){
     
@@ -132,7 +131,7 @@ export class AddEmployerComponent {
   addEmp(){
     this.inputsAreValid().then((isValid: boolean) => {
       if (isValid == true){
-        this.dialogRef.close(
+        this.action.next(
           // IEmployer
           {
             Id: -1,

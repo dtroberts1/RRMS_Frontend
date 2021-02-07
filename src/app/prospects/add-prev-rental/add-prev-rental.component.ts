@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
+import { Subject } from 'rxjs';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import {IEmployer, SalaryType} from '../../interfaces/Employer';
 
@@ -12,6 +13,8 @@ import {IEmployer, SalaryType} from '../../interfaces/Employer';
 })
 
 export class AddPrevRentalComponent {
+  action: Subject<any> = new Subject();
+  modalRef: MDBModalRef;
   PrevLandlordFName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,30}')]);
   PrevLandlordLName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z\\s]{2,30}')]);
   PrevLandlordEmailAddress = new FormControl('', [Validators.required, Validators.email]);
@@ -28,17 +31,13 @@ export class AddPrevRentalComponent {
   salaryType: string[] = ['Annual', 'Hourly'];
   salType : SalaryType = SalaryType.annual;
   currentEmp : boolean = false;
-  modalRef: MDBModalRef;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, 
-  public dialogRef: MatDialogRef<AddPrevRentalComponent>,
-  public dialog: MatDialog, 
+  constructor(
   private modalService: MDBModalService,
-
   ) {
   }
   closeAddRentalDialog(){
-    this.dialogRef.close(null); // this needs to return a null
+    this.action.next(null); // this needs to return a null
 
   }  
   getInputErrorMessage(inputField){
@@ -120,7 +119,7 @@ export class AddPrevRentalComponent {
   addPrevRental(){
     this.inputsAreValid().then((isValid : boolean) => {
       if (isValid == true){
-        this.dialogRef.close(
+        this.action.next(
           {
             PrevLandlordEmailAddress : this.PrevLandlordEmailAddress.value,
             PrevLandlordPhoneNumber : this.PrevLandlordPhoneNumber.value,

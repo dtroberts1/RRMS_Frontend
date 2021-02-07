@@ -142,16 +142,30 @@ export class LeaseTemplatesComponent {
 
     public saveAsDocx() :void {
         let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
-        this.dialog.open(LeaseTemplatePopupModal, {
+        this.modalRef = this.modalService.show(LeaseTemplatePopupModal, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
             data: {
                 title: "Residential Lease Agreement",
                 contentSummary: "Chose State for RLA",
                 content: this.states,
               }
-        }).afterClosed().subscribe((selectedState: string) => {
+        });
+        this.modalRef.content.action.subscribe((selectedState: string) => {
+            this.modalRef.hide();
             if (selectedState != null){
                 this.templateService.createTemplate(sfdt, selectedState);
             }
+        },
+        error => {
+            console.log(error);
+            this.modalRef.hide();
         });
     }
   
@@ -179,23 +193,36 @@ rlaBtnClicked(){
 }
 chooseRLAStateHelperWithPrompt(){
     if (this.savedNote != null){
-        this.dialog.open(LeaseTemplatePopupModal, {
+        this.modalRef = this.modalService.show(LeaseTemplatePopupModal, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
             data: {
                 title: "Unsaved Changes", // from 'Load Template'
                 contentSummary: "Unsaved Changes exist in the editor. Would you like to save?",
                 content: null, // Need to set this up, also if returned list contains no elements, it should display different message
               }
-        })
-            .afterClosed().subscribe(async (saveNoOrCancel: string) => {
-                if (saveNoOrCancel == 'yes'){
-                    await this.saveHelper().then(()=>{
-                        this.chooseRLAStateHelper();
-                    });
-                }
-                else if(saveNoOrCancel == 'no'){
+        });
+        this.modalRef.content.action.subscribe(async (saveNoOrCancel: string) => {
+            this.modalRef.hide();
+            if (saveNoOrCancel == 'yes'){
+                await this.saveHelper().then(()=>{
                     this.chooseRLAStateHelper();
-                }
-            })
+                });
+            }
+            else if(saveNoOrCancel == 'no'){
+                this.chooseRLAStateHelper();
+            }
+        },
+        error => {
+            console.log(error);
+            this.modalRef.hide();
+        })
         }
     else{
         this.chooseRLAStateHelper();
@@ -203,14 +230,23 @@ chooseRLAStateHelperWithPrompt(){
 }
 
 chooseRLAStateHelper(){
-    this.dialog.open(LeaseTemplatePopupModal, {
+    this.modalRef = this.modalService.show(LeaseTemplatePopupModal, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
             title: "Residential Lease Agreement",
             contentSummary: "Chose State for RLA",
             content: this.states,
           }
-    })
-    .afterClosed().subscribe((selectedState: string) => {
+    });
+    this.modalRef.content.action.subscribe((selectedState: string) => {
+        this.modalRef.hide();
         if (selectedState != null){
             this.templateService.getStateRLATemplates(selectedState).then((sfdt : any) => {
                 this.documentEditorContainerComponent.documentEditor.open(sfdt);
@@ -219,6 +255,10 @@ chooseRLAStateHelper(){
                 this.astrisk = "*";
             })
         }
+    },
+    error => {
+        console.log(error);
+        this.modalRef.hide(); 
     });
 }
 
@@ -237,30 +277,43 @@ chooseRLAStateHelper(){
  loadFromServer(){
        // Check and prompt if unsaved changes exist
        if (this.savedNote != null){
-        this.dialog.open(LeaseTemplatePopupModal, {
+        this.modalRef = this.modalService.show(LeaseTemplatePopupModal, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
             data: {
                 title: "Unsaved Changes", // from 'Load Template'
                 contentSummary: "Unsaved Changes exist in the editor. Would you like to save?",
                 content: null, // Need to set this up, also if returned list contains no elements, it should display different message
               }
-        })
-            .afterClosed().subscribe(async (saveNoOrCancel: string) => {
-                if (saveNoOrCancel == 'yes'){
-                    // Call Save and then proceed with the block inside the "No" condition
-                    // First try to save, prompt if file doesn't yet exist on server
-                    
-                    // There should be a loadedFileName if savedNote != null
-                    await this.saveHelper().then(() => {
-                        this.loadTemplateHelper();
-                    })
-                }
-                else if(saveNoOrCancel == 'no'){
+        });
+        this.modalRef.content.action.subscribe(async (saveNoOrCancel: string) => {
+            this.modalRef.hide();
+            if (saveNoOrCancel == 'yes'){
+                // Call Save and then proceed with the block inside the "No" condition
+                // First try to save, prompt if file doesn't yet exist on server
+                
+                // There should be a loadedFileName if savedNote != null
+                await this.saveHelper().then(() => {
                     this.loadTemplateHelper();
-                }
-                else if(saveNoOrCancel == 'cancel'){
-                    // Return and do nothing
-                    return;
-                }
+                })
+            }
+            else if(saveNoOrCancel == 'no'){
+                this.loadTemplateHelper();
+            }
+            else if(saveNoOrCancel == 'cancel'){
+                // Return and do nothing
+                return;
+            }
+            },
+            error => {
+                console.log(error);
+                this.modalRef.hide();
             });
     }
     else{
@@ -272,14 +325,23 @@ chooseRLAStateHelper(){
  loadTemplateHelper(){
     // First get list of custom filenames that exist for the landlord
     this.templateService.getAvailableCustomTemplateFileNames().then((availableFileNames: Iterable<string>) => {
-        this.dialog.open(LeaseTemplatePopupModal, {
+        this.modalRef = this.modalService.show(LeaseTemplatePopupModal, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
             data: {
                 title: "Load Template",
                 contentSummary: "Choose Template",
                 content: availableFileNames, // Need to set this up, also if returned list contains no elements, it should display different message
             }
-        })
-            .afterClosed().subscribe((selectedTemplate: string) => {
+        });
+        this.modalRef.content.action.subscribe((selectedTemplate: string) => {
+            this.modalRef.hide();
                 if (selectedTemplate != null){
                     this.templateService.getTemplate(selectedTemplate).then((sfdt : any) => {
                         this.documentEditorContainerComponent.documentEditor.open(sfdt);
@@ -288,6 +350,10 @@ chooseRLAStateHelper(){
                         this.astrisk = null;
                     })
                 }
+            },
+            error => {
+                console.log(error);
+                this.modalRef.hide();
             });
     });
  }
@@ -301,29 +367,51 @@ saveAs(selectedItem: string){
     return new Promise((resolve, reject) => {
         let sfdt: any = {content: this.documentEditorContainerComponent.documentEditor.serialize()};
 
-        this.dialog.open(LeaseTemplatePopupModal, {
+        this.modalRef = this.modalService.show(LeaseTemplatePopupModal, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
             data: {
                 title: "Save As",
                 contentSummary: "Enter Filename",
                 content: null,
               }
-        })
-        .afterClosed().subscribe((fileName: string) => {
+        });
+        this.modalRef.content.action.subscribe((fileName: string) => {
+            this.modalRef.hide();
             if (fileName != null){
                 this.templateService.createCustomTemplate(sfdt, fileName).then((sfdt : any) => {
                     // Open the confirmation dialog and update the loadedFileName and savedNote
-                    this.dialog.open(LeaseTemplatePopupModal, {
+                    this.modalRef = this.modalService.show(LeaseTemplatePopupModal, {
+                        backdrop: true,
+                        keyboard: true,
+                        focus: true,
+                        show: false,
+                        ignoreBackdropClick: false,
+                        class: '',
+                        containerClass: '',
+                        animated: true,
                         data: {
                             title: "Saved",
                             contentSummary: `${fileName} has been saved`,
                             content: null,
                             }
-                    })
-                    .afterClosed().subscribe(() => {
+                    });
+                    this.modalRef.content.action.subscribe(() => {
+                        this.modalRef.hide();
                         this.savedNote = null;
                         this.astrisk = null;
                         this.loadedFileName = fileName;
                         resolve(true);
+                    },
+                    error => {
+                        console.log(error);
+                        this.modalRef.hide();
                     })
                 })
                 .catch(() => {
@@ -333,6 +421,10 @@ saveAs(selectedItem: string){
             else{
                 reject();
             }
+        },
+        error => {
+            console.log(error);
+            this.modalRef.hide();
         });
     });
 }
@@ -353,17 +445,30 @@ async saveHelper(){
                 });
             }
             else{
-                this.dialog.open(LeaseTemplatePopupModal, {
+                this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+                    backdrop: true,
+                    keyboard: true,
+                    focus: true,
+                    show: false,
+                    ignoreBackdropClick: false,
+                    class: '',
+                    containerClass: '',
+                    animated: true,
                     data: {
                         title: "Saved",
                         contentSummary: `${this.loadedFileName} has been saved`,
                         content: null,
                       }
-                })
-                .afterClosed().subscribe(() => {
+                });
+                this.modalRef.content.action.subscribe(() => {
+                    this.modalRef.hide();    
                     this.savedNote = null;
                     this.astrisk = null;
                     resolve(true);
+                },
+                error => {
+                    console.log(error);
+                    this.modalRef.hide();    
                 })
             }
         })
@@ -388,14 +493,23 @@ async serverBtnItemSelected(args: MenuEventArgs){
     else if(selectedItem == 'Delete'){
         // First get list of custom filenames that exist for the landlord
         this.templateService.getAvailableCustomTemplateFileNames().then((availableFileNames: Iterable<string>) => {
-            this.dialog.open(LeaseTemplatePopupModal, {
+            this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+                backdrop: true,
+                keyboard: true,
+                focus: true,
+                show: false,
+                ignoreBackdropClick: false,
+                class: '',
+                containerClass: '',
+                animated: true,
                 data: {
                     title: "Delete Template", // from 'Load Template'
                     contentSummary: "Choose Template",
                     content: availableFileNames, // Need to set this up, also if returned list contains no elements, it should display different message
                   }
-            })
-                .afterClosed().subscribe((selectedTemplate: string) => {
+            });
+            this.modalRef.content.action.subscribe((selectedTemplate: string) => {
+                this.modalRef.hide();
                     if (selectedTemplate != null){
                         this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
                             backdrop: true,
@@ -417,15 +531,30 @@ async serverBtnItemSelected(args: MenuEventArgs){
                             this.modalRef.hide();
                             if (deleteTemplate == true ){
                                 this.templateService.deleteTemplate(selectedTemplate).then(()=>{
-                                    this.dialog.open(LeaseTemplatePopupModal, {
+                                    this.modalRef = this.modalService.show(LeaseTemplatePopupModal, {
+                                        backdrop: true,
+                                        keyboard: true,
+                                        focus: true,
+                                        show: false,
+                                        ignoreBackdropClick: false,
+                                        class: '',
+                                        containerClass: '',
+                                        animated: true,
                                         data: {
                                             title: "Deleted",
                                             contentSummary: `${selectedTemplate} has been removed`,
                                             content: null,
                                         }
-                                    })
-                                    .afterClosed().subscribe(() => {
+                                    });
+
+                                    this.modalRef.content.action.subscribe(() => {
                                         // Dont' do any thing to the content in the editor or the changed status indicators
+                                        this.modalRef.hide();
+
+                                    },
+                                    error => {
+                                        console.log(error);
+                                        this.modalRef.hide();
                                     })
                                 })
                             }
@@ -435,6 +564,10 @@ async serverBtnItemSelected(args: MenuEventArgs){
                             this.modalRef.hide();
                         });
                     }
+                },
+                error => {
+                    console.log(error);
+                    this.modalRef.hide();
                 });
         });
     }
@@ -447,19 +580,33 @@ async serverBtnItemSelected(args: MenuEventArgs){
 }
 
 mergeTagMainBtnClicked() {
-    this.dialog.open(LeaseTemplatePopupModal, {
+    this.modalRef = this.modalService.show(LeaseTemplatePopupModal, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
             title: "Insert Merge Tag", // from 'Load Template'
             contentSummary: "Choose Merge Tag", 
             content: this.mergeTagKeys, // Need to set this up, also if returned list contains no elements, it should display different message
           }
-    }).afterClosed().subscribe((selectedMergeTag: string) => {
+    });
+    this.modalRef.content.action.subscribe((selectedMergeTag: string) => {
+        this.modalRef.hide();
         let fileName : string = selectedMergeTag.replace(/\n/g, '').replace(/\r/g, '').replace(/\r\n/g, '');
         var fieldCode = 'MERGEFIELD  ' + fileName + "  \\* MERGEFORMAT blue";
         this.documentEditorContainerComponent.documentEditor.editor.insertField(fieldCode, '«' + selectedMergeTag + '»');
         this.documentEditorContainerComponent.documentEditor.focusIn();
         this.documentEditorContainerComponent.documentEditor.saveAsBlob("Docx").then(function (blob) {
         });
+    },
+    error => {
+        console.log(error);
+        this.modalRef.hide();
     })
 }
 closeSplitBtn(){

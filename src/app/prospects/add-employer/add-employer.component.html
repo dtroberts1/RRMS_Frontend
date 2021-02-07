@@ -1,11 +1,17 @@
-<h1 mat-dialog-title style="color:blue"></h1>
-<div mat-dialog-content>
-<!--
-  current: boolean,
-  salaryType: SalaryType,
-  prospectID: number,
--->
-<h1>Add Employer</h1>
+<div class ="modal fade in" style="display: block;" aria-hidden="false"> <!--z-index defaults to 1050-->
+  <div class="modal-dialog modal-sm modal-dialog-centered" >
+    <!--Content-->
+    <div class="modal-content">
+  <div class="modal-header text-center">
+    <span id="mainHeader" class="modal-title w-100" style="font-size:18pt;">Add Employer</span>
+    <span class="pull-right" style="margin-right:40px;">
+    </span>
+
+    <button (click)="closeEmpDialog()" type="button" class="close pull-right" aria-label="Close" >X
+    </button>
+  </div>
+  <div class="modal-body" style="max-height:450px; overflow-y: auto;">
+
 <mat-form-field appearance="standard">
   <mat-label>Company Name</mat-label>
   <input matInput placeholder="Stacy" required [formControl]="CmpyName">
@@ -121,8 +127,12 @@
     {{salType}}
   </mat-radio-button>
 </mat-radio-group>
-  <br />
-  <button mat-button (click)="closeEmpDialog()">Close</button>
-  <button mat-button (click)="addEmp()">Add </button>
-
+</div>
+  <div class="button-container">
+    <span class="fill-space"></span>
+    <button class="flex-items" mat-button (click)="addEmp()">Add </button>
+    <button class="flex-items" style="right:0" mat-button (click)="closeEmpDialog()">Close</button>
+  </div>
+</div>
+</div>
 </div>

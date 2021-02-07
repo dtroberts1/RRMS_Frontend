@@ -160,14 +160,23 @@ templatesHelperWithUnsavedPrompt(){
 loadTemplateHelper(){
     // First get list of custom filenames that exist for the landlord
     this.templateService.getAvailableCustomTemplateFileNames().then((availableFileNames: Iterable<string>) => {
-        this.dialog.open(LeaseTemplatePopupModal, {
+        this.modalRef = this.modalService.show(LeaseTemplatePopupModal, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
             data: {
                 title: "Load Template",
                 contentSummary: "Choose Template",
                 content: availableFileNames, // Need to set this up, also if returned list contains no elements, it should display different message
             }
-        })
-            .afterClosed().subscribe((selectedTemplate: string) => {
+        });
+        this.modalRef.content.action.subscribe((selectedTemplate: string) => {
+            this.modalRef.hide(); 
                 if (selectedTemplate != null){
                     this.templateService.getTemplate(selectedTemplate).then((sfdt : any) => {
                         this.documentEditorContainerComponent.documentEditor.open(sfdt);
@@ -176,6 +185,10 @@ loadTemplateHelper(){
                         this.astrisk = null;
                     })
                 }
+            },
+            error => {
+                console.log(error);
+                this.modalRef.hide(); 
             });
     });
 }
@@ -239,11 +252,25 @@ emailHelper(){
         LatestDocDelivery: null,
     }
     console.log("Attempting to send" + JSON.stringify(dtoData))
-    this.dialog.open(SendLeaseEmailModalComponent,{
+    this.modalRef = this.modalService.show(SendLeaseEmailModalComponent, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {docProspectDto: dtoData,
-        }}
-        ).afterClosed().subscribe((emailSent: boolean) => {
-        })
+        }
+    });
+    this.modalRef.content.action.subscribe(() => {
+        this.modalRef.hide();
+    },
+    error => {
+        console.log(error);
+        this.modalRef.hide();
+    });
 }
 
  leasesMainBtnSelected(){
@@ -288,12 +315,21 @@ emailHelper(){
     // First get list of custom filenames that exist for the landlord
     this.leaseDocumentService.getDocumentProspectDtos().then((docProspectDtos: Iterable<IDocumentProspectDto>) => {
         console.log("back in loadDocumentsHelper, returned object is " + JSON.stringify(docProspectDtos));
-        this.dialog.open(LeaseDocProspectTableModalComponent, {
+        this.modalRef = this.modalService.show(LeaseDocProspectTableModalComponent, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
             data: {
                 content: docProspectDtos,
             }
-        })
-        .afterClosed().subscribe((retFromTable: {selectedTemplate: string, prospectId: number, selectedDocId: number}) => {
+        });
+        this.modalRef.content.action.subscribe((retFromTable: {selectedTemplate: string, prospectId: number, selectedDocId: number}) => {
+            this.modalRef.hide();
             if (retFromTable != null && retFromTable.selectedTemplate != "" && retFromTable.prospectId != null){
                 // First get prospect using ID (so you can later resave)
                 this.prospectService.getProspect(retFromTable.prospectId)
@@ -308,6 +344,10 @@ emailHelper(){
                     });
                 })
             }
+        },
+        error => {
+            console.log(error);
+            this.modalRef.hide();
         });
     });
  }

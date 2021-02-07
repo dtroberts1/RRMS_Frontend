@@ -1,5 +1,16 @@
-<div>
-  <h1 id="mainHeader" style="text-align: center">Lease Documents</h1>
+<div class ="modal fade in" style="display: block;" aria-hidden="false"> <!--z-index defaults to 1050-->
+  <div class="modal-dialog modal-xl modal-dialog-centered" >
+    <!--Content-->
+    <div class="modal-content">
+  <div class="modal-header text-center">
+    <span id="mainHeader"  class="modal-title w-100" style="font-size:20pt;">Lease Documents</span>
+    <span class="pull-right" style="margin-right:40px;">
+    </span>
+
+    <button (click)="closeBtnClicked()" type="button" class="close pull-right" aria-label="Close" >X
+    </button>
+  </div>
+  <div class="modal-body">
     <div id="table-container">
         <table (click)="tableClicked()" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
@@ -96,4 +107,7 @@
       <button (click)="deleteDocument()" class="flex-items" style="background-color:#476c79; color:white;" mat-button >Delete</button>
       <button (click)="closeBtnClicked()" class="flex-items" style="background-color:#476c79; color:white;" mat-button >Close</button><!-- or Open Editor--> 
     </div>
+</div>
+</div>
+</div>
 </div>

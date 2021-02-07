@@ -1,10 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MDBModalRef } from 'angular-bootstrap-md';
+import { Subject } from 'rxjs';
 import { IDocumentDeliveries } from 'src/app/interfaces/DocumentDeliveries';
-
-interface ModalData {
-  content: Iterable<IDocumentDeliveries>,
-}
 
 @Component({
   selector: 'app-document-deliveries-modal',
@@ -13,7 +10,9 @@ interface ModalData {
 })
 export class DocumentDeliveriesModalComponent implements OnInit {
   displayedColumns: string[] = ['Delivery Date','To Address', 'DocumentDeclined'];
-
+  action: Subject<any> = new Subject();
+  modalRef: MDBModalRef;
+  content: Iterable<IDocumentDeliveries> = null;
   dataSource : Array<IDocumentDeliveries>;
   dateOptions : {hour: string, minute: string, hour12: boolean} = {
     hour: 'numeric',
@@ -21,23 +20,16 @@ export class DocumentDeliveriesModalComponent implements OnInit {
     hour12: true
   };
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: ModalData,
-    public dialogRef: MatDialogRef<DocumentDeliveriesModalComponent>,
-    public dialog: MatDialog, 
   ) {
-    if (data != null){
-
-      this.dataSource = Array.from(this.data.content);
-      this.dataSource.forEach((dataItem) => {
-        dataItem.DeliveryDate = new Date(dataItem.DeliveryDate + 'Z');
-      })
-    }
    }
 
   ngOnInit(): void {
-    
+    this.dataSource = Array.from(this.content);
+    this.dataSource.forEach((dataItem) => {
+      dataItem.DeliveryDate = new Date(dataItem.DeliveryDate + 'Z');
+    })
   }
   closeBtnClicked(){
-    this.dialogRef.close(null);
+    this.action.next(null);
   }
 }

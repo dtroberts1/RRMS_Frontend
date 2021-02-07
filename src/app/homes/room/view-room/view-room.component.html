@@ -79,7 +79,7 @@
           <span *ngIf="editDimension1 == false">{{dimension1.value}}&nbsp;{{"ft"}}</span>
           <span *ngIf="editDimension1 == true">
             <mat-form-field appearance="fill">
-              <mat-label>Length</mat-label>
+              <mat-label>Select</mat-label>
               <mat-select [(value)]="selectedLength" (selectionChange)="lenChanged($event)">
               <mat-option *ngFor="let lengthVal of lengthList" [value]="lengthVal">
                   {{lengthVal}}

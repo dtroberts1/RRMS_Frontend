@@ -55,3 +55,22 @@
     color:white;
     background-color:Red;
   }
+  .flex-items {  
+    margin: 6px;  
+    background-color:#476c79; 
+    color:white;
+}  
+.flex-items:hover{
+  background-color: #90A6AE;
+}
+.button-container {
+}
+#mainHeader{
+  background: linear-gradient(90deg, rgba(2,0,36,1) 3%, rgba(135,217,206,1) 28%, rgba(51,92,148,1) 97%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.fill-space {
+  flex:
+   1 1 auto;
+}

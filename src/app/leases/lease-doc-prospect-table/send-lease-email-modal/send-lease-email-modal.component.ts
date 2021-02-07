@@ -3,27 +3,26 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { catchError, last, map, tap } from 'rxjs/operators';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IDocumentProspectDto } from 'src/app/interfaces/DocumentProspect';
 import { DocumentDeliveryService } from 'src/app/services/documentDelivery.service';
 
-export interface DialogData {
-  docProspectDto: IDocumentProspectDto,
-}
 @Component({
   selector: 'app-send-lease-email-modal',
   templateUrl: './send-lease-email-modal.component.html',
   styleUrls: ['./send-lease-email-modal.component.css']
 })
 export class SendLeaseEmailModalComponent implements OnInit {
+  action: Subject<any> = new Subject();
+  modalRef: MDBModalRef;
+  docProspectDto: IDocumentProspectDto = null;
   emailOptions: Iterable<string>;
   subjectOptions: Iterable<string>;
   attachmentOptions: Iterable<string>;
   localFileName: string;
   fd: FormData = null;
-  modalRef: MDBModalRef;
   selectedEmailOption: string = null;
   selectedSubjectOption: string = null;
   selectedAttachmentOption: string = null;
@@ -35,22 +34,16 @@ export class SendLeaseEmailModalComponent implements OnInit {
   emailBodyInput : FormControl = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9_\\s\\.\\!\\$\\,\\-\\%\\*\\(\\)\\?]{0,2000}')]);
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private _http: HttpClient,
-    public dialogRef: MatDialogRef<SendLeaseEmailModalComponent>,
-    public dialog: MatDialog, 
     private documentDeliveryService: DocumentDeliveryService,
     private modalService: MDBModalService,
   ) { }
 
   ngOnInit(): void {
-    console.log("In dto is " + JSON.stringify(this.data.docProspectDto));
-    this.emailOptions = [this.data.docProspectDto.EmailAddress, 'Enter a different email'];
+    console.log("In dto is " + JSON.stringify(this.docProspectDto));
+    this.emailOptions = [this.docProspectDto.EmailAddress, 'Enter a different email'];
     this.subjectOptions = ['"Your Lease Agreement"', 'Customize Subject'];
-    this.attachmentOptions = [this.data.docProspectDto.DocumentName, 'Browse local File']
-    if (this.data != null){
-      console.log("In modal, data is " + JSON.stringify(this.data));
-    }
+    this.attachmentOptions = [this.docProspectDto.DocumentName, 'Browse local File']
   }
   attachmentSelectionChanged(){
     if (this.selectedAttachmentOption == 'Browse local File'){
@@ -88,7 +81,7 @@ export class SendLeaseEmailModalComponent implements OnInit {
   getEmail(){
     // Used for API call -- based on what user chooses from combobox
     if (this.showEmailTextBox == false){
-      return this.emailOptions[0]; // Default: should be this.data.docProspectDto.EmailAddress
+      return this.emailOptions[0];
     }
     else if(this.showEmailTextBox == true){
       return this.emailAddressInput.value;
@@ -100,7 +93,7 @@ export class SendLeaseEmailModalComponent implements OnInit {
       this.fd.append("Email", this.getEmail());
       this.fd.append("SubjectLine", this.getSubject());
       this.fd.append("EmailBody", this.emailBodyInput.value);
-      this.fd.append("prospectId",this.data.docProspectDto.ProspectId.toString());
+      this.fd.append("prospectId",this.docProspectDto.ProspectId.toString());
       this.documentDeliveryService.DeliverAddRecordCustom(this.fd)
       .then(() => {
         this.fd = null;
@@ -122,7 +115,7 @@ export class SendLeaseEmailModalComponent implements OnInit {
           });
           this.modalRef.content.action.subscribe(() => {
             this.modalRef.hide();
-            this.dialogRef.close(true);
+            this.action.next(true);
           },
           error =>{
             console.log(error);
@@ -160,7 +153,7 @@ export class SendLeaseEmailModalComponent implements OnInit {
       this.documentDeliveryService.DeliverAddRecord({
         Message: this.emailBodyInput.value,
         Subject: this.getSubject(),
-        LeaseDocumentId: this.data.docProspectDto.DocumentId,
+        LeaseDocumentId: this.docProspectDto.DocumentId,
         EmailAddress: this.getEmail(),
         LocalFileData: this.localFileName,
         FName: null,
@@ -188,7 +181,7 @@ export class SendLeaseEmailModalComponent implements OnInit {
             });
             this.modalRef.content.action.subscribe(() => {
               this.modalRef.hide();
-              this.dialogRef.close(true);
+              this.action.next(true);
             },
             error => {
               console.log(error);
@@ -249,7 +242,7 @@ export class SendLeaseEmailModalComponent implements OnInit {
     }
   }
   cancel(){
-    this.dialogRef.close(null);
+    this.action.next(null);
   }
   clearText(){
     this.emailBodyInput.reset();

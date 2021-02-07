@@ -1,6 +1,8 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
+import { Subject } from 'rxjs';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IDocumentDeliveries } from 'src/app/interfaces/DocumentDeliveries';
 import { IDocumentProspectDto, TermType } from 'src/app/interfaces/DocumentProspect';
@@ -28,8 +30,11 @@ interface EmailedLeaseDocMessage{
   styleUrls: ['./lease-doc-prospect-table-modal.component.css']
 })
 export class LeaseDocProspectTableModalComponent implements OnInit {
+  action: Subject<any> = new Subject();
+  modalRef: MDBModalRef;
   displayedColumns: string[] = ['DocumentName','FName', 'LName', 'ReadOnly','TenantSigned', 'LandlordSigned', 'LeaseDeclined', 'Move-in-Date', 'Term Type', 'Home', 'Room', 'Delivered Date'];
   dataSource : Array<IDocumentProspectDto>;
+  content: Iterable<IDocumentProspectDto> = null;
   selection = new SelectionModel<IDocumentProspectDto>(false, []);
   openDocOrPdf : string = "Open Document";
   dateOptions : {hour: string, minute: string, hour12: boolean} = {
@@ -45,27 +50,37 @@ export class LeaseDocProspectTableModalComponent implements OnInit {
   year: 'numeric', month: 'long', day: 'numeric'
   }
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: ModalData,
-    public dialogRef: MatDialogRef<LeaseDocProspectTableModalComponent>,
     public dialog: MatDialog, 
     private documentDeliveryService : DocumentDeliveryService,
     private leaseDocumentService : LeaseDocumentService,
+    private modalService: MDBModalService,
     ) {
-    if (data != null){
-      this.setupTable();
-    }
-
   }
+  ngOnInit(): void {
+    this.setupTable();
+  }
+
   deleteDocument(){
     if (this.selection != null && this.selection.selected[0] != null){
-      this.dialog.open(DialogDataRRMSDialog, {
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
           inError: false,
           title: "Delete - Are you sure?",
           contentSummary: `Are you sure you would like to delete this lease document "${this.selection.selected[0].DocumentName}"?`,
           errorItems: []
         }
-      }).afterClosed().subscribe((deleteLease: boolean)=> {
+      });
+      this.modalRef.content.action.subscribe((deleteLease: boolean)=> {
+        this.modalRef.hide();
+
         if (deleteLease == true){
           this.leaseDocumentService.removeLeaseDocument(this.selection.selected[0].DocumentId)
             .then((result) => {
@@ -80,24 +95,41 @@ export class LeaseDocProspectTableModalComponent implements OnInit {
                       }
                   })
                   .afterClosed().subscribe(() => {
-                    this.data.content = leaseDocDtos;
+                    this.content = leaseDocDtos;
                     this.setupTable();
                   })
               })
             })
           }
+      },
+      error => {
+        console.log(error);
+        this.modalRef.hide();
       });
     }
     else{
-      this.dialog.open(DialogDataRRMSDialog, {
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
           inError: true,
           title: "No Row Selected",
           contentSummary: "No row has been selected. Please select a row.",
           errorItems: []
         }
-      }).afterClosed().subscribe((result) => {
-
+      });
+      this.modalRef.content.action.subscribe((result) => {
+        this.modalRef.hide();
+      },
+      error => {
+        console.log(error);
+        this.modalRef.hide();
       });
     }
   }
@@ -106,7 +138,7 @@ export class LeaseDocProspectTableModalComponent implements OnInit {
   }
 
   setupTable(){
-    this.dataSource = Array.from(this.data.content);    
+    this.dataSource = Array.from(this.content);    
     this.dataSource.forEach((dataItem) => {
       if (dataItem.MoveInDate != null){
         dataItem.MoveInDate = new Date(dataItem.MoveInDate + 'Z');
@@ -140,10 +172,25 @@ export class LeaseDocProspectTableModalComponent implements OnInit {
     console.log("opening doc deliveries");
       this.documentDeliveryService.GetDocumentDeliveries(docPros.DocumentId).then((documentDeliveries: Iterable<IDocumentDeliveries>) => {
         console.log("back in loadDocumentsHelper, returned object is " + JSON.stringify(documentDeliveries));
-        this.dialog.open(DocumentDeliveriesModalComponent, {
+        this.modalRef = this.modalService.show(DocumentDeliveriesModalComponent, {
+          backdrop: true,
+          keyboard: true,
+          focus: true,
+          show: false,
+          ignoreBackdropClick: false,
+          class: '',
+          containerClass: '',
+          animated: true,
             data: {
                 content: documentDeliveries,
             }
+        });
+        this.modalRef.content.action.subscribe(()=> {
+          this.modalRef.hide();
+        },
+        error => {
+          console.log(error);
+          this.modalRef.hide();
         });
     });
   }
@@ -151,25 +198,50 @@ export class LeaseDocProspectTableModalComponent implements OnInit {
     // Should first open a modal
     if (this.selection != null && this.selection.selected[0] != null)
     {
-      this.dialog.open(SendLeaseEmailModalComponent,{
+      this.modalRef = this.modalService.show(SendLeaseEmailModalComponent, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {docProspectDto: this.selection.selected[0]},
-        }
-        ).afterClosed().subscribe((emailSent: boolean) => {
+        });
+        this.modalRef.content.action.subscribe((emailSent: boolean) => {
+          this.modalRef.hide();
           if (emailSent == true){
-            this.dialogRef.close(null);
+            this.action.next(null);
           }
+        },
+        error => {
+          console.log(error);
+          this.modalRef.hide();  
         })
     }
     else{
-      this.dialog.open(DialogDataRRMSDialog, {
-        data: {
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,        data: {
           inError: true,
           title: "No Row Selected",
           contentSummary: "No row has been selected. Please select a row.",
           errorItems: []
         }
-      }).afterClosed().subscribe((result) => {
-
+      });
+      this.modalRef.content.action.subscribe((result) => {
+        this.modalRef.hide();
+      },
+      error => {
+        console.log(error);
+        this.modalRef.hide();
       });
     }
     
@@ -189,48 +261,66 @@ export class LeaseDocProspectTableModalComponent implements OnInit {
   }
 
   closeBtnClicked(){
-    this.dialogRef.close(null);
+    this.action.next(null);
   }
   openDocument(){
     if (this.selection != null && this.selection.selected[0] != null)
     {
       if (this.openDocOrPdf == "Open Document"){
-        this.dialogRef.close({
+        this.action.next({
           selectedTemplate: this.selection.selected[0].DocumentName, 
           prospectId: this.selection.selected[0].ProspectId,
           selectedDocId: this.selection.selected[0].DocumentId,
-        });
+        })
       }
       else if(this.openDocOrPdf == "Open PDF"){
         // Open PDF Viewer
-        this.dialog.open(LeasePdfModalComponent, {
+          this.modalRef = this.modalService.show(LeasePdfModalComponent, {
+            backdrop: true,
+            keyboard: true,
+            focus: true,
+            show: false,
+            ignoreBackdropClick: false,
+            class: '',
+            containerClass: '',
+            animated: true,
           data: {
             LeaseDocId: this.selection.selected[0].DocumentId, // Need to pass in something here!!!!!!
-          },
-          width: '55%',
-          height: '91%',
-      })
-        .afterClosed().subscribe((res) => {
-          //this.selection = null;
-        }
-        )
+          }
+      });
+      this.modalRef.content.action.subscribe(() => {
+        this.modalRef.hide();
+        },
+        error => {
+          console.log(error);
+          this.modalRef.hide();
+        });
       }
     }
     else{
-      this.dialog.open(DialogDataRRMSDialog, {
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
           inError: true,
           title: "No Row Selected",
           contentSummary: "No row has been selected. Please select a row.",
           errorItems: []
         }
-      }).afterClosed().subscribe((result) => {
-
+      });
+      this.modalRef.content.action.subscribe((result) => {
+        this.modalRef.hide();
+      },
+      error => {
+        console.log(error);
+        this.modalRef.hide();
       });
     }
   }
-
-  ngOnInit(): void {
-  }
-
 }

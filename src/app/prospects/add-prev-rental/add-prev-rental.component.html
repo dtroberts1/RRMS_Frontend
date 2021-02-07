@@ -1,8 +1,16 @@
-<h1 mat-dialog-title style="color:blue"></h1>
-<div mat-dialog-content>
+<div class ="modal fade in" style="display: block;" aria-hidden="false"> <!--z-index defaults to 1050-->
+  <div class="modal-dialog modal-sm modal-dialog-centered" >
+    <!--Content-->
+    <div class="modal-content">
+  <div class="modal-header text-center">
+    <span id="mainHeader" class="modal-title w-100" style="font-size:18pt;">Add Previous Residence</span>
+    <span class="pull-right" style="margin-right:40px;">
+    </span>
 
-<h1>Add New Previous Address/Landlord</h1>
-
+    <button (click)="closeAddRentalDialog()" type="button" class="close pull-right" aria-label="Close" >X
+    </button>
+  </div>
+  <div class="modal-body" style="max-height:450px; overflow-y: auto;">
   <mat-form-field>
     <mat-label>First Name</mat-label>
     <input matInput placeholder="Stacy" required [formControl]="PrevLandlordFName">
@@ -94,7 +102,12 @@
 <br />
 <br />
   <br />
-  <button mat-button (click)="closeAddRentalDialog()">Close</button>
-  <button mat-button (click)="addPrevRental()">Add </button>
 
+</div>
+<div class="button-container"> 
+  <button class="flex-items" mat-button (click)="addPrevRental()">Add </button>
+  <button class="flex-items" mat-button (click)="closeAddRentalDialog()">Close</button>
+</div>
+</div>
+</div>
 </div>

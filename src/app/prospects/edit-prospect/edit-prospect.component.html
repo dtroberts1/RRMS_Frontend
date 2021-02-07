@@ -6,13 +6,13 @@
       <span id="mainHeader" class="example-margin"> Prospect Details</span>
       <span class="fill-space"></span>
       <mat-slide-toggle
-      style="font-family:sans-serif; font-size: 15px; color:#476c79;"
+      style="font-family:sans-serif; font-size: 15px; color:#476c79;margin-right:25px;"
       class="example-margin"
       [(ngModel)]="uiEditMode">
       Edit Mode
     </mat-slide-toggle>
-    <button type="button" class="close pull-right" aria-label="Close" >
-      <span aria-hidden="true" (click)="closeProspectDialog()">×</span>
+    <button type="button" (click)="closeProspectDialog()" class="close pull-right" aria-label="Close" >
+      X
     </button>
   </div>
   <div class="modal-body">
@@ -185,14 +185,14 @@
       <tr>
           <app-date-picker [headerName]="'Move-in Date'" [(date)]="moveInDateInput"></app-date-picker>
           <app-date-picker *ngIf="termType == 'Fixed-Term'" [headerName]="'Move-out Date'" [(date)]="moveOutDateInput"></app-date-picker>
-          <mat-form-field  appearance="fill">
+          <mat-form-field appearance="fill">
             <mat-label class="labelClass">Status</mat-label>
             <mat-select  class="labelClass"  [(value)]="selectedStatus" (selectionChange)="setModified($event)">
-            <mat-option class="labelClass" *ngFor="let stat of statusList" [value]="stat.statusType">
-                <span class="labelClass" >{{stat.name}}</span>
-            </mat-option>
+              <mat-option class="labelClass" *ngFor="let stat of statusList" [value]="stat.statusType">
+                  <span class="labelClass" >{{stat.name}}</span>
+              </mat-option>
             </mat-select>
-        </mat-form-field>
+          </mat-form-field>
       </tr>
       </fieldset>
     </table>

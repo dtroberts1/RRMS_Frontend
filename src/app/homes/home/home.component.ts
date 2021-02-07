@@ -32,42 +32,32 @@ export class HomeComponent implements OnInit {
   }
 
   removeHome(){
-    if (this.myHome.Rooms != null && (<any[]>this.myHome.Rooms).length > 0){
-      // If there are rooms assigned to this house, prompt the user (let them know which rooms).
-      // Do not remove the rooms from the home. Let the user remove the rooms manually
-      let roomNameStr : string[] = new Array<string>();
-      (<any[]>this.myHome.Rooms).forEach((room: IRoom) => {
-        roomNameStr.push(room.RoomName);
-      })
-      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
-        backdrop: true,
-        keyboard: true,
-        focus: true,
-        show: false,
-        ignoreBackdropClick: false,
-        class: '',
-        containerClass: '',
-        animated: true,
-        data: {
-          inError: true,
-          title: "Unable To Delete",
-          contentSummary: `The following rooms are linked to this house and will need to first be removed:`,
-          errorItems: roomNameStr,
-        }
-      })
-      this.modalRef.content.action.subscribe(()=> {
-        this.modalRef.hide();
-      },
-      error => {
-      console.log(error);
+    this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+      backdrop: true,
+      keyboard: true,
+      focus: true,
+      show: false,
+      ignoreBackdropClick: false,
+      class: '',
+      containerClass: '',
+      animated: true,
+      data: {
+        inError: false,
+        title: "Delete - Are you sure?",
+        contentSummary: "Are you sure you would like to delete this home?",
+        errorItems: []
+      }
+    });
+    this.modalRef.content.action.subscribe((deleteHome: boolean)=> {
       this.modalRef.hide();
-      });
-    }
-    else{
-      // It's safe to remove home
-      // Call Service to remove the home
-      this.homesService.removeHome(this.myHome.Id)
-        .then(() => {
+      if (deleteHome == true){
+        if (this.myHome.Rooms != null && (<any[]>this.myHome.Rooms).length > 0){
+          // If there are rooms assigned to this house, prompt the user (let them know which rooms).
+          // Do not remove the rooms from the home. Let the user remove the rooms manually
+          let roomNameStr : string[] = new Array<string>();
+          (<any[]>this.myHome.Rooms).forEach((room: IRoom) => {
+            roomNameStr.push(room.RoomName);
+          })
           this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
             backdrop: true,
             keyboard: true,
@@ -79,26 +69,61 @@ export class HomeComponent implements OnInit {
             animated: true,
             data: {
               inError: true,
-              title: "Home Deleted",
-              contentSummary: `Home ${this.myHome.Nickname} has been Removed`,
-              errorItems: []
+              title: "Unable To Delete",
+              contentSummary: `The following rooms are linked to this house and will need to first be removed:`,
+              errorItems: roomNameStr,
             }
-          });
-          this.modalRef.content.action.subscribe(result => {
+          })
+          this.modalRef.content.action.subscribe(()=> {
             this.modalRef.hide();
-            this.router.navigate(['./dashboard']);
           },
           error => {
-            console.log(error);
-            this.modalRef.hide();
+          console.log(error);
+          this.modalRef.hide();
           });
-        })
-        .catch(() =>{
-          // Use our 'we're sorry.. our blablabla
-        })
-
-      // Then redirect to homes
-    }
+        }
+        else{
+          // It's safe to remove home
+          // Call Service to remove the home
+          this.homesService.removeHome(this.myHome.Id)
+            .then(() => {
+              this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+                backdrop: true,
+                keyboard: true,
+                focus: true,
+                show: false,
+                ignoreBackdropClick: false,
+                class: '',
+                containerClass: '',
+                animated: true,
+                data: {
+                  inError: true,
+                  title: "Home Deleted",
+                  contentSummary: `Home ${this.myHome.Nickname} has been Removed`,
+                  errorItems: []
+                }
+              });
+              this.modalRef.content.action.subscribe(result => {
+                this.modalRef.hide();
+                this.router.navigate(['./dashboard']);
+              },
+              error => {
+                console.log(error);
+                this.modalRef.hide();
+              });
+            })
+            .catch(() =>{
+              // Use our 'we're sorry.. our blablabla
+            })
+    
+          // Then redirect to homes
+        }
+      }
+    },
+    error => {
+      console.log(error);
+      this.modalRef.hide();
+    });
   }
 
   ngOnInit(): void {

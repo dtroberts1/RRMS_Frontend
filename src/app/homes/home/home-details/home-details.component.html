@@ -17,7 +17,7 @@ height:100%;">
  matTooltipClass="tooltip"
  [matTooltip]="'Add new rental room for this house'"
  (click)="addRoom()">Add New Room</button>
-<button mat-raised-button
+<button *ngIf="home != null && hasRooms() == true" mat-raised-button
  matTooltipClass="tooltip" id="removeRoomBtn"
  [matTooltip]="'Remove a room from this house'"
  (click)="removeRoomBtnClicked()">Remove a Room</button>

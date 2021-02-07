@@ -11,6 +11,8 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { LeasesPopupModal } from '../../../../leases/leases/leases-popup-modal/leases-popup-modal.component';
 import { DocumentDeliveryService } from '../../../../services/documentDelivery.service';
 import { IEmailedLeaseDocMessageDto } from '../../../../interfaces/EmailedLeaseDocMessageDto';
+import { Subject } from 'rxjs';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 
 interface ModelData{
   LeaseDocId: number,
@@ -35,37 +37,32 @@ export class LeasePdfModalComponent implements OnInit {
   enableSendApprvdBtn: boolean = false;
   landlordSigned: boolean = false;
   docReady : boolean = false;
-
+  action: Subject<any> = new Subject();
+  modalRef: MDBModalRef;
+  LeaseDocId: number = null;
   constructor(
-  @Inject(MAT_DIALOG_DATA) public data: ModelData,
-  public dialogRef: MatDialogRef<LeasePdfModalComponent>,
     private router: Router,
     private leaseDocService: LeaseDocumentService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private documentDeliveryService: DocumentDeliveryService,
+    private modalService: MDBModalService,
 
   ) {
-    console.log("in child, confcode is " + this.leaseDocConfCode);
    }
 
   ngOnInit(): void {
     this.docReady = true;
   }
-  onCreated(args){
-    console.log("created..");
-    console.log("signed is " + this.landlordSigned);
-    console.log("code is " + this.leaseDocConfCode);
-    console.log("value in init is " + this.pdfViewer);
-
+  onCreated(){
     this.buttonsCanEnable = true;
     // Make the editor read only and remove properties pane
     this.pdfViewer.enableHandwrittenSignature = true;
     this.pdfViewer.handWrittenSignatureSettings.strokeColor = "rgb(3,3,4,4)";
     this.pdfViewer.handWrittenSignatureSettings.opacity = 1;
     // Call the service to load the document in the editor
-    if (this.data != null && this.data.LeaseDocId != null){
-      this.leaseDocService.GetLeaseDocPDFBase64(this.data.LeaseDocId)
+    if (this.LeaseDocId != null){
+      this.leaseDocService.GetLeaseDocPDFBase64(this.LeaseDocId)
       .then((sfdt : string) => {
         this.pdfViewer.load(sfdt, ''); // need to replace this with something
 
@@ -74,17 +71,14 @@ export class LeasePdfModalComponent implements OnInit {
   }
 
   sign(){
-    this.pdfViewer.enableHandwrittenSignature = true;
-    //console.log("collection: " + JSON.stringify(this.pdfviewerControl.annotations))
-    
+    this.pdfViewer.enableHandwrittenSignature = true;    
     this.pdfViewer.annotation.setAnnotationMode('HandWrittenSignature');
-
   }
 
   close(){
     this.pdfViewer = null;
     this.docReady = false;
-    this.dialogRef.close(null);
+    this.action.next(null);
   }
 
   addedSignature(event: AddSignatureEventArgs){
@@ -102,12 +96,26 @@ export class LeasePdfModalComponent implements OnInit {
   }
 
   declineLease(){
-    this.dialog.open(LeasePdfModalComponent, {
+    this.modalRef = this.modalService.show(LeasePdfModalComponent, {
+      backdrop: true,
+      keyboard: true,
+      focus: true,
+      show: false,
+      ignoreBackdropClick: false,
+      class: '',
+      containerClass: '',
+      animated: true,
       data: {
           confCode: this.leaseDocConfCode,
         }
-    }).afterClosed().subscribe(() => {
+    });
+    this.modalRef.content.action.subscribe(() => {
+      this.modalRef.hide();
       this.enableSendApprvdBtn = true;
+    },
+    error => {
+      console.log(error);
+      this.modalRef.hide();
     })
   }
 

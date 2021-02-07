@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
+import { Subject } from 'rxjs';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
 import { IHome } from 'src/app/interfaces/Homes';
 import {IEmployer, SalaryType} from '../../../interfaces/Employer';
@@ -29,6 +31,7 @@ export class LinkRoomModalComponent implements OnInit {
   fieldsModified: boolean = false;
   currentRoomIndex: number = 0;
   roomCount: number = 0;
+  modalRef: MDBModalRef;
 
   dimension1 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
   dimension2 : FormControl = new FormControl('', [Validators.pattern('[0-9]{1,3}')]);
@@ -39,19 +42,26 @@ export class LinkRoomModalComponent implements OnInit {
   hasPrivateBath : boolean;
  selected: number;
  selectedRoom: number = null;;
+ action: Subject<any> = new Subject();
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
-  public dialogRef: MatDialogRef<LinkRoomModalComponent>,
-  public dialog: MatDialog, 
+  private modalService: MDBModalService,
   ) {
   }
   closeNoSelection(){
-    this.dialogRef.close(null);
+    this.action.next(null);
   }
   returnChoice(){
     if (this.selectedRoom == null){
-      this.dialog.open(DialogDataRRMSDialog, {
+      this.modalRef = this.modalService.show(DialogDataRRMSDialog, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
           inError: true,
           title: "No Room Selected",
@@ -59,9 +69,17 @@ export class LinkRoomModalComponent implements OnInit {
           errorItems: []
         }
       });
+      this.modalRef.content.action.subscribe(()=> {
+        this.modalRef.hide();
+      },
+      error => {
+        console.log(error);
+        this.modalRef.hide();
+      });
     }
     else{
-      this.dialogRef.close(this.selectedRoom); // important: returns the id, not the index!!
+      this.action.next(this.selectedRoom);
+
     }
   }
   showProductDetails(){
@@ -77,8 +95,6 @@ export class LinkRoomModalComponent implements OnInit {
   
   ngOnInit(): void {
     // load all homes for the landlord
-    this.homes = this.data.homes;
-
     if (this.homes != null)
       this.selected = this.homes[0];
   }
@@ -89,9 +105,6 @@ export class LinkRoomModalComponent implements OnInit {
    this.origSettings = Object.assign({}, room);
   }
 
-  linkRoomToProspect(){
-
-  }
   updateRoom(){
 
   }

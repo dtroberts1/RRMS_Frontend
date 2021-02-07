@@ -253,11 +253,21 @@ ngOnInit(){
   openLinkRoomModal(){
     this.homesService.getHomes().then((homes) => {
       this.homes = homes;
-      this.dialog.open(LinkRoomModalComponent, {
+      this.modalRef = this.modalService.show(LinkRoomModalComponent, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+        show: false,
+        ignoreBackdropClick: false,
+        class: '',
+        containerClass: '',
+        animated: true,
         data: {
           homes : this.homes,
         }
-      }).afterClosed().subscribe((selectedRoomId : number) => {
+      });
+      this.modalRef.content.action.subscribe((selectedRoomId : number) => {
+        this.modalRef.hide(); 
         if (selectedRoomId)
         {
           this.prospect.RoomId = selectedRoomId;
@@ -269,6 +279,10 @@ ngOnInit(){
             console.log(err);
           }); 
         }
+      },
+      error => {
+        console.log(error);
+        this.modalRef.hide(); 
       });
     }).catch((err) =>{
       console.log(err);
