@@ -48,11 +48,10 @@
     padding-left:10px;
   }
   #loginText:hover{
-    background: rgba(0,0,0,.5);
+    color:lighten(#476c79, 30%);    
   }
   #createAcctMainBtn:hover{
-    background: rgba(0,0,0,.5);
-    
+    color:lighten(#476c79, 30%);    
   }
   .headerText:hover{
     cursor:pointer;

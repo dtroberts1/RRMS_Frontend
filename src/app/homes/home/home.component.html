@@ -5,48 +5,50 @@
     <table *ngIf="myHome != null" class="homesTable"style="width: 100%; height:50%;">
         <tr style="height:8%"> <!-- Home Nickname -->
             <td rowspan="2" width="30%">
-                <h2 class="mainHeader">{{myHome?.Nickname}}</h2>
-                <!--<img [src]="myHome?.HomeImagePath"/>-->
-                <!--Carousel Wrapper-->
-<mdb-carousel [isControls]="true" class="carousel slide carousel-fade" [animation]="'fade'" >
-    <!--First slide-->
-
-    <mdb-carousel-item *ngFor="let carouselImage of myHome.HomeImages;let i = index"
-    (dblclick)="doubleClicked($event)"
-    (click)="singleClicked($event)"
-    >
-      <div class="view w-100">
-        <img class="d-block w-100" [src]="carouselImage.Url"
-             alt="Slide  #{{i + 1}}">
-        <div class="mask rgba-black-light waves-light" mdbWavesEffect></div>
-      </div>
-      <div class="carousel-caption">
-        <h3 class="h3-responsive">{{carouselImage.PrimaryText}}</h3>
-        <p>{{carouselImage.SecondaryText}}</p>
-      </div>
-    </mdb-carousel-item>
-    <!--/First slide-->
-  </mdb-carousel>
-  <!--/.Carousel Wrapper-->
-                <br />
-                <button *ngIf="individualView == true" mat-raised-button
-                    class="homeCtrlBtns"
-                    style="color:#476c79;"
-                    (dblclick)="doubleClicked($event)"
-                    (click)="singleClicked($event)"
-                    >Modify Image
-                </button>
-                <button *ngIf="individualView == true" mat-raised-button
-                    class="homeCtrlBtns"
-                    style="color:#476c79; margin-left:4px; margin-right:4px;"
-                    >Modify Home
-                </button>
-                <button *ngIf="individualView == true" mat-raised-button
-                    class="homeCtrlBtns"
-                    (click)="removeHome()"
-                    style="color:#476c79;;"
-                >Remove Home
-                </button>
+                <div style="height:100%;margin-top:45px;">
+                    <h2 class="mainHeader">{{myHome?.Nickname}}</h2>
+                    <!--<img [src]="myHome?.HomeImagePath"/>-->
+                    <!--Carousel Wrapper-->
+    <mdb-carousel [isControls]="true" style="min-height: 200px;" class="carousel slide carousel-fade" [animation]="'fade'" >
+        <!--First slide-->
+    
+        <mdb-carousel-item *ngFor="let carouselImage of myHome.HomeImages;let i = index"
+        (dblclick)="doubleClicked($event)"
+        (click)="singleClicked($event)"
+        >
+          <div class="view w-100">
+            <img class="d-block w-100" [src]="carouselImage.Url"
+                 alt="Slide  #{{i + 1}}">
+            <div class="mask rgba-black-light waves-light" mdbWavesEffect></div>
+          </div>
+          <div class="carousel-caption">
+            <h3 class="h3-responsive">{{carouselImage.PrimaryText}}</h3>
+            <p>{{carouselImage.SecondaryText}}</p>
+          </div>
+        </mdb-carousel-item>
+        <!--/First slide-->
+      </mdb-carousel>
+      <!--/.Carousel Wrapper-->
+                    <br />
+                    <button *ngIf="individualView == true" mat-raised-button
+                        class="homeCtrlBtns"
+                        style="color:#476c79;"
+                        (dblclick)="doubleClicked($event)"
+                        (click)="singleClicked($event)"
+                        >Modify Image
+                    </button>
+                    <button *ngIf="individualView == true" mat-raised-button
+                        class="homeCtrlBtns"
+                        style="color:#476c79; margin-left:4px; margin-right:4px;"
+                        >Modify Home
+                    </button>
+                    <button *ngIf="individualView == true" mat-raised-button
+                        class="homeCtrlBtns"
+                        (click)="removeHome()"
+                        style="color:#476c79;;"
+                    >Remove Home
+                    </button>
+                </div>
             </td>
             <td rowspan="2" width="5%">
 

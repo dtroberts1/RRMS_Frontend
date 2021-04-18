@@ -42,21 +42,13 @@
    1 1 auto;
 }
 .sidenav-content {
- /* display: flex; */
-  /*height: 100%; */
-  /*
-  align-items: center;
-  justify-content: center;
-  */
   background-color: green;
 }
 
 #sidebarToggler:hover{
   background-color:#069677;
 }
-#midTopToolbar{
-  
-}
+
 #logoutBtn:hover{
   cursor:pointer;
   background: rgba(0,0,0,.5);
