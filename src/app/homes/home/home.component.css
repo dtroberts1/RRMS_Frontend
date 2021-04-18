@@ -2,9 +2,13 @@
 
     width:100%;
     text-align: center;
-    
+    margin-left:20px;
   }
-
+  .mainHeader{
+    background: linear-gradient(90deg, rgba(2,0,36,1) 3%, rgba(135,217,206,1) 28%, rgba(51,92,148,1) 97%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
   .homesTable{
     overflow:auto;
 /*     overflow: hidden; */
@@ -17,9 +21,27 @@ agm-map,home-details {
 }
 
 .homeCtrlBtns:hover{
-    background-color:green;
+    background-color:#476c79;;
     color:white !important;
 }
 #homeCtrlBtns{
-    color:blue !important;
+    color:#476c79;
+
+}
+/*
+.homeContainer{
+   border-color:blue;
+   border-width:3px;
+   border-style:solid;
+    width:100%;
+    height:80%;
+    align-items: center;
+    justify-content: center;
+}*/
+
+.homesUiView{
+  width:100%;
+  height:80%;
+  align-items: center;
+  justify-content: center;
 }

@@ -134,6 +134,7 @@ export class AddHomeComponent implements OnInit {
           AddressZipCode : this.addressZipCode.value,
           Rooms : [],
           Prospects : [],
+          HomeImages: null, //TODO
           LandlordId : -1,
           }
           )?.then((home:IHome) => {

@@ -60,6 +60,7 @@ export class AddRoomComponent implements OnInit {
       HasPrivateBath: this.hasPrivateBath,
       MonthlyRate: this.monthlyRateInput.value,
       HomeId: this.homeID,
+      RoomImages: null,
       Id: -1,
     }).then(() => {
       console.log("room created");

@@ -15,7 +15,7 @@ export class AppComponent implements OnInit{
   }
   title = 'RRMSWebapp';
   loginLogout = "Login";
-  showLoginScreen: boolean = false;
+  showLoginScreen: boolean = true;
   showCreateAcctScreen: boolean = false;
   showCreateAcctEmailConfScreen: boolean = false;
   showDashboard: boolean = false;
@@ -45,12 +45,19 @@ export class AppComponent implements OnInit{
       this.showDashboard = !this.showDashboard;
       this.router.navigate([`dashboard`]);
     }
+    else if(msgFromLogin == "closeLoginDialog"){
+      console.log("cancelling")
+      this.showLoginScreen = false;
+
+    }
   }
   toggleDashboard(): void{
     this.showDashboard = !this.showDashboard;
     console.log("showDashboard is "+ this.showDashboard);
   }
   toggleLoginScreen(): void{
+    this.showLoginScreen = !this.showLoginScreen;
+
     if (this.showDashboard)
     { // First close dashboard if it's opened.
       // Clear Token
@@ -58,7 +65,6 @@ export class AppComponent implements OnInit{
       this.showDashboard = !this.showDashboard;
       this.router.navigate([`login`]);
     }
-    this.showLoginScreen = !this.showLoginScreen;
   }
   toggleCreateAcctScreen(): void{
     this.showCreateAcctScreen = !this.showCreateAcctScreen;

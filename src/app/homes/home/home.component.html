@@ -1,29 +1,55 @@
-<div class="homeItem">
+<div class="homeContainer">
+    <div class="homesUiView">
+        <div class="homeItem">
+
     <table *ngIf="myHome != null" class="homesTable"style="width: 100%; height:50%;">
         <tr style="height:8%"> <!-- Home Nickname -->
-            <td rowspan="2" width="50%">
-                <h2>{{myHome?.Nickname}}</h2>
-                <img [src]="myHome?.HomeImagePath"/>
+            <td rowspan="2" width="30%">
+                <h2 class="mainHeader">{{myHome?.Nickname}}</h2>
+                <!--<img [src]="myHome?.HomeImagePath"/>-->
+                <!--Carousel Wrapper-->
+<mdb-carousel [isControls]="true" class="carousel slide carousel-fade" [animation]="'fade'" >
+    <!--First slide-->
+
+    <mdb-carousel-item *ngFor="let carouselImage of myHome.HomeImages;let i = index"
+    (dblclick)="doubleClicked($event)"
+    (click)="singleClicked($event)"
+    >
+      <div class="view w-100">
+        <img class="d-block w-100" [src]="carouselImage.Url"
+             alt="Slide  #{{i + 1}}">
+        <div class="mask rgba-black-light waves-light" mdbWavesEffect></div>
+      </div>
+      <div class="carousel-caption">
+        <h3 class="h3-responsive">{{carouselImage.PrimaryText}}</h3>
+        <p>{{carouselImage.SecondaryText}}</p>
+      </div>
+    </mdb-carousel-item>
+    <!--/First slide-->
+  </mdb-carousel>
+  <!--/.Carousel Wrapper-->
                 <br />
                 <button *ngIf="individualView == true" mat-raised-button
                     class="homeCtrlBtns"
-                    style="color:blue;"
-                    matTooltipClass="tooltip"
-                    [matTooltip]="'Some tooltip text'">Modify Image
+                    style="color:#476c79;"
+                    (dblclick)="doubleClicked($event)"
+                    (click)="singleClicked($event)"
+                    >Modify Image
                 </button>
                 <button *ngIf="individualView == true" mat-raised-button
                     class="homeCtrlBtns"
-                    style="color:blue;"
-                    matTooltipClass="tooltip"
-                    [matTooltip]="'Some tooltip text'">Modify Home
+                    style="color:#476c79; margin-left:4px; margin-right:4px;"
+                    >Modify Home
                 </button>
                 <button *ngIf="individualView == true" mat-raised-button
                     class="homeCtrlBtns"
                     (click)="removeHome()"
-                    style="color:blue;"
-                    matTooltipClass="tooltip"
-                    [matTooltip]="'Some tooltip text'">Remove Home
+                    style="color:#476c79;;"
+                >Remove Home
                 </button>
+            </td>
+            <td rowspan="2" width="5%">
+
             </td>
             <td rowspan="2" width="50%"> <!-- Image -->
                 <h3 *ngIf="individualView == false">{{myHome?.AddressStreet1}}{{','}}{{myHome?.AddressStreet2.length > 0 ? ' ' : ''}}
@@ -33,11 +59,12 @@
                 <agm-map *ngIf="individualView == false">
                     <agm-marker [latitude]="10.3207886" [longitude]="123.90250049999997"></agm-marker>
                 </agm-map>
-                <app-home-details *ngIf="individualView == true"
+                <div style="margin-top:23px;">
+                    <app-home-details *ngIf="individualView == true"
                     [(home)]="myHome"
-                    style="width:100%; height:100%"
                 >
                 </app-home-details>
+                </div>
             </td>
         </tr>
         <tr style="height:92%">
@@ -47,4 +74,6 @@
             </td>
         </tr>
     </table>
+</div>
+</div>
 </div>

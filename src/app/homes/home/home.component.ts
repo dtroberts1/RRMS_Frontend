@@ -5,7 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IRoom } from 'src/app/interfaces/Rooms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogDataRRMSDialog } from 'src/app/dialog-data/dialog-data.component';
-import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
+import { CarouselComponent, MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
+import { CarouselModifierComponent } from 'src/app/utils/carousel-modifier/carousel-modifier.component';
 
 @Component({
   selector: 'app-home',
@@ -125,7 +126,38 @@ export class HomeComponent implements OnInit {
       this.modalRef.hide();
     });
   }
-
+  singleClicked(event){
+    this.openModifyImageModal();
+  }
+  openModifyImageModal(){
+/*
+    this.modalRef = this.modalService.show(CarouselModifierComponent, {
+      backdrop: true,
+      keyboard: true,
+      focus: true,
+      show: false,
+      ignoreBackdropClick: false,
+      class: '',
+      containerClass: '',
+      animated: true,
+      data: {
+        images: this.myHome.HomeImages,
+        currImgIndex: 0,
+      }
+    });
+    this.modalRef.content.action.subscribe(()=> {
+      this.modalRef.hide();
+    },
+    error => {
+      console.log(error);
+      this.modalRef.hide();
+    });
+    */
+  }
+  doubleClicked(event){
+    console.log("doubleclicked!");
+    this.openModifyImageModal();
+  }
   ngOnInit(): void {
     if (this.route.queryParams != null){
       this.route.queryParams.subscribe(queryParams => {
@@ -137,6 +169,7 @@ export class HomeComponent implements OnInit {
           if (this.homesService.homes == null){
             this.homesService.getHomes().then((homes : Iterable<IHome>) => {
               this.myHome = homes[params.id - 1];
+              console.log("myHome: " + JSON.stringify(this.myHome))
               this.individualView = true;
             }).catch((err) => {
               this.individualView = false;
@@ -145,6 +178,8 @@ export class HomeComponent implements OnInit {
           else{
             this.myHome = this.homesService.homes[params.id - 1];
             this.individualView = true;
+            console.log("myHome: " + JSON.stringify(this.myHome))
+
           }
         }
         else{

@@ -1,16 +1,16 @@
 <div style="width: 100%;    text-align: center;
 height:100%;">
-<h2 style="text-align: left;">Summary</h2>
-<p *ngIf="home != null" style="text-align: left;text-indent: 5%;">
+<span class="mainHeader">Summary</span>
+<p *ngIf="home != null">
     {{home.Summary}}<br />
 </p>
-<h2 style="text-align: left;">Address</h2>
+<h2 class="mainHeader" style="text-align: left;">Address</h2>
 <p style="text-align: left;text-indent: 5%;">
     {{home?.AddressStreet1}}{{','}}{{home?.AddressStreet2.length > 0 ? ' ' : ''}}
                     {{home?.AddressStreet2}}{{home?.AddressStreet2.length > 0 ? ', ' : ''}}
                     {{home?.AddressCity}}{{', '}}{{home?.AddressState}}{{', '}}{{home?.AddressZipCode}}
 </p>
-<h2 style="text-align: left;">Rooms</h2>
+<h2 class="mainHeader" style="text-align: left;">Rooms</h2>
 <button *ngIf="home != null && hasRooms() == true" mat-raised-button id="viewRoomBtn" (click)="openViewRoomDialog()">View&nbsp;{{dispRoomCount()}}</button>
 &nbsp;
 <button mat-raised-button id="addAdditionalRoomBtn"  
@@ -23,7 +23,7 @@ height:100%;">
  (click)="removeRoomBtnClicked()">Remove a Room</button>
 <br />
 <br />
-<h2 style="text-align: left;">Tenants</h2>
+<h2 class="mainHeader" style="text-align: left;">Tenants</h2>
 <button mat-raised-button id="viewProspectBtn" 
     matTooltipClass="tooltip"
     [matTooltip]="'View Tenants Living Here'"

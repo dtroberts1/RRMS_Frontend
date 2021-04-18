@@ -69,6 +69,7 @@ export class AddRoomModalComponent {
           HasPrivateBath: this.hasPrivateBath,
           MonthlyRate: this.monthlyRateInput.value,
           HomeId: this.home.Id,
+          RoomImages: null, //TODO
           Id: -1,
       };
 

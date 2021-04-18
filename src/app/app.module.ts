@@ -62,14 +62,20 @@ import { LeasePdfModalComponent } from './leases/lease-doc-prospect-table/lease-
 import { DatePickerComponent, ExampleHeader } from './utils/date-picker/date-picker.component';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
+import { CarouselModifierComponent } from './utils/carousel-modifier/carousel-modifier.component';
 //import { ModalModule } from 'ng-uikit-pro-standard';
 
 
 const appRoutes: Routes = [
- { path: '', children: [
+ { path: '',component: AppComponent},
   { path: 'login', component: AppComponent}, /*Using this for when user clicks logout from dashboard */
   { path: 'dashboard' , component: Dashboard, children :
     [
+      {
+        path: '',
+        pathMatch: 'full', 
+        redirectTo: 'dashboard' 
+    },
       { path: 'homes', component: HomesComponent, outlet:'view'},
       { path: 'homes/add-home', component: AddHomeComponent, outlet:'view'},
       { path: 'homes/room', component: RoomComponent, outlet:'view'},
@@ -87,14 +93,13 @@ const appRoutes: Routes = [
       { path: 'prospects/add-prospect', component: AddProspectComponent, outlet:'view' },
       { path: 'leases', component: LeasesComponent, outlet:'view' },
       { path: 'leases/add-lease', component: AddLeaseComponent, outlet:'view' },
-      { path: 'leases/lease-templates', component: LeaseTemplatesComponent, outlet:'view' },
-    ]
+      { path: 'leases/lease-templates', component: LeaseTemplatesComponent, outlet:'view' }, 
+    ],
   },
- ]}, 
+  { path: 'dashboard/**',
+  redirectTo: ''},
+  { path: '**', redirectTo: ''}, 
  { path: 'lease-appvdcode/:landlordsigned/:confcode', component: LeaseDocumentApprovalComponent},
- { path: '**', redirectTo: ''},
-
-/* { path: 'login', component: LoginScreenComponent},*/
 ];
 @NgModule({
   declarations: [
@@ -144,6 +149,7 @@ const appRoutes: Routes = [
     DeclineLeaseModalComponent,
     LeasePdfModalComponent,
     DatePickerComponent,
+    CarouselModifierComponent,
     ExampleHeader,
     ],
     schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
@@ -193,8 +199,9 @@ const appRoutes: Routes = [
       ExampleHeader,
       ModifyEmployerModalComponent,
       ModifyPrevRentalComponent,
+      CarouselModifierComponent,
     ],
-    providers: [HttpClientModule, MatDialogModule],
+    providers: [HttpClientModule, MatDialogModule, ],
     bootstrap: [AppComponent],
 
 })

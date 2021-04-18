@@ -33,3 +33,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   .mat-form-field:not(.mat-form-field-has-label) .mat-form-field-infix {
     border-top-width: 0;
   }
+
+  .mat-drawer-inner-container{ overflow: hidden !important; }
+

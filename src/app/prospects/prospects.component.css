@@ -66,8 +66,3 @@ th{
   color: cadetblue;
   width: 100px !important;
 }
-.my-editclass .mat-dialog-container{
-  width :'600px';
-  height: '500px';
-  overflow: hidden;
-}

@@ -7,6 +7,12 @@
   ::ng-deep .mat-sidenav-container{
     height:96vh !important; /* or 100% */
   }
+  mat-sidenav .mat-drawer-inner-container{
+    overflow-y:hidden !important;
+    max-height: 100px;
+    background-color: red;
+  }
+
   .midTopToolbar{
     background: rgb(2,0,36);
     background: linear-gradient(90deg, rgba(2,0,36,1) 3%, rgba(135,217,206,1) 28%, rgba(51,92,148,1) 97%);
@@ -20,6 +26,7 @@
     /*height: 100%; */
     align-items: center;
     justify-content: center;
+
   }
 
   #sidebarToggler:hover{
@@ -35,6 +42,7 @@
   mat-expansion-panel{
     background: rgb(2,0,36);
     background: linear-gradient(90deg, rgba(2,0,36,1) 3%, rgba(135,217,206,1) 28%, rgba(51,92,148,1) 97%);
+
   }
   h3{
     width:100%;
@@ -42,7 +50,6 @@
   mat-expansion-panel-header:hover{
     background-color:white
   }
-
 
   mat-expansion-panel h3{
     color:white;
@@ -59,4 +66,5 @@ a{
     padding: 20px;
     background: rgb(2,0,36);
     background: linear-gradient(90deg, rgba(2,0,36,1) 3%, rgba(135,217,206,1) 28%, rgba(51,92,148,1) 97%);
+
   }

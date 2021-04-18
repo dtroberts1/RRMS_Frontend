@@ -1,27 +1,30 @@
+.mainHeader{
+    display: block; text-align: left; color:#476c79; font-size:18pt; line-height: 20pt; font-family: sans-serif;
+  }
 #viewRoomBtn:hover{
-    background-color:green;
+    background-color:#476c79;;
     color:white;
 }
 #viewRoomBtn{
     float:left;
-    color:blue;
+    color:#476c79;;
     margin-left:2%;
 }
 #viewProspectBtn:hover{
-    background-color:green;
+    background-color:#476c79;;
     color:white;
 }
 #viewProspectBtn{
     float:left;
-    color:blue;
+    color:#476c79;;
     margin-left:2%;
 }
 #addAdditionalRoomBtn:hover{
-    background-color:green;
+    background-color:#476c79;;
     color:white;
 }
 #addAdditionalRoomBtn{
-    color:blue;
+    color:#476c79;;
     float:left;
     margin-left:2%;
 }
@@ -30,35 +33,43 @@
     color:white;
 }
 #removeRoomBtn{
-    color:blue;
+    color:#476c79;;
     float:left;
     margin-left:2%;
 }
 
 #addAdditionalProspectBtn{
-    color:blue;
+    color:#476c79;;
     float:left;
     margin-left:2%;
 }
 #addAdditionalProspectBtn:hover{
-    background-color:green;
+    background-color:#476c79;;
     color:white;
 }
 #moveProspectBtn{
-    color:blue;
+    color:#476c79;;
     float:left;
     margin-left:2%;
 }
 #moveProspectBtn:hover{
-    background-color:green;
+    background-color:#476c79;;
     color:white;
 }
 #moveExistingTenant{
-    color:blue;
+    color:#476c79;
     float:left;
     margin-left:2%;
 }
 #moveExistingTenant:hover{
-    background-color:green;
+    background-color:#476c79;
     color:white;
+}
+p{
+    text-align: left;
+    text-indent: 5%; 
+    font-size:13pt; 
+    margin-top:10px;
+    font-family:sans-serif; 
+    color:#476c79;
 }

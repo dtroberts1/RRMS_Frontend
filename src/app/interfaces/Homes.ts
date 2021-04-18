@@ -1,5 +1,6 @@
 import { IRoom } from './Rooms';
 import {IProspect} from './Prospect';
+import {ICarouselImage} from './CarouselImage';
 
 export interface IHome{
     Id:number,
@@ -14,4 +15,6 @@ export interface IHome{
     Rooms: Iterable<IRoom>,
     Prospects: Iterable<IProspect>,
     LandlordId: number,
+    HomeImages: Iterable<ICarouselImage>
+
 }

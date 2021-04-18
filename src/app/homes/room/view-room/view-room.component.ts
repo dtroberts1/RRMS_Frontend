@@ -406,6 +406,7 @@ export class ViewRoomComponent {
           MonthlyRate: this.room.MonthlyRate,
           HomeId: this.home.Id,
           Id: this.room.Id,
+          RoomImages: null, // TODO
         };
         return new Promise((resolve, reject) => {
         this.roomsService.updateRoom(this.room).then(() => {

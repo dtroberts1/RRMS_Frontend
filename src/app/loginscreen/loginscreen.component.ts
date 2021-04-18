@@ -25,7 +25,7 @@ export class LoginScreenComponent implements OnInit{
     async notifyParentClicked(inStr : string) {
       // Logout
       if (inStr == "closeLoginDialog"){
-        this.notifyFromLogin.emit("closeLoginDialog. Don't login");
+        this.notifyFromLogin.emit("closeLoginDialog");
         return;
       }
       let result = await this.accountService.login({

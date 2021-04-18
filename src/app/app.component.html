@@ -1,16 +1,20 @@
+<router-outlet>
+</router-outlet>
 <mat-toolbar role="toolbar" class="toolbar" style="height:4%">
   <img
     width="40"
     src="../assets/better_omega.svg"
   />
-  <span id="welcomeText">Welcome</span>
+  <span id="welcomeText">{{showDashboard ? "" : "Welcome"}}</span>
   <span class="fill-space"></span>
 
   <span class=headerText id=createAccountText
   (click)='toggleCreateAcctScreen()'
 > 
   <span id="createAcctMainBtn"  *ngIf="showDashboard == false"
-  >Create Account</span>
+  >        {{showDashboard ? "" : "Create Account"}}
+
+</span>
 </span>
 
   <span class=headerText id="loginText"
@@ -19,19 +23,16 @@
     {{showDashboard ? "Logout" : "Login"}}
   </span>
 </mat-toolbar>
+  <div class="home-page-container">
 
-
-<div [ngClass]="{'home-page-container':showDashboard == false, 'home-page-container-show-dashboard' : showDashboard == true}" class="home-page-container">
-  <router-outlet>
-  </router-outlet>
   <app-lease-document-approval *ngIf="canShowLeaseDocApprovalScrn == true"
     [confCode]="leaseDocApprvConfCode"
   >
     here is some stuff
   </app-lease-document-approval>
 
-    <div class="loginScreenContainer" *ngIf="showLoginScreen">
-      <login-screen
+    <div class="loginScreenContainer" *ngIf="showLoginScreen == true">
+      <login-screen 
       (notifyFromLogin)="onNotifyFromLogin($event)"
        >
       </login-screen>
@@ -50,5 +51,5 @@
       >
       </app-create-acct-email-confscrn>
     </div>
+    </div>
   <!-- Footer -->
-</div>
